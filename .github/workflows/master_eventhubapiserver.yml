@@ -19,25 +19,19 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '3.1'
-
-      - name: Display current directory
-        run: pwd
-
-      - name: List all files in the repository
-        run: ls -R
+          dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build EventHub.sln --configuration Release
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish EventHub.Presentation/EventHub.Presentation.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: "${{env.DOTNET_ROOT}}/myapp"
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -59,4 +53,4 @@ jobs:
           app-name: 'EventHubAPIServer'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8EF0904234314D1F90C68369FD42672B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2E162A0AE3134EF8992B4DD6656A4E66 }}
