@@ -1,0 +1,22 @@
+﻿namespace EventHub.Domain.Enums.Function;
+
+public enum EFunctionCode
+{
+    DASHBOARD,
+
+    CONTENT,
+    CONTENT_CATEGORY,
+    CONTENT_EVENT,
+    CONTENT_REVIEW,
+    CONTENT_TICKET,
+    CONTENT_PAYMENT,
+    CONTENT_CHAT,
+
+    STATISTIC,
+
+    SYSTEM,
+    SYSTEM_USER,
+    SYSTEM_ROLE,
+    SYSTEM_FUNCTION,
+    SYSTEM_PERMISSION
+}

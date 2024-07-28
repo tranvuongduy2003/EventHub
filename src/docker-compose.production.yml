@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  eventhub.api:
+    image: eventhubcontainer.azurecr.io/eventhub-api:linux-latest
+    container_name: eventhub.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always

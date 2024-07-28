@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Common\"/>
+        <Folder Include="Constants\"/>
+        <Folder Include="Contracts\"/>
+        <Folder Include="DTOs\"/>
+        <Folder Include="Entities\"/>
+        <Folder Include="Enums\"/>
+        <Folder Include="Exceptions\"/>
+        <Folder Include="Hangfire\"/>
+        <Folder Include="HttpResponses\"/>
+        <Folder Include="Interfaces\"/>
+        <Folder Include="Models\"/>
+        <Folder Include="Settings\"/>
+        <Folder Include="Usecases\"/>
+        <Folder Include="Validators\"/>
+        <Folder Include="ValueObjects\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.9.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+    </ItemGroup>
+
+</Project>

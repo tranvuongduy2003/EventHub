@@ -1,0 +1,9 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+/EventHub.Presentation/appsettings.Development.json
+/EventHub.Presentation/appsettings.Production.json
+.idea/
+dotnet-tools.json
