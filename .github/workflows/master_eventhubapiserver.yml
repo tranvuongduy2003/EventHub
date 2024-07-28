@@ -21,17 +21,20 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Store dependencies
+        run: dotnet restore src/EventHub.Presentation/EventHub.Presentation.csproj
+
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build src/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./build
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./publish
 
   deploy:
     runs-on: windows-latest
