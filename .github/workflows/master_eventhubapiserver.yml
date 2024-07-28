@@ -21,6 +21,12 @@ jobs:
         with:
           dotnet-version: '3.1'
 
+      - name: Display current directory
+        run: pwd
+
+      - name: List all files in the repository
+        run: ls -R
+
       - name: Build with dotnet
         run: dotnet build EventHub.sln --configuration Release
 
@@ -31,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: "${{env.DOTNET_ROOT}}/myapp"
 
   deploy:
     runs-on: windows-latest
@@ -45,7 +51,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-
+      
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
