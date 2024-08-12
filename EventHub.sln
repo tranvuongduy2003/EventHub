@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Presentation", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Application", "src\EventHub.Application\EventHub.Application.csproj", "{95E61338-B5A3-486F-8E79-903C417665C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Shared", "EventHub.Shared\EventHub.Shared.csproj", "{BCD262A2-7FE2-45AE-8854-1FBF1F3FA9AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Shared", "src\EventHub.Shared\EventHub.Shared.csproj", "{A0BE85EF-83F0-488D-9E69-FCB2C518AEA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,9 +40,9 @@ Global
 		{95E61338-B5A3-486F-8E79-903C417665C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95E61338-B5A3-486F-8E79-903C417665C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95E61338-B5A3-486F-8E79-903C417665C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCD262A2-7FE2-45AE-8854-1FBF1F3FA9AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCD262A2-7FE2-45AE-8854-1FBF1F3FA9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCD262A2-7FE2-45AE-8854-1FBF1F3FA9AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCD262A2-7FE2-45AE-8854-1FBF1F3FA9AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0BE85EF-83F0-488D-9E69-FCB2C518AEA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0BE85EF-83F0-488D-9E69-FCB2C518AEA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0BE85EF-83F0-488D-9E69-FCB2C518AEA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0BE85EF-83F0-488D-9E69-FCB2C518AEA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

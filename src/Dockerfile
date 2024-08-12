@@ -4,6 +4,7 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+COPY ["EventHub.Shared/EventHub.Shared.csproj", "EventHub.Shared/"]
 COPY ["EventHub.Domain/EventHub.Domain.csproj", "EventHub.Domain/"]
 COPY ["EventHub.Infrastructor/EventHub.Infrastructor.csproj", "EventHub.Infrastructor/"]
 COPY ["EventHub.Usecase/EventHub.Usecase.csproj", "EventHub.Usecase/"]
