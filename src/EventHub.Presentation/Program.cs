@@ -1,7 +1,6 @@
 using EventHub.Infrastructor;
 using EventHub.Infrastructor.Logging;
 using EventHub.Presentation.Extensions;
-using EventHub.Usecase;
 using Serilog;
 
 var AppCors = "AppCors";
@@ -16,7 +15,6 @@ try
     builder.Host.AddAppConfigurations();
 
     builder.Services.ConfigureInfrastructorServices(builder.Configuration, AppCors);
-    builder.Services.ConfigureUsecaseServices();
 
     var app = builder.Build();
 

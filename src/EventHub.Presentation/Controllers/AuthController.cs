@@ -1,11 +1,21 @@
-﻿using EventHub.Domain.DTOs.Auth;
-using EventHub.Domain.DTOs.User;
-using EventHub.Domain.Exceptions;
-using EventHub.Domain.HttpResponses;
-using EventHub.Domain.Models.Auth;
-using EventHub.Domain.Models.User;
-using EventHub.Domain.Usecases;
+﻿using EventHub.Application.Commands.Auth.ExternalLogin;
+using EventHub.Application.Commands.Auth.ExternalLoginCallback;
+using EventHub.Application.Commands.Auth.ForgotPassword;
+using EventHub.Application.Commands.Auth.RefreshToken;
+using EventHub.Application.Commands.Auth.ResetPassword;
+using EventHub.Application.Commands.Auth.SignIn;
+using EventHub.Application.Commands.Auth.SignOut;
+using EventHub.Application.Commands.Auth.SignUp;
+using EventHub.Application.Commands.Auth.ValidateUser;
+using EventHub.Application.Queries.Auth;
 using EventHub.Infrastructor.FilterAttributes;
+using EventHub.Shared.DTOs.Auth;
+using EventHub.Shared.DTOs.User;
+using EventHub.Shared.Exceptions;
+using EventHub.Shared.HttpResponses;
+using EventHub.Shared.Models.Auth;
+using EventHub.Shared.Models.User;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -18,13 +28,13 @@ namespace EventHub.Presentation.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthUsecase _authUsecase;
-    private readonly ILogger _logger;
+    private readonly IMediator _mediator;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ILogger logger, IAuthUsecase authUsecase)
+    public AuthController(ILogger<AuthController> logger, IMediator mediator)
     {
         _logger = logger;
-        _authUsecase = authUsecase;
+        _mediator = mediator;
     }
 
     [HttpPost("signup")]
@@ -34,12 +44,12 @@ public class AuthController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> SignUp([FromBody] CreateUserDto dto)
     {
-        _logger.LogInformation("START: AuthController - SignUp");
+        _logger.LogInformation("START: SignUp");
         try
         {
-            var signUpResponse = await _authUsecase.SignUpAsync(dto);
+            var signUpResponse = await _mediator.Send(new SignUpCommand(dto));
 
-            _logger.LogInformation("END: AuthController - SignUp");
+            _logger.LogInformation("END: SignUp");
 
             return Ok(new ApiOkResponse(signUpResponse));
         }
@@ -60,12 +70,12 @@ public class AuthController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> ValidateUser([FromBody] ValidateUserDto dto)
     {
-        _logger.LogInformation("START: AuthController - ValidateUser");
+        _logger.LogInformation("START: ValidateUser");
         try
         {
-            await _authUsecase.ValidateUserAsync(dto);
+            await _mediator.Send(new ValidateUserCommand(dto));
 
-            _logger.LogInformation("END: AuthController - ValidateUser");
+            _logger.LogInformation("END: ValidateUser");
 
             return Ok(new ApiOkResponse());
         }
@@ -86,12 +96,12 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SignIn([FromBody] SignInDto dto)
     {
-        _logger.LogInformation("START: AuthController - SignIn");
+        _logger.LogInformation("START: SignIn");
         try
         {
-            var signInResponse = await _authUsecase.SignInAsync(dto);
+            var signInResponse = await _mediator.Send(new SignInCommand(dto));
 
-            _logger.LogInformation("END: AuthController - SignIn");
+            _logger.LogInformation("END: SignIn");
 
             return Ok(new ApiOkResponse(signInResponse));
         }
@@ -114,12 +124,12 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SignOut()
     {
-        _logger.LogInformation("START: AuthController - SignOut");
+        _logger.LogInformation("START: SignOut");
         try
         {
-            await _authUsecase.SignOutAsync();
+            await _mediator.Send(new SignOutCommand());
 
-            _logger.LogInformation("END: AuthController - SignOut");
+            _logger.LogInformation("END: SignOut");
 
             Response.Cookies.Delete("AuthTokenHolder");
 
@@ -135,14 +145,14 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
     {
-        _logger.LogInformation("START: AuthController - ExternalLogin");
+        _logger.LogInformation("START: ExternalLogin");
         try
         {
-            if (User.Identity != null) await _authUsecase.SignOutAsync();
+            if (User.Identity != null) await _mediator.Send(new SignOutCommand());
 
-            var externalLoginResponse = await _authUsecase.ExternalLoginAsync(provider, returnUrl);
+            var externalLoginResponse = await _mediator.Send(new ExternalLoginCommand(provider, returnUrl));
 
-            _logger.LogInformation("END: AuthController - ExternalLogin");
+            _logger.LogInformation("END: ExternalLogin");
 
             return Challenge(externalLoginResponse.Properties, externalLoginResponse.Provider);
         }
@@ -157,10 +167,10 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ExternalLoginCallback([FromQuery] string returnUrl)
     {
-        _logger.LogInformation("START: AuthController - ExternalLoginCallback");
+        _logger.LogInformation("START: ExternalLoginCallback");
         try
         {
-            var signInResponse = await _authUsecase.ExternalLoginCallbackAsync(returnUrl);
+            var signInResponse = await _mediator.Send(new ExternalLoginCallbackCommand(returnUrl));
 
             var options = new CookieOptions
             {
@@ -178,7 +188,7 @@ public class AuthController : ControllerBase
                     Formatting = Formatting.Indented
                 }), options);
 
-            _logger.LogInformation("END: AuthController - ExternalLoginCallback");
+            _logger.LogInformation("END: ExternalLoginCallback");
 
             return Redirect(returnUrl);
         }
@@ -200,7 +210,7 @@ public class AuthController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
     {
-        _logger.LogInformation("START: AuthController - RefreshToken");
+        _logger.LogInformation("START: RefreshToken");
         try
         {
             var accessToken = Request
@@ -208,9 +218,9 @@ public class AuthController : ControllerBase
                 .ToString()
                 .Replace("Bearer ", "");
 
-            var refreshTokenResponse = await _authUsecase.RefreshTokenAsync(dto, accessToken);
+            var refreshTokenResponse = await _mediator.Send(new RefreshTokenCommand(dto.RefreshToken, accessToken));
 
-            _logger.LogInformation("END: AuthController - RefreshToken");
+            _logger.LogInformation("END: RefreshToken");
 
             return Ok(new ApiOkResponse(refreshTokenResponse));
         }
@@ -232,12 +242,12 @@ public class AuthController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
-        _logger.LogInformation("START: AuthController - ForgotPassword");
+        _logger.LogInformation("START: ForgotPassword");
         try
         {
-            await _authUsecase.ForgotPasswordAsync(dto);
+            await _mediator.Send(new ForgotPasswordCommand(dto));
 
-            _logger.LogInformation("END: AuthController - ForgotPassword");
+            _logger.LogInformation("END: ForgotPassword");
 
             return Ok(new ApiOkResponse());
         }
@@ -260,12 +270,12 @@ public class AuthController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordDto dto)
     {
-        _logger.LogInformation("START: AuthController - ResetPassword");
+        _logger.LogInformation("START: ResetPassword");
         try
         {
-            await _authUsecase.ResetPasswordAsync(dto);
+            await _mediator.Send(new ResetPasswordCommand(dto));
 
-            _logger.LogInformation("END: AuthController - ResetPassword");
+            _logger.LogInformation("END: ResetPassword");
 
             return Ok(new ApiOkResponse());
         }
@@ -290,7 +300,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserProfile()
     {
-        _logger.LogInformation("START: AuthController - GetUserProfile");
+        _logger.LogInformation("START: GetUserProfile");
         try
         {
             var accessToken = Request
@@ -298,9 +308,9 @@ public class AuthController : ControllerBase
                 .ToString()
                 .Replace("Bearer ", "");
 
-            var userProfile = await _authUsecase.GetUserProfileAsync(accessToken);
+            var userProfile = await _mediator.Send(new GetUserProfileQuery(accessToken));
 
-            _logger.LogInformation("END: AuthController - GetUserProfile");
+            _logger.LogInformation("END: GetUserProfile");
 
             return Ok(new ApiOkResponse(userProfile));
         }

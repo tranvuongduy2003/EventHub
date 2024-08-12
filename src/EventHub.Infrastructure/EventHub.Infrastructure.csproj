@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>EventHub.Infrastructor</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Caching\" />
+        <Folder Include="SeedWork\" />
+        <Folder Include="Configurations\" />
+        <Folder Include="Data\" />
+        <Folder Include="FilesSystem\" />
+        <Folder Include="FilterAttributes\" />
+        <Folder Include="Hangfire\" />
+        <Folder Include="Logging\" />
+        <Folder Include="Mailler\" />
+        <Folder Include="Mapper\" />
+        <Folder Include="Middlewares\" />
+        <Folder Include="Repositories\" />
+        <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="13.0.1" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.21.1" />
+        <PackageReference Include="Bogus" Version="35.6.0" />
+        <PackageReference Include="FluentValidation" Version="11.9.2" />
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="Hangfire" Version="1.8.14" />
+        <PackageReference Include="Hangfire.Console" Version="1.4.3" />
+        <PackageReference Include="Hangfire.Console.Extensions" Version="2.0.0" />
+        <PackageReference Include="Hangfire.Mongo" Version="1.10.7" />
+        <PackageReference Include="MailKit" Version="4.7.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.26.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
+        <PackageReference Include="MimeKit" Version="4.7.1" />
+        <PackageReference Include="Serilog" Version="4.0.1" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+        <PackageReference Include="SignalRSwaggerGen" Version="4.7.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
+        <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

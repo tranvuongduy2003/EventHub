@@ -23,9 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EventHub.Usecase\EventHub.Usecase.csproj"/>
+        <ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
         <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj"/>
-        <ProjectReference Include="..\EventHub.Infrastructor\EventHub.Infrastructor.csproj"/>
+        <ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
