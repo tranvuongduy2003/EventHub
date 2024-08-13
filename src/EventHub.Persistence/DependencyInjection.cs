@@ -10,6 +10,7 @@ using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Repository;
 using EventHub.Domain.SeedWork.UnitOfWork;
+using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;
 using EventHub.Persistence.SeedWork.Repository;
@@ -26,6 +27,7 @@ public static class DependencyInjection
     {
         services.ConfigureDependencyInjection();
         services.ConfigureRepositories();
+        services.ConfigureCachedRepositories();
 
         return services;
     }
@@ -70,6 +72,19 @@ public static class DependencyInjection
             .AddScoped<ITicketTypesRepository, TicketTypesRepository>()
             .AddScoped<IUserFollowersRepository, UserFollowersRepository>()
             .AddScoped<IUserPaymentMethodsRepository, UserPaymentMethodsRepository>();
+
+        return services;
+    }
+    
+    public static IServiceCollection ConfigureCachedRepositories(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<CachedCategoriesRepository>()
+            .AddScoped<CachedEventsRepository>()
+            .AddScoped<CachedEventSubImagesRepository>()
+            .AddScoped<CachedReasonsRepository>()
+            .AddScoped<CachedReviewsRepository>()
+            .AddScoped<CachedTicketTypesRepository>();
 
         return services;
     }
