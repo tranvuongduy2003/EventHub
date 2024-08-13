@@ -5,13 +5,13 @@ namespace EventHub.Domain.SeedWork.Repository;
 
 public interface IRepositoryBase<T> where T : EntityBase
 {
-    IQueryable<T> FindAll(bool trackChanges = false);
+    Task<IQueryable<T>> FindAll(bool trackChanges = false);
 
-    IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties);
+    Task<IQueryable<T>> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties);
 
-    IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false);
+    Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false);
 
-    IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
+    Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties);
 
     Task<T> GetByIdAsync(int id);

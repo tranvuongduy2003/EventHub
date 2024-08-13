@@ -21,7 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Commands\Category\" />
       <Folder Include="DomainEventHandlers\" />
+      <Folder Include="Queries\Category\" />
     </ItemGroup>
 
 </Project>

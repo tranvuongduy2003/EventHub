@@ -1,4 +1,6 @@
 ﻿using EventHub.Domain.SeedWork.UnitOfWork;
+using EventHub.Domain.Services;
+using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -8,6 +10,7 @@ namespace EventHub.Persistence.SeedWork.UnitOfWork;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICacheService _cacheService;
     private bool _disposed;
 
     private CategoriesRepository _categoriesRepository;
@@ -32,15 +35,23 @@ public class UnitOfWork : IUnitOfWork
     private PaymentsRepository _paymentsRepository;
     private PermissionsRepository _permissionsRepository;
     private ReviewsRepository _reviewsRepository;
-    private ReasonsRepository _seasonsRepository;
+    private ReasonsRepository _reasonsRepository;
     private TicketsRepository _ticketsRepository;
     private TicketTypesRepository _ticketTypesRepository;
     private UserFollowersRepository _userFollowersRepository;
     private UserPaymentMethodsRepository _userPaymentMethodsRepository;
 
-    public UnitOfWork(ApplicationDbContext context)
+    private CachedCategoriesRepository _cachedCategoriesRepository;
+    private CachedEventsRepository _cachedEventsRepository;
+    private CachedEventSubImagesRepository _cachedEventSubImagesRepository;
+    private CachedReasonsRepository _cachedReasonsRepository;
+    private CachedReviewsRepository _cachedReviewsRepository;
+    private CachedTicketTypesRepository _cachedTicketTypesRepository;
+
+    public UnitOfWork(ApplicationDbContext context, ICacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public CategoriesRepository CategoriesRepository
@@ -257,9 +268,9 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_seasonsRepository == null)
-                _seasonsRepository = new ReasonsRepository(_context);
-            return _seasonsRepository;
+            if (_reasonsRepository == null)
+                _reasonsRepository = new ReasonsRepository(_context);
+            return _reasonsRepository;
         }
     }
 
@@ -310,6 +321,87 @@ public class UnitOfWork : IUnitOfWork
             if (_userPaymentMethodsRepository == null)
                 _userPaymentMethodsRepository = new UserPaymentMethodsRepository(_context);
             return _userPaymentMethodsRepository;
+        }
+    }
+
+    public CachedCategoriesRepository CachedCategoriesRepository
+    {
+        get
+        {
+            if (_categoriesRepository == null)
+                _categoriesRepository = new CategoriesRepository(_context);
+            
+            if (_cachedCategoriesRepository == null)
+                _cachedCategoriesRepository =
+                    new CachedCategoriesRepository(_context, _categoriesRepository, _cacheService);
+            return _cachedCategoriesRepository;
+        }
+    }
+
+    private CachedEventsRepository CachedEventsRepository
+    {
+        get
+        {
+            if (_eventsRepository == null)
+                _eventsRepository = new EventsRepository(_context);
+            
+            if (_cachedEventsRepository == null)
+                _cachedEventsRepository = new CachedEventsRepository(_context, _eventsRepository, _cacheService);
+            return _cachedEventsRepository;
+        }
+    }
+
+    private CachedEventSubImagesRepository CachedEventSubImagesRepository
+    {
+        get
+        {
+            if (_eventSubImagesRepository == null)
+                _eventSubImagesRepository = new EventSubImagesRepository(_context);
+            
+            if (_cachedEventSubImagesRepository == null)
+                _cachedEventSubImagesRepository =
+                    new CachedEventSubImagesRepository(_context, _eventSubImagesRepository, _cacheService);
+            return _cachedEventSubImagesRepository;
+        }
+    }
+
+    private CachedReasonsRepository CachedReasonsRepository
+    {
+        get
+        {
+            if (_reasonsRepository == null)
+                _reasonsRepository = new ReasonsRepository(_context);
+            
+            if (_cachedReasonsRepository == null)
+                _cachedReasonsRepository = new CachedReasonsRepository(_context, _reasonsRepository, _cacheService);
+            return _cachedReasonsRepository;
+        }
+    }
+
+    private CachedReviewsRepository CachedReviewsRepository
+    {
+        get
+        {
+            if (_reviewsRepository == null)
+                _reviewsRepository = new ReviewsRepository(_context);
+            
+            if (_cachedReviewsRepository == null)
+                _cachedReviewsRepository = new CachedReviewsRepository(_context, _reviewsRepository, _cacheService);
+            return _cachedReviewsRepository;
+        }
+    }
+
+    private CachedTicketTypesRepository CachedTicketTypesRepository
+    {
+        get
+        {
+            if (_ticketTypesRepository == null)
+                _ticketTypesRepository = new TicketTypesRepository(_context);
+            
+            if (_cachedTicketTypesRepository == null)
+                _cachedTicketTypesRepository =
+                    new CachedTicketTypesRepository(_context, _ticketTypesRepository, _cacheService);
+            return _cachedTicketTypesRepository;
         }
     }
 
