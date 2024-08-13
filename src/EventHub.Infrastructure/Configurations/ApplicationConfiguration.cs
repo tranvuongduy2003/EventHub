@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class ApplicationConfiguration
 {

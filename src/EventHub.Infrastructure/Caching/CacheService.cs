@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 
-namespace EventHub.Infrastructor.Caching;
+namespace EventHub.Infrastructure.Caching;
 
 public class CacheService : ICacheService
 {

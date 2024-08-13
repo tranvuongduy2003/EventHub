@@ -6,7 +6,7 @@ using EventHub.Shared.Models.File;
 using EventHub.Shared.Settings;
 using Microsoft.AspNetCore.Http;
 
-namespace EventHub.Infrastructor.FilesSystem;
+namespace EventHub.Infrastructure.FilesSystem;
 
 public class AzureBlobService : IBlobService
 {

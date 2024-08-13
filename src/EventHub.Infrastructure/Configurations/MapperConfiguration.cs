@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using AutoMapper;
-using EventHub.Infrastructor.Mapper;
+using EventHub.Infrastructure.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class MapperConfiguration
 {

@@ -2,7 +2,7 @@
 using EventHub.Shared.Enums.Function;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventHub.Infrastructor.FilterAttributes;
+namespace EventHub.Infrastructure.FilterAttributes;
 
 public class ClaimRequirementAttribute : TypeFilterAttribute
 {

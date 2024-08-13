@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
 
-namespace EventHub.Infrastructor.FilterAttributes;
+namespace EventHub.Infrastructure.FilterAttributes;
 
 public class TokenRequirementFilter : IAuthorizationFilter
 {

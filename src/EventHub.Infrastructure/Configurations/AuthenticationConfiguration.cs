@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class AuthenticationConfiguration
 {

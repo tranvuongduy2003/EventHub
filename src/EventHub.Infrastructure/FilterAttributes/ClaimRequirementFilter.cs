@@ -4,11 +4,10 @@ using EventHub.Shared.Enums.Function;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace EventHub.Infrastructor.FilterAttributes;
+namespace EventHub.Infrastructure.FilterAttributes;
 
 public class ClaimRequirementFilter : IAuthorizationFilter
 {

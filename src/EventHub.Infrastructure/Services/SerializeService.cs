@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace EventHub.Infrastructor.Services;
+namespace EventHub.Infrastructure.Services;
 
 public class SerializeService : ISerializeService
 {

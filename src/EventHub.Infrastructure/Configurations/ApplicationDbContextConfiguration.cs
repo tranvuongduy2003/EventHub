@@ -1,9 +1,9 @@
-﻿using EventHub.Infrastructor.Data;
+﻿using EventHub.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class ApplicationDbContextConfiguration
 {

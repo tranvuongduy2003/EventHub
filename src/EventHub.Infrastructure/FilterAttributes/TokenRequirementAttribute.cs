@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace EventHub.Infrastructor.FilterAttributes;
+namespace EventHub.Infrastructure.FilterAttributes;
 
 public class TokenRequirementAttribute : TypeFilterAttribute
 {

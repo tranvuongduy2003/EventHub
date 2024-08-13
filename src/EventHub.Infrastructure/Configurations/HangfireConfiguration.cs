@@ -1,4 +1,6 @@
-﻿using Hangfire;
+﻿using System.Security.Authentication;
+using EventHub.Shared.Settings;
+using Hangfire;
 using Hangfire.Console.Extensions;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
@@ -8,10 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using System.Security.Authentication;
-using EventHub.Shared.Settings;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class HangfireConfiguration
 {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Infrastructor.Configurations;
+using EventHub.Infrastructure.Configurations;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Models.User;
 
-namespace EventHub.Infrastructor.Mapper;
+namespace EventHub.Infrastructure.Mapper;
 
 public class UserMapper
 {

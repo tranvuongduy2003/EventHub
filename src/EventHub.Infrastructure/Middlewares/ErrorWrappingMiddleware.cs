@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace EventHub.Infrastructor.Middlewares;
+namespace EventHub.Infrastructure.Middlewares;
 
 public class ErrorWrappingMiddleware
 {

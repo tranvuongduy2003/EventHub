@@ -2,7 +2,7 @@
 using EventHub.Domain.Services;
 using Hangfire;
 
-namespace EventHub.Infrastructor.Hangfire;
+namespace EventHub.Infrastructure.Hangfire;
 
 public class HangfireService : IHangfireService
 {

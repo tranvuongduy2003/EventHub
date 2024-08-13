@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
-using Serilog.Formatting.Json;
 
-namespace EventHub.Infrastructor.Logging;
+namespace EventHub.Infrastructure.Logging;
 
 public static class Serilogger
 {

@@ -1,5 +1,4 @@
-﻿using EventHub.Infrastructor.Configurations;
-using EventHub.Infrastructor.Data;
+﻿using EventHub.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 

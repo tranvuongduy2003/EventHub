@@ -1,6 +1,9 @@
-using EventHub.Infrastructor;
-using EventHub.Infrastructor.Logging;
+using EventHub.Application;
+using EventHub.Infrastructure;
+using EventHub.Infrastructure.Logging;
+using EventHub.Persistence;
 using EventHub.Presentation.Extensions;
+using EventHub.SignalR;
 using Serilog;
 
 var AppCors = "AppCors";
@@ -14,7 +17,9 @@ try
     builder.Host.UseSerilog(Serilogger.Configure);
     builder.Host.AddAppConfigurations();
 
-    builder.Services.ConfigureInfrastructorServices(builder.Configuration, AppCors);
+    builder.Services.ConfigurePersistenceServices(builder.Configuration);
+    builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
+    builder.Services.ConfigureSignalRServices(builder.Configuration);
 
     var app = builder.Build();
 

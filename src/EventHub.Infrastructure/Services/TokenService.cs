@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
-using EventHub.Infrastructor.Data;
+using EventHub.Persistence.Data;
 using EventHub.Shared.Settings;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace EventHub.Infrastructor.Services;
+namespace EventHub.Infrastructure.Services;
 
 public class TokenService : ITokenService
 {

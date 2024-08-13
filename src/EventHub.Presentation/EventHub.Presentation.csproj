@@ -19,7 +19,6 @@
     <ItemGroup>
         <Folder Include="Controllers\"/>
         <Folder Include="Extensions\"/>
-        <Folder Include="Helpers\"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +26,7 @@
         <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj"/>
         <ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj" />
         <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
+        <ProjectReference Include="..\EventHub.SignalR\EventHub.SignalR.csproj" />
     </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ public class Metadata
     public Metadata()
     {
         TotalCount = 0;
+        PayloadSize = 0;
         PageSize = 10;
         CurrentPage = 1;
         TotalPages = 0;
@@ -16,8 +17,9 @@ public class Metadata
         TotalCount = count;
         PageSize = pageSize;
         CurrentPage = pageNumber;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         TakeAll = takeAll;
+        TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+        PayloadSize = Math.Min(PageSize, TotalCount - (CurrentPage - 1) * PageSize);
     }
 
     public int CurrentPage { get; }
@@ -29,6 +31,8 @@ public class Metadata
     public int PageSize { get; private set; }
 
     public int TotalCount { get; private set; }
+
+    public int PayloadSize { get; private set; }
 
     public bool HasPrevious => CurrentPage > 1;
 

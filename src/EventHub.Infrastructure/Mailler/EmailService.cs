@@ -6,7 +6,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace EventHub.Infrastructor.Mailler;
+namespace EventHub.Infrastructure.Mailler;
 
 public class EmailService : IEmailService
 {

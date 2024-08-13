@@ -1,10 +1,10 @@
 ﻿using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Infrastructor.Data;
+using EventHub.Persistence.Data;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class IdentityConfiguration
 {

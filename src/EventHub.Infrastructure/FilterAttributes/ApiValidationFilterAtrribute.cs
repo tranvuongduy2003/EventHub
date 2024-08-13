@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace EventHub.Infrastructor.FilterAttributes;
+namespace EventHub.Infrastructure.FilterAttributes;
 
 public class ApiValidationFilterAttribute : ActionFilterAttribute
 {

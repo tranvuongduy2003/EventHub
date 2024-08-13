@@ -1,7 +1,7 @@
-﻿using EventHub.Infrastructor.Middlewares;
+﻿using EventHub.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
-namespace EventHub.Infrastructor.Configurations;
+namespace EventHub.Infrastructure.Configurations;
 
 public static class MiddlewaresConfiguration
 {

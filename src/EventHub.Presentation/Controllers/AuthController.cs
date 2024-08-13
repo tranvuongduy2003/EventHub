@@ -8,7 +8,7 @@ using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
 using EventHub.Application.Queries.Auth;
-using EventHub.Infrastructor.FilterAttributes;
+using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Exceptions;
