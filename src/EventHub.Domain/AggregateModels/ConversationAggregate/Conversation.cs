@@ -12,13 +12,9 @@ public class Conversation : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
-
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [Required]
     [MaxLength(50)]

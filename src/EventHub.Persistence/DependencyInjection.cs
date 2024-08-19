@@ -8,6 +8,7 @@ using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.AggregateModels.ReviewAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Repositories;
 using EventHub.Domain.SeedWork.Repository;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Persistence.CachedRepositories;

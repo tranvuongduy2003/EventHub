@@ -12,9 +12,9 @@ public class TicketType : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [Required]
     [MaxLength(100)]

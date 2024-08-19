@@ -10,9 +10,9 @@ public class EmailAttachment : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    [Required] public int EmailContentId { get; set; }
+    [Required] public string EmailContentId { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(max)")]

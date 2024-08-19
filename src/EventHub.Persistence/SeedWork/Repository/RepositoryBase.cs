@@ -49,12 +49,12 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return items;
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(string id)
     {
         return await _context.Set<T>().FindAsync(id);
     }
 
-    public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includeProperties)
+    public async Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties)
     {
         return await _context.Set<T>().FindAsync(id, includeProperties);
     }

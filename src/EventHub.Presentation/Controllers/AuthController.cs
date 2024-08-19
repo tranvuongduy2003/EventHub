@@ -1,4 +1,5 @@
-﻿using EventHub.Application.Commands.Auth.ExternalLogin;
+﻿using AutoMapper;
+using EventHub.Application.Commands.Auth.ExternalLogin;
 using EventHub.Application.Commands.Auth.ExternalLoginCallback;
 using EventHub.Application.Commands.Auth.ForgotPassword;
 using EventHub.Application.Commands.Auth.RefreshToken;
@@ -8,6 +9,7 @@ using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
 using EventHub.Application.Queries.Auth;
+using EventHub.Application.Queries.Auth.GetUserProfile;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
@@ -29,12 +31,14 @@ namespace EventHub.Presentation.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
     private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ILogger<AuthController> logger, IMediator mediator)
+    public AuthController(ILogger<AuthController> logger, IMediator mediator, IMapper mapper)
     {
         _logger = logger;
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpPost("signup")]
@@ -308,11 +312,13 @@ public class AuthController : ControllerBase
                 .ToString()
                 .Replace("Bearer ", "");
 
-            var userProfile = await _mediator.Send(new GetUserProfileQuery(accessToken));
+            var userModel = await _mediator.Send(new GetUserProfileQuery(accessToken));
+
+            var user = _mapper.Map<UserDto>(userModel);
 
             _logger.LogInformation("END: GetUserProfile");
 
-            return Ok(new ApiOkResponse(userProfile));
+            return Ok(new ApiOkResponse(user));
         }
         catch (UnauthorizedException e)
         {

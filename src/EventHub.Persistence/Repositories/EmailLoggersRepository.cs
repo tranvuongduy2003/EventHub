@@ -1,4 +1,5 @@
 ﻿using EventHub.Domain.AggregateModels.EmailLoggerAggregate;
+using EventHub.Domain.Repositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.SeedWork.Repository;
 

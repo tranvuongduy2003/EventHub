@@ -14,7 +14,6 @@
         <Folder Include="Hangfire\"/>
         <Folder Include="Logging\"/>
         <Folder Include="Mailler\"/>
-        <Folder Include="Mapper\"/>
         <Folder Include="Middlewares\"/>
         <Folder Include="Services\"/>
     </ItemGroup>

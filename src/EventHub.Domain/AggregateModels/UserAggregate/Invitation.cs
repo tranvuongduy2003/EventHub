@@ -20,7 +20,7 @@ public class Invitation : EntityBase
     [Column(TypeName = "varchar(50)")]
     public string InvitedId { get; set; } = string.Empty;
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [ForeignKey("InviterId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

@@ -1,4 +1,16 @@
-﻿using EventHub.Domain.SeedWork.UnitOfWork;
+﻿using EventHub.Domain.AggregateModels.CategoryAggregate;
+using EventHub.Domain.AggregateModels.ConversationAggregate;
+using EventHub.Domain.AggregateModels.EmailLoggerAggregate;
+using EventHub.Domain.AggregateModels.EventAggregate;
+using EventHub.Domain.AggregateModels.LabelAggregate;
+using EventHub.Domain.AggregateModels.PaymentAggregate;
+using EventHub.Domain.AggregateModels.PermissionAggregate;
+using EventHub.Domain.AggregateModels.ReviewAggregate;
+using EventHub.Domain.AggregateModels.TicketAggregate;
+using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.CachedRepositories;
+using EventHub.Domain.Repositories;
+using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Domain.Services;
 using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
@@ -13,40 +25,40 @@ public class UnitOfWork : IUnitOfWork
     private readonly ICacheService _cacheService;
     private bool _disposed;
 
-    private CategoriesRepository _categoriesRepository;
-    private CommandInFunctionsRepository _commandInFunctionsRepository;
-    private CommandsRepository _commandsRepository;
-    private ConversationsRepository _conversationsRepository;
-    private EmailAttachmentsRepository _emailAttachmentsRepository;
-    private EmailContentsRepository _emailContentsRepository;
-    private EmailLoggersRepository _emailLoggersRepository;
-    private EventCategoriesRepository _eventCategoriesRepository;
-    private EventsRepository _eventsRepository;
-    private EventSubImagesRepository _eventSubImagesRepository;
-    private FavouriteEventsRepository _favouriteEventsRepository;
-    private FunctionsRepository _functionsRepository;
-    private InvitationsRepository _invitationsRepository;
-    private LabelInEventsRepository _labelInEventsRepository;
-    private LabelInUsersRepository _labelInUsersRepository;
-    private LabelsRepository _labelsRepository;
-    private MessagesRepository _messagesRepository;
-    private PaymentItemsRepository _paymentItemsRepository;
-    private PaymentMethodsRepository _paymentMethodsRepository;
-    private PaymentsRepository _paymentsRepository;
-    private PermissionsRepository _permissionsRepository;
-    private ReviewsRepository _reviewsRepository;
-    private ReasonsRepository _reasonsRepository;
-    private TicketsRepository _ticketsRepository;
-    private TicketTypesRepository _ticketTypesRepository;
-    private UserFollowersRepository _userFollowersRepository;
-    private UserPaymentMethodsRepository _userPaymentMethodsRepository;
+    private CategoriesRepository _categories;
+    private CommandInFunctionsRepository _commandInFunctions;
+    private CommandsRepository _commands;
+    private ConversationsRepository _conversations;
+    private EmailAttachmentsRepository _emailAttachments;
+    private EmailContentsRepository _emailContents;
+    private EmailLoggersRepository _emailLoggers;
+    private EventCategoriesRepository _eventCategories;
+    private EventsRepository _events;
+    private EventSubImagesRepository _eventSubImages;
+    private FavouriteEventsRepository _favouriteEvents;
+    private FunctionsRepository _functions;
+    private InvitationsRepository _invitations;
+    private LabelInEventsRepository _labelInEvents;
+    private LabelInUsersRepository _labelInUsers;
+    private LabelsRepository _labels;
+    private MessagesRepository _messages;
+    private PaymentItemsRepository _paymentItems;
+    private PaymentMethodsRepository _paymentMethods;
+    private PaymentsRepository _payments;
+    private PermissionsRepository _permissions;
+    private ReviewsRepository _reviews;
+    private ReasonsRepository _reasons;
+    private TicketsRepository _tickets;
+    private TicketTypesRepository _ticketTypes;
+    private UserFollowersRepository _userFollowers;
+    private UserPaymentMethodsRepository _userPaymentMethods;
 
-    private CachedCategoriesRepository _cachedCategoriesRepository;
-    private CachedEventsRepository _cachedEventsRepository;
-    private CachedEventSubImagesRepository _cachedEventSubImagesRepository;
-    private CachedReasonsRepository _cachedReasonsRepository;
-    private CachedReviewsRepository _cachedReviewsRepository;
-    private CachedTicketTypesRepository _cachedTicketTypesRepository;
+    private CachedCategoriesRepository _cachedCategories;
+    private CachedEventsRepository _cachedEvents;
+    private CachedEventSubImagesRepository _cachedEventSubImages;
+    private CachedReasonsRepository _cachedReasons;
+    private CachedReviewsRepository _cachedReviews;
+    private CachedTicketTypesRepository _cachedTicketTypes;
 
     public UnitOfWork(ApplicationDbContext context, ICacheService cacheService)
     {
@@ -54,354 +66,354 @@ public class UnitOfWork : IUnitOfWork
         _cacheService = cacheService;
     }
 
-    public CategoriesRepository CategoriesRepository
+    public ICategoriesRepository Categories
     {
         get
         {
-            if (_categoriesRepository == null)
-                _categoriesRepository = new CategoriesRepository(_context);
-            return _categoriesRepository;
+            if (_categories == null)
+                _categories = new CategoriesRepository(_context);
+            return _categories;
         }
     }
 
-    public CommandInFunctionsRepository CommandInFunctionsRepository
+    public ICommandInFunctionsRepository CommandInFunctions
     {
         get
         {
-            if (_commandInFunctionsRepository == null)
-                _commandInFunctionsRepository = new CommandInFunctionsRepository(_context);
-            return _commandInFunctionsRepository;
+            if (_commandInFunctions == null)
+                _commandInFunctions = new CommandInFunctionsRepository(_context);
+            return _commandInFunctions;
         }
     }
 
-    public CommandsRepository CommandsRepository
+    public ICommandsRepository Commands
     {
         get
         {
-            if (_commandsRepository == null)
-                _commandsRepository = new CommandsRepository(_context);
-            return _commandsRepository;
+            if (_commands == null)
+                _commands = new CommandsRepository(_context);
+            return _commands;
         }
     }
 
-    public ConversationsRepository ConversationsRepository
+    public IConversationsRepository Conversations
     {
         get
         {
-            if (_conversationsRepository == null)
-                _conversationsRepository = new ConversationsRepository(_context);
-            return _conversationsRepository;
+            if (_conversations == null)
+                _conversations = new ConversationsRepository(_context);
+            return _conversations;
         }
     }
 
-    public EmailAttachmentsRepository EmailAttachmentsRepository
+    public IEmailAttachmentsRepository EmailAttachments
     {
         get
         {
-            if (_emailAttachmentsRepository == null)
-                _emailAttachmentsRepository = new EmailAttachmentsRepository(_context);
-            return _emailAttachmentsRepository;
+            if (_emailAttachments == null)
+                _emailAttachments = new EmailAttachmentsRepository(_context);
+            return _emailAttachments;
         }
     }
 
-    public EmailContentsRepository EmailContentsRepository
+    public IEmailContentsRepository EmailContents
     {
         get
         {
-            if (_emailContentsRepository == null)
-                _emailContentsRepository = new EmailContentsRepository(_context);
-            return _emailContentsRepository;
+            if (_emailContents == null)
+                _emailContents = new EmailContentsRepository(_context);
+            return _emailContents;
         }
     }
 
-    public EmailLoggersRepository EmailLoggersRepository
+    public IEmailLoggersRepository EmailLoggers
     {
         get
         {
-            if (_emailLoggersRepository == null)
-                _emailLoggersRepository = new EmailLoggersRepository(_context);
-            return _emailLoggersRepository;
+            if (_emailLoggers == null)
+                _emailLoggers = new EmailLoggersRepository(_context);
+            return _emailLoggers;
         }
     }
 
-    public EventCategoriesRepository EventCategoriesRepository
+    public IEventCategoriesRepository EventCategories
     {
         get
         {
-            if (_eventCategoriesRepository == null)
-                _eventCategoriesRepository = new EventCategoriesRepository(_context);
-            return _eventCategoriesRepository;
+            if (_eventCategories == null)
+                _eventCategories = new EventCategoriesRepository(_context);
+            return _eventCategories;
         }
     }
 
-    public EventsRepository EventsRepository
+    public IEventsRepository Events
     {
         get
         {
-            if (_eventsRepository == null)
-                _eventsRepository = new EventsRepository(_context);
-            return _eventsRepository;
+            if (_events == null)
+                _events = new EventsRepository(_context);
+            return _events;
         }
     }
 
-    public EventSubImagesRepository EventSubImagesRepository
+    public IEventSubImagesRepository EventSubImages
     {
         get
         {
-            if (_eventSubImagesRepository == null)
-                _eventSubImagesRepository = new EventSubImagesRepository(_context);
-            return _eventSubImagesRepository;
+            if (_eventSubImages == null)
+                _eventSubImages = new EventSubImagesRepository(_context);
+            return _eventSubImages;
         }
     }
 
-    public FavouriteEventsRepository FavouriteEventsRepository
+    public IFavouriteEventsRepository FavouriteEvents
     {
         get
         {
-            if (_favouriteEventsRepository == null)
-                _favouriteEventsRepository = new FavouriteEventsRepository(_context);
-            return _favouriteEventsRepository;
+            if (_favouriteEvents == null)
+                _favouriteEvents = new FavouriteEventsRepository(_context);
+            return _favouriteEvents;
         }
     }
 
-    public FunctionsRepository FunctionsRepository
+    public IFunctionsRepository Functions
     {
         get
         {
-            if (_functionsRepository == null)
-                _functionsRepository = new FunctionsRepository(_context);
-            return _functionsRepository;
+            if (_functions == null)
+                _functions = new FunctionsRepository(_context);
+            return _functions;
         }
     }
 
-    public InvitationsRepository InvitationsRepository
+    public IInvitationsRepository Invitations
     {
         get
         {
-            if (_invitationsRepository == null)
-                _invitationsRepository = new InvitationsRepository(_context);
-            return _invitationsRepository;
+            if (_invitations == null)
+                _invitations = new InvitationsRepository(_context);
+            return _invitations;
         }
     }
 
-    public LabelInEventsRepository LabelInEventsRepository
+    public ILabelInEventsRepository LabelInEvents
     {
         get
         {
-            if (_labelInEventsRepository == null)
-                _labelInEventsRepository = new LabelInEventsRepository(_context);
-            return _labelInEventsRepository;
+            if (_labelInEvents == null)
+                _labelInEvents = new LabelInEventsRepository(_context);
+            return _labelInEvents;
         }
     }
 
-    public LabelInUsersRepository LabelInUsersRepository
+    public ILabelInUsersRepository LabelInUsers
     {
         get
         {
-            if (_labelInUsersRepository == null)
-                _labelInUsersRepository = new LabelInUsersRepository(_context);
-            return _labelInUsersRepository;
+            if (_labelInUsers == null)
+                _labelInUsers = new LabelInUsersRepository(_context);
+            return _labelInUsers;
         }
     }
 
-    public LabelsRepository LabelsRepository
+    public ILabelsRepository Labels
     {
         get
         {
-            if (_labelsRepository == null)
-                _labelsRepository = new LabelsRepository(_context);
-            return _labelsRepository;
+            if (_labels == null)
+                _labels = new LabelsRepository(_context);
+            return _labels;
         }
     }
 
-    public MessagesRepository MessagesRepository
+    public IMessagesRepository Messages
     {
         get
         {
-            if (_messagesRepository == null)
-                _messagesRepository = new MessagesRepository(_context);
-            return _messagesRepository;
+            if (_messages == null)
+                _messages = new MessagesRepository(_context);
+            return _messages;
         }
     }
 
-    public PaymentItemsRepository PaymentItemsRepository
+    public IPaymentItemsRepository PaymentItems
     {
         get
         {
-            if (_paymentItemsRepository == null)
-                _paymentItemsRepository = new PaymentItemsRepository(_context);
-            return _paymentItemsRepository;
+            if (_paymentItems == null)
+                _paymentItems = new PaymentItemsRepository(_context);
+            return _paymentItems;
         }
     }
 
-    public PaymentMethodsRepository PaymentMethodsRepository
+    public IPaymentMethodsRepository PaymentMethods
     {
         get
         {
-            if (_paymentMethodsRepository == null)
-                _paymentMethodsRepository = new PaymentMethodsRepository(_context);
-            return _paymentMethodsRepository;
+            if (_paymentMethods == null)
+                _paymentMethods = new PaymentMethodsRepository(_context);
+            return _paymentMethods;
         }
     }
 
-    public PaymentsRepository PaymentsRepository
+    public IPaymentsRepository Payments
     {
         get
         {
-            if (_paymentsRepository == null)
-                _paymentsRepository = new PaymentsRepository(_context);
-            return _paymentsRepository;
+            if (_payments == null)
+                _payments = new PaymentsRepository(_context);
+            return _payments;
         }
     }
 
-    public PermissionsRepository PermissionsRepository
+    public IPermissionsRepository Permissions
     {
         get
         {
-            if (_permissionsRepository == null)
-                _permissionsRepository = new PermissionsRepository(_context);
-            return _permissionsRepository;
+            if (_permissions == null)
+                _permissions = new PermissionsRepository(_context);
+            return _permissions;
         }
     }
 
-    public ReasonsRepository ReasonsRepository
+    public IReasonsRepository Reasons
     {
         get
         {
-            if (_reasonsRepository == null)
-                _reasonsRepository = new ReasonsRepository(_context);
-            return _reasonsRepository;
+            if (_reasons == null)
+                _reasons = new ReasonsRepository(_context);
+            return _reasons;
         }
     }
 
-    public ReviewsRepository ReviewsRepository
+    public IReviewsRepository Reviews
     {
         get
         {
-            if (_reviewsRepository == null)
-                _reviewsRepository = new ReviewsRepository(_context);
-            return _reviewsRepository;
+            if (_reviews == null)
+                _reviews = new ReviewsRepository(_context);
+            return _reviews;
         }
     }
 
-    public TicketsRepository TicketsRepository
+    public ITicketsRepository Tickets
     {
         get
         {
-            if (_ticketsRepository == null)
-                _ticketsRepository = new TicketsRepository(_context);
-            return _ticketsRepository;
+            if (_tickets == null)
+                _tickets = new TicketsRepository(_context);
+            return _tickets;
         }
     }
 
-    public TicketTypesRepository TicketTypesRepository
+    public ITicketTypesRepository TicketTypes
     {
         get
         {
-            if (_ticketTypesRepository == null)
-                _ticketTypesRepository = new TicketTypesRepository(_context);
-            return _ticketTypesRepository;
+            if (_ticketTypes == null)
+                _ticketTypes = new TicketTypesRepository(_context);
+            return _ticketTypes;
         }
     }
 
-    public UserFollowersRepository UserFollowersRepository
+    public IUserFollowersRepository UserFollowers
     {
         get
         {
-            if (_userFollowersRepository == null)
-                _userFollowersRepository = new UserFollowersRepository(_context);
-            return _userFollowersRepository;
+            if (_userFollowers == null)
+                _userFollowers = new UserFollowersRepository(_context);
+            return _userFollowers;
         }
     }
 
-    public UserPaymentMethodsRepository UserPaymentMethodsRepository
+    public IUserPaymentMethodsRepository UserPaymentMethods
     {
         get
         {
-            if (_userPaymentMethodsRepository == null)
-                _userPaymentMethodsRepository = new UserPaymentMethodsRepository(_context);
-            return _userPaymentMethodsRepository;
+            if (_userPaymentMethods == null)
+                _userPaymentMethods = new UserPaymentMethodsRepository(_context);
+            return _userPaymentMethods;
         }
     }
 
-    public CachedCategoriesRepository CachedCategoriesRepository
+    public ICachedCategoriesRepository CachedCategories
     {
         get
         {
-            if (_categoriesRepository == null)
-                _categoriesRepository = new CategoriesRepository(_context);
-            
-            if (_cachedCategoriesRepository == null)
-                _cachedCategoriesRepository =
-                    new CachedCategoriesRepository(_context, _categoriesRepository, _cacheService);
-            return _cachedCategoriesRepository;
+            if (_categories == null)
+                _categories = new CategoriesRepository(_context);
+
+            if (_cachedCategories == null)
+                _cachedCategories =
+                    new CachedCategoriesRepository(_context, _categories, _cacheService);
+            return _cachedCategories;
         }
     }
 
-    private CachedEventsRepository CachedEventsRepository
+    public ICachedEventsRepository CachedEvents
     {
         get
         {
-            if (_eventsRepository == null)
-                _eventsRepository = new EventsRepository(_context);
-            
-            if (_cachedEventsRepository == null)
-                _cachedEventsRepository = new CachedEventsRepository(_context, _eventsRepository, _cacheService);
-            return _cachedEventsRepository;
+            if (_events == null)
+                _events = new EventsRepository(_context);
+
+            if (_cachedEvents == null)
+                _cachedEvents = new CachedEventsRepository(_context, _events, _cacheService);
+            return _cachedEvents;
         }
     }
 
-    private CachedEventSubImagesRepository CachedEventSubImagesRepository
+    public ICachedEventSubImagesRepository CachedEventSubImages
     {
         get
         {
-            if (_eventSubImagesRepository == null)
-                _eventSubImagesRepository = new EventSubImagesRepository(_context);
-            
-            if (_cachedEventSubImagesRepository == null)
-                _cachedEventSubImagesRepository =
-                    new CachedEventSubImagesRepository(_context, _eventSubImagesRepository, _cacheService);
-            return _cachedEventSubImagesRepository;
+            if (_eventSubImages == null)
+                _eventSubImages = new EventSubImagesRepository(_context);
+
+            if (_cachedEventSubImages == null)
+                _cachedEventSubImages =
+                    new CachedEventSubImagesRepository(_context, _eventSubImages, _cacheService);
+            return _cachedEventSubImages;
         }
     }
 
-    private CachedReasonsRepository CachedReasonsRepository
+    public ICachedReasonsRepository CachedReasons
     {
         get
         {
-            if (_reasonsRepository == null)
-                _reasonsRepository = new ReasonsRepository(_context);
-            
-            if (_cachedReasonsRepository == null)
-                _cachedReasonsRepository = new CachedReasonsRepository(_context, _reasonsRepository, _cacheService);
-            return _cachedReasonsRepository;
+            if (_reasons == null)
+                _reasons = new ReasonsRepository(_context);
+
+            if (_cachedReasons == null)
+                _cachedReasons = new CachedReasonsRepository(_context, _reasons, _cacheService);
+            return _cachedReasons;
         }
     }
 
-    private CachedReviewsRepository CachedReviewsRepository
+    public ICachedReviewsRepository CachedReviews
     {
         get
         {
-            if (_reviewsRepository == null)
-                _reviewsRepository = new ReviewsRepository(_context);
-            
-            if (_cachedReviewsRepository == null)
-                _cachedReviewsRepository = new CachedReviewsRepository(_context, _reviewsRepository, _cacheService);
-            return _cachedReviewsRepository;
+            if (_reviews == null)
+                _reviews = new ReviewsRepository(_context);
+
+            if (_cachedReviews == null)
+                _cachedReviews = new CachedReviewsRepository(_context, _reviews, _cacheService);
+            return _cachedReviews;
         }
     }
 
-    private CachedTicketTypesRepository CachedTicketTypesRepository
+    public ICachedTicketTypesRepository CachedTicketTypes
     {
         get
         {
-            if (_ticketTypesRepository == null)
-                _ticketTypesRepository = new TicketTypesRepository(_context);
-            
-            if (_cachedTicketTypesRepository == null)
-                _cachedTicketTypesRepository =
-                    new CachedTicketTypesRepository(_context, _ticketTypesRepository, _cacheService);
-            return _cachedTicketTypesRepository;
+            if (_ticketTypes == null)
+                _ticketTypes = new TicketTypesRepository(_context);
+
+            if (_cachedTicketTypes == null)
+                _cachedTicketTypes =
+                    new CachedTicketTypesRepository(_context, _ticketTypes, _cacheService);
+            return _cachedTicketTypes;
         }
     }
 

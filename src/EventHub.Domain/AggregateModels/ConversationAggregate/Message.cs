@@ -12,11 +12,7 @@ public class Message : EntityAuditBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
+    public string Id { get; set; }
 
     [Column(TypeName = "nvarchar(max)")] public string? Content { get; set; }
 
@@ -31,9 +27,9 @@ public class Message : EntityAuditBase
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
-    [Required] public int ConversationId { get; set; }
+    [Required] public string ConversationId { get; set; }
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

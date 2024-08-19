@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Persistence.SeedWork.Repository;
 
-public class CachedRepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
+public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : EntityBase
 {
     private readonly RepositoryBase<T> _decorated;
     private readonly ICacheService _cacheService;
@@ -65,7 +65,7 @@ public class CachedRepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return items;
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(string id)
     {
         string key = $"{nameof(T)}-{id}";
 
@@ -80,7 +80,7 @@ public class CachedRepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return entity;
     }
 
-    public Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includeProperties)
+    public Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties)
         => _decorated.GetByIdAsync(id, includeProperties);
 
     public Task CreateAsync(T entity) => _decorated.CreateAsync(entity);

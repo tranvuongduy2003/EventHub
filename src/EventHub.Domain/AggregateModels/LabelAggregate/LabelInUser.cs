@@ -10,7 +10,7 @@ namespace EventHub.Domain.AggregateModels.LabelAggregate;
 [PrimaryKey("LabelId", "UserId")]
 public class LabelInUser : EntityBase
 {
-    [Required] public int LabelId { get; set; }
+    [Required] public string LabelId { get; set; }
 
     [Required]
     [MaxLength(50)]

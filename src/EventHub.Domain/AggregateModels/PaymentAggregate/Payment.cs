@@ -15,13 +15,9 @@ public class Payment : EntityAuditBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
-
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [Required]
     [Range(0, double.PositiveInfinity)]
@@ -53,7 +49,7 @@ public class Payment : EntityAuditBase
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
-    [Required] public int UserPaymentMethodId { get; set; }
+    [Required] public string UserPaymentMethodId { get; set; }
 
     public string? PaymentSessionId { get; set; }
 

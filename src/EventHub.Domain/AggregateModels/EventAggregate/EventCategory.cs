@@ -10,9 +10,9 @@ namespace EventHub.Domain.AggregateModels.EventAggregate;
 [PrimaryKey("CategoryId", "EventId")]
 public class EventCategory : EntityBase
 {
-    [Required] public int CategoryId { get; set; }
+    [Required] public string CategoryId { get; set; }
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [ForeignKey("CategoryId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

@@ -13,18 +13,18 @@ public class PaymentItem : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
-    [Required] public int TicketTypeId { get; set; }
+    [Required] public string TicketTypeId { get; set; }
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int PaymentId { get; set; }
+    [Required] public string PaymentId { get; set; }
 
     [Required]
     [MaxLength(100)]

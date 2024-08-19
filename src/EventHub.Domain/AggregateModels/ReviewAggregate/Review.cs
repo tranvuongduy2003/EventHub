@@ -12,17 +12,13 @@ public class Review : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
+    public string Id { get; set; }
 
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [MaxLength(1000)]
     [Column(TypeName = "nvarchar(1000)")]

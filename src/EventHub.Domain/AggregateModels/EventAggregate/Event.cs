@@ -18,11 +18,7 @@ public class Event : EntityAuditBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
+    public string Id { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(max)")]

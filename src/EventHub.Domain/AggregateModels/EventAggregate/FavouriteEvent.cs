@@ -15,7 +15,7 @@ public class FavouriteEvent : EntityBase
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [ForeignKey("UserId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

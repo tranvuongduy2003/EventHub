@@ -15,11 +15,7 @@ public class Ticket : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
+    public string Id { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -38,16 +34,16 @@ public class Ticket : EntityBase
     [EmailAddress]
     public string CustomerEmail { get; set; } = string.Empty;
 
-    [Required] public int TicketTypeId { get; set; }
+    [Required] public string TicketTypeId { get; set; }
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int PaymentId { get; set; }
+    [Required] public string PaymentId { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ETicketStatus Status { get; set; } = ETicketStatus.INACTIVE;

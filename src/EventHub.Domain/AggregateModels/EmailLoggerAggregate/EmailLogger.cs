@@ -11,7 +11,7 @@ public class EmailLogger : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -23,7 +23,7 @@ public class EmailLogger : EntityBase
     [EmailAddress]
     public string SentEmail { get; set; } = string.Empty;
 
-    [Required] public int EmailContentId { get; set; }
+    [Required] public string EmailContentId { get; set; }
 
     [ForeignKey("EmailContentId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

@@ -11,18 +11,14 @@ public class UserPaymentMethod : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Uuid { get; set; }
+    public string Id { get; set; }
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     public string UserId { get; set; } = string.Empty;
 
-    [Required] public int MethodId { get; set; }
+    [Required] public string MethodId { get; set; }
 
     [Required] [MaxLength(50)] public string PaymentAccountNumber { get; set; } = string.Empty;
 

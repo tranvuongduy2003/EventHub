@@ -34,9 +34,9 @@ public class UserModel
 
     public int? NumberOfCreatedEvents { get; set; } = 0;
 
-    public List<string> Roles { get; set; }
+    public IEnumerable<string> Roles { get; set; } = null;
 
-    public List<string> FollowingIds { get; set; } = new();
+    public IEnumerable<UserModel> Followers { get; set; } = null;
 
     public DateTime CreatedAt { get; set; }
 

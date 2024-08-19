@@ -10,12 +10,16 @@ public class UserMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<User, UserModel>().IgnoreAllNonExisting();
+        config.CreateMap<User, UserModel>().ReverseMap();
 
-        config.CreateMap<UserModel, User>().IgnoreAllNonExisting();
+        config.CreateMap<UserModel, UserDto>().IgnoreAllNonExisting();
 
-        config.CreateMap<CreateUserDto, User>().IgnoreAllNonExisting();
+        config
+            .CreateMap<CreateUserDto, UserModel>()
+            .ForMember(dest => dest.Avatar, options => options.Ignore());
 
-        config.CreateMap<UpdateUserDto, User>().IgnoreAllNonExisting();
+        config
+            .CreateMap<UpdateUserDto, UserModel>()
+            .ForMember(dest => dest.Avatar, options => options.Ignore());
     }
 }

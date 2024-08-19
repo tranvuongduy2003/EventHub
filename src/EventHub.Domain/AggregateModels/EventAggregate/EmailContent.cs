@@ -11,13 +11,13 @@ public class EmailContent : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(max)")]
     public string Content { get; set; } = string.Empty;
 
-    [Required] public int EventId { get; set; }
+    [Required] public string EventId { get; set; }
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
