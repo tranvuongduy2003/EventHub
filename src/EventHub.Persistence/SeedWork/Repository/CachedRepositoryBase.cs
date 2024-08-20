@@ -64,6 +64,8 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
                 current.Include(includeProperty));
         return items;
     }
+    
+    public Task<bool> ExistAsync(string id) => _decorated.ExistAsync(id);
 
     public async Task<T> GetByIdAsync(string id)
     {

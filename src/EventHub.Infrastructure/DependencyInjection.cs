@@ -39,7 +39,7 @@ public static class DependencyInjection
         return services
             .AddTransient<ISerializeService, SerializeService>()
             .AddTransient<ICacheService, CacheService>()
-            .AddTransient<IBlobService, AzureBlobService>()
+            .AddTransient<IFileService, AzureFileService>()
             .AddTransient<IHangfireService, HangfireService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITokenService, TokenService>();

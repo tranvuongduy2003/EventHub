@@ -18,6 +18,7 @@ public class PaginationFilter
 
     [DefaultValue(1)]
     [DisplayName("page")]
+    [Description("Current page number")]
     public int Page
     {
         get => _page;
@@ -26,18 +27,23 @@ public class PaginationFilter
 
     [DefaultValue(10)]
     [DisplayName("size")]
+    [Description("Total items of each page")]
     public int Size
     {
         get => _size;
         set => _size = value < 1 ? 1 : value;
     }
     
+    [DisplayName("orders")]
+    [Description("The list pairs of the ordered attribute and its order direction")]
     public IEnumerable<Order> Orders
     {
         get => _orders; 
         set => _orders = value;
     }
     
+    [DisplayName("searches")]
+    [Description("The list pairs of the searched attribute and its search value")]
     public IEnumerable<Search> Searches
     {
         get => _searches; 
@@ -46,6 +52,7 @@ public class PaginationFilter
     
     [DefaultValue(false)]
     [DisplayName("takeAll")]
+    [Description("If takeAll equals true, skip paging and get all items")]
     public bool TakeAll
     {
         get => _takeAll; 
@@ -57,10 +64,12 @@ public class Order
 {
     [DefaultValue(null)]
     [DisplayName("orderBy")]
+    [Description("Name of the ordered attribute")]
     public string OrderBy { get; set; }
     
     [DefaultValue(EPageOrder.ASC)]
     [DisplayName("orderDirection")]
+    [Description("Direction of the ordered attribute (ASC, DESC)")]
     public EPageOrder OrderDirection { get; set; }
 }
 
@@ -68,9 +77,11 @@ public class Search
 {
     [DefaultValue(null)]
     [DisplayName("searchBy")]
+    [Description("Name of the searched attribute")]
     public string? SearchBy { get; set; }
     
     [DefaultValue(null)]
     [DisplayName("searchValue")]
+    [Description("Value of the searched attribute")]
     public string? SearchValue { get; set; }
 }

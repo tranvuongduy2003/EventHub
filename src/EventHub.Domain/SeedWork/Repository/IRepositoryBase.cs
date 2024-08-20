@@ -14,6 +14,8 @@ public interface IRepositoryBase<T> where T : EntityBase
     Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties);
 
+    Task<bool> ExistAsync(string id);
+    
     Task<T> GetByIdAsync(string id);
 
     Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties);

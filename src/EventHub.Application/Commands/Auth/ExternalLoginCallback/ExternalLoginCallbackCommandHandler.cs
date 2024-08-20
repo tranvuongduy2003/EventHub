@@ -1,39 +1,45 @@
 using System.Security.Claims;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
+using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;
-using EventHub.Shared.Models.Auth;
 using EventHub.Shared.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
-public class ExternalLoginCallbackCommandHandler : IRequestHandler<ExternalLoginCallbackCommand, SignInResponseModel>
+public class ExternalLoginCallbackCommandHandler : IRequestHandler<ExternalLoginCallbackCommand, SignInResponseDto>
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
     private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
     private readonly ITokenService _tokenService;
+    private readonly ILogger<ExternalLoginCallbackCommandHandler> _logger;
 
     public ExternalLoginCallbackCommandHandler(
         SignInManager<User> signInManager, 
         UserManager<User> userManager,
         IHangfireService hangfireService, 
         IEmailService emailService, 
-        ITokenService tokenService)
+        ITokenService tokenService,
+        ILogger<ExternalLoginCallbackCommandHandler> logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _hangfireService = hangfireService;
         _emailService = emailService;
         _tokenService = tokenService;
+        _logger = logger;
     }
     
-    public async Task<SignInResponseModel> Handle(ExternalLoginCallbackCommand request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> Handle(ExternalLoginCallbackCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("BEGIN: ExternalLoginCallbackCommandHandler");
+        
         var info = await _signInManager.GetExternalLoginInfoAsync();
 
         var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -81,11 +87,13 @@ public class ExternalLoginCallbackCommandHandler : IRequestHandler<ExternalLogin
             await _userManager
                 .SetAuthenticationTokenAsync(user, info.LoginProvider, TokenTypes.REFRESH, refreshToken);
 
-            var signInResponse = new SignInResponseModel
+            var signInResponse = new SignInResponseDto
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
+            
+            _logger.LogInformation("END: ExternalLoginCallbackCommandHandler");
 
             return signInResponse;
         }

@@ -1,9 +1,9 @@
-using EventHub.Shared.Models.Auth;
+using EventHub.Shared.DTOs.Auth;
 using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
-public class ExternalLoginCallbackCommand : IRequest<SignInResponseModel>
+public class ExternalLoginCallbackCommand : IRequest<SignInResponseDto>
 {
     public ExternalLoginCallbackCommand(string returnUrl)
         => ReturnUrl = returnUrl;

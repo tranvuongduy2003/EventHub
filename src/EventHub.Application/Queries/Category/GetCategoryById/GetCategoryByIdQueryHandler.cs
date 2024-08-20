@@ -1,13 +1,14 @@
 using AutoMapper;
 using EventHub.Application.Queries.Category.GetPaginatedCategories;
 using EventHub.Domain.SeedWork.UnitOfWork;
-using EventHub.Shared.Models.Category;
+using EventHub.Shared.DTOs.Category;
+using EventHub.Shared.Exceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;
 
-public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryModel>
+public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetPaginatedCategoriesQueryHandler> _logger;
@@ -21,14 +22,17 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
         _mapper = mapper;
     }
 
-    public async Task<CategoryModel> Handle(GetCategoryByIdQuery request,
+    public async Task<CategoryDto> Handle(GetCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: GetCategoryByIdQueryHandler");
 
         var cachedCategory = await _unitOfWork.CachedCategories.GetByIdAsync(request.Id);
 
-        var category = _mapper.Map<CategoryModel>(cachedCategory);
+        if (cachedCategory == null)
+            throw new NotFoundException("Category does not exist!");
+
+        var category = _mapper.Map<CategoryDto>(cachedCategory);
 
         _logger.LogInformation("END: GetCategoryByIdQueryHandler");
 

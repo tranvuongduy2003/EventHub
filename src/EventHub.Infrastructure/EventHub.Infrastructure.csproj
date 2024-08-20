@@ -29,6 +29,7 @@
         <PackageReference Include="Hangfire.Mongo" Version="1.10.7"/>
         <PackageReference Include="MailKit" Version="4.7.1.1"/>
         <PackageReference Include="MediatR" Version="12.4.0" />
+        <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7"/>

@@ -1,8 +1,8 @@
 using AutoMapper;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
+using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Exceptions;
-using EventHub.Shared.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Queries.Auth.GetUserProfile;
 
-public class GetUserProfileQueryHandler: IRequestHandler<GetUserProfileQuery, UserModel>
+public class GetUserProfileQueryHandler: IRequestHandler<GetUserProfileQuery, UserDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
@@ -25,7 +25,7 @@ public class GetUserProfileQueryHandler: IRequestHandler<GetUserProfileQuery, Us
         _logger = logger;
     }
     
-    public async Task<UserModel> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
+    public async Task<UserDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: GetUserProfileQueryHandler");
         
@@ -37,11 +37,11 @@ public class GetUserProfileQueryHandler: IRequestHandler<GetUserProfileQuery, Us
         if (user == null) throw new UnauthorizedException("Unauthorized");
 
         var roles = await _userManager.GetRolesAsync(user);
-        var userModel = _mapper.Map<UserModel>(user);
-        userModel.Roles = roles.ToList();
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Roles = roles.ToList();
         
         _logger.LogInformation("END: GetUserProfileQueryHandler");
 
-        return userModel;
+        return userDto;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.AspNetCore;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHub.Infrastructure.Configurations;
@@ -9,7 +10,8 @@ public static class ValidationConfiguration
     {
         services
             .AddFluentValidationAutoValidation()
-            .AddFluentValidationClientsideAdapters();
+            .AddFluentValidationClientsideAdapters()
+            .AddFluentValidationRulesToSwagger();
 
         return services;
     }

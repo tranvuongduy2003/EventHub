@@ -1,28 +1,33 @@
 using EventHub.Application.Commands.Auth.RefreshToken;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
+using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Exceptions;
-using EventHub.Shared.Models.Auth;
 using EventHub.Shared.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, SignInResponseModel>
+public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, SignInResponseDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly ILogger<RefreshTokenCommandHandler> _logger;
 
-    public RefreshTokenCommandHandler(UserManager<User> userManager, ITokenService tokenService)
+    public RefreshTokenCommandHandler(UserManager<User> userManager, ITokenService tokenService, ILogger<RefreshTokenCommandHandler> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _logger = logger;
     }
     
-    public async Task<SignInResponseModel> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("BEGIN: RefreshTokenCommandHandler");
+        
         if (string.IsNullOrEmpty(request.RefreshToken))
             throw new InvalidTokenException();
 
@@ -44,7 +49,9 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, S
         var newRefreshToken =
             await _userManager.GenerateUserTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH);
 
-        var refreshResponse = new SignInResponseModel
+        _logger.LogInformation("END: RefreshTokenCommandHandler");
+        
+        var refreshResponse = new SignInResponseDto
         {
             AccessToken = newAccessToken,
             RefreshToken = newRefreshToken

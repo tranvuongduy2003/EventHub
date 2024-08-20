@@ -1,9 +1,9 @@
-using EventHub.Shared.Models.Auth;
+using EventHub.Shared.DTOs.Auth;
 using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
 
-public class ExternalLoginCommand : IRequest<ExternalLoginModel>
+public class ExternalLoginCommand : IRequest<ExternalLoginDto>
 {
     public ExternalLoginCommand(string provider, string returnUrl)
         => (Provider, ReturnUrl) = (provider, returnUrl);

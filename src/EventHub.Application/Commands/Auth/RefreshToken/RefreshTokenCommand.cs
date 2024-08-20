@@ -1,9 +1,9 @@
-using EventHub.Shared.Models.Auth;
+using EventHub.Shared.DTOs.Auth;
 using MediatR;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;
 
-public class RefreshTokenCommand : IRequest<SignInResponseModel>
+public class RefreshTokenCommand : IRequest<SignInResponseDto>
 {
     public RefreshTokenCommand(string refreshToken, string accessToken)
         => (RefreshToken, AccessToken) = (refreshToken, accessToken);

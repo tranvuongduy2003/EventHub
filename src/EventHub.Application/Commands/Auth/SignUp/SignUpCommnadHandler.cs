@@ -1,17 +1,18 @@
 using AutoMapper;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
+using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;
-using EventHub.Shared.Models.Auth;
 using EventHub.Shared.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.SignUp;
 
-public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponseModel>
+public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponseDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
@@ -19,13 +20,15 @@ public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponse
     private readonly ITokenService _tokenService;
     private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
+    private readonly ILogger<SignUpCommnadHandler> _logger;
 
     public SignUpCommnadHandler(
         UserManager<User> userManager, 
         IMapper mapper, SignInManager<User> signInManager, 
         ITokenService tokenService, 
         IHangfireService hangfireService, 
-        IEmailService emailService)
+        IEmailService emailService,
+        ILogger<SignUpCommnadHandler> logger)
     {
         _userManager = userManager;
         _mapper = mapper;
@@ -33,10 +36,13 @@ public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponse
         _tokenService = tokenService;
         _hangfireService = hangfireService;
         _emailService = emailService;
+        _logger = logger;
     }
     
-    public async Task<SignInResponseModel> Handle(SignUpCommand request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("BEGIN: SignUpCommnadHandler");
+        
         var useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
             throw new BadRequestException("Email already exists");
@@ -69,7 +75,7 @@ public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponse
             await _userManager
                 .SetAuthenticationTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH, refreshToken);
 
-            var signUpResponse = new SignInResponseModel
+            var signUpResponse = new SignInResponseDto
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
@@ -79,6 +85,8 @@ public class SignUpCommnadHandler: IRequestHandler<SignUpCommand, SignInResponse
                 _emailService
                     .SendRegistrationConfirmationEmailAsync(userToReturn.Email, userToReturn.FullName)
                     .Wait());
+            
+            _logger.LogInformation("END: SignUpCommnadHandler");
 
             return signUpResponse;
         }

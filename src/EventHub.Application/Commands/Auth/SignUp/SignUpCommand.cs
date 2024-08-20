@@ -1,12 +1,12 @@
+using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.User;
-using EventHub.Shared.Models.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Auth.SignUp;
 
-public class SignUpCommand : IRequest<SignInResponseModel>
+public class SignUpCommand : IRequest<SignInResponseDto>
 {
     public SignUpCommand(CreateUserDto dto)
         => (Email, PhoneNumber, Dob, FullName, Password, UserName, Gender, Bio, Avatar) 

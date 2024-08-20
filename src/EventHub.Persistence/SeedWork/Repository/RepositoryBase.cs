@@ -49,6 +49,11 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return items;
     }
 
+    public async Task<bool> ExistAsync(string id)
+    {
+        return await _context.Set<T>().AnyAsync(x => x.GetType().GetProperty("Id")!.ToString() == id);
+    }
+
     public async Task<T> GetByIdAsync(string id)
     {
         return await _context.Set<T>().FindAsync(id);

@@ -13,10 +13,10 @@ using EventHub.Application.Queries.Auth.GetUserProfile;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
+using EventHub.Shared.Enums.Command;
+using EventHub.Shared.Enums.Function;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
-using EventHub.Shared.Models.Auth;
-using EventHub.Shared.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +26,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace EventHub.Presentation.Controllers;
 
-[Route("api/auth")]
+[Route("api/v1/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    [ProducesResponseType(typeof(SignInResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ApiValidationFilter]
@@ -94,7 +94,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signin")]
-    [ProducesResponseType(typeof(SignInResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -205,12 +205,12 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
+    
     [HttpPost("refresh-token")]
-    [ProducesResponseType(typeof(SignInResponseModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
     {
@@ -237,12 +237,13 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
+    
     [HttpPost("forgot-password")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
@@ -264,13 +265,14 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
+    
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordDto dto)
     {
@@ -296,12 +298,13 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
+    
     [HttpGet("profile")]
-    [ProducesResponseType(typeof(UserModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetUserProfile()
     {
         _logger.LogInformation("START: GetUserProfile");
@@ -312,9 +315,7 @@ public class AuthController : ControllerBase
                 .ToString()
                 .Replace("Bearer ", "");
 
-            var userModel = await _mediator.Send(new GetUserProfileQuery(accessToken));
-
-            var user = _mapper.Map<UserDto>(userModel);
+            var user = await _mediator.Send(new GetUserProfileQuery(accessToken));
 
             _logger.LogInformation("END: GetUserProfile");
 

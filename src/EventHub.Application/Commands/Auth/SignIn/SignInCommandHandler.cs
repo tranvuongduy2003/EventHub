@@ -1,29 +1,34 @@
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Services;
+using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;
-using EventHub.Shared.Models.Auth;
 using EventHub.Shared.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.SignIn;
 
-public class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResponseModel>
+public class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResponseDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly ITokenService _tokenService;
+    private readonly ILogger<SignInCommandHandler> _logger;
 
-    public SignInCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService)
+    public SignInCommandHandler(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService, ILogger<SignInCommandHandler> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _tokenService = tokenService;
+        _logger = logger;
     }
     
-    public async Task<SignInResponseModel> Handle(SignInCommand request, CancellationToken cancellationToken)
+    public async Task<SignInResponseDto> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("BEGIN: SignInCommandHandler");
+        
         var user = _userManager.Users.FirstOrDefault(u =>
             u.Email == request.Identity || u.PhoneNumber == request.Identity);
         if (user == null)
@@ -44,7 +49,9 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, SignInRespons
 
         await _userManager.SetAuthenticationTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH, refreshToken);
 
-        var signInResponse = new SignInResponseModel
+        _logger.LogInformation("END: SignInCommandHandler");
+        
+        var signInResponse = new SignInResponseDto
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken
