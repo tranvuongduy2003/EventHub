@@ -20,7 +20,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         _cacheService = cacheService;
     }
 
-    public async Task<IQueryable<T>> FindAll(bool trackChanges = false)
+    public async Task<IQueryable<T>> FindAllCached(bool trackChanges = false)
     {
         var key = $"{nameof(T)}";
 
@@ -38,34 +38,50 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         return items;
     }
 
-    public async Task<IQueryable<T>> FindAll(bool trackChanges = false,
+    public async Task<IQueryable<T>> FindAllCached(bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindAll(trackChanges);
+        var items = await FindAllCached(trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
         return items;
     }
 
-    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
+    public async Task<IQueryable<T>> FindCachedByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
     {
         return !trackChanges
             ? Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression).AsNoTracking()
             : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression);
     }
 
-    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
+    public async Task<IQueryable<T>> FindCachedByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindByCondition(expression, trackChanges);
+        var items = await FindCachedByCondition(expression, trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
         return items;
     }
-    
-    public Task<bool> ExistAsync(string id) => _decorated.ExistAsync(id);
+
+    public IQueryable<T> FindAll(bool trackChanges = false)
+        => _decorated.FindAll(trackChanges);
+
+    public IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
+        => _decorated.FindAll(trackChanges, includeProperties);
+
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
+        => _decorated.FindByCondition(expression, trackChanges);
+
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
+        => _decorated.FindByCondition(expression, trackChanges, includeProperties);
+
+    public Task<bool> ExistAsync(string id) 
+        => _decorated.ExistAsync(id);
+
+    public Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
+        => _decorated.ExistAsync(expression);
 
     public async Task<T> GetByIdAsync(string id)
     {

@@ -146,39 +146,39 @@ public class ApplicationDbContextSeed
 
                 new()
                 {
-                    Id = EFunctionCode.GENERAL.GetDisplayName(), Name = "Contents", ParentId = null, SortOrder = 0,
-                    Url = "/content"
+                    Id = EFunctionCode.GENERAL.GetDisplayName(), Name = "General", ParentId = null, SortOrder = 0,
+                    Url = "/general"
                 },
 
                 new()
                 {
                     Id = EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), Name = "Categories",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/content/category"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/general/category"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_EVENT.GetDisplayName(), Name = "Events",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/content/event"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/general/event"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), Name = "Reviews",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/content/review"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/review"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_TICKET.GetDisplayName(), Name = "Tickets",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/content/ticket"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/ticket"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_CHAT.GetDisplayName(), Name = "Chats",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/content/chat"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/chat"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), Name = "Payments",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/content/payment"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/payment"
                 },
 
                 new()

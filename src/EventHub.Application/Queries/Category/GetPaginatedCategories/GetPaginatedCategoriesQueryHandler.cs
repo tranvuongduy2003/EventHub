@@ -27,7 +27,7 @@ public class GetPaginatedCategoriesQueryHandler : IRequestHandler<GetPaginatedCa
     {
         _logger.LogInformation("BEGIN: GetPaginatedCategoriesQueryHandler");
 
-        var cachedCategories = await _unitOfWork.CachedCategories.FindAll();
+        var cachedCategories = await _unitOfWork.CachedCategories.FindAllCached();
         
         var categories = _mapper.Map<List<CategoryDto>>(cachedCategories);
 

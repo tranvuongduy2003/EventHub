@@ -3,10 +3,13 @@ using FluentValidation;
 
 namespace EventHub.Shared.Validators.Function;
 
-public class CreateFunctionDtoValidator : AbstractValidator<CreateFunctionDto>
+public class UpdateFunctionDtoValidator : AbstractValidator<UpdateFunctionDto>
 {
-    public CreateFunctionDtoValidator()
+    public UpdateFunctionDtoValidator()
     {
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Id value is required")
+            .MaximumLength(50).WithMessage("Function Id cannot over limit 50 characters");
+
         RuleFor(x => x.Name).NotEmpty().WithMessage("Name value is required")
             .MaximumLength(200).WithMessage("Name cannot over limit 200 characters");
 
