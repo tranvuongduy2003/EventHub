@@ -18,5 +18,6 @@ public enum EFunctionCode
     SYSTEM_USER,
     SYSTEM_ROLE,
     SYSTEM_FUNCTION,
+    SYSTEM_COMMAND,
     SYSTEM_PERMISSION
 }

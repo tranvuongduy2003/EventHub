@@ -36,7 +36,7 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
         //TODO: Delete icon image from FileStorage
         await _fileService.DeleteAsync(category.IconImage, FileContainer.CATEGORIES);
 
-        await _unitOfWork.Categories.DeleteAsync(category);
+        await _unitOfWork.Categories.SoftDeleteAsync(category);
         await _unitOfWork.CommitAsync();
         
         _logger.LogInformation("END: DeleteCategoryCommandHandler");

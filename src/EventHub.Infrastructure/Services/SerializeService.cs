@@ -5,6 +5,13 @@ using Newtonsoft.Json.Serialization;
 
 namespace EventHub.Infrastructure.Services;
 
+/// <summary>
+/// Provides functionality for serializing and deserializing objects to and from various formats.
+/// </summary>
+/// <remarks>
+/// This class implements the <see cref="ISerializeService"/> interface and provides concrete methods
+/// for serializing objects to a specific format (e.g., JSON) and deserializing them back to objects.
+/// </remarks>
 public class SerializeService : ISerializeService
 {
     public T Deserialize<T>(string text)

@@ -8,12 +8,24 @@ using MimeKit;
 
 namespace EventHub.Infrastructure.Mailler;
 
+/// <summary>
+/// Provides functionality for sending emails using the specified email settings and logging information.
+/// </summary>
 public class EmailService : IEmailService
 {
     private readonly EmailSettings _emailSettings;
 
     private readonly ILogger<EmailService> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmailService"/> class.
+    /// </summary>
+    /// <param name="emailSettings">
+    /// An instance of <see cref="EmailSettings"/> containing configuration settings required for sending emails.
+    /// </param>
+    /// <param name="logger">
+    /// An instance of <see cref="ILogger{EmailService}"/> used to log information and errors for the <see cref="EmailService"/>.
+    /// </param>
     public EmailService(EmailSettings emailSettings, ILogger<EmailService> logger)
     {
         _emailSettings = emailSettings;

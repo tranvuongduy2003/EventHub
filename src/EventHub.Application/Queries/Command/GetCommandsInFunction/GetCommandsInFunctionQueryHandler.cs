@@ -26,15 +26,14 @@ public class GetCommandsInFunctionQueryHandler : IRequestHandler<GetCommandsInFu
     {
         _logger.LogInformation("BEGIN: GetCommandsInFunctionQueryHandler");
 
-        var commands = await _unitOfWork.CommandInFunctions
-            .FindByCondition(x => x.FunctionId.Equals(request.FunctionId))
-            .DistinctBy(x => x.CommandId)
-            .Include(x => x.Command)
+        var commandInFunctions = await _unitOfWork.CommandInFunctions
+            .FindByCondition(x => x.FunctionId.Equals(request.FunctionId), includeProperties: x => x.Command);
+        var commands = await commandInFunctions.DistinctBy(x => x.CommandId)
             .Select(x => x.Command)
             .ToListAsync();
-        
+
         _logger.LogInformation("END: GetCommandsInFunctionQueryHandler");
-        
+
         return _mapper.Map<List<CommandDto>>(commands);
     }
 }

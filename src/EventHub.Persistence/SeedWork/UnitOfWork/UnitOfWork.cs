@@ -19,6 +19,14 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EventHub.Persistence.SeedWork.UnitOfWork;
 
+/// <summary>
+/// Represents a unit of work pattern implementation, managing database operations and caching.
+/// </summary>
+/// <remarks>
+/// The Unit of Work pattern is used to handle transactions across multiple repositories and coordinate changes
+/// in a single transaction. This class also integrates with a caching service to optimize performance and reduce
+/// database load.
+/// </remarks>
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
@@ -60,6 +68,11 @@ public class UnitOfWork : IUnitOfWork
     private CachedReviewsRepository _cachedReviews;
     private CachedTicketTypesRepository _cachedTicketTypes;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+    /// </summary>
+    /// <param name="context">The database context used for database operations.</param>
+    /// <param name="cacheService">The caching service used to cache data and reduce database load.</param>
     public UnitOfWork(ApplicationDbContext context, ICacheService cacheService)
     {
         _context = context;

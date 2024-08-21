@@ -4,6 +4,12 @@ using Hangfire;
 
 namespace EventHub.Infrastructure.Hangfire;
 
+/// <summary>
+/// Provides a service for interacting with Hangfire, a framework for background job processing.
+/// </summary>
+/// <remarks>
+/// This class implements the <see cref="IHangfireService"/> interface but does not include any specific functionality or members as currently defined.
+/// </remarks>
 public class HangfireService : IHangfireService
 {
     public string Enqueue(Expression<Action> functionCall)

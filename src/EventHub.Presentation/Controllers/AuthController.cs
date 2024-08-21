@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using EventHub.Application.Commands.Auth.ExternalLogin;
+﻿using EventHub.Application.Commands.Auth.ExternalLogin;
 using EventHub.Application.Commands.Auth.ExternalLoginCallback;
 using EventHub.Application.Commands.Auth.ForgotPassword;
 using EventHub.Application.Commands.Auth.RefreshToken;
@@ -8,7 +7,6 @@ using EventHub.Application.Commands.Auth.SignIn;
 using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
-using EventHub.Application.Queries.Auth;
 using EventHub.Application.Queries.Auth.GetUserProfile;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Auth;
@@ -18,7 +16,6 @@ using EventHub.Shared.Enums.Function;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -31,14 +28,12 @@ namespace EventHub.Presentation.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
     private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ILogger<AuthController> logger, IMediator mediator, IMapper mapper)
+    public AuthController(ILogger<AuthController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpPost("signup")]

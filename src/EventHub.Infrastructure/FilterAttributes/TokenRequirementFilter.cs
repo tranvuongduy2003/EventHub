@@ -6,10 +6,19 @@ using Microsoft.Net.Http.Headers;
 
 namespace EventHub.Infrastructure.FilterAttributes;
 
+/// <summary>
+/// Represents a filter used for authorization based on token requirements.
+/// </summary>
 public class TokenRequirementFilter : IAuthorizationFilter
 {
     private readonly ITokenService _tokenService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TokenRequirementFilter"/> class.
+    /// </summary>
+    /// <param name="tokenService">
+    /// An instance of <see cref="ITokenService"/> used to handle token-based operations, such as validation and retrieval of claims.
+    /// </param>
     public TokenRequirementFilter(ITokenService tokenService)
     {
         _tokenService = tokenService;

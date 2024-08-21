@@ -4,12 +4,31 @@ using Serilog;
 
 namespace EventHub.Infrastructure.Caching;
 
+/// <summary>
+/// Provides an implementation of a caching service using a distributed cache and serialization.
+/// </summary>
+/// <remarks>
+/// This class manages cache operations, including storing and retrieving data from a distributed cache.
+/// It uses a serialization service to handle data conversion and a logger to record cache operations.
+/// </remarks>
 public class CacheService : ICacheService
 {
     private readonly IDistributedCache _redisCacheService;
     private readonly ISerializeService _serializeService;
     private readonly ILogger _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CacheService"/> class.
+    /// </summary>
+    /// <param name="redisCacheService">The distributed cache service used to store and retrieve cache data.</param>
+    /// <param name="serializeService">The service used for serializing and deserializing cache data.</param>
+    /// <param name="logger">The logger used to log cache operations and errors.</param>
+    /// <remarks>
+    /// The constructor sets up the caching service with the necessary components for cache management:
+    /// - <paramref name="redisCacheService"/>: Handles interactions with the distributed cache.
+    /// - <paramref name="serializeService"/>: Manages data serialization and deserialization.
+    /// - <paramref name="logger"/>: Provides logging capabilities for monitoring and debugging cache operations.
+    /// </remarks>
     public CacheService(IDistributedCache redisCacheService, ISerializeService serializeService, ILogger logger)
     {
         _redisCacheService = redisCacheService;

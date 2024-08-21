@@ -8,18 +8,32 @@ using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Infrastructure.FilesSystem;
 
+/// <summary>
+/// Provides file management services using Azure Blob Storage.
+/// </summary>
+/// <remarks>
+/// This class handles file operations such as uploading, downloading, and deleting files in an Azure Blob Storage container.
+/// It uses Azure's `BlobServiceClient` and `BlobContainerClient` to interact with the Azure Blob Storage service.
+/// </remarks>
 public class AzureFileService : IFileService
 {
     private readonly AzureBlobStorage _azureBlobStorage;
     private readonly BlobContainerClient _filesContainer;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AzureFileService"/> class.
+    /// </summary>
+    /// <param name="azureBlobStorage">An instance of <see cref="AzureBlobStorage"/> containing configuration for Azure Blob Storage.</param>
+    /// <remarks>
+    /// The constructor sets up the Azure Blob Storage service client and retrieves the container client for file operations.
+    /// - <paramref name="azureBlobStorage"/>: Provides storage account details, including the account name, key, and container name.
+    /// </remarks>
     public AzureFileService(AzureBlobStorage azureBlobStorage)
     {
         _azureBlobStorage = azureBlobStorage;
 
         var credential = new StorageSharedKeyCredential(_azureBlobStorage.StorageAccount, _azureBlobStorage.Key);
-        var blobUri =
-            $"https://{_azureBlobStorage.StorageAccount}.blob.core.windows.net/{_azureBlobStorage.ContainerName}";
+        var blobUri = $"https://{_azureBlobStorage.StorageAccount}.blob.core.windows.net/{_azureBlobStorage.ContainerName}";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
         _filesContainer = blobServiceClient.GetBlobContainerClient(_azureBlobStorage.ContainerName);
     }

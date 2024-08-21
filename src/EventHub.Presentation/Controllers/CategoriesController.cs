@@ -21,16 +21,14 @@ namespace EventHub.Presentation.Controllers;
 public class CategoriesController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
     private readonly ILogger<CategoriesController> _logger;
 
-    public CategoriesController(ILogger<CategoriesController> logger, IMediator mediator, IMapper mapper)
+    public CategoriesController(ILogger<CategoriesController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;
-        _mapper = mapper;
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -55,7 +53,7 @@ public class CategoriesController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpGet]
     [ProducesResponseType(typeof(Pagination<CategoryDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -75,20 +73,20 @@ public class CategoriesController : ControllerBase
             throw;
         }
     }
-    
-    [HttpGet("{id}")]
+
+    [HttpGet("{categoryId}")]
     [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetCategoryById(string id)
+    public async Task<IActionResult> GetCategoryById(string categoryId)
     {
         _logger.LogInformation("START: GetCategoryById");
         try
         {
-            var category = await _mediator.Send(new GetCategoryByIdQuery(id));
+            var category = await _mediator.Send(new GetCategoryByIdQuery(categoryId));
 
             _logger.LogInformation("END: GetCategoryById");
 
@@ -103,8 +101,8 @@ public class CategoriesController : ControllerBase
             throw;
         }
     }
-    
-    [HttpPut("{id}")]
+
+    [HttpPut("{categoryId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -113,12 +111,12 @@ public class CategoriesController : ControllerBase
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.UPDATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PutCategory(string id, [FromForm] UpdateCategoryDto request)
+    public async Task<IActionResult> PutCategory(string categoryId, [FromForm] UpdateCategoryDto request)
     {
         _logger.LogInformation("START: PutCategory");
         try
         {
-            await _mediator.Send(new UpdateCategoryCommand(id, request));
+            await _mediator.Send(new UpdateCategoryCommand(categoryId, request));
 
             _logger.LogInformation("END: PutCategory");
 
@@ -133,20 +131,20 @@ public class CategoriesController : ControllerBase
             throw;
         }
     }
-    
-    [HttpDelete("{id}")]
+
+    [HttpDelete("{categoryId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.DELETE)]
-    public async Task<IActionResult> DeleteCategory(string id)
+    public async Task<IActionResult> DeleteCategory(string categoryId)
     {
         _logger.LogInformation("START: DeleteCategory");
         try
         {
-            await _mediator.Send(new DeleteCategoryCommand(id));
+            await _mediator.Send(new DeleteCategoryCommand(categoryId));
 
             _logger.LogInformation("END: DeleteCategory");
 

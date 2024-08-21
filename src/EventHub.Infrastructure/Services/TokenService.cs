@@ -13,6 +13,14 @@ using Newtonsoft.Json;
 
 namespace EventHub.Infrastructure.Services;
 
+/// <summary>
+/// Provides functionality for generating, validating, and managing authentication tokens.
+/// </summary>
+/// <remarks>
+/// This class implements the <see cref="ITokenService"/> interface and typically handles operations such as
+/// creating new tokens, validating existing tokens, and retrieving claims from tokens. It may use libraries
+/// or frameworks for token generation and validation, such as JWT (JSON Web Tokens).
+/// </remarks>
 public class TokenService : ITokenService
 {
     private readonly ApplicationDbContext _context;
@@ -20,6 +28,21 @@ public class TokenService : ITokenService
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TokenService"/> class.
+    /// </summary>
+    /// <param name="context">
+    /// An instance of <see cref="ApplicationDbContext"/> used to interact with the application database.
+    /// </param>
+    /// <param name="userManager">
+    /// An instance of <see cref="UserManager{User}"/> used for managing user-related operations.
+    /// </param>
+    /// <param name="roleManager">
+    /// An instance of <see cref="RoleManager{Role}"/> used for managing role-related operations.
+    /// </param>
+    /// <param name="jwtOptions">
+    /// An instance of <see cref="JwtOptions"/> containing configuration settings for JWT tokens.
+    /// </param>
     public TokenService(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager,
         JwtOptions jwtOptions)
     {

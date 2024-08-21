@@ -5,6 +5,13 @@ namespace EventHub.Shared.Helpers;
 
 public static class PagingHelper
 {
+    /// <summary>
+    /// Paginates the provided list of items based on the specified pagination filter.
+    /// </summary>
+    /// <typeparam name="T">The type of the items in the list.</typeparam>
+    /// <param name="items">The list of items to paginate.</param>
+    /// <param name="filter">The pagination filter containing page number, page size, and sorting criteria.</param>
+    /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
     public static Pagination<T> Paginate<T>(List<T> items, PaginationFilter filter)
     {
         if (filter.Searches.Any())
@@ -21,7 +28,7 @@ public static class PagingHelper
 
         if (filter.Orders.Any())
         {
-            items = filter.Orders.Aggregate(items, (current, order) => 
+            items = filter.Orders.Aggregate(items, (current, order) =>
                 order.OrderDirection switch
                 {
                     EPageOrder.ASC => (List<T>)current.OrderBy(x => x.GetType().GetProperty(order.OrderBy)),
@@ -37,7 +44,7 @@ public static class PagingHelper
                 .Take(filter.Size)
                 .ToList();
         }
-        
+
         var metadata = new Metadata(items.Count, filter.Page, filter.Size, filter.TakeAll);
 
         return new Pagination<T>

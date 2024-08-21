@@ -24,6 +24,14 @@ public class EnableCommandInFunctionDomainEventHandler : INotificationHandler<En
     public async Task Handle(EnableCommandInFunctionDomainEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: EnableCommandInFunctionDomainEventHandler");
+
+        var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
+        if (!isFunctionExisted)
+            throw new NotFoundException("Function does not exist!");
+        
+        var isCommandExisted = await _unitOfWork.Commands.ExistAsync(notification.CommandId);
+        if (!isCommandExisted)
+            throw new NotFoundException("Command does not exist!");
         
         var commandInFunction = await _unitOfWork.CommandInFunctions.ExistAsync(x => 
             x.FunctionId.Equals(notification.FunctionId) &&

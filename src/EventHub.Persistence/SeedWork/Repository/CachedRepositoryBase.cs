@@ -7,12 +7,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Persistence.SeedWork.Repository;
 
+/// <summary>
+/// Provides a base implementation for a repository that includes caching capabilities.
+/// </summary>
+/// <typeparam name="T">The type of the entity managed by this repository. It must derive from <see cref="EntityBase"/>.</typeparam>
+/// <remarks>
+/// This class extends the functionality of the base repository by integrating caching operations.
+/// It wraps an existing repository (decorated) and uses a caching service (cacheService) to manage cached data.
+/// </remarks>
 public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : EntityBase
 {
     private readonly RepositoryBase<T> _decorated;
     private readonly ICacheService _cacheService;
     private readonly ApplicationDbContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CachedRepositoryBase{T}"/> class.
+    /// </summary>
+    /// <param name="context">The database context used by the repository.</param>
+    /// <param name="decorated">An instance of the base repository that is being decorated with caching capabilities.</param>
+    /// <param name="cacheService">The caching service used to manage cached data.</param>
+    /// <remarks>
+    /// The constructor initializes the repository with a database context, a base repository instance, and a caching service.
+    /// This setup allows the repository to use caching in addition to the standard repository operations.
+    /// </remarks>
     public CachedRepositoryBase(ApplicationDbContext context, RepositoryBase<T> decorated, ICacheService cacheService)
     {
         _context = context;
@@ -20,7 +38,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         _cacheService = cacheService;
     }
 
-    public async Task<IQueryable<T>> FindAllCached(bool trackChanges = false)
+    public async Task<IQueryable<T>> FindAll(bool trackChanges = false)
     {
         var key = $"{nameof(T)}";
 
@@ -38,45 +56,33 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         return items;
     }
 
-    public async Task<IQueryable<T>> FindAllCached(bool trackChanges = false,
+    public async Task<IQueryable<T>> FindAll(bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindAllCached(trackChanges);
+        var items = await FindAll(trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
         return items;
     }
 
-    public async Task<IQueryable<T>> FindCachedByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
+    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
     {
         return !trackChanges
             ? Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression).AsNoTracking()
             : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression);
     }
 
-    public async Task<IQueryable<T>> FindCachedByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
+    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindCachedByCondition(expression, trackChanges);
+        var items = await FindByCondition(expression, trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
         return items;
     }
-
-    public IQueryable<T> FindAll(bool trackChanges = false)
-        => _decorated.FindAll(trackChanges);
-
-    public IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
-        => _decorated.FindAll(trackChanges, includeProperties);
-
-    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
-        => _decorated.FindByCondition(expression, trackChanges);
-
-    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
-        => _decorated.FindByCondition(expression, trackChanges, includeProperties);
-
+    
     public Task<bool> ExistAsync(string id) 
         => _decorated.ExistAsync(id);
 

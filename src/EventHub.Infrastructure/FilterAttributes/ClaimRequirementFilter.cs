@@ -9,12 +9,27 @@ using Newtonsoft.Json;
 
 namespace EventHub.Infrastructure.FilterAttributes;
 
+/// <summary>
+/// Represents a filter used for authorization based on claim requirements.
+/// </summary>
 public class ClaimRequirementFilter : IAuthorizationFilter
 {
     private readonly ECommandCode _eCommandCode;
     private readonly EFunctionCode _eFunctionCode;
     private readonly ITokenService _tokenService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ClaimRequirementFilter"/> class.
+    /// </summary>
+    /// <param name="eFunctionCode">
+    /// The function code representing the specific functionality or access level required for authorization.
+    /// </param>
+    /// <param name="eCommandCode">
+    /// The command code representing the specific command or operation that needs to be authorized.
+    /// </param>
+    /// <param name="tokenService">
+    /// An instance of <see cref="ITokenService"/> used to handle token-based operations, such as validation and claims retrieval.
+    /// </param>
     public ClaimRequirementFilter(EFunctionCode eFunctionCode, ECommandCode eCommandCode, ITokenService tokenService)
     {
         _eFunctionCode = eFunctionCode;
