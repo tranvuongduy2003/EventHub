@@ -6,9 +6,31 @@ using Newtonsoft.Json;
 
 namespace EventHub.Persistence.Interceptors;
 
-public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
-    : SaveChangesInterceptor
+/// <summary>
+/// An EF Core interceptor that converts domain events into outbox messages before saving changes.
+/// </summary>
+/// <remarks>
+/// This class extends <see cref="SaveChangesInterceptor"/> to intercept the `SavingChangesAsync` event
+/// and convert domain events from aggregate roots into outbox messages. These outbox messages are then
+/// added to the `OutboxMessage` table to ensure that domain events can be processed and published asynchronously.
+/// </remarks>
+public sealed class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChangesInterceptor
 {
+    /// <summary>
+    /// Intercepts the `SavingChangesAsync` event to convert domain events into outbox messages.
+    /// </summary>
+    /// <param name="eventData">
+    /// The data related to the EF Core event, including the <see cref="DbContext"/> instance.
+    /// </param>
+    /// <param name="result">
+    /// The result of the interception up to this point.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A token to observe and respond to cancellation requests.
+    /// </param>
+    /// <returns>
+    /// A <see cref="ValueTask{InterceptionResult{T}}"/> representing the asynchronous operation.
+    /// </returns>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,

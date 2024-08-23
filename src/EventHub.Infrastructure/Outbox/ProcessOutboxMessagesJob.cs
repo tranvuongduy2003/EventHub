@@ -9,10 +9,20 @@ using Quartz;
 
 namespace EventHub.Infrastructure.Outbox;
 
+/// <summary>
+/// A job that processes outbox messages, ensuring that they are published and marked as processed.
+/// </summary>
+/// <remarks>
+/// This class implements <see cref="IProcessOutboxMessagesJob"/> and is responsible for executing
+/// the processing of outbox messages. It ensures that messages are read from the database, deserialized,
+/// and published as domain events. It also handles errors and updates the status of the messages in
+/// the database to reflect whether they have been successfully processed or encountered an error.
+/// </remarks>
 [DisallowConcurrentExecution]
 public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
 {
     private const int BatchSize = 15;
+
     private static readonly JsonSerializerSettings JsonSerializerSettings = new()
     {
         TypeNameHandling = TypeNameHandling.All
@@ -23,6 +33,21 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProcessOutboxMessagesJob"/> class.
+    /// </summary>
+    /// <param name="sqlConnectionFactory">
+    /// Factory for creating SQL database connections.
+    /// </param>
+    /// <param name="publisher">
+    /// Publisher used to publish domain events.
+    /// </param>
+    /// <param name="dateTimeProvider">
+    /// Provider for obtaining the current UTC date and time.
+    /// </param>
+    /// <param name="logger">
+    /// Logger for logging information and errors.
+    /// </param>
     public ProcessOutboxMessagesJob(
         ISqlConnectionFactory sqlConnectionFactory,
         IPublisher publisher,
@@ -35,6 +60,15 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
         _logger = logger;
     }
 
+    /// <summary>
+    /// Executes the job to process outbox messages.
+    /// </summary>
+    /// <param name="context">
+    /// The context for job execution, providing information such as cancellation token.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// </returns>
     public async Task Execute(IJobExecutionContext context)
     {
         _logger.LogInformation("Beginning to process outbox messages");
@@ -124,5 +158,8 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
             transaction: transaction);
     }
 
+    /// <summary>
+    /// Represents an outbox message response.
+    /// </summary>
     internal sealed record OutboxMessageResponse(Guid Id, string Content);
 }

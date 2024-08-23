@@ -46,14 +46,4 @@ public class Permission : AggregateRoot
     [ForeignKey("CommandId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual Command Command { get; set; } = null!;
-
-    public static async Task EnableCommandInFunction(string functionId, string commandId)
-    {
-        new Permission().RaiseDomainEvent(new EnableCommandInFunctionDomainEvent(Guid.NewGuid(), functionId, commandId));
-    }
-    
-    public static async Task DisableCommandInFunction(string functionId, string commandId)
-    {
-        new Permission().RaiseDomainEvent(new DisableCommandInFunctionDomainEvent(Guid.NewGuid(), functionId, commandId));
-    }
 }
