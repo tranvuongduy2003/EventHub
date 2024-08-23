@@ -1,16 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.AggregateModels.EventAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 
 namespace EventHub.Domain.AggregateModels.CategoryAggregate;
 
 [Table("Categories")]
-public class Category : EntityBase
+public class Category : AggregateRoot
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [MaxLength(100)]

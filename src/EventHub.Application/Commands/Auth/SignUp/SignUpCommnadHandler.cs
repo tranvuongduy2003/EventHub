@@ -1,6 +1,6 @@
 using AutoMapper;
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.Services;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;

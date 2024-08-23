@@ -62,9 +62,9 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return items;
     }
 
-    public async Task<bool> ExistAsync(string id)
+    public async Task<bool> ExistAsync(Guid id)
     {
-        return await _context.Set<T>().AnyAsync(x => x.GetType().GetProperty("Id")!.ToString() == id);
+        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id").ToString()) == id);
     }
 
     public async Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
@@ -72,12 +72,12 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return await _context.Set<T>().AnyAsync(expression);
     }
 
-    public async Task<T> GetByIdAsync(string id)
+    public async Task<T> GetByIdAsync(Guid id)
     {
         return await _context.Set<T>().FindAsync(id);
     }
 
-    public async Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties)
+    public async Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
     {
         return await _context.Set<T>().FindAsync(id, includeProperties);
     }

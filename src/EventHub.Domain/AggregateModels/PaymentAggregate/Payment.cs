@@ -4,20 +4,22 @@ using System.Text.Json.Serialization;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
+using EventHub.Domain.SeedWork.Interfaces;
 using EventHub.Shared.Enums.Payment;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.PaymentAggregate;
 
 [Table("Payments")]
-public class Payment : EntityAuditBase
+public class Payment : AggregateRoot, IAuditable
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [Required]
     [Range(0, double.PositiveInfinity)]
@@ -26,7 +28,7 @@ public class Payment : EntityAuditBase
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(100)]
@@ -49,9 +51,15 @@ public class Payment : EntityAuditBase
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
-    [Required] public string UserPaymentMethodId { get; set; }
+    [Required] public Guid UserPaymentMethodId { get; set; }
 
-    public string? PaymentSessionId { get; set; }
+    public Guid? PaymentSessionId { get; set; }
+    
+    public Guid AuthorId { get; set; }
+    
+    [ForeignKey("AuthorId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual User Author { get; set; } = null!;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

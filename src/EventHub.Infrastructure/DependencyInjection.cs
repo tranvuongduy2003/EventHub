@@ -1,13 +1,16 @@
-﻿using EventHub.Domain.Services;
+﻿using EventHub.Domain.Abstractions;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.FilesSystem;
 using EventHub.Infrastructure.Hangfire;
+using EventHub.Infrastructure.Idempotence;
 using EventHub.Infrastructure.Mailler;
+using EventHub.Infrastructure.Outbox;
 using EventHub.Infrastructure.Services;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IHangfireService = EventHub.Domain.Services.IHangfireService;
+using IHangfireService = EventHub.Domain.Abstractions.IHangfireService;
 
 namespace EventHub.Infrastructure;
 
@@ -20,6 +23,7 @@ public static class DependencyInjection
         services.ConfigureControllers();
         services.ConfigureCors(appCors);
         services.ConfigureApplicationDbContext(configuration);
+        services.ConfigureQuartz();
         services.ConfigureHangfireServices();
         services.ConfigureMediatR();
         services.ConfigureIdentity();
@@ -36,7 +40,11 @@ public static class DependencyInjection
 
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
-        return services
+        services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
+
+        services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
+        
+        services
             .AddTransient<ISerializeService, SerializeService>()
             .AddTransient<ICacheService, CacheService>()
             .AddTransient<IFileService, AzureFileService>()

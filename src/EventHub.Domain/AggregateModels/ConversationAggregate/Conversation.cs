@@ -2,31 +2,32 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.ConversationAggregate;
 
 [Table("Conversations")]
-public class Conversation : EntityBase
+public class Conversation : AggregateRoot
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
-    [Required] public string EventId { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public string HostId { get; set; } = string.Empty;
+    [Required] public Guid EventId { get; set; }
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string UserId { get; set; } = string.Empty;
+    public Guid HostId { get; set; } = Guid.Empty;
 
-    [Column(TypeName = "nvarchar(max)")] public string? LastMessageId { get; set; } = string.Empty;
+    [Required]
+    [MaxLength(50)]
+    [Column(TypeName = "varchar(50)")]
+    public Guid UserId { get; set; } = Guid.Empty;
+
+    [Column(TypeName = "nvarchar(max)")] public Guid? LastMessageId { get; set; } = Guid.Empty;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

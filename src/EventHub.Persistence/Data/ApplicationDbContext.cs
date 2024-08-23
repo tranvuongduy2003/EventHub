@@ -9,17 +9,19 @@ using EventHub.Domain.AggregateModels.ReviewAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Interfaces;
+using EventHub.Persistence.Outbox;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Persistence.Data;
 
-public class ApplicationDbContext : IdentityDbContext<User>
+public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
 
+    public DbSet<UserAggregate> UserAggregates { set; get; }
     public DbSet<User> Users { set; get; }
     public DbSet<Role> Roles { set; get; }
     public DbSet<Category> Categories { set; get; }
@@ -49,6 +51,8 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<PaymentItem> PaymentItems { get; set; }
     public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<OutboxMessageConsumer> OutboxMessageConsumers { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

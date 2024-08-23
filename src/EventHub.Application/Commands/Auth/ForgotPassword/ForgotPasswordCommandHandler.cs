@@ -1,5 +1,5 @@
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.Services;
 using EventHub.Shared.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using EventHub.Domain.Abstractions;
 using EventHub.Shared.Settings;
 using Hangfire;
 using Hangfire.Console.Extensions;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using Quartz;
+using Quartz.Impl;
 
 namespace EventHub.Infrastructure.Configurations;
 
@@ -63,6 +66,21 @@ public static class HangfireConfiguration
         services.AddHangfireServer(options => { options.ServerName = hangfireSettings.ServerName; });
 
         return services;
+    }
+
+    public static IApplicationBuilder UseHangfireBackgroundJobs(this IApplicationBuilder app)
+    {
+        var context = app.ApplicationServices
+            .GetRequiredService<IJobExecutionContext>();
+        
+        app.ApplicationServices
+            .GetRequiredService<IRecurringJobManager>()
+            .AddOrUpdate<IProcessOutboxMessagesJob>(
+                "outbox-processor",
+                job => job.Execute(context),
+                "0/15 * * * * *");
+
+        return app;
     }
 
     public static IApplicationBuilder UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)

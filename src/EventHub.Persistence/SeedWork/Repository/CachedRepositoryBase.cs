@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.SeedWork.Repository;
-using EventHub.Domain.Services;
 using EventHub.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -83,13 +83,13 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         return items;
     }
     
-    public Task<bool> ExistAsync(string id) 
+    public Task<bool> ExistAsync(Guid id) 
         => _decorated.ExistAsync(id);
 
     public Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
         => _decorated.ExistAsync(expression);
 
-    public async Task<T> GetByIdAsync(string id)
+    public async Task<T> GetByIdAsync(Guid id)
     {
         string key = $"{nameof(T)}-{id}";
 
@@ -104,7 +104,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         return entity;
     }
 
-    public Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties)
+    public Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
         => _decorated.GetByIdAsync(id, includeProperties);
 
     public Task CreateAsync(T entity) => _decorated.CreateAsync(entity);

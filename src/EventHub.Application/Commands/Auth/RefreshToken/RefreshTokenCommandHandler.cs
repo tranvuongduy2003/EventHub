@@ -1,6 +1,6 @@
 using EventHub.Application.Commands.Auth.RefreshToken;
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.Services;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;

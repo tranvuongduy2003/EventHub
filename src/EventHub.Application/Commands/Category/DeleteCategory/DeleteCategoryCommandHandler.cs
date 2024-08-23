@@ -1,5 +1,5 @@
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.SeedWork.UnitOfWork;
-using EventHub.Domain.Services;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using MediatR;

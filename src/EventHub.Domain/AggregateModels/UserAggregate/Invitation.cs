@@ -13,14 +13,14 @@ public class Invitation : EntityBase
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string InviterId { get; set; } = string.Empty;
+    public Guid InviterId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string InvitedId { get; set; } = string.Empty;
+    public Guid InvitedId { get; set; } = Guid.Empty;
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [ForeignKey("InviterId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

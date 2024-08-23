@@ -1,6 +1,7 @@
 using AutoMapper;
 using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.Events;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.Exceptions;
 using MediatR;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
-public class EnableCommandInFunctionDomainEventHandler : INotificationHandler<EnableCommandInFunctionDomainEvent>
+public class EnableCommandInFunctionDomainEventHandler : IDomainEventHandler<EnableCommandInFunctionDomainEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;

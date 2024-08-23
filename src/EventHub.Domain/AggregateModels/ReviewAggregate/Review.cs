@@ -2,23 +2,24 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.ReviewAggregate;
 
 [Table("Reviews")]
-public class Review : EntityBase
+public class Review : AggregateRoot
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [MaxLength(1000)]
     [Column(TypeName = "nvarchar(1000)")]

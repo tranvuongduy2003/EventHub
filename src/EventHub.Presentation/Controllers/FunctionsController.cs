@@ -3,6 +3,7 @@ using EventHub.Application.Commands.Function.DeleteFunction;
 using EventHub.Application.Commands.Function.UpdateFunction;
 using EventHub.Application.Queries.Function.GetFunctionById;
 using EventHub.Application.Queries.Function.GetFuntions;
+using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.Events;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Function;
@@ -174,7 +175,7 @@ public class FunctionsController : ControllerBase
         _logger.LogInformation("START: PostEnableCommandInFunction");
         try
         {
-            await _mediator.Send(new EnableCommandInFunctionDomainEvent(functionId, commandId));
+            await Permission.EnableCommandInFunction(functionId, commandId);
 
             _logger.LogInformation("END: PostEnableCommandInFunction");
 
@@ -207,7 +208,7 @@ public class FunctionsController : ControllerBase
         _logger.LogInformation("START: PostDisableCommandInFunction");
         try
         {
-            await _mediator.Send(new DisableCommandInFunctionDomainEvent(functionId, commandId));
+            await Permission.DisableCommandInFunction(functionId, commandId);
 
             _logger.LogInformation("END: PostDisableCommandInFunction");
 

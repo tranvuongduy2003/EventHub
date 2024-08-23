@@ -12,6 +12,10 @@ public static class SettingsConfiguration
         var jwtOptions = configuration.GetSection(nameof(JwtOptions))
             .Get<JwtOptions>();
         services.AddSingleton<JwtOptions>(jwtOptions);
+        
+        var outboxOptions = configuration.GetSection(nameof(OutboxOptions))
+            .Get<OutboxOptions>();
+        services.AddSingleton<OutboxOptions>(outboxOptions);
 
         var azureBlobStorage = configuration.GetSection(nameof(AzureBlobStorage))
             .Get<AzureBlobStorage>();

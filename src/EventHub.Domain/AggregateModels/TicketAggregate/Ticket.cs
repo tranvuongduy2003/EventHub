@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.PaymentAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Shared.Enums.Ticket;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,11 @@ using Microsoft.EntityFrameworkCore;
 namespace EventHub.Domain.AggregateModels.TicketAggregate;
 
 [Table("Tickets")]
-public class Ticket : EntityBase
+public class Ticket : AggregateRoot
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -34,16 +35,16 @@ public class Ticket : EntityBase
     [EmailAddress]
     public string CustomerEmail { get; set; } = string.Empty;
 
-    [Required] public string TicketTypeId { get; set; }
+    [Required] public Guid TicketTypeId { get; set; }
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] public string PaymentId { get; set; }
+    [Required] public Guid PaymentId { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ETicketStatus Status { get; set; } = ETicketStatus.INACTIVE;

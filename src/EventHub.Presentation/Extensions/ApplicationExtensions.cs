@@ -1,6 +1,4 @@
 ﻿using EventHub.Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace EventHub.Presentation.Extensions;
 
@@ -12,12 +10,13 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Hub API V1"); });
 
-        app.UseHttpsRedirection(); //production only
+        // app.UseHttpsRedirection(); //production only
 
         app.UseErrorWrapping();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseCors(appCors);
+        app.UseHangfireBackgroundJobs();
         app.UseHangfireDashboard(app.Configuration);
         app.MapControllers();
         app.MapGet("/", context => Task.Run(() =>

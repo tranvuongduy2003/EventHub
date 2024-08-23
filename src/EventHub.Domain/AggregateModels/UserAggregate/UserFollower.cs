@@ -12,12 +12,12 @@ public class UserFollower : EntityBase
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     [Required]
-    public string FollowerId { get; set; } = string.Empty;
+    public Guid FollowerId { get; set; } = Guid.Empty;
 
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
     [Required]
-    public string FollowedId { get; set; } = string.Empty;
+    public Guid FollowedId { get; set; } = Guid.Empty;
 
     [ForeignKey("FollowerId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

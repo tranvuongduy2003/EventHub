@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Domain.AggregateModels.UserAggregate;
 
-public class User : IdentityUser, IDateTracking, ISoftDeletable
+public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
 {
     [MaxLength(50)]
     [Column(TypeName = "nvarchar(50)")]

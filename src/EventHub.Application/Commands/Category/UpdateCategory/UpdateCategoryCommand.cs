@@ -20,7 +20,7 @@ public class UpdateCategoryCommand : IRequest
     /// <param name="request">
     /// The data transfer object containing the updated details of the category.
     /// </param>
-    public UpdateCategoryCommand(string id, UpdateCategoryDto request)
+    public UpdateCategoryCommand(Guid id, UpdateCategoryDto request)
         => (Id, Category) = (id, request);
 
     /// <summary>
@@ -29,7 +29,7 @@ public class UpdateCategoryCommand : IRequest
     /// <value>
     /// A string representing the unique identifier of the category.
     /// </value>
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Gets or sets the data transfer object containing the updated details of the category.

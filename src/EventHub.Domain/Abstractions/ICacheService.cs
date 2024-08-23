@@ -1,4 +1,4 @@
-﻿namespace EventHub.Domain.Services;
+﻿namespace EventHub.Domain.Abstractions;
 
 /// <summary>
 /// Defines the contract for a caching service that provides methods to interact with a cache.

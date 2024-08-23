@@ -7,7 +7,7 @@ public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDto>
 {
     public UpdateCategoryDtoValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(x => x.Id.ToString())
             .NotEmpty().WithMessage("Id is required")
             .MaximumLength(50).WithMessage("Id cannot over limit 50 characters");
         

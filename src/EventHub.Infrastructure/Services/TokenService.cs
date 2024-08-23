@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.Services;
 using EventHub.Persistence.Data;
 using EventHub.Shared.Settings;
 using EventHub.Shared.ValueObjects;
@@ -73,7 +73,7 @@ public class TokenService : ITokenService
         {
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.MobilePhone, user.PhoneNumber ?? ""),
-            new(JwtRegisteredClaimNames.Jti, user.Id),
+            new(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
             new(ClaimTypes.Role, string.Join(";", roles)),
             new(SystemConstants.Claims.Permissions, JsonConvert.SerializeObject(permissions))
         };

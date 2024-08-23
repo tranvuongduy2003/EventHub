@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
 using MediatR;
 
 namespace EventHub.Domain.Events;
 
-public record DisableCommandInFunctionDomainEvent(string FunctionId, string CommandId) : INotification;
+public record DisableCommandInFunctionDomainEvent(Guid Id, string FunctionId, string CommandId) : DomainEvent(Id);

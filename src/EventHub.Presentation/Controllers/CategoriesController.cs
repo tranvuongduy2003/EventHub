@@ -1,4 +1,3 @@
-using AutoMapper;
 using EventHub.Application.Commands.Category.CreateCategory;
 using EventHub.Application.Commands.Category.DeleteCategory;
 using EventHub.Application.Commands.Category.UpdateCategory;
@@ -74,14 +73,14 @@ public class CategoriesController : ControllerBase
         }
     }
 
-    [HttpGet("{categoryId}")]
+    [HttpGet("{categoryId:guid}")]
     [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetCategoryById(string categoryId)
+    public async Task<IActionResult> GetCategoryById(Guid categoryId)
     {
         _logger.LogInformation("START: GetCategoryById");
         try
@@ -102,7 +101,7 @@ public class CategoriesController : ControllerBase
         }
     }
 
-    [HttpPut("{categoryId}")]
+    [HttpPut("{categoryId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -111,7 +110,7 @@ public class CategoriesController : ControllerBase
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.UPDATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PutCategory(string categoryId, [FromForm] UpdateCategoryDto request)
+    public async Task<IActionResult> PutCategory(Guid categoryId, [FromForm] UpdateCategoryDto request)
     {
         _logger.LogInformation("START: PutCategory");
         try
@@ -132,14 +131,14 @@ public class CategoriesController : ControllerBase
         }
     }
 
-    [HttpDelete("{categoryId}")]
+    [HttpDelete("{categoryId:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.DELETE)]
-    public async Task<IActionResult> DeleteCategory(string categoryId)
+    public async Task<IActionResult> DeleteCategory(Guid categoryId)
     {
         _logger.LogInformation("START: DeleteCategory");
         try

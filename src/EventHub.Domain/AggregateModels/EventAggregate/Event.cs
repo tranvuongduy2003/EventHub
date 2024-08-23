@@ -8,17 +8,20 @@ using EventHub.Domain.AggregateModels.PaymentAggregate;
 using EventHub.Domain.AggregateModels.ReviewAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
+using EventHub.Domain.SeedWork.Interfaces;
 using EventHub.Shared.Enums.Event;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.EventAggregate;
 
 [Table("Events")]
-public class Event : EntityAuditBase
+public class Event : AggregateRoot, IAuditable
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(max)")]
@@ -61,7 +64,13 @@ public class Event : EntityAuditBase
     public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
     public bool IsPrivate { get; set; } = false;
-
+    
+    public Guid AuthorId { get; set; }
+    
+    [ForeignKey("AuthorId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual User Author { get; set; } = null!;
+    
     public virtual EmailContent? EmailContent { get; set; }
 
     public virtual ICollection<EventCategory> EventCategories { get; set; } = new List<EventCategory>();

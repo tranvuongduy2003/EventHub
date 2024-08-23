@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Domain.AggregateModels.UserAggregate;
 
-public class Role : IdentityRole, IDateTracking, ISoftDeletable
+public class Role : IdentityRole<Guid>, IDateTracking, ISoftDeletable
 {
     public bool IsDeleted { get; set; }
     

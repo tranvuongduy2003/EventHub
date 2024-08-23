@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 
 namespace EventHub.Domain.AggregateModels.LabelAggregate;
 
 [Table("Labels")]
-public class Label : EntityBase
+public class Label : AggregateRoot
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [MaxLength(50)]

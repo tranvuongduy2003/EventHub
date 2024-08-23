@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Services;
+﻿using EventHub.Domain.Abstractions;
 using EventHub.Shared.SeedWork;
 using EventHub.Shared.Settings;
 using MailKit.Net.Smtp;

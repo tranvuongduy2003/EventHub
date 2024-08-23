@@ -1,7 +1,6 @@
 using AutoMapper;
 using EventHub.Application.Commands.Function.UpdateFunction;
 using EventHub.Domain.SeedWork.UnitOfWork;
-using EventHub.Domain.Services;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using MediatR;

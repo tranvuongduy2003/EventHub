@@ -7,7 +7,7 @@ namespace EventHub.Shared.DTOs.User;
 public class UserDto
 {
     [Description("Id of the user")]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Description("User name of the user")]
     public string UserName { get; set; }

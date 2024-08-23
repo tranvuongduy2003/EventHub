@@ -1,6 +1,6 @@
+using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.CategoryAggregate;
 using EventHub.Domain.CachedRepositories;
-using EventHub.Domain.Services;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.SeedWork.Repository;
 

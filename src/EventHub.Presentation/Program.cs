@@ -1,4 +1,3 @@
-using EventHub.Application;
 using EventHub.Infrastructure;
 using EventHub.Infrastructure.Logging;
 using EventHub.Persistence;

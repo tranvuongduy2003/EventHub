@@ -5,7 +5,7 @@ namespace EventHub.Shared.DTOs.Category;
 public class CategoryDto
 {
     [Description("Id of the category")]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Description("Name of the category")]
     public string Name { get; set; }

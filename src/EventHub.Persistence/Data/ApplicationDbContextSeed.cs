@@ -51,21 +51,18 @@ public class ApplicationDbContextSeed
         {
             await _roleManager.CreateAsync(new Role
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = EUserRole.ADMIN.GetDisplayName(),
                 ConcurrencyStamp = "1",
                 NormalizedName = EUserRole.ADMIN.GetDisplayName().Normalize()
             });
             await _roleManager.CreateAsync(new Role
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = EUserRole.CUSTOMER.GetDisplayName(),
                 ConcurrencyStamp = "2",
                 NormalizedName = EUserRole.CUSTOMER.GetDisplayName().Normalize()
             });
             await _roleManager.CreateAsync(new Role
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = EUserRole.ORGANIZER.GetDisplayName(),
                 ConcurrencyStamp = "3",
                 NormalizedName = EUserRole.ORGANIZER.GetDisplayName().Normalize()
@@ -81,7 +78,6 @@ public class ApplicationDbContextSeed
         {
             var admin = new User
             {
-                Id = Guid.NewGuid().ToString(),
                 Email = "admin@gmail.com",
                 NormalizedEmail = "admin@gmail.com",
                 UserName = "admin",
@@ -103,7 +99,6 @@ public class ApplicationDbContextSeed
 
 
             var userFaker = new Faker<User>()
-                .RuleFor(u => u.Id, _ => Guid.NewGuid().ToString())
                 .RuleFor(u => u.Email, f => f.Person.Email)
                 .RuleFor(u => u.NormalizedEmail, f => f.Person.Email)
                 .RuleFor(u => u.UserName, f => f.Person.UserName)

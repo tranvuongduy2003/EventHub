@@ -13,9 +13,9 @@ public class FavouriteEvent : EntityBase
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "varchar(50)")]
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [ForeignKey("UserId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

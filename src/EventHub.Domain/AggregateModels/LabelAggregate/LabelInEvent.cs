@@ -10,9 +10,9 @@ namespace EventHub.Domain.AggregateModels.LabelAggregate;
 [PrimaryKey("LabelId", "EventId")]
 public class LabelInEvent : EntityBase
 {
-    [Required] public string LabelId { get; set; }
+    [Required] public Guid LabelId { get; set; }
 
-    [Required] public string EventId { get; set; }
+    [Required] public Guid EventId { get; set; }
 
     [ForeignKey("LabelId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
