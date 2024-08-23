@@ -1,13 +1,5 @@
-using EventHub.Domain.AggregateModels.CategoryAggregate;
-using EventHub.Domain.AggregateModels.ConversationAggregate;
-using EventHub.Domain.AggregateModels.EmailLoggerAggregate;
-using EventHub.Domain.AggregateModels.EventAggregate;
-using EventHub.Domain.AggregateModels.LabelAggregate;
-using EventHub.Domain.AggregateModels.PaymentAggregate;
-using EventHub.Domain.AggregateModels.PermissionAggregate;
-using EventHub.Domain.AggregateModels.ReviewAggregate;
-using EventHub.Domain.AggregateModels.TicketAggregate;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Abstractions;
+using EventHub.Domain.CachedRepositories;
 using EventHub.Domain.Repositories;
 using EventHub.Domain.SeedWork.Repository;
 using EventHub.Domain.SeedWork.UnitOfWork;
@@ -15,6 +7,7 @@ using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;
 using EventHub.Persistence.SeedWork.Repository;
+using EventHub.Persistence.SeedWork.SqlConnection;
 using EventHub.Persistence.SeedWork.UnitOfWork;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,14 +21,16 @@ public static class DependencyInjection
     {
         services.ConfigureDependencyInjection();
         services.ConfigureRepositories();
-        services.ConfigureCachedRepositories();
 
         return services;
     }
 
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
-        return services
+        services
+            .AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+        
+        services
             .AddTransient<ApplicationDbContextSeed>();
 
         return services;
@@ -43,9 +38,12 @@ public static class DependencyInjection
 
     public static IServiceCollection ConfigureRepositories(this IServiceCollection services)
     {
-        return services
+        services
             .AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>))
-            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped(typeof(ICachedRepositoryBase<>), typeof(CachedRepositoryBase<>))
+            .AddScoped<IUnitOfWork, UnitOfWork>();
+            
+        services
             .AddScoped<ICategoriesRepository, CategoriesRepository>()
             .AddScoped<ICommandInFunctionsRepository, CommandInFunctionsRepository>()
             .AddScoped<ICommandsRepository, CommandsRepository>()
@@ -74,18 +72,13 @@ public static class DependencyInjection
             .AddScoped<IUserFollowersRepository, UserFollowersRepository>()
             .AddScoped<IUserPaymentMethodsRepository, UserPaymentMethodsRepository>();
 
-        return services;
-    }
-    
-    public static IServiceCollection ConfigureCachedRepositories(this IServiceCollection services)
-    {
-        return services
-            .AddScoped<CachedCategoriesRepository>()
-            .AddScoped<CachedEventsRepository>()
-            .AddScoped<CachedEventSubImagesRepository>()
-            .AddScoped<CachedReasonsRepository>()
-            .AddScoped<CachedReviewsRepository>()
-            .AddScoped<CachedTicketTypesRepository>();
+        services
+            .AddScoped<ICachedCategoriesRepository, CachedCategoriesRepository>()
+            .AddScoped<ICachedEventsRepository, CachedEventsRepository>()
+            .AddScoped<ICachedEventSubImagesRepository, CachedEventSubImagesRepository>()
+            .AddScoped<ICachedReasonsRepository, CachedReasonsRepository>()
+            .AddScoped<ICachedReviewsRepository, CachedReviewsRepository>()
+            .AddScoped<ICachedTicketTypesRepository, CachedTicketTypesRepository>();
 
         return services;
     }

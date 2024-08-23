@@ -9,8 +9,6 @@ public static class QuartzConfiguration
 {
     public static IServiceCollection ConfigureQuartz(this IServiceCollection services)
     {
-        var outboxOptions = services.GetOptions<OutboxOptions>("OutboxOptions");
-
         services.AddQuartz(configure =>
         {
             const string jobName = nameof(ProcessOutboxMessagesJob);
@@ -21,7 +19,7 @@ public static class QuartzConfiguration
                     triggerConfigure
                         .ForJob(jobName)
                         .WithSimpleSchedule(schedule =>
-                            schedule.WithIntervalInSeconds(outboxOptions.IntervalInSeconds).RepeatForever()));
+                            schedule.WithIntervalInSeconds(10).RepeatForever()));
         });
 
         services.AddQuartz();

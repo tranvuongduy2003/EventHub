@@ -1,5 +1,6 @@
 ﻿using EventHub.Domain.Abstractions;
 using EventHub.Infrastructure.Caching;
+using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.FilesSystem;
 using EventHub.Infrastructure.Hangfire;
@@ -50,7 +51,8 @@ public static class DependencyInjection
             .AddTransient<IFileService, AzureFileService>()
             .AddTransient<IHangfireService, HangfireService>()
             .AddTransient<IEmailService, EmailService>()
-            .AddTransient<ITokenService, TokenService>();
+            .AddTransient<ITokenService, TokenService>()
+            .AddTransient<IDateTimeProvider, DateTimeProvider>();;
 
         return services;
     }

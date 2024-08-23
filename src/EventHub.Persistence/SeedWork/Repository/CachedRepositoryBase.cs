@@ -17,7 +17,7 @@ namespace EventHub.Persistence.SeedWork.Repository;
 /// </remarks>
 public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : EntityBase
 {
-    private readonly RepositoryBase<T> _decorated;
+    private readonly IRepositoryBase<T> _decorated;
     private readonly ICacheService _cacheService;
     private readonly ApplicationDbContext _context;
 
@@ -31,7 +31,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     /// The constructor initializes the repository with a database context, a base repository instance, and a caching service.
     /// This setup allows the repository to use caching in addition to the standard repository operations.
     /// </remarks>
-    public CachedRepositoryBase(ApplicationDbContext context, RepositoryBase<T> decorated, ICacheService cacheService)
+    public CachedRepositoryBase(ApplicationDbContext context, IRepositoryBase<T> decorated, ICacheService cacheService)
     {
         _context = context;
         _decorated = decorated;

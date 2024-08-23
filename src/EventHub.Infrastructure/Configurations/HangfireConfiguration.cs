@@ -70,14 +70,11 @@ public static class HangfireConfiguration
 
     public static IApplicationBuilder UseHangfireBackgroundJobs(this IApplicationBuilder app)
     {
-        var context = app.ApplicationServices
-            .GetRequiredService<IJobExecutionContext>();
-        
         app.ApplicationServices
             .GetRequiredService<IRecurringJobManager>()
             .AddOrUpdate<IProcessOutboxMessagesJob>(
                 "outbox-processor",
-                job => job.Execute(context),
+                job => job.Execute(null),
                 "0/15 * * * * *");
 
         return app;
