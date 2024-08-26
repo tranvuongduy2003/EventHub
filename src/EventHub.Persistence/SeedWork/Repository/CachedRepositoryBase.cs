@@ -38,45 +38,58 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         _cacheService = cacheService;
     }
 
-    public async Task<IQueryable<T>> FindAll(bool trackChanges = false)
+    public IQueryable<T> FindAll(bool trackChanges = false)
     {
-        var key = $"{nameof(T)}";
+        var key = $"{typeof(T).Name}";
 
-        var items = await _cacheService.GetData<IQueryable<T>>(key);
+        var items = _cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() as IQueryable<T>;
 
         if (items == null || !items.Any())
         {
             items = !trackChanges
-                ? Queryable.Where<T>(_context.Set<T>().AsNoTracking(), e => e.DeletedAt != null)
-                : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null);
+                ? Queryable.Where<T>(_context.Set<T>().AsNoTracking(), e => e.DeletedAt == null)
+                : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt == null);
 
-            await _cacheService.SetData<IQueryable<T>>(key, items, TimeSpan.FromMinutes(2));
+            _cacheService.SetData<IQueryable<T>>(key, items, TimeSpan.FromMinutes(2)).GetAwaiter();
         }
 
         return items;
     }
 
-    public async Task<IQueryable<T>> FindAll(bool trackChanges = false,
+    public IQueryable<T> FindAll(bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindAll(trackChanges);
+        var items = FindAll(trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
         return items;
     }
 
-    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
     {
-        return !trackChanges
-            ? Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression).AsNoTracking()
-            : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt != null).Where(expression);
+        var key = $"{typeof(T).Name}";
+
+        var items = _cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() as IQueryable<T>;
+
+        if (items == null || !items.Any())
+        {
+            items = !trackChanges
+                ? Queryable.Where<T>(_context.Set<T>().AsNoTracking(), e => e.DeletedAt == null)
+                : Queryable.Where<T>(_context.Set<T>(), e => e.DeletedAt == null);
+
+            _cacheService.SetData<IQueryable<T>>(key, items, TimeSpan.FromMinutes(2)).GetAwaiter();
+
+            items = items.Where(expression);
+        }
+
+        return items;
     }
 
-    public async Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = await FindByCondition(expression, trackChanges);
+        var items = FindByCondition(expression, trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
@@ -91,7 +104,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
 
     public async Task<T> GetByIdAsync(Guid id)
     {
-        string key = $"{nameof(T)}-{id}";
+        string key = $"{typeof(T).Name}-{id}";
 
         var entity = await _cacheService.GetData<T>(key);
         if (entity != null)

@@ -12,6 +12,7 @@ public class InvitationConfiguration: IEntityTypeConfiguration<Invitation>
             .HasOne(x => x.Inviter)
             .WithMany(x => x.Inviters)
             .HasForeignKey(x => x.InviterId);
+        
         builder
             .HasOne(x => x.Invited)
             .WithMany(x => x.Inviteds)

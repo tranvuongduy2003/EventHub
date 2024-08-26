@@ -1,4 +1,7 @@
 ﻿using EventHub.Infrastructure.Configurations;
+using EventHub.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace EventHub.Presentation.Extensions;
 
@@ -8,7 +11,10 @@ public static class ApplicationExtensions
     {
         // Configure the HTTP request pipeline.
         app.UseSwagger();
-        app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Hub API V1"); });
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Hub API V1");
+        });
 
         // app.UseHttpsRedirection(); //production only
 
@@ -25,27 +31,27 @@ public static class ApplicationExtensions
         // Hubs
         // app.MapHub<ChatHub>("/Chat");
 
-        // using (var scope = app.Services.CreateScope())
-        // {
-        //     var services = scope.ServiceProvider;
-        //     var logger = services.GetRequiredService<ILogger<ApplicationDbContext>>();
-        //     var context = services.GetRequiredService<ApplicationDbContext>();
-        //
-        //     try
-        //     {
-        //         logger.LogInformation("Migrating database.");
-        //         if (context.Database.GetPendingMigrations().Any())
-        //             context.Database.Migrate();
-        //         logger.LogInformation("Migrated database.");
-        //         Log.Information("Seeding data...");
-        //         var dbInitializer = services.GetService<ApplicationDbContextSeed>();
-        //         dbInitializer?.Seed().Wait();
-        //         Log.Information("Seeding data successfully!");
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         logger.LogError(ex, "An error occurred while seeding the database.");
-        //     }
-        // }
+        using var scope = app.Services.CreateScope();
+        {
+            var services = scope.ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<ApplicationDbContext>>();
+            var context = services.GetRequiredService<ApplicationDbContext>();
+        
+            try
+            {
+                logger.LogInformation("Migrating database.");
+                if (context.Database.GetPendingMigrations().Any())
+                    context.Database.Migrate();
+                logger.LogInformation("Migrated database.");
+                Log.Information("Seeding data...");
+                var dbInitializer = services.GetService<ApplicationDbContextSeed>();
+                dbInitializer?.Seed().Wait();
+                Log.Information("Seeding data successfully!");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while seeding the database.");
+            }
+        }
     }
 }

@@ -24,16 +24,12 @@ public class Permission : AggregateRoot
     }
     
     [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public string FunctionId { get; set; } = string.Empty;
+    public required string FunctionId { get; set; } = string.Empty;
+    
+    public required Guid RoleId { get; set; } = Guid.Empty;
 
     [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid RoleId { get; set; } = Guid.Empty;
-
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public string CommandId { get; set; } = string.Empty;
+    public required string CommandId { get; set; } = string.Empty;
 
     [ForeignKey("FunctionId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

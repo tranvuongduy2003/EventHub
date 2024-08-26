@@ -20,7 +20,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="trackChanges">Indicates whether changes to the entities should be tracked.</param>
     /// <returns>A task representing the asynchronous operation. The task result is an <see cref="IQueryable{T}"/> that can be used to query all entities of type <typeparamref name="T"/>.</returns>
-    Task<IQueryable<T>> FindAll(bool trackChanges = false);
+    IQueryable<T> FindAll(bool trackChanges = false);
 
     /// <summary>
     /// Asynchronously retrieves all entities of type <typeparamref name="T"/> with specified related properties included.
@@ -28,7 +28,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <param name="trackChanges">Indicates whether changes to the entities should be tracked.</param>
     /// <param name="includeProperties">An array of expressions specifying related properties to include in the query.</param>
     /// <returns>A task representing the asynchronous operation. The task result is an <see cref="IQueryable{T}"/> that can be used to query all entities of type <typeparamref name="T"/> including specified related properties.</returns>
-    Task<IQueryable<T>> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties);
+    IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties);
 
     /// <summary>
     /// Asynchronously retrieves entities of type <typeparamref name="T"/> that satisfy a specified condition.
@@ -36,7 +36,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <param name="expression">An expression defining the condition to be satisfied by the entities.</param>
     /// <param name="trackChanges">Indicates whether changes to the entities should be tracked.</param>
     /// <returns>A task representing the asynchronous operation. The task result is an <see cref="IQueryable{T}"/> that can be used to query entities of type <typeparamref name="T"/> that satisfy the specified condition.</returns>
-    Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false);
+    IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false);
 
     /// <summary>
     /// Asynchronously retrieves entities of type <typeparamref name="T"/> that satisfy a specified condition with related properties included.
@@ -45,7 +45,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <param name="trackChanges">Indicates whether changes to the entities should be tracked.</param>
     /// <param name="includeProperties">An array of expressions specifying related properties to include in the query.</param>
     /// <returns>A task representing the asynchronous operation. The task result is an <see cref="IQueryable{T}"/> that can be used to query entities of type <typeparamref name="T"/> that satisfy the specified condition including specified related properties.</returns>
-    Task<IQueryable<T>> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
+    IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties);
 
     #endregion

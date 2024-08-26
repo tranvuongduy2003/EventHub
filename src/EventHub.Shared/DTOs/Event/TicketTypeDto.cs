@@ -2,9 +2,7 @@
 
 public class TicketTypeDto
 {
-    public string Id { get; set; }
-
-    public string EventId { get; set; }
+    public Guid Id { get; set; }
 
     public string Name { get; set; }
 

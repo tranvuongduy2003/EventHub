@@ -9,15 +9,13 @@ namespace EventHub.Domain.AggregateModels.PermissionAggregate;
 [PrimaryKey("CommandId", "FunctionId")]
 public class CommandInFunction : EntityBase
 {
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     [Required]
-    public string CommandId { get; set; } = string.Empty;
+    [MaxLength(50)]
+    public required string CommandId { get; set; } = string.Empty;
 
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     [Required]
-    public string FunctionId { get; set; } = string.Empty;
+    [MaxLength(50)]
+    public required string FunctionId { get; set; } = string.Empty;
 
     [ForeignKey("CommandId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

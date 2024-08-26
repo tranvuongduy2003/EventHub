@@ -14,10 +14,12 @@ public class EmailContent : EntityBase
     public Guid Id { get; set; }
 
     [Required]
-    [Column(TypeName = "nvarchar(max)")]
-    public string Content { get; set; } = string.Empty;
+    [MaxLength(4000)]
+    [Column(TypeName = "nvarchar(4000)")]
+    public required string Content { get; set; } = string.Empty;
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

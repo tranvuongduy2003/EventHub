@@ -6,33 +6,36 @@ namespace EventHub.Shared.DTOs.Event;
 
 public class CreateEventDto
 {
-    public string AuthorId { get; set; }
-
     public IFormFile CoverImage { get; set; }
+    
+    public string Name { get; set; } = string.Empty;
+    
+    public string Description { get; set; } = string.Empty;
+    
+    public string Location { get; set; } = string.Empty;
 
-    public string Name { get; set; }
+    public DateTime StartTime { get; set; } = DateTime.UtcNow;
 
-    public string Description { get; set; }
-
-    public string Location { get; set; }
-
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
-
-    public List<string> CategoryIds { get; set; } = new();
+    public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
     public double? Promotion { get; set; } = 0;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EEventCycleType EventCycleType { get; set; }
+    public EEventStatus? Status { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EEventPaymentType EventPaymentType { get; set; }
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
 
-    public bool IsPrivate { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
-    public IEnumerable<string>? TicketTypes { get; set; } = new List<string>();
+    public bool IsPrivate { get; set; } = false;
+    
+    public Guid AuthorId { get; set; }
+
+    public List<string> Categories { get; set; } = new();
+    
+    public IEnumerable<CreateTicketTypeDto>? TicketTypes { get; set; } = new List<CreateTicketTypeDto>();
 
     public IEnumerable<string>? Reasons { get; set; } = new List<string>();
 

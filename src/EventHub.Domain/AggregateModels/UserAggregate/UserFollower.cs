@@ -9,15 +9,11 @@ namespace EventHub.Domain.AggregateModels.UserAggregate;
 [PrimaryKey("FollowerId", "FollowedId")]
 public class UserFollower : EntityBase
 {
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     [Required]
-    public Guid FollowerId { get; set; } = Guid.Empty;
-
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
+    public required Guid FollowerId { get; set; } = Guid.Empty;
+    
     [Required]
-    public Guid FollowedId { get; set; } = Guid.Empty;
+    public required Guid FollowedId { get; set; } = Guid.Empty;
 
     [ForeignKey("FollowerId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

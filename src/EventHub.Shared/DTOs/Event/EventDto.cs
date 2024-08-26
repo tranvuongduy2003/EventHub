@@ -1,46 +1,48 @@
-﻿using EventHub.Shared.DTOs.Category;
+﻿using System.Text.Json.Serialization;
+using EventHub.Shared.DTOs.Category;
+using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.Event;
-using EventHub.Shared.SeedWork;
 
 namespace EventHub.Shared.DTOs.Event;
 
 public class EventDto
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
+    
+    public string CoverImageUrl { get; set; } = string.Empty;
+    
+    public string Name { get; set; } = string.Empty;
+    
+    public string Description { get; set; } = string.Empty;
+    
+    public string Location { get; set; } = string.Empty;
 
-    public string CreatorName { get; set; }
+    public DateTime StartTime { get; set; } = DateTime.UtcNow;
 
-    public string CreatorAvatar { get; set; }
+    public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    public string CoverImage { get; set; }
+    public double? Promotion { get; set; } = 0;
 
-    public string Name { get; set; }
+    public int? NumberOfFavourites { get; set; } = 0;
 
-    public string Description { get; set; }
+    public int? NumberOfShares { get; set; } = 0;
 
-    public string Location { get; set; }
+    public int? NumberOfSoldTickets { get; set; } = 0;
 
-    public PriceRange PriceRange { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public EEventStatus? Status { get; set; }
 
-    public DateTime StartTime { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
 
-    public DateTime EndTime { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
-    public EEventCycleType EventCycleType { get; set; }
+    public bool IsPrivate { get; set; } = false;
 
-    public EEventPaymentType EventPaymentType { get; set; }
-
-    public bool IsPrivate { get; set; }
-
-    public bool IsTrash { get; set; }
+    public UserDto? Author { get; set; } = null;
 
     public List<CategoryDto> Categories { get; set; }
-
-    public double AverageRating { get; set; } = 0.0;
-
-    public double Promotion { get; set; } = 0;
-
-    public EEventStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

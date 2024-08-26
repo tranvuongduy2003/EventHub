@@ -38,20 +38,20 @@ public class CacheService : ICacheService
 
     public async Task<T> GetData<T>(string key)
     {
-        _logger.Information($"BEGIN: GetData<{nameof(T)}>(key: {key})");
+        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>(key: {key})");
 
         var value = await _redisCacheService.GetStringAsync(key);
         if (!string.IsNullOrEmpty(value))
             return _serializeService.Deserialize<T>(value);
 
-        _logger.Information($"END: GetData<{nameof(T)}>");
+        _logger.Information($"END: GetData<{typeof(T).Name}>");
 
         return default;
     }
 
     public async Task<bool> SetData<T>(string key, T value, TimeSpan? expirationTime = null)
     {
-        _logger.Information($"BEGIN: GetData<{nameof(T)}>(key: {key}, value: {value})");
+        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>(key: {key}, value: {value})");
 
         var options = new DistributedCacheEntryOptions();
         if (expirationTime.HasValue)
@@ -59,7 +59,7 @@ public class CacheService : ICacheService
 
         await _redisCacheService.SetStringAsync(key, _serializeService.Serialize(value), options);
 
-        _logger.Information($"BEGIN: GetData<{nameof(T)}>");
+        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>");
 
         return true;
     }

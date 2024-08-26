@@ -12,6 +12,7 @@ public class EmailContentConfiguration: IEntityTypeConfiguration<EmailContent>
             .HasMany(x => x.EmailAttachments)
             .WithOne(x => x.EmailContent)
             .HasForeignKey(x => x.EmailContentId);
+        
         builder
             .HasMany(x => x.EmailLoggers)
             .WithOne(x => x.EmailContent)

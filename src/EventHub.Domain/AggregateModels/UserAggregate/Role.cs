@@ -6,9 +6,13 @@ namespace EventHub.Domain.AggregateModels.UserAggregate;
 
 public class Role : IdentityRole<Guid>, IDateTracking, ISoftDeletable
 {
-    public bool IsDeleted { get; set; }
+    public Role(string name) : base(name)
+    {
+    }
     
-    public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; } = false;
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? UpdatedAt { get; set; }
     

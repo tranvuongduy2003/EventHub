@@ -12,6 +12,7 @@ public class LabelInEventConfiguration: IEntityTypeConfiguration<LabelInEvent>
             .HasOne(x => x.Event)
             .WithMany(x => x.LabelInEvents)
             .HasForeignKey(x => x.EventId);
+        
         builder
             .HasOne(x => x.Label)
             .WithMany(x => x.LabelInEvents)

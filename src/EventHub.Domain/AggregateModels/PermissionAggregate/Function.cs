@@ -15,14 +15,16 @@ public class Function : EntityBase
     [Required]
     [MaxLength(200)]
     [Column(TypeName = "nvarchar(200)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
-    [Required] [MaxLength(200)] public string Url { get; set; } = string.Empty;
+    [Required] 
+    [MaxLength(200)]
+    public required string Url { get; set; } = string.Empty;
 
-    [Required] public int SortOrder { get; set; } = 0;
+    [Required] 
+    public required int SortOrder { get; set; } = 0;
 
     [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     public string? ParentId { get; set; }
 
     [ForeignKey("ParentId")]

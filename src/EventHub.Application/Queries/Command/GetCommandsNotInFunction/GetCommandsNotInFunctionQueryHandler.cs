@@ -26,13 +26,11 @@ public class GetCommandsNotInFunctionQueryHandler : IRequestHandler<GetCommandsN
     {
         _logger.LogInformation("BEGIN: GetCommandsNotInFunctionQueryHandler");
 
-        var commandInFunctions = await _unitOfWork.CommandInFunctions
+        var commandInFunctions = _unitOfWork.CommandInFunctions
             .FindByCondition(x => x.FunctionId.Equals(request.FunctionId));
         
-        var commands = await _unitOfWork.Commands
+        var commands = _unitOfWork.Commands
             .FindByCondition(x => !commandInFunctions.Any(cif => cif.CommandId == x.Id))
-            .GetAwaiter()
-            .GetResult()
             .ToListAsync();
         
         _logger.LogInformation("END: GetCommandsNotInFunctionQueryHandler");

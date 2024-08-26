@@ -12,6 +12,7 @@ public class FavouriteEventConfiguration: IEntityTypeConfiguration<FavouriteEven
             .HasOne(x => x.Event)
             .WithMany(x => x.FavouriteEvents)
             .HasForeignKey(x => x.EventId);
+        
         builder
             .HasOne(x => x.User)
             .WithMany(x => x.FavouriteEvents)

@@ -20,34 +20,37 @@ public class Ticket : AggregateRoot
 
     [Required]
     [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public string TicketNo { get; set; } = string.Empty;
+    public required string TicketNo { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
-    public string CustomerName { get; set; } = string.Empty;
+    public required string CustomerName { get; set; } = string.Empty;
 
-    [Required] [MaxLength(100)] [Phone] public string CustomerPhone { get; set; } = string.Empty;
+    [Required] 
+    [MaxLength(100)] 
+    [Phone] 
+    public required string CustomerPhone { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [EmailAddress]
-    public string CustomerEmail { get; set; } = string.Empty;
+    public required string CustomerEmail { get; set; } = string.Empty;
 
-    [Required] public Guid TicketTypeId { get; set; }
+    [Required] 
+    public required Guid TicketTypeId { get; set; } = Guid.Empty;
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
+    public required Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] public Guid PaymentId { get; set; }
+    [Required] 
+    public required Guid PaymentId { get; set; } = Guid.Empty;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public ETicketStatus Status { get; set; } = ETicketStatus.INACTIVE;
+    public required ETicketStatus Status { get; set; } = ETicketStatus.INACTIVE;
 
     [ForeignKey("TicketTypeId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

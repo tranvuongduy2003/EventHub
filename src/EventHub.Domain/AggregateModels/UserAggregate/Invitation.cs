@@ -11,16 +11,13 @@ namespace EventHub.Domain.AggregateModels.UserAggregate;
 public class Invitation : EntityBase
 {
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     public Guid InviterId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
     public Guid InvitedId { get; set; } = Guid.Empty;
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public Guid EventId { get; set; } = Guid.Empty;
 
     [ForeignKey("InviterId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

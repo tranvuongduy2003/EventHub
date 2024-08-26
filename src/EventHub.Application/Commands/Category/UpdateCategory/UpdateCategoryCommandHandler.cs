@@ -32,13 +32,15 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             throw new NotFoundException("Category does not exist!");
         
         //TODO: Delete current icon image from FileStorage
-        await _fileService.DeleteAsync(category.IconImage, FileContainer.CATEGORIES);
+        if (category.IconImageFileName != null)
+            await _fileService.DeleteAsync(category.IconImageFileName, FileContainer.CATEGORIES);
 
         category = _mapper.Map<Domain.AggregateModels.CategoryAggregate.Category>(request.Category);
         
         //TODO: Upload file and assign category.ImageColor to new File's Name
         var iconImage = await _fileService.UploadAsync(request.Category.IconImage, FileContainer.CATEGORIES);
-        category.IconImage = iconImage.Blob.Name ?? "";
+        category.IconImageUrl = iconImage.Blob.Uri ?? "";
+        category.IconImageFileName = iconImage.Blob.Name ?? "";
         
         await _unitOfWork.Categories.UpdateAsync(category);
         await _unitOfWork.CommitAsync();

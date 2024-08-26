@@ -12,10 +12,12 @@ public class PermissionConfiguration: IEntityTypeConfiguration<Permission>
             .HasOne(x => x.Function)
             .WithMany(x => x.Permissions)
             .HasForeignKey(x => x.FunctionId);
+        
         builder
             .HasOne(x => x.Role)
             .WithMany(x => x.Permissions)
             .HasForeignKey(x => x.RoleId);
+        
         builder
             .HasOne(x => x.Command)
             .WithMany(x => x.Permissions)

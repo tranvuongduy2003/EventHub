@@ -14,20 +14,24 @@ public class TicketType : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
     [Required]
     [Range(0, double.PositiveInfinity)]
-    public int Quantity { get; set; } = 0;
+    public required int Quantity { get; set; } = 0;
 
-    [Required] [Range(0, 1000000000)] public long Price { get; set; } = 0;
+    [Required] 
+    [Range(0, 1000000000)] 
+    public required long Price { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] public int? NumberOfSoldTickets { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] 
+    public int? NumberOfSoldTickets { get; set; } = 0;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ public static class ValidationConfiguration
         services
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters()
+            .AddValidatorsFromAssembly(Shared.AssemblyReference.Assembly)
             .AddFluentValidationRulesToSwagger();
 
         return services;

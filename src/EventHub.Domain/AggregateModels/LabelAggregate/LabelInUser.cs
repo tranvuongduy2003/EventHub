@@ -10,12 +10,11 @@ namespace EventHub.Domain.AggregateModels.LabelAggregate;
 [PrimaryKey("LabelId", "UserId")]
 public class LabelInUser : EntityBase
 {
-    [Required] public Guid LabelId { get; set; }
+    [Required] 
+    public required Guid LabelId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
+    public required Guid UserId { get; set; } = Guid.Empty;
 
     [ForeignKey("LabelId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

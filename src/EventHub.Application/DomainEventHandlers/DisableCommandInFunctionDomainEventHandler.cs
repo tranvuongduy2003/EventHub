@@ -39,8 +39,6 @@ public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<Di
             .FindByCondition(x =>
                 x.FunctionId.Equals(notification.FunctionId) &&
                 x.CommandId.Equals(notification.CommandId))
-            .GetAwaiter()
-            .GetResult()
             .FirstOrDefaultAsync();
         if (commandInFunction is null)
             throw new NotFoundException("This command is not existed in function.");

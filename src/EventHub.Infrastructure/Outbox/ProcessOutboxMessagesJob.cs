@@ -118,14 +118,12 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
         IDbConnection connection,
         IDbTransaction transaction)
     {
-        string sql = $"""
-                      SELECT id, content
-                      FROM outbox_messages
-                      WHERE processed_on_utc IS NULL
-                      ORDER BY occurred_on_utc
-                      LIMIT @BatchSize
-                      FOR UPDATE SKIP LOCKED
-                      """;
+        string sql = @"
+          SELECT TOP (@BatchSize) Id, Content
+          FROM OutboxMessages WITH (READPAST)
+          WHERE ProcessedOnUtc IS NULL
+          ORDER BY OccurredOnUtc
+        ";
 
         IEnumerable<OutboxMessageResponse> outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(
             sql,
@@ -142,10 +140,10 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
         Exception? exception)
     {
         const string sql = @"
-            UPDATE outbox_messages
-            SET processed_on_utc = @ProcessedOnUtc,
-                error = @Error
-            WHERE id = @Id";
+            UPDATE OutboxMessages
+            SET ProcessedOnUtc = @ProcessedOnUtc,
+                Error = @Error
+            WHERE Id = @Id";
 
         await connection.ExecuteAsync(
             sql,

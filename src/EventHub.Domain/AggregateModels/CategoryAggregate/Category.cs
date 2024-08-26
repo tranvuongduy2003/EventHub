@@ -16,13 +16,19 @@ public class Category : AggregateRoot
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
     [Required]
-    [Column(TypeName = "nvarchar(max)")]
-    public string IconImage { get; set; } = string.Empty;
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public required string IconImageUrl { get; set; } = string.Empty;
 
-    [Required] [MaxLength(50)] public string Color { get; set; } = "#FFFFFF";
+    [Required]
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public required string IconImageFileName { get; set; } = string.Empty;
+
+    [Required] [MaxLength(50)] public required string Color { get; set; } = "#FFFFFF";
 
     public virtual ICollection<EventCategory> EventCategories { get; set; } = new List<EventCategory>();
 }

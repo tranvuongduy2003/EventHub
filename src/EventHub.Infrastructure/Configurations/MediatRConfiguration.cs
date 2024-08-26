@@ -8,7 +8,7 @@ public static class MediatRConfiguration
     {
         services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssembly(EventHub.Application.AssemblyReference.Assembly);
+            config.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
         });
 
         return services;

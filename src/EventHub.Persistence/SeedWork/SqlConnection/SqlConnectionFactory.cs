@@ -6,15 +6,17 @@ namespace EventHub.Persistence.SeedWork.SqlConnection;
 
 public class SqlConnectionFactory : ISqlConnectionFactory
 {
-    private readonly string? _connectionString;
+    private readonly string _connectionString;
 
     public SqlConnectionFactory(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnectionString");
+        _connectionString = configuration.GetConnectionString("DefaultConnectionString") ?? "";
     }
 
     public IDbConnection CreateConnection()
     {
-        return new Microsoft.Data.SqlClient.SqlConnection(_connectionString);
+        var connection = new Microsoft.Data.SqlClient.SqlConnection(_connectionString);
+        connection.Open();
+        return connection;
     }
 }

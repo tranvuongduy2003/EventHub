@@ -12,6 +12,7 @@ public class CommandInFunctionConfiguration: IEntityTypeConfiguration<CommandInF
             .HasOne(x => x.Function)
             .WithMany(x => x.CommandInFunctions)
             .HasForeignKey(x => x.FunctionId);
+        
         builder
             .HasOne(x => x.Command)
             .WithMany(x => x.CommandInFunctions)

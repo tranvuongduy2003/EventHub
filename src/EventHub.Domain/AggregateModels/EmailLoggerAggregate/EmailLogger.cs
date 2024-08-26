@@ -17,14 +17,15 @@ public class EmailLogger : AggregateRoot
     [Required]
     [MaxLength(100)]
     [EmailAddress]
-    public string ReceiverEmail { get; set; } = string.Empty;
+    public required string ReceiverEmail { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [EmailAddress]
-    public string SentEmail { get; set; } = string.Empty;
+    public required string SentEmail { get; set; } = string.Empty;
 
-    [Required] public Guid EmailContentId { get; set; }
+    [Required] 
+    public required Guid EmailContentId { get; set; } = Guid.Empty;
 
     [ForeignKey("EmailContentId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

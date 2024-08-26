@@ -26,6 +26,10 @@ Please give me 1 star for reference source.
   - **Step 2:** Run app with **http** options
   **http** will run with the environment **Development** while **https** will run with the environment **Production**
 
+# 4. Run migration:
+  - dotnet ef migrations add "InitialMigration" --startup-project EventHub.Presentation --project EventHub.Persistence --output-dir ../EventHub.Persistence/Migrations
+  - dotnet ef database update --startup-project EventHub.Presentation --project EventHub.Persistence
+
 -----------------------------------------------------------
 
 ## 1. Clean Architecture

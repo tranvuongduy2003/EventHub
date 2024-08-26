@@ -1,24 +1,18 @@
-﻿namespace EventHub.Shared.DTOs.Payment;
+﻿using EventHub.Shared.DTOs.Event;
+
+namespace EventHub.Shared.DTOs.Payment;
 
 public class PaymentItemDto
 {
-    public string Id { get; set; }
-
-    public string EventId { get; set; }
-
-    public string EventName { get; set; }
-
-    public string TicketTypeId { get; set; }
-
-    public string TicketTypeName { get; set; }
-
-    public string UserId { get; set; }
-
-    public string PaymentId { get; set; }
-
-    public long TotalPrice { get; set; } = 0;
-
+    public Guid Id { get; set; }
+    
+    public string Name { get; set; } = string.Empty;
+    
     public int Quantity { get; set; } = 0;
-
+    
+    public long TotalPrice { get; set; } = 0;
+    
     public double Discount { get; set; } = 0;
+    
+    public TicketTypeDto TicketType { get; set; } = null!;
 }

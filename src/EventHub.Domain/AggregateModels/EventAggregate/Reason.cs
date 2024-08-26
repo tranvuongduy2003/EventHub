@@ -12,12 +12,13 @@ public class Reason : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(1000)]
     [Column(TypeName = "nvarchar(1000)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

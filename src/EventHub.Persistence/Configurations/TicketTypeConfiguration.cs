@@ -12,6 +12,7 @@ public class TicketTypeConfiguration: IEntityTypeConfiguration<TicketType>
             .HasMany(x => x.PaymentItems)
             .WithOne(x => x.TicketType)
             .HasForeignKey(x => x.TicketTypeId);
+        
         builder
             .HasMany(x => x.Tickets)
             .WithOne(x => x.TicketType)

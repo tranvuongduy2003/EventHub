@@ -12,11 +12,18 @@ public class EventSubImage : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
-    [Column(TypeName = "nvarchar(max)")]
-    public string Image { get; set; } = string.Empty;
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public required string ImageUrl { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public required string ImageFileName { get; set; } = string.Empty;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

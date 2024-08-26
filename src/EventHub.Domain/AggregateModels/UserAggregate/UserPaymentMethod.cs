@@ -2,39 +2,47 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.AggregateModels.PaymentAggregate;
 using EventHub.Domain.SeedWork.Entities;
+using EventHub.Domain.SeedWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.UserAggregate;
 
 [Table("UserPaymentMethods")]
-public class UserPaymentMethod : EntityBase
+public class UserPaymentMethod : EntityBase, IAuditable
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
+    public required Guid AuthorId { get; set; } = Guid.Empty;
 
-    [Required] public Guid MethodId { get; set; }
+    [Required] 
+    public required Guid PaymentMethodId { get; set; } = Guid.Empty;
 
-    [Required] [MaxLength(50)] public string PaymentAccountNumber { get; set; } = string.Empty;
+    [Required] 
+    [MaxLength(50)] 
+    public required string PaymentAccountNumber { get; set; } = string.Empty;
 
-    [Column(TypeName = "nvarchar(max)")] public string? PaymentAccountQRCode { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? PaymentAccountQrCodeUrl { get; set; }
+    
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? PaymentAccountQrCodeFileName { get; set; }
 
     [MaxLength(200)]
     [Column(TypeName = "nvarchar(200)")]
     public string? CheckoutContent { get; set; } = string.Empty;
 
-    [ForeignKey("UserId")]
+    [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
-    public virtual User User { get; set; } = null!;
+    public virtual User Author { get; set; } = null!;
 
-    [ForeignKey("MethodId")]
+    [ForeignKey("PaymentMethodId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
-    public virtual PaymentMethod Method { get; set; } = null!;
+    public virtual PaymentMethod PaymentMethod { get; set; } = null!;
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

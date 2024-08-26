@@ -1,24 +1,25 @@
 using System.ComponentModel;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Category;
 
 public class CategoryDto
 {
-    [Description("Id of the category")]
+    [SwaggerSchema("Id of the category")]
     public Guid Id { get; set; }
 
-    [Description("Name of the category")]
+    [SwaggerSchema("Name of the category")]
     public string Name { get; set; }
 
-    [Description("Icon image URL of the category")]
-    public string IconImage { get; set; }
+    [SwaggerSchema("Icon image URL of the category")]
+    public string IconImageUrl { get; set; }
 
-    [Description("Background color of the category")]
+    [SwaggerSchema("Background color of the category")]
     public string Color { get; set; }
 
-    [Description("The datetime that the category was created")]
+    [SwaggerSchema("The datetime that the category was created")]
     public DateTime CreatedAt { get; set; }
 
-    [Description("The last datetime that the category was updated")]
+    [SwaggerSchema("The last datetime that the category was updated")]
     public DateTime? UpdatedAt { get; set; }
 }

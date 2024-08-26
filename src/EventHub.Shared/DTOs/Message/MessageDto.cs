@@ -8,11 +8,11 @@ public class MessageDto
 
     public string? Content { get; set; }
 
-    public string? Image { get; set; }
+    public string? ImageUrl { get; set; } = string.Empty;
 
-    public string? Video { get; set; }
+    public string? VideoUrl { get; set; } = string.Empty;
 
-    public string? Audio { get; set; }
+    public string? AudioUrl { get; set; } = string.Empty;
 
     public string UserId { get; set; }
 

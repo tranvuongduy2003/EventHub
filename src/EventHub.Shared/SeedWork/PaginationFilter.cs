@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using EventHub.Shared.Enums.Common;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.SeedWork;
 
@@ -26,8 +27,7 @@ public class PaginationFilter
     /// An integer representing the current page number. The default value is 1. The value is clamped to be at least 1.
     /// </value>
     [DefaultValue(1)]
-    [DisplayName("page")]
-    [Description("Current page number")]
+    [SwaggerParameter("Current page number")]
     public int Page
     {
         get => _page;
@@ -41,8 +41,7 @@ public class PaginationFilter
     /// An integer representing the total items per page. The default value is 10. The value is clamped to be at least 1.
     /// </value>
     [DefaultValue(10)]
-    [DisplayName("size")]
-    [Description("Total items of each page")]
+    [SwaggerParameter("Total items of each page")]
     public int Size
     {
         get => _size;
@@ -55,8 +54,7 @@ public class PaginationFilter
     /// <value>
     /// A collection of <see cref="Order"/> instances representing the attributes to order by and their respective directions.
     /// </value>
-    [DisplayName("orders")]
-    [Description("The list pairs of the ordered attribute and its order direction")]
+    [SwaggerParameter("The list pairs of the ordered attribute and its order direction")]
     public IEnumerable<Order> Orders
     {
         get => _orders; 
@@ -69,8 +67,7 @@ public class PaginationFilter
     /// <value>
     /// A collection of <see cref="Search"/> instances representing the attributes to search by and their respective values.
     /// </value>
-    [DisplayName("searches")]
-    [Description("The list pairs of the searched attribute and its search value")]
+    [SwaggerParameter("The list pairs of the searched attribute and its search value")]
     public IEnumerable<Search> Searches
     {
         get => _searches; 
@@ -84,8 +81,7 @@ public class PaginationFilter
     /// A boolean value indicating whether to skip paging and get all items. The default value is false.
     /// </value>
     [DefaultValue(false)]
-    [DisplayName("takeAll")]
-    [Description("If takeAll equals true, skip paging and get all items")]
+    [SwaggerParameter("If takeAll equals true, skip paging and get all items")]
     public bool TakeAll
     {
         get => _takeAll; 
@@ -108,8 +104,7 @@ public class Order
     /// A string representing the name of the attribute to order by. The default value is null.
     /// </value>
     [DefaultValue(null)]
-    [DisplayName("orderBy")]
-    [Description("Name of the ordered attribute")]
+    [SwaggerParameter("Name of the ordered attribute")]
     public string OrderBy { get; set; }
     
     /// <summary>
@@ -119,8 +114,7 @@ public class Order
     /// An enumeration value of type <see cref="EPageOrder"/> representing the direction of the order. The default value is <see cref="EPageOrder.ASC"/>.
     /// </value>
     [DefaultValue(EPageOrder.ASC)]
-    [DisplayName("orderDirection")]
-    [Description("Direction of the ordered attribute (ASC, DESC)")]
+    [SwaggerParameter("Direction of the ordered attribute (ASC, DESC)")]
     public EPageOrder OrderDirection { get; set; }
 }
 
@@ -139,8 +133,7 @@ public class Search
     /// A nullable string representing the name of the attribute to search by. The default value is null.
     /// </value>
     [DefaultValue(null)]
-    [DisplayName("searchBy")]
-    [Description("Name of the searched attribute")]
+    [SwaggerParameter("Name of the searched attribute")]
     public string? SearchBy { get; set; }
     
     /// <summary>
@@ -150,7 +143,6 @@ public class Search
     /// A nullable string representing the search value for the attribute. The default value is null.
     /// </value>
     [DefaultValue(null)]
-    [DisplayName("searchValue")]
-    [Description("Value of the searched attribute")]
+    [SwaggerParameter("Value of the searched attribute")]
     public string? SearchValue { get; set; }
 }

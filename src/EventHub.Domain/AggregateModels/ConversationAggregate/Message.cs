@@ -14,22 +14,39 @@ public class Message : EntityAuditBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")] public string? Content { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? Content { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")] public string? Image { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? ImageUrl { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")] public string? Video { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? ImageFileName { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")] public string? Audio { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? VideoUrl { get; set; }
 
-    [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? VideoFileName { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? AudioUrl { get; set; }
 
-    [Required] public Guid ConversationId { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? AudioFileName { get; set; }
+
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
+
+    [Required] 
+    public required Guid ConversationId { get; set; } = Guid.Empty;
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
@@ -38,8 +55,4 @@ public class Message : EntityAuditBase
     [ForeignKey("ConversationId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual Conversation Conversation { get; set; } = null!;
-
-    [ForeignKey("UserId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual User User { get; set; } = null!;
 }

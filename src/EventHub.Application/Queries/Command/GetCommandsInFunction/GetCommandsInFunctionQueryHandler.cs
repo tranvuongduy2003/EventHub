@@ -26,9 +26,9 @@ public class GetCommandsInFunctionQueryHandler : IRequestHandler<GetCommandsInFu
     {
         _logger.LogInformation("BEGIN: GetCommandsInFunctionQueryHandler");
 
-        var commandInFunctions = await _unitOfWork.CommandInFunctions
-            .FindByCondition(x => x.FunctionId.Equals(request.FunctionId), includeProperties: x => x.Command);
-        var commands = await commandInFunctions.DistinctBy(x => x.CommandId)
+        var commands = await _unitOfWork.CommandInFunctions
+            .FindByCondition(x => x.FunctionId.Equals(request.FunctionId), includeProperties: x => x.Command)
+            .DistinctBy(x => x.CommandId)
             .Select(x => x.Command)
             .ToListAsync();
 

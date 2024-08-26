@@ -15,19 +15,16 @@ public class Conversation : AggregateRoot
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid HostId { get; set; } = Guid.Empty;
+    public required Guid HostId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
-
-    [Column(TypeName = "nvarchar(max)")] public Guid? LastMessageId { get; set; } = Guid.Empty;
+    public required Guid UserId { get; set; } = Guid.Empty;
+    
+    public Guid? LastMessageId { get; set; }
 
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

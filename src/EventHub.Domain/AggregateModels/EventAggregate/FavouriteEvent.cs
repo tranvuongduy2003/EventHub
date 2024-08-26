@@ -11,11 +11,10 @@ namespace EventHub.Domain.AggregateModels.EventAggregate;
 public class FavouriteEvent : EntityBase
 {
     [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
+    public required Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid EventId { get; set; } = Guid.Empty;
 
     [ForeignKey("UserId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]

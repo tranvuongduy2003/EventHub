@@ -15,8 +15,8 @@ namespace EventHub.Domain.AggregateModels.UserAggregate;
 
 public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
 {
-    [MaxLength(50)]
-    [Column(TypeName = "nvarchar(50)")]
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
     public string? FullName { get; set; }
 
     public DateTime? Dob { get; set; }
@@ -28,19 +28,37 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     [Column(TypeName = "nvarchar(1000)")]
     public string? Bio { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")] public string? Avatar { get; set; }
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? AvatarUrl { get; set; }
+
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string? AvatarFileName { get; set; }
 
     [Required]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
+    public required EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
 
-    [Range(0, double.PositiveInfinity)] public int? NumberOfFollowers { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] 
+    public int? NumberOfFollowers { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] public int? NumberOfFolloweds { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] 
+    public int? NumberOfFolloweds { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] public int? NumberOfFavourites { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] 
+    public int? NumberOfFavourites { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] public int? NumberOfCreatedEvents { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] 
+    public int? NumberOfCreatedEvents { get; set; } = 0;
+
+    public bool IsDeleted { get; set; } = false;
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime? UpdatedAt { get; set; }
+    
+    public DateTime? DeletedAt { get; set; }
 
     public virtual ICollection<LabelInUser> LabelInUsers { get; set; } = new List<LabelInUser>();
 
@@ -68,12 +86,4 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = new List<UserPaymentMethod>();
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public bool IsDeleted { get; set; }
-
-    public DateTime? DeletedAt { get; set; }
 }

@@ -35,6 +35,7 @@ public static class SwaggerConfiguration
                 }
             });
             option.AddSignalRSwaggerGen();
+            option.EnableAnnotations();
         });
 
         return services;

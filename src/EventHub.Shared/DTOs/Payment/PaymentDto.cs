@@ -1,25 +1,21 @@
 ﻿using System.Text.Json.Serialization;
+using EventHub.Shared.DTOs.Event;
+using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.Payment;
 
 namespace EventHub.Shared.DTOs.Payment;
 
 public class PaymentDto
 {
-    public string Id { get; set; }
-
-    public string EventId { get; set; }
-
-    public PaymentEventDto Event { get; set; }
+    public Guid Id { get; set; }
 
     public int TicketQuantity { get; set; } = 0;
 
-    public string UserId { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
 
-    public string CustomerName { get; set; }
+    public string CustomerPhone { get; set; } = string.Empty;
 
-    public string CustomerPhone { get; set; }
-
-    public string CustomerEmail { get; set; }
+    public string CustomerEmail { get; set; } = string.Empty;
 
     public decimal TotalPrice { get; set; } = 0;
 
@@ -28,9 +24,11 @@ public class PaymentDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
-    public string UserPaymentMethodId { get; set; }
+    public EventDto? Event { get; set; } = null;
+    
+    public UserDto? Author { get; set; } = null;
 
-    public UserPaymentMethodDto PaymentMethod { get; set; }
+    public UserPaymentMethodDto? UserPaymentMethod { get; set; } = null;
 
     public DateTime CreatedAt { get; set; }
 

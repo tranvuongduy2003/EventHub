@@ -31,7 +31,8 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         
         //TODO: Upload file and assign category.ImageColor to new File's Name
         var iconImage = await _fileService.UploadAsync(request.IconImage, FileContainer.CATEGORIES);
-        category.IconImage = iconImage.Blob.Name;
+        category.IconImageUrl = iconImage.Blob.Uri;
+        category.IconImageFileName = iconImage.Blob.Name;
 
         await _unitOfWork.Categories.CreateAsync(category);
         await _unitOfWork.CommitAsync();

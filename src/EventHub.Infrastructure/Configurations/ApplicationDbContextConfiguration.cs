@@ -12,17 +12,26 @@ public static class ApplicationDbContextConfiguration
         IConfiguration configuration)
     {
         services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
-        
+        services.AddSingleton<DateTrackingInterceptor>();
+
         var connectionString = configuration.GetConnectionString("DefaultConnectionString");
         if (connectionString == null || string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("DefaultConnectionString is not configured.");
         services.AddDbContext<ApplicationDbContext>((provider, optionsBuilder) =>
-            {
-                var inteceptor = provider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-                optionsBuilder
-                    .UseSqlServer(connectionString)
-                    .AddInterceptors(inteceptor);
-            });
+        {
+            var convertDomainEventsToOutboxMessagesInterceptor =
+                provider.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>()!;
+            var dateTrackingInterceptor =
+                provider.GetService<DateTrackingInterceptor>()!;
+
+            optionsBuilder
+                .UseSqlServer(connectionString, builder => 
+                    builder.MigrationsAssembly("EventHub.Persistence"))
+                .AddInterceptors(
+                    dateTrackingInterceptor,
+                    convertDomainEventsToOutboxMessagesInterceptor
+                );
+        });
         return services;
     }
 }

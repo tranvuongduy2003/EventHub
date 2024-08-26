@@ -49,24 +49,9 @@ public class ApplicationDbContextSeed
     {
         if (!_roleManager.Roles.Any())
         {
-            await _roleManager.CreateAsync(new Role
-            {
-                Name = EUserRole.ADMIN.GetDisplayName(),
-                ConcurrencyStamp = "1",
-                NormalizedName = EUserRole.ADMIN.GetDisplayName().Normalize()
-            });
-            await _roleManager.CreateAsync(new Role
-            {
-                Name = EUserRole.CUSTOMER.GetDisplayName(),
-                ConcurrencyStamp = "2",
-                NormalizedName = EUserRole.CUSTOMER.GetDisplayName().Normalize()
-            });
-            await _roleManager.CreateAsync(new Role
-            {
-                Name = EUserRole.ORGANIZER.GetDisplayName(),
-                ConcurrencyStamp = "3",
-                NormalizedName = EUserRole.ORGANIZER.GetDisplayName().Normalize()
-            });
+            await _roleManager.CreateAsync(new Role(EUserRole.ADMIN.GetDisplayName()));
+            await _roleManager.CreateAsync(new Role(EUserRole.CUSTOMER.GetDisplayName()));
+            await _roleManager.CreateAsync(new Role(EUserRole.ORGANIZER.GetDisplayName()));
         }
 
         await _context.SaveChangesAsync();
@@ -79,48 +64,42 @@ public class ApplicationDbContextSeed
             var admin = new User
             {
                 Email = "admin@gmail.com",
-                NormalizedEmail = "admin@gmail.com",
                 UserName = "admin",
-                NormalizedUserName = "admin",
-                LockoutEnabled = false,
                 PhoneNumber = "0829440357",
                 FullName = "Admin",
                 Dob = new Faker().Person.DateOfBirth,
                 Gender = EGender.MALE,
-                Bio = new Faker().Lorem.ToString(),
+                Bio = new Faker().Lorem.Paragraph(),
                 Status = EUserStatus.ACTIVE
             };
             var result = await _userManager.CreateAsync(admin, "Admin@123");
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync("admin@gmail.com");
-                await _userManager.AddToRoleAsync(user, EUserRole.ADMIN.GetDisplayName());
+                if (user != null)
+                    await _userManager.AddToRoleAsync(user, EUserRole.ADMIN.GetDisplayName());
             }
 
 
             var userFaker = new Faker<User>()
                 .RuleFor(u => u.Email, f => f.Person.Email)
-                .RuleFor(u => u.NormalizedEmail, f => f.Person.Email)
                 .RuleFor(u => u.UserName, f => f.Person.UserName)
-                .RuleFor(u => u.NormalizedUserName, f => f.Person.UserName)
-                .RuleFor(u => u.LockoutEnabled, f => false)
                 .RuleFor(u => u.PhoneNumber, f => f.Phone.PhoneNumber("###-###-####"))
                 .RuleFor(u => u.FullName, f => f.Person.FullName)
                 .RuleFor(u => u.Dob, f => f.Person.DateOfBirth)
                 .RuleFor(u => u.Gender, f => f.PickRandom<EGender>())
-                .RuleFor(u => u.Bio, f => f.Lorem.ToString())
+                .RuleFor(u => u.Bio, f => f.Lorem.Paragraph())
                 .RuleFor(u => u.Status, _ => EUserStatus.ACTIVE);
 
             for (var userIndex = 0; userIndex < MAX_USERS_QUANTITY * 2; userIndex++)
             {
                 var customer = userFaker.Generate();
                 var customerResult = await _userManager.CreateAsync(customer, "User@123");
-                if (customerResult.Succeeded)
-                {
-                    var user = await _userManager.FindByEmailAsync(customer.Email);
-                    await _userManager.AddToRolesAsync(user,
-                        new List<string> { EUserRole.CUSTOMER.GetDisplayName(), EUserRole.ORGANIZER.GetDisplayName() });
-                }
+                if (!customerResult.Succeeded || customer.Email == null) continue;
+                var user = await _userManager.FindByEmailAsync(customer.Email);
+                if (user != null)
+                    await _userManager.AddToRolesAsync(user, new List<string>
+                        { EUserRole.CUSTOMER.GetDisplayName(), EUserRole.ORGANIZER.GetDisplayName() });
             }
 
             await _context.SaveChangesAsync();
@@ -276,104 +255,256 @@ public class ApplicationDbContextSeed
             var adminRole = await _roleManager.FindByNameAsync(EUserRole.ADMIN.GetDisplayName());
             foreach (var function in functions)
             {
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "CREATE"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "UPDATE"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "DELETE"));
-                _context.Permissions.Add(new Permission(function.Id, adminRole.Id, "VIEW"));
+                if (adminRole == null) continue;
+                _context.Permissions.Add(new Permission
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "CREATE" });
+                _context.Permissions.Add(new Permission
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "UPDATE" });
+                _context.Permissions.Add(new Permission
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "DELETE" });
+                _context.Permissions.Add(new Permission
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "VIEW" });
             }
 
             var customerRole = await _roleManager.FindByNameAsync(EUserRole.CUSTOMER.GetDisplayName());
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), customerRole.Id, "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), customerRole.Id, "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), customerRole.Id, "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), customerRole.Id, "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_EVENT.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), customerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), customerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), customerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_TICKET.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), customerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), customerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), customerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(
-                new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), customerRole.Id, "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), customerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), customerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), customerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.SYSTEM.GetDisplayName(), customerRole.Id, "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.SYSTEM.GetDisplayName(), customerRole.Id, "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.SYSTEM_USER.GetDisplayName(), customerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.SYSTEM_USER.GetDisplayName(), customerRole.Id,
-                "UPDATE"));
+            if (customerRole != null)
+            {
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = customerRole.Id, CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = customerRole.Id, CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = customerRole.Id, CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = customerRole.Id, CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EVENT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_TICKET.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM.GetDisplayName(), RoleId = customerRole.Id, CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM.GetDisplayName(), RoleId = customerRole.Id, CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(), RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+            }
 
             var organizerRole = await _roleManager.FindByNameAsync(EUserRole.ORGANIZER.GetDisplayName());
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), organizerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL.GetDisplayName(), organizerRole.Id, "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_EVENT.GetDisplayName(), organizerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_EVENT.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_EVENT.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_EVENT.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), organizerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_TICKET.GetDisplayName(), organizerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_TICKET.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_TICKET.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_TICKET.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_REVIEW.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), organizerRole.Id,
-                "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), organizerRole.Id,
-                "CREATE"));
-            _context.Permissions.Add(new Permission(EFunctionCode.GENERAL_CHAT.GetDisplayName(), organizerRole.Id,
-                "DELETE"));
-            _context.Permissions.Add(
-                new Permission(EFunctionCode.SYSTEM_USER.GetDisplayName(), organizerRole.Id, "VIEW"));
-            _context.Permissions.Add(new Permission(EFunctionCode.SYSTEM_USER.GetDisplayName(), organizerRole.Id,
-                "UPDATE"));
+            if (organizerRole != null)
+            {
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = organizerRole.Id, CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = organizerRole.Id, CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = organizerRole.Id, CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL.GetDisplayName(), RoleId = organizerRole.Id, CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EVENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EVENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EVENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EVENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_TICKET.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_TICKET.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_TICKET.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_TICKET.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(), RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -427,7 +558,7 @@ public class ApplicationDbContextSeed
             {
                 fakerCategory
                     .RuleFor(c => c.Name, _ => categoryNames[i])
-                    .RuleFor(c => c.IconImage, _ => icons[i]);
+                    .RuleFor(c => c.IconImageFileName, _ => icons[i]);
 
                 var category = fakerCategory.Generate();
                 categories.Add(category);
@@ -481,8 +612,9 @@ public class ApplicationDbContextSeed
             {
                 var method = new PaymentMethod
                 {
-                    MethodLogo = icons[i],
-                    MethodName = bankNames[i]
+                    MethodLogoFileName = icons[i],
+                    MethodName = bankNames[i],
+                    MethodLogoUrl = string.Empty,
                 };
                 _context.PaymentMethods.Add(method);
             }
@@ -543,7 +675,7 @@ public class ApplicationDbContextSeed
 
                 #region CoverImage
 
-                eventItem.CoverImage = new Faker().Image.ToString();
+                eventItem.CoverImageUrl = new Faker().Image.PicsumUrl();
 
                 #endregion
 
@@ -573,7 +705,8 @@ public class ApplicationDbContextSeed
                     var eventSubImage = new EventSubImage
                     {
                         EventId = eventItem.Id,
-                        Image = new Faker().Image.ToString()
+                        ImageUrl = new Faker().Image.PicsumUrl(),
+                        ImageFileName = string.Empty
                     };
                     _context.EventSubImages.Add(eventSubImage);
                 });
@@ -612,7 +745,7 @@ public class ApplicationDbContextSeed
                 .RuleFor(e => e.Content, f => f.Lorem.Text())
                 .RuleFor(e => e.Rate, f => f.Random.Double(0.0, 5.0))
                 .RuleFor(e => e.EventId, f => f.PickRandom<Event>(events).Id)
-                .RuleFor(e => e.UserId, f => f.PickRandom<User>(users).Id);
+                .RuleFor(e => e.AuthorId, f => f.PickRandom<User>(users).Id);
 
             var reviews = fakerReview.Generate(1000);
             _context.Reviews.AddRange(reviews);

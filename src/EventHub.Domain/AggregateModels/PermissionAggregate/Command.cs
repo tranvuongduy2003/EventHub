@@ -14,7 +14,7 @@ public class Command : EntityBase
     [Required]
     [MaxLength(50)]
     [Column(TypeName = "nvarchar(50)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
     public virtual ICollection<CommandInFunction> CommandInFunctions { get; set; } = new List<CommandInFunction>();
 

@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Auth;
 
 public class SignInResponseDto
 {
-    [Description("Access token to login the account")]
+    [SwaggerSchema("Access token to login the account")]
     public string AccessToken { get; set; }
 
-    [Description("Refresh token to get another new access token")]
+    [SwaggerSchema("Refresh token to get another new access token")]
     public string RefreshToken { get; set; }
 }

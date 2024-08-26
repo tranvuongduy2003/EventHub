@@ -12,6 +12,7 @@ public class LabelInUserConfiguration: IEntityTypeConfiguration<LabelInUser>
             .HasOne(x => x.User)
             .WithMany(x => x.LabelInUsers)
             .HasForeignKey(x => x.UserId);
+        
         builder
             .HasOne(x => x.Label)
             .WithMany(x => x.LabelInUsers)

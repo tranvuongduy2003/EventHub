@@ -8,15 +8,15 @@ public class SendMessageDto
 
     public string? Content { get; set; }
 
-    public string? ImageId { get; set; }
-
     public string? ImageUrl { get; set; }
-
-    public string? VideoId { get; set; }
+    
+    public string? ImageFileName { get; set; }
 
     public string? VideoUrl { get; set; }
-
-    public string? AudioId { get; set; }
+    
+    public string? VideoFileName { get; set; }
 
     public string? AudioUrl { get; set; }
+    
+    public string? AudioFileName { get; set; }
 }

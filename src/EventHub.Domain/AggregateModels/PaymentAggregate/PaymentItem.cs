@@ -4,6 +4,7 @@ using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Entities;
+using EventHub.Domain.SeedWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.PaymentAggregate;
@@ -15,37 +16,28 @@ public class PaymentItem : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] public Guid EventId { get; set; }
+    [Required] 
+    public required Guid TicketTypeId { get; set; } = Guid.Empty;
 
-    [Required] public Guid TicketTypeId { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    [Column(TypeName = "varchar(50)")]
-    public Guid UserId { get; set; } = Guid.Empty;
-
-    [Required] public Guid PaymentId { get; set; }
+    [Required] 
+    public required Guid PaymentId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
 
     [Required]
     [Range(0, double.PositiveInfinity)]
-    public int Quantity { get; set; } = 0;
+    public required int Quantity { get; set; } = 0;
 
-    [Required] [Range(0, 1000000000)] public long TotalPrice { get; set; } = 0;
+    [Required] 
+    [Range(0, 1000000000)] 
+    public required long TotalPrice { get; set; } = 0;
 
-    [Required] [Range(0.00, 1.00)] public double Discount { get; set; } = 0;
-
-    [ForeignKey("EventId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual Event Event { get; set; } = null!;
-
-    [ForeignKey("UserId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual User User { get; set; } = null!;
+    [Required] 
+    [Range(0.00, 1.00)] 
+    public required double Discount { get; set; } = 0;
 
     [ForeignKey("PaymentId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
