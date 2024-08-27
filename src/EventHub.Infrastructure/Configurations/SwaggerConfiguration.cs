@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace EventHub.Infrastructure.Configurations;
@@ -36,8 +38,26 @@ public static class SwaggerConfiguration
             });
             option.AddSignalRSwaggerGen();
             option.EnableAnnotations();
+            option.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "EventHub APIs Documentation",
+                Description = "A comprehensive platform for hosting events, managing event logistics, and facilitating ticket sales. EventHub streamlines the entire event lifecycle from creation to ticketing."
+            });
         });
 
         return services;
+    }
+
+    public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
+    {
+        // Configure the HTTP request pipeline.
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.DocumentTitle = "EventHub APIs Documentation";
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventHub API V1");
+        });
+
+        return app;
     }
 }

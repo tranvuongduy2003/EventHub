@@ -7,6 +7,7 @@ using EventHub.Shared.Enums.Function;
 using EventHub.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -24,10 +25,14 @@ public class PermissionsController : ControllerBase
     }
     
     [HttpGet]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve all permissions for a function",
+        Description = "Fetches a list of all permissions associated with the specified function ID."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of permissions", typeof(List<CommandDto>))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetFullPermissions(string functionId)
     {
@@ -47,10 +52,14 @@ public class PermissionsController : ControllerBase
     }
     
     [HttpGet("roles")]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve permissions categorized by roles",
+        Description = "Fetches a list of permissions categorized by roles."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the permissions categorized by roles", typeof(List<CommandDto>))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPermissionsCategorizedByRoles()
     {

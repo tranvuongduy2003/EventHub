@@ -8,6 +8,7 @@ using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -25,12 +26,16 @@ public class RolesController : ControllerBase
     }
     
     [HttpPost("{roleId:guid}/add-function/{functionId}")]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Add a function to a role",
+        Description = "Adds a specific function to the role identified by the role ID."
+    )]
+    [SwaggerResponse(200, "Function added to role successfully", typeof(List<CommandDto>))]
+    [SwaggerResponse(400, "Bad Request - Invalid input or request data")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Role or function with the specified IDs not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> PostAddFunctionToRole(Guid roleId, string functionId)
     {
@@ -58,12 +63,16 @@ public class RolesController : ControllerBase
     }
     
     [HttpPost("{roleId:guid}/remove-function/{functionId}")]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Remove a function from a role",
+        Description = "Removes a specific function from the role identified by the role ID."
+    )]
+    [SwaggerResponse(200, "Function removed from role successfully", typeof(List<CommandDto>))]
+    [SwaggerResponse(400, "Bad Request - Invalid input or request data")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Role or function with the specified IDs not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> PostRemoveFunctionFromRole(Guid roleId, string functionId)
     {

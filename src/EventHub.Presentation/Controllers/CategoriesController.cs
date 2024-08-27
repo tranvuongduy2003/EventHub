@@ -12,6 +12,7 @@ using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -29,10 +30,14 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Create a new category",
+        Description = "Creates a new category based on the provided details. The request must include multipart form data."
+    )]
+    [SwaggerResponse(201, "Category created successfully", typeof(CategoryDto))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.CREATE)]
     [ApiValidationFilter]
@@ -54,8 +59,12 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(Pagination<CategoryDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve a list of categories",
+        Description = "Fetches a paginated list of categories based on the provided filter parameters."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of categories", typeof(Pagination<CategoryDto>))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     public async Task<IActionResult> GetCategories([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetCategories");
@@ -74,11 +83,15 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{categoryId:guid}")]
-    [ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve a category by its ID",
+        Description = "Fetches the details of a specific category based on the provided category ID."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the category", typeof(CategoryDto))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Category with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
     public async Task<IActionResult> GetCategoryById(Guid categoryId)
     {
@@ -102,11 +115,15 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{categoryId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Update an existing category",
+        Description = "Updates the details of an existing category based on the provided category ID and update information."
+    )]
+    [SwaggerResponse(200, "Category updated successfully")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Category with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.UPDATE)]
     [ApiValidationFilter]
@@ -132,11 +149,15 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{categoryId:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Delete a category",
+        Description = "Deletes the category with the specified ID."
+    )]
+    [SwaggerResponse(200, "Category deleted successfully")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Category with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.DELETE)]
     public async Task<IActionResult> DeleteCategory(Guid categoryId)
     {

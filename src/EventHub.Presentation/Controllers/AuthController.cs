@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -37,9 +38,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Sign up a new user",
+        Description = "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
+    )]
+    [SwaggerResponse(200, "User successfully registered", typeof(SignInResponseDto))]
+    [SwaggerResponse(400, "Invalid user input")]
+    [SwaggerResponse(500, "An error occurred while processing the request")]
     [ApiValidationFilter]
     public async Task<IActionResult> SignUp([FromBody] CreateUserDto dto)
     {
@@ -63,9 +68,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("validate-user")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Validate user credentials",
+        Description = "Validates the provided user credentials and returns an appropriate response based on the validation result."
+    )]
+    [SwaggerResponse(200, "User credentials are valid")]
+    [SwaggerResponse(400, "Invalid user credentials or request data")]
+    [SwaggerResponse(500, "An error occurred while processing the request")]
     [ApiValidationFilter]
     public async Task<IActionResult> ValidateUser([FromBody] ValidateUserDto dto)
     {
@@ -89,10 +98,14 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signin")]
-    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Sign in a user",
+        Description = "Authenticates the user based on the provided credentials and returns a sign-in response if successful."
+    )]
+    [SwaggerResponse(200, "Successfully signed in", typeof(SignInResponseDto))]
+    [SwaggerResponse(401, "Unauthorized - Invalid credentials")]
+    [SwaggerResponse(404, "Not Found - User not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     public async Task<IActionResult> SignIn([FromBody] SignInDto dto)
     {
         _logger.LogInformation("START: SignIn");
@@ -119,8 +132,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signout")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Sign out a user",
+        Description = "Signs out the current user, invalidating their session or authentication token."
+    )]
+    [SwaggerResponse(200, "Successfully signed out")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+
     public async Task<IActionResult> SignOut()
     {
         _logger.LogInformation("START: SignOut");
@@ -141,7 +159,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("external-login")]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Log in a user via an external provider",
+        Description = "Authenticates the user using an external authentication provider (e.g., Google, Facebook) and returns a login response if successful."
+    )]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
     {
         _logger.LogInformation("START: ExternalLogin");
@@ -162,8 +184,12 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("external-auth-callback")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Callback endpoint for external authentication",
+        Description = "Handles the callback from an external authentication provider and processes the authentication result."
+    )]
+    [SwaggerResponse(400, "Bad Request - Invalid or missing returnUrl parameter")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the authentication callback")]
     public async Task<IActionResult> ExternalLoginCallback([FromQuery] string returnUrl)
     {
         _logger.LogInformation("START: ExternalLoginCallback");
@@ -200,11 +226,15 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpPost("refresh-token")]
-    [ProducesResponseType(typeof(SignInResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Refresh user authentication token",
+        Description = "Refreshes the user's authentication token based on the provided refresh token credentials."
+    )]
+    [SwaggerResponse(200, "Successfully refreshed the token", typeof(SignInResponseDto))]
+    [SwaggerResponse(401, "Unauthorized - Invalid or expired refresh token")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
@@ -232,12 +262,16 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpPost("forgot-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Initiate password recovery",
+        Description = "Sends a password recovery email to the user based on the provided email address."
+    )]
+    [SwaggerResponse(200, "Password recovery email sent successfully")]
+    [SwaggerResponse(401, "Unauthorized - Invalid or missing credentials")]
+    [SwaggerResponse(404, "Not Found - User with the provided email address not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
@@ -260,13 +294,17 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpPost("reset-password")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Reset user password",
+        Description = "Resets the user's password based on the provided credentials and reset information."
+    )]
+    [SwaggerResponse(200, "Password reset successfully")]
+    [SwaggerResponse(400, "Bad Request - Invalid input or parameters")]
+    [SwaggerResponse(401, "Unauthorized - Invalid or expired credentials")]
+    [SwaggerResponse(404, "Not Found - User or resource not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [TokenRequirementFilter]
     [ApiValidationFilter]
     public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordDto dto)
@@ -293,12 +331,16 @@ public class AuthController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpGet("profile")]
-    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve user profile",
+        Description = "Fetches the details of the currently authenticated user."
+    )]
+    [SwaggerResponse(200, "User profile retrieved successfully", typeof(UserDto))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetUserProfile()
     {

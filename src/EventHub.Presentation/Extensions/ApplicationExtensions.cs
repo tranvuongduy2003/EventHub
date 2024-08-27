@@ -9,13 +9,8 @@ public static class ApplicationExtensions
 {
     public static void UseInfrastructure(this WebApplication app, string appCors)
     {
-        // Configure the HTTP request pipeline.
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Hub API V1");
-        });
-
+        app.UseSwaggerDocumentation();
+        
         // app.UseHttpsRedirection(); //production only
 
         app.UseErrorWrapping();

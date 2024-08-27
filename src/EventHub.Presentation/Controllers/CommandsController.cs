@@ -7,6 +7,7 @@ using EventHub.Shared.Enums.Function;
 using EventHub.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -24,10 +25,14 @@ public class CommandsController : ControllerBase
     }
     
     [HttpGet("get-in-function/{functionId}")]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve commands associated with a specific function",
+        Description = "Fetches a list of commands that are associated with the specified function ID."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of commands", typeof(List<CommandDto>))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
     [ClaimRequirement(EFunctionCode.SYSTEM_COMMAND, ECommandCode.VIEW)]
     public async Task<IActionResult> GetCommandsInFunction(string functionId)
@@ -48,10 +53,14 @@ public class CommandsController : ControllerBase
     }
     
     [HttpGet("get-not-in-function/{functionId}")]
-    [ProducesResponseType(typeof(List<CommandDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(
+        Summary = "Retrieve commands not associated with a specific function",
+        Description = "Fetches a list of commands that are not associated with the specified function ID."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of commands", typeof(List<CommandDto>))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
     [ClaimRequirement(EFunctionCode.SYSTEM_COMMAND, ECommandCode.VIEW)]
     public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
