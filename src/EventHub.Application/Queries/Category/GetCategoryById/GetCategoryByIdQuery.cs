@@ -10,4 +10,4 @@ namespace EventHub.Application.Queries.Category.GetCategoryById;
 /// <remarks>
 /// This query is used to request the retrieval of a category's information based on its unique identifier.
 /// </remarks>
-public record GetCategoryByIdQuery(Guid Id) : IQuery<CategoryDto>;
+public record GetCategoryByIdQuery(Guid CategoryId) : IQuery<CategoryDto>;

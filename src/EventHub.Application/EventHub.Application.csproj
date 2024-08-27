@@ -21,4 +21,12 @@
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\User\ChangePassword\" />
+      <Folder Include="Commands\User\CreateUser\" />
+      <Folder Include="Commands\User\Follow\" />
+      <Folder Include="Commands\User\Unfollow\" />
+      <Folder Include="Commands\User\UpdateUser\" />
+    </ItemGroup>
+
 </Project>
