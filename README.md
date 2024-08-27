@@ -37,9 +37,9 @@
     - **http** will run with the environment **Development** while **https** will run with the environment **Production**
 
 # RUN MIGRATIONS (ensure you are in **/src**):
-  - If you want to add a new migration, use this command:
+  - If you want to add a new migration, use this command, replace <your-migration-name> with your migration name:
   ```
-  dotnet ef migrations add "InitialMigration" --startup-project EventHub.Presentation --project EventHub.Persistence --output-dir ../EventHub.Persistence/Migrations 
+  dotnet ef migrations add <your-migration-name> --startup-project EventHub.Presentation --project EventHub.Persistence --output-dir ../EventHub.Persistence/Migrations 
   ```
   - Run this command in step 2 of **# HOW TO RUN THE APPLICATION** section, or after adding a new migration to update your database:
   ```
