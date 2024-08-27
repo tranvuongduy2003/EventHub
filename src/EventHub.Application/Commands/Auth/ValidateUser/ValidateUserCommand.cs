@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.User;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ValidateUser;
 
@@ -9,7 +10,7 @@ namespace EventHub.Application.Commands.Auth.ValidateUser;
 /// <remarks>
 /// This command is used to validate user details such as email, phone number, and full name.
 /// </remarks>
-public class ValidateUserCommand : IRequest<bool>
+public class ValidateUserCommand : ICommand<bool>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidateUserCommand"/> class.

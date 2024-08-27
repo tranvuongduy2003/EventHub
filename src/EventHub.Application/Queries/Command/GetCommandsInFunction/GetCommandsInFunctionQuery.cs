@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Command;
-using MediatR;
 
 namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 
@@ -9,4 +10,4 @@ namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 /// <remarks>
 /// This query is used to request the retrieval of commands that are linked to a given function, specified by its unique identifier.
 /// </remarks>
-public record GetCommandsInFunctionQuery(string FunctionId) : IRequest<List<CommandDto>>;
+public record GetCommandsInFunctionQuery(string FunctionId) : IQuery<List<CommandDto>>;

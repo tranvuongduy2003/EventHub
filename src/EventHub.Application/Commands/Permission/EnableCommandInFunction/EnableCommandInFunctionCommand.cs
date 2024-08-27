@@ -1,6 +1,6 @@
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
 
-namespace EventHub.Application.Commands.Permission.EnableCommandInFunctionCommand;
+namespace EventHub.Application.Commands.Permission.EnableCommandInFunction;
 
 /// <summary>
 /// Represents a command to enable a specific command within a function.
@@ -13,4 +13,4 @@ namespace EventHub.Application.Commands.Permission.EnableCommandInFunctionComman
 /// The unique identifier of the command that needs to be enabled within the specified function.
 /// This parameter is a string that identifies the command that should be enabled in the given function.
 /// </param>
-public record EnableCommandInFunctionCommand(string FunctionId, string CommandId) : IRequest;
+public record EnableCommandInFunctionCommand(string FunctionId, string CommandId) : ICommand;

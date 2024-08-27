@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 
 namespace EventHub.Application.Queries.Function.GetFunctionById;
 
@@ -9,4 +10,4 @@ namespace EventHub.Application.Queries.Function.GetFunctionById;
 /// <remarks>
 /// This query is used to request the retrieval of a function's information based on its unique identifier.
 /// </remarks>
-public record GetFunctionByIdQuery(string Id) : IRequest<FunctionDto>;
+public record GetFunctionByIdQuery(string Id) : IQuery<FunctionDto>;

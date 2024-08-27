@@ -1,12 +1,12 @@
 using EventHub.Application.Commands.Auth.SignIn;
 using EventHub.Domain.AggregateModels.UserAggregate;
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.SignOut;
 
-public class SignOutCommandHandler : IRequestHandler<SignOutCommand>
+public class SignOutCommandHandler : ICommandHandler<SignOutCommand>
 {
     private readonly SignInManager<User> _signInManager;
     private readonly ILogger<SignInCommandHandler> _logger;

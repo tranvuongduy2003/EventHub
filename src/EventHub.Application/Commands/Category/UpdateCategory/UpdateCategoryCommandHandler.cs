@@ -1,14 +1,14 @@
 using AutoMapper;
 using EventHub.Domain.Abstractions;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Category.UpdateCategory;
 
-public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand>
+public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;

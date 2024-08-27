@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.User;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ResetPassword;
 
 // <summary>
 /// Represents a command to reset a user's password.
 /// </summary>
-public class ResetPasswordCommand : IRequest<bool>
+public class ResetPasswordCommand : ICommand<bool>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ResetPasswordCommand"/> class.

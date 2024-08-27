@@ -1,7 +1,8 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.User;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Auth.SignUp;
@@ -12,7 +13,7 @@ namespace EventHub.Application.Commands.Auth.SignUp;
 /// <remarks>
 /// This command is used to create a new user account with the provided details.
 /// </remarks>
-public class SignUpCommand : IRequest<SignInResponseDto>
+public class SignUpCommand : ICommand<SignInResponseDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SignUpCommand"/> class.

@@ -1,8 +1,8 @@
 using EventHub.Application.Commands.Function.CreateFunction;
 using EventHub.Application.Commands.Function.DeleteFunction;
 using EventHub.Application.Commands.Function.UpdateFunction;
-using EventHub.Application.Commands.Permission.DisableCommandInFunctionCommand;
-using EventHub.Application.Commands.Permission.EnableCommandInFunctionCommand;
+using EventHub.Application.Commands.Permission.DisableCommandInFunction;
+using EventHub.Application.Commands.Permission.EnableCommandInFunction;
 using EventHub.Application.Queries.Function.GetFunctionById;
 using EventHub.Application.Queries.Function.GetFuntions;
 using EventHub.Infrastructure.FilterAttributes;

@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;
 
 /// <summary>
 /// Represents a command to refresh the authentication tokens for a user.
 /// </summary>
-public class RefreshTokenCommand : IRequest<SignInResponseDto>
+public class RefreshTokenCommand : ICommand<SignInResponseDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RefreshTokenCommand"/> class.

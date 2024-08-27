@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
 /// <summary>
 /// Represents a command to handle the callback process after an external login attempt.
 /// </summary>
-public class ExternalLoginCallbackCommand : IRequest<SignInResponseDto>
+public class ExternalLoginCallbackCommand : ICommand<SignInResponseDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ExternalLoginCallbackCommand"/> class.

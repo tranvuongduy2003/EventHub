@@ -12,17 +12,6 @@ namespace EventHub.Domain.AggregateModels.PermissionAggregate;
 [PrimaryKey("FunctionId", "RoleId", "CommandId")]
 public class Permission : AggregateRoot
 {
-    public Permission()
-    {
-    }
-    
-    public Permission(string functionId, Guid roleId, string commandId)
-    {
-        FunctionId = functionId;
-        RoleId = roleId;
-        CommandId = commandId;
-    }
-    
     [MaxLength(50)]
     public required string FunctionId { get; set; } = string.Empty;
     

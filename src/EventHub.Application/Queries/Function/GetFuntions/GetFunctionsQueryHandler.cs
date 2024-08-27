@@ -1,12 +1,12 @@
 using AutoMapper;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Function.GetFuntions;
 
-public class GetFunctionsQueryHandler : IRequestHandler<GetFunctionsQuery, List<FunctionDto>>
+public class GetFunctionsQueryHandler : IQueryHandler<GetFunctionsQuery, List<FunctionDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetFunctionsQueryHandler> _logger;

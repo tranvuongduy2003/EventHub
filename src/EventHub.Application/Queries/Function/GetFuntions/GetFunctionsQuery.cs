@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 
 namespace EventHub.Application.Queries.Function.GetFuntions;
 
@@ -9,4 +10,4 @@ namespace EventHub.Application.Queries.Function.GetFuntions;
 /// <remarks>
 /// This query is used to request the retrieval of all available functions without any specific filtering or pagination.
 /// </remarks>
-public class GetFunctionsQuery : IRequest<List<FunctionDto>>;
+public class GetFunctionsQuery : IQuery<List<FunctionDto>>;

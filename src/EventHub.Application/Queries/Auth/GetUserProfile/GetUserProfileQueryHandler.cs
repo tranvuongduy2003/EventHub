@@ -1,16 +1,16 @@
 using AutoMapper;
 using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Exceptions;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Queries.Auth.GetUserProfile;
 
-public class GetUserProfileQueryHandler: IRequestHandler<GetUserProfileQuery, UserDto>
+public class GetUserProfileQueryHandler: IQueryHandler<GetUserProfileQuery, UserDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;

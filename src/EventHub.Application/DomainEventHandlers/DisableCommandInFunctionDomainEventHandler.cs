@@ -1,9 +1,7 @@
-using AutoMapper;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.Exceptions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -12,14 +10,12 @@ namespace EventHub.Application.DomainEventHandlers;
 public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<DisableCommandInFunctionDomainEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly ILogger<DisableCommandInFunctionDomainEventHandler> _logger;
 
-    public DisableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork, IMapper mapper,
+    public DisableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork,
         ILogger<DisableCommandInFunctionDomainEventHandler> logger)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _logger = logger;
     }
 

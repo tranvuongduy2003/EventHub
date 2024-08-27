@@ -14,4 +14,14 @@ public class PermissionAggregateRoot : AggregateRoot
     {
         new PermissionAggregateRoot().RaiseDomainEvent(new DisableCommandInFunctionDomainEvent(Guid.NewGuid(), functionId, commandId));
     }
+    
+    public static async Task AddFunctionToRole(string functionId, Guid roleId)
+    {
+        new PermissionAggregateRoot().RaiseDomainEvent(new AddFunctionToRoleDomainEvent(Guid.NewGuid(), functionId, roleId));
+    }
+    
+    public static async Task RemoveFunctionFromRole(string functionId, Guid roleId)
+    {
+        new PermissionAggregateRoot().RaiseDomainEvent(new RemoveFunctionFromRoleDomainEvent(Guid.NewGuid(), functionId, roleId));
+    }
 }

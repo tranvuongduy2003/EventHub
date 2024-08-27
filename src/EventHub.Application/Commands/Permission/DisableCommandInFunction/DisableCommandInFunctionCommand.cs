@@ -1,6 +1,6 @@
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
 
-namespace EventHub.Application.Commands.Permission.DisableCommandInFunctionCommand;
+namespace EventHub.Application.Commands.Permission.DisableCommandInFunction;
 
 /// <summary>
 /// Represents a command to disable a specific command within a function.
@@ -15,4 +15,4 @@ namespace EventHub.Application.Commands.Permission.DisableCommandInFunctionComma
 /// This parameter is a string that represents the ID of the command. It is necessary to identify
 /// which command should be disabled within the given function.
 /// </param>
-public record DisableCommandInFunctionCommand(string FunctionId, string CommandId) : IRequest;
+public record DisableCommandInFunctionCommand(string FunctionId, string CommandId) : ICommand;

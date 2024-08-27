@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ForgotPassword;
 
 /// <summary>
 /// Represents a command to initiate a password reset process for a user.
 /// </summary>
-public class ForgotPasswordCommand : IRequest<bool>
+public class ForgotPasswordCommand : ICommand<bool>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ForgotPasswordCommand"/> class.

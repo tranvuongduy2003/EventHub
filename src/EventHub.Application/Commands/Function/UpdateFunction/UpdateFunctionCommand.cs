@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 
 namespace EventHub.Application.Commands.Function.UpdateFunction;
 
@@ -9,7 +10,7 @@ namespace EventHub.Application.Commands.Function.UpdateFunction;
 /// <remarks>
 /// This command is used to request an update to an existing function specified by its unique identifier.
 /// </remarks>
-public class UpdateFunctionCommand : IRequest
+public class UpdateFunctionCommand : ICommand
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateFunctionCommand"/> class.

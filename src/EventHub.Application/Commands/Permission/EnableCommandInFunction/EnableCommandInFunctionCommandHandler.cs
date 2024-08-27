@@ -1,10 +1,10 @@
 using EventHub.Domain.AggregateModels.PermissionAggregate;
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
 using Microsoft.Extensions.Logging;
 
-namespace EventHub.Application.Commands.Permission.EnableCommandInFunctionCommand;
+namespace EventHub.Application.Commands.Permission.EnableCommandInFunction;
 
-public class EnableCommandInFunctionCommandHandler : IRequestHandler<EnableCommandInFunctionCommand>
+public class EnableCommandInFunctionCommandHandler : ICommandHandler<EnableCommandInFunction.EnableCommandInFunctionCommand>
 {
     private readonly ILogger<EnableCommandInFunctionCommandHandler> _logger;
 
@@ -13,7 +13,7 @@ public class EnableCommandInFunctionCommandHandler : IRequestHandler<EnableComma
         _logger = logger;
     }
     
-    public async Task Handle(EnableCommandInFunctionCommand request, CancellationToken cancellationToken)
+    public async Task Handle(EnableCommandInFunction.EnableCommandInFunctionCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: EnableCommandInFunctionCommandHandler");
 

@@ -1,6 +1,7 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.SeedWork;
-using MediatR;
 
 namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
 
@@ -10,4 +11,4 @@ namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
 /// <remarks>
 /// This query is used to request a list of categories with pagination, using the specified filter parameters to control the paging behavior.
 /// </remarks>
-public record GetPaginatedCategoriesQuery(PaginationFilter Filter) : IRequest<Pagination<CategoryDto>>;
+public record GetPaginatedCategoriesQuery(PaginationFilter Filter) : IQuery<Pagination<CategoryDto>>;

@@ -1,16 +1,16 @@
 using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.SignIn;
 
-public class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResponseDto>
+public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInResponseDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;

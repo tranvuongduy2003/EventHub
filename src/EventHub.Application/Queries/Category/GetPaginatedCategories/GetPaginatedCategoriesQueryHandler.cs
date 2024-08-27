@@ -1,15 +1,14 @@
 using AutoMapper;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
 
-public class GetPaginatedCategoriesQueryHandler : IRequestHandler<GetPaginatedCategoriesQuery, Pagination<CategoryDto>>
+public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCategoriesQuery, Pagination<CategoryDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetPaginatedCategoriesQueryHandler> _logger;

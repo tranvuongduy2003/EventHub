@@ -1,10 +1,10 @@
 using EventHub.Domain.AggregateModels.PermissionAggregate;
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
 using Microsoft.Extensions.Logging;
 
-namespace EventHub.Application.Commands.Permission.DisableCommandInFunctionCommand;
+namespace EventHub.Application.Commands.Permission.DisableCommandInFunction;
 
-public class DisableCommandInFunctionCommandHandler : IRequestHandler<DisableCommandInFunctionCommand>
+public class DisableCommandInFunctionCommandHandler : ICommandHandler<DisableCommandInFunctionCommand>
 {
     private readonly ILogger<DisableCommandInFunctionCommandHandler> _logger;
 

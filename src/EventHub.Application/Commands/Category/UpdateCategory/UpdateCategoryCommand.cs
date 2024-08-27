@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Category;
-using MediatR;
 
 namespace EventHub.Application.Commands.Category.UpdateCategory;
 
@@ -9,7 +10,7 @@ namespace EventHub.Application.Commands.Category.UpdateCategory;
 /// <remarks>
 /// This command is used to request an update to an existing category identified by its unique identifier.
 /// </remarks>
-public class UpdateCategoryCommand : IRequest
+public class UpdateCategoryCommand : ICommand
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateCategoryCommand"/> class.

@@ -1,4 +1,5 @@
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 
 namespace EventHub.Application.Commands.Function.DeleteFunction;
 
@@ -8,4 +9,4 @@ namespace EventHub.Application.Commands.Function.DeleteFunction;
 /// <remarks>
 /// This command is used to request the deletion of a function specified by its unique identifier.
 /// </remarks>
-public record DeleteFunctionCommand(string FunctionId) : IRequest;
+public record DeleteFunctionCommand(string FunctionId) : ICommand;

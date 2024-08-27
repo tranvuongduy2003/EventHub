@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 
 namespace EventHub.Application.Commands.Function.CreateFunction;
 
@@ -9,7 +10,7 @@ namespace EventHub.Application.Commands.Function.CreateFunction;
 /// <remarks>
 /// This command is used to create a new function with the specified details.
 /// </remarks>
-public class CreateFunctionCommand : IRequest<FunctionDto>
+public class CreateFunctionCommand : ICommand<FunctionDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateFunctionCommand"/> class.

@@ -1,3 +1,5 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using MediatR;
 
 namespace EventHub.Application.Commands.Auth.SignOut;
@@ -9,7 +11,7 @@ namespace EventHub.Application.Commands.Auth.SignOut;
 /// This command does not require any parameters because it is intended to end the user’s session 
 /// and invalidate any authentication tokens or cookies associated with the user.
 /// </remarks>
-public class SignOutCommand : IRequest
+public class SignOutCommand : ICommand
 {
     // No additional properties or methods are required for this command.
 }

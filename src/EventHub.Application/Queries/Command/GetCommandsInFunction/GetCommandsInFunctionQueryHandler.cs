@@ -1,13 +1,13 @@
 using AutoMapper;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Command;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 
-public class GetCommandsInFunctionQueryHandler : IRequestHandler<GetCommandsInFunctionQuery, List<CommandDto>>
+public class GetCommandsInFunctionQueryHandler : IQueryHandler<GetCommandsInFunctionQuery, List<CommandDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetCommandsInFunctionQueryHandler> _logger;

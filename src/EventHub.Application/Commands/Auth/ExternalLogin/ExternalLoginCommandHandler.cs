@@ -1,12 +1,12 @@
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
 
-public class ExternalLoginCommandHandler : IRequestHandler<ExternalLoginCommand, ExternalLoginDto>
+public class ExternalLoginCommandHandler : ICommandHandler<ExternalLoginCommand, ExternalLoginDto>
 {
     private readonly SignInManager<User> _signInManager;
     private readonly ILogger _logger;

@@ -36,7 +36,7 @@ public class CategoriesController : ControllerBase
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.CREATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PostCategory([FromForm] CreateCategoryDto request)
+    public async Task<IActionResult> PostCreateCategory([FromForm] CreateCategoryDto request)
     {
         _logger.LogInformation("START: PostCategory");
         try
@@ -110,7 +110,7 @@ public class CategoriesController : ControllerBase
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.UPDATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PutCategory(Guid categoryId, [FromForm] UpdateCategoryDto request)
+    public async Task<IActionResult> PutUpdateCategory(Guid categoryId, [FromForm] UpdateCategoryDto request)
     {
         _logger.LogInformation("START: PutCategory");
         try

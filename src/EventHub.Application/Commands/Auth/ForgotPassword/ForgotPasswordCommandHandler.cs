@@ -1,13 +1,13 @@
 using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ForgotPassword;
 
-public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, bool>
+public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, bool>
 {
     private readonly UserManager<User> _userManager;
     private readonly IHangfireService _hangfireService;

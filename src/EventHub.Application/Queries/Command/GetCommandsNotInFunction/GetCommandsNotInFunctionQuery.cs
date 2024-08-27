@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Command;
-using MediatR;
 
 namespace EventHub.Application.Queries.Command.GetCommandsNotInFunction;
 
@@ -9,4 +10,4 @@ namespace EventHub.Application.Queries.Command.GetCommandsNotInFunction;
 /// <remarks>
 /// This query is used to request the retrieval of commands that are not linked to a given function, specified by its unique identifier.
 /// </remarks>
-public record GetCommandsNotInFunctionQuery(string FunctionId) : IRequest<List<CommandDto>>;
+public record GetCommandsNotInFunctionQuery(string FunctionId) : IQuery<List<CommandDto>>;

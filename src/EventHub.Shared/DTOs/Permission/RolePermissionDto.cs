@@ -1,12 +1,16 @@
-﻿namespace EventHub.Shared.DTOs.Permission;
+﻿using EventHub.Shared.DTOs.Function;
+using Swashbuckle.AspNetCore.Annotations;
+
+namespace EventHub.Shared.DTOs.Permission;
 
 public class RolePermissionDto
 {
-    public List<string> FunctionIds { get; set; } = new();
+    [SwaggerSchema("Unique identifier for the role permission.")]
+    public Guid Id { get; set; }
 
-    public List<string> FunctionNames { get; set; } = new();
+    [SwaggerSchema("Name of the role permission.")]
+    public string Name { get; set; }
 
-    public string RoleId { get; set; }
-
-    public string RoleName { get; set; }
+    [SwaggerSchema("List of functions associated with the role permission.")]
+    public List<FunctionDto> Functions { get; set; } = new();
 }

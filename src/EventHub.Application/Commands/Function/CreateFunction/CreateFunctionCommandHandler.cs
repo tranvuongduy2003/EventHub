@@ -1,12 +1,12 @@
 using AutoMapper;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Function;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Function.CreateFunction;
 
-public class CreateFunctionCommandHandler : IRequestHandler<CreateFunctionCommand, FunctionDto>
+public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionCommand, FunctionDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;

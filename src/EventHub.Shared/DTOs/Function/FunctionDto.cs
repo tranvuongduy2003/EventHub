@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Function;
 

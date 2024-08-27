@@ -1,12 +1,12 @@
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ResetPassword;
 
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, bool>
+public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand, bool>
 {
     private readonly UserManager<User> _userManager;
     private readonly ILogger<ResetPasswordCommandHandler> _logger;

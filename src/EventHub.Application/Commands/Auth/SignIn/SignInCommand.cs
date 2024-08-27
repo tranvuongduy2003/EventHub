@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.SignIn;
 
 /// <summary>
 /// Represents a command to sign in a user using their credentials.
 /// </summary>
-public class SignInCommand : IRequest<SignInResponseDto>
+public class SignInCommand : ICommand<SignInResponseDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SignInCommand"/> class.

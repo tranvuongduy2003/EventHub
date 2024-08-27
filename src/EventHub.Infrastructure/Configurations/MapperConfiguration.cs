@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using AutoMapper;
-using EventHub.Infrastructure.Mapper;
+﻿using EventHub.Infrastructure.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHub.Infrastructure.Configurations;
@@ -26,6 +24,7 @@ public static class MapperConfiguration
             .AddAutoMapper(config =>
             {
                 UserMapper.CreateMap(config);
+                FunctionMapper.CreateMap(config);
                 CategoryMapper.CreateMap(config);
             });
         return services;

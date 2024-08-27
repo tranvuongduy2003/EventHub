@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Category;
-using MediatR;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;
 
@@ -9,4 +10,4 @@ namespace EventHub.Application.Queries.Category.GetCategoryById;
 /// <remarks>
 /// This query is used to request the retrieval of a category's information based on its unique identifier.
 /// </remarks>
-public record GetCategoryByIdQuery(Guid Id) : IRequest<CategoryDto>;
+public record GetCategoryByIdQuery(Guid Id) : IQuery<CategoryDto>;

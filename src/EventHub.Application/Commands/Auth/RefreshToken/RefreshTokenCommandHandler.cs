@@ -1,17 +1,16 @@
-using EventHub.Application.Commands.Auth.RefreshToken;
 using EventHub.Domain.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, SignInResponseDto>
+public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, SignInResponseDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;

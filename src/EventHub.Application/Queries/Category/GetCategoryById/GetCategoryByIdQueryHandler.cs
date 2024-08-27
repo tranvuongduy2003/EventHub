@@ -1,14 +1,14 @@
 using AutoMapper;
 using EventHub.Application.Queries.Category.GetPaginatedCategories;
+using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.Exceptions;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;
 
-public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
+public class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByIdQuery, CategoryDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetPaginatedCategoriesQueryHandler> _logger;

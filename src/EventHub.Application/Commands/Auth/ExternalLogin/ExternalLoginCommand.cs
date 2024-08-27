@@ -1,12 +1,13 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
 
 /// <summary>
 /// Represents a command to initiate an external login process.
 /// </summary>
-public class ExternalLoginCommand : IRequest<ExternalLoginDto>
+public class ExternalLoginCommand : ICommand<ExternalLoginDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ExternalLoginCommand"/> class.

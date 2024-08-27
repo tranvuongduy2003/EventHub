@@ -1,5 +1,6 @@
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Category;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Category.CreateCategory;
@@ -10,7 +11,7 @@ namespace EventHub.Application.Commands.Category.CreateCategory;
 /// <remarks>
 /// This command is used to create a new category with the specified details.
 /// </remarks>
-public class CreateCategoryCommand : IRequest<CategoryDto>
+public class CreateCategoryCommand : ICommand<CategoryDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateCategoryCommand"/> class.

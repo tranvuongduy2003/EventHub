@@ -1,4 +1,5 @@
-using MediatR;
+using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.DomainEvent;
 
 namespace EventHub.Application.Commands.Category.DeleteCategory;
 
@@ -8,4 +9,4 @@ namespace EventHub.Application.Commands.Category.DeleteCategory;
 /// <remarks>
 /// This command is used to request the deletion of a category specified by its unique identifier.
 /// </remarks>
-public record DeleteCategoryCommand(Guid Id) : IRequest;
+public record DeleteCategoryCommand(Guid Id) : ICommand;
