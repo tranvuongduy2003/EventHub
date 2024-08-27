@@ -18,16 +18,16 @@
   - Domain-Driven Design (DDD):
     - Domain-Driven Design (DDD) is a software development philosophy that emphasizes the importance of understanding and modeling the business domain. It is a strategy aimed at improving the quality of software by aligning it more closely with the business needs it serves.
   - CQRS Pattern:
-    - CQRS stands for Command and Query Responsibility Segregation, a pattern that separates read and update operations for a data store. It is perfect pattern to collaborate with DDD. In this solution, I just use 1 database for both commands and queries.
+    - CQRS stands for Command and Query Responsibility Segregation, a pattern that separates read and update operations for a data store. It is a perfect pattern to collaborate with DDD. In this solution, I just use 1 database for both commands and queries.
   - Transactional Outbox Pattern & Idempotency:
-    - The transactional outbox pattern resolves the dual write operations issue that occurs in distributed systems when a single operation involves both a database write operation and a message or event notification. Idempotency is a crucial property of certain operations or API requests that guarantees consistent outcomes, regardless of the number of times an operation is performed. I use the couple of these patterns to ensure Event Sourcing of DDD work well. The event will be recalled if there are any errors, and if an event was called, it will not be called again (duplicate message). It is also used for message broker, in this solution I just apply to sending email using Hangfire, the result must be similar with the Event Sourcing.
+    - The transactional outbox pattern resolves the dual write operations issue that occurs in distributed systems when a single operation involves both a database write operation and a message or event notification. Idempotency is a crucial property of certain operations or API requests that guarantees consistent outcomes, regardless of the number of times an operation is performed. I use the couple of these patterns to ensure Event Sourcing of DDD work well. The event will be recalled if there are any errors, and if an event was called, it will not be called again (duplicate message). It is also used for message broker, in this solution I just apply for sending email using Hangfire, the result must be similar with the Event Sourcing.
   - Some another Design Patterns: Decorator Pattern, Factory Pattern, Singleton Pattern (just is C# Dependency Injection), ...
 
 # CI/CD
-  - The project has set up CI/CD to deploy to Azure App Service. If anyone wants to deploy to Azure, you can use it for reference.
+  - The project has been set up CI/CD to deploy on Azure App Service. If anyone wants to deploy on Azure, you can use it for reference.
 
 # HOW TO RUN THE APPLICATION (Development Environment)
-  - **Step 1:** Run docker compose (pay attention to the **path** to the docker-compose file, if you have **cd src** then you don't need to add **src/** to the command)
+  - **Step 1:** Run docker compose (pay attention to the **path** of the docker-compose file, if you are in **/src**, you don't need to add **src/** to the command)
   ```
   docker-compose -f src/docker-compose.development.yml -p eventhub up -d --remove-orphans 
   ```
@@ -41,7 +41,7 @@
   ```
   dotnet ef migrations add "InitialMigration" --startup-project EventHub.Presentation --project EventHub.Persistence --output-dir ../EventHub.Persistence/Migrations 
   ```
-  - Run this command after step 2 of **# HOW TO RUN THE APPLICATION** section, or after adding a new migration to update your database:
+  - Run this command in step 2 of **# HOW TO RUN THE APPLICATION** section, or after adding a new migration to update your database:
   ```
   dotnet ef database update --startup-project EventHub.Presentation --project EventHub.Persistence
   ```
