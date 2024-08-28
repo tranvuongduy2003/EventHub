@@ -1,4 +1,3 @@
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
@@ -9,10 +8,10 @@ namespace EventHub.Application.Commands.Auth.ValidateUser;
 
 public class ValidateUserCommandHandler : ICommandHandler<ValidateUserCommand, bool>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly ILogger<ValidateUserCommandHandler> _logger;
 
-    public ValidateUserCommandHandler(UserManager<User> userManager, ILogger<ValidateUserCommandHandler> logger)
+    public ValidateUserCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ILogger<ValidateUserCommandHandler> logger)
     {
         _userManager = userManager;
         _logger = logger;

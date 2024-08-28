@@ -1,6 +1,5 @@
 using AutoMapper;
 using EventHub.Domain.Abstractions;
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
@@ -14,17 +13,17 @@ namespace EventHub.Application.Commands.Auth.SignUp;
 
 public class SignUpCommnadHandler: ICommandHandler<SignUpCommand, SignInResponseDto>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly IMapper _mapper;
-    private readonly SignInManager<User> _signInManager;
+    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
     private readonly ILogger<SignUpCommnadHandler> _logger;
 
     public SignUpCommnadHandler(
-        UserManager<User> userManager, 
-        IMapper mapper, SignInManager<User> signInManager, 
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, 
+        IMapper mapper, SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, 
         ITokenService tokenService, 
         IHangfireService hangfireService, 
         IEmailService emailService,
@@ -52,7 +51,7 @@ public class SignUpCommnadHandler: ICommandHandler<SignUpCommand, SignInResponse
         if (useByPhoneNumber != null)
             throw new BadRequestException("Phone number already exists");
 
-        var user = _mapper.Map<User>(request);
+        var user = _mapper.Map<Domain.AggregateModels.UserAggregate.User>(request);
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)

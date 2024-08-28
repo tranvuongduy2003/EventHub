@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using EventHub.Domain.Abstractions;
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
@@ -13,16 +12,16 @@ namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
 public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLoginCallbackCommand, SignInResponseDto>
 {
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
     private readonly ITokenService _tokenService;
     private readonly ILogger<ExternalLoginCallbackCommandHandler> _logger;
 
     public ExternalLoginCallbackCommandHandler(
-        SignInManager<User> signInManager, 
-        UserManager<User> userManager,
+        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, 
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
         IHangfireService hangfireService, 
         IEmailService emailService, 
         ITokenService tokenService,
@@ -50,7 +49,7 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
 
             if (user == null)
             {
-                user = new User
+                user = new Domain.AggregateModels.UserAggregate.User
                 {
                     UserName = email,
                     Email = email,

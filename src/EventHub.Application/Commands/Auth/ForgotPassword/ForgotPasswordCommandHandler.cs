@@ -1,5 +1,4 @@
 using EventHub.Domain.Abstractions;
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
@@ -9,12 +8,12 @@ namespace EventHub.Application.Commands.Auth.ForgotPassword;
 
 public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, bool>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
     private readonly ILogger<ForgotPasswordCommandHandler> _logger;
 
-    public ForgotPasswordCommandHandler(UserManager<User> userManager, IHangfireService hangfireService, IEmailService emailService, ILogger<ForgotPasswordCommandHandler> logger)
+    public ForgotPasswordCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IHangfireService hangfireService, IEmailService emailService, ILogger<ForgotPasswordCommandHandler> logger)
     {
         _userManager = userManager;
         _hangfireService = hangfireService;

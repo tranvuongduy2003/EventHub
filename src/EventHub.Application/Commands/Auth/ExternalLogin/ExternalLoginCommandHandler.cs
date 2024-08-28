@@ -1,4 +1,3 @@
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -8,10 +7,10 @@ namespace EventHub.Application.Commands.Auth.ExternalLogin;
 
 public class ExternalLoginCommandHandler : ICommandHandler<ExternalLoginCommand, ExternalLoginDto>
 {
-    private readonly SignInManager<User> _signInManager;
+    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ILogger _logger;
 
-    public ExternalLoginCommandHandler(SignInManager<User> signInManager, ILogger<ExternalLoginCommandHandler> logger)
+    public ExternalLoginCommandHandler(SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, ILogger<ExternalLoginCommandHandler> logger)
     {
         _signInManager = signInManager;
         _logger = logger;

@@ -1,5 +1,4 @@
 using EventHub.Domain.Abstractions;
-using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Exceptions;
@@ -12,11 +11,11 @@ namespace EventHub.Application.Commands.Auth.RefreshToken;
 
 public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, SignInResponseDto>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly ITokenService _tokenService;
     private readonly ILogger<RefreshTokenCommandHandler> _logger;
 
-    public RefreshTokenCommandHandler(UserManager<User> userManager, ITokenService tokenService, ILogger<RefreshTokenCommandHandler> logger)
+    public RefreshTokenCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ITokenService tokenService, ILogger<RefreshTokenCommandHandler> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
