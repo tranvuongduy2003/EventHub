@@ -32,7 +32,6 @@ public class CreateUserDto
     [SwaggerSchema("User name will be registered for the account")]
     public string? UserName { get; set; } = string.Empty;
 
-
     [DefaultValue(nameof(EGender.MALE))]
     [SwaggerSchema("Gender of the user")]
     [JsonConverter(typeof(JsonStringEnumConverter))]

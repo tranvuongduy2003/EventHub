@@ -1,17 +1,17 @@
-﻿using EventHub.Shared.DTOs.User;
+using EventHub.Shared.DTOs.User;
 using FluentValidation;
 
 namespace EventHub.Shared.Validators.User;
 
-public class UpdateUserPasswordDtoValidator : AbstractValidator<UpdateUserPasswordDto>
+public class ResetUserPasswordDtoValidator : AbstractValidator<ResetUserPasswordDto>
 {
-    public UpdateUserPasswordDtoValidator()
+    public ResetUserPasswordDtoValidator()
     {
-        RuleFor(x => x.UserId.ToString())
-            .NotEmpty().WithMessage("UserId is required")
-            .MaximumLength(50).WithMessage("UserId cannot over limit 50 characters");
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Email is invalid format");
 
-        RuleFor(x => x.OldPassword)
+        RuleFor(x => x.Token)
             .NotEmpty().WithMessage("Old password is required");
 
         RuleFor(x => x.NewPassword)

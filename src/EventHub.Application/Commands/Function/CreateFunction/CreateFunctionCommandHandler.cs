@@ -23,7 +23,13 @@ public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionComman
     {
         _logger.LogInformation("BEGIN: CreateFunctionCommandHandler");
 
-        var function = _mapper.Map<Domain.AggregateModels.PermissionAggregate.Function>(request);
+        var function = new Domain.AggregateModels.PermissionAggregate.Function()
+        {
+            Name = request.Name,
+            Url = request.Url,
+            SortOrder = request.SortOrder,
+            ParentId = request.ParentId
+        };
 
         await _unitOfWork.Functions.CreateAsync(function);
         await _unitOfWork.CommitAsync();

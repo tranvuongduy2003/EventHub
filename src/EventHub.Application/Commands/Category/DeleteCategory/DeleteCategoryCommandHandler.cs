@@ -32,9 +32,8 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
 
         if (isEventCategoryExisted)
             throw new BadRequestException($"Existing more than 1 events in category {category.Name}");
-
-        //TODO: Delete icon image from FileStorage
-        if (category.IconImageFileName != null)
+        
+        if (!string.IsNullOrEmpty(category.IconImageFileName))
             await _fileService.DeleteAsync(category.IconImageFileName, FileContainer.CATEGORIES);
 
         await _unitOfWork.Categories.SoftDeleteAsync(category);

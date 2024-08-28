@@ -43,12 +43,12 @@ public class CategoriesController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> PostCreateCategory([FromForm] CreateCategoryDto request)
     {
-        _logger.LogInformation("START: PostCategory");
+        _logger.LogInformation("START: PostCreateCategory");
         try
         {
             var category = await _mediator.Send(new CreateCategoryCommand(request));
 
-            _logger.LogInformation("END: PostCategory");
+            _logger.LogInformation("END: PostCreateCategory");
 
             return Ok(new ApiCreatedResponse(category));
         }
@@ -65,14 +65,14 @@ public class CategoriesController : ControllerBase
     )]
     [SwaggerResponse(200, "Successfully retrieved the list of categories", typeof(Pagination<CategoryDto>))]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    public async Task<IActionResult> GetCategories([FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> GetPaginatedCategories([FromQuery] PaginationFilter filter)
     {
-        _logger.LogInformation("START: GetCategories");
+        _logger.LogInformation("START: GetPaginatedCategories");
         try
         {
             var categories = await _mediator.Send(new GetPaginatedCategoriesQuery(filter));
 
-            _logger.LogInformation("END: GetCategories");
+            _logger.LogInformation("END: GetPaginatedCategories");
 
             return Ok(new ApiOkResponse(categories));
         }
@@ -129,12 +129,12 @@ public class CategoriesController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateCategory(Guid categoryId, [FromForm] UpdateCategoryDto request)
     {
-        _logger.LogInformation("START: PutCategory");
+        _logger.LogInformation("START: PutUpdateCategory");
         try
         {
             await _mediator.Send(new UpdateCategoryCommand(categoryId, request));
 
-            _logger.LogInformation("END: PutCategory");
+            _logger.LogInformation("END: PutUpdateCategory");
 
             return Ok(new ApiOkResponse(true));
         }

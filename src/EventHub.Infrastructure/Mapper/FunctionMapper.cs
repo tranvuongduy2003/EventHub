@@ -13,5 +13,7 @@ public class FunctionMapper
             .ForMember(dest => dest.ParentId, options => options.Ignore())
             .ForMember(dest => dest.SortOrder, options => options.Ignore())
             .ForMember(dest => dest.Url, options => options.Ignore());
+
+        config.CreateMap<UpdateFunctionDto, Function>();
     }
 }

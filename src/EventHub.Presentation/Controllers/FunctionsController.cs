@@ -41,14 +41,14 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.CREATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PostFunction([FromBody] CreateFunctionDto request)
+    public async Task<IActionResult> PostCreateFunction([FromBody] CreateFunctionDto request)
     {
-        _logger.LogInformation("START: PostFunction");
+        _logger.LogInformation("START: PostCreateFunction");
         try
         {
             var function = await _mediator.Send(new CreateFunctionCommand(request));
 
-            _logger.LogInformation("END: PostFunction");
+            _logger.LogInformation("END: PostCreateFunction");
 
             return Ok(new ApiCreatedResponse(function));
         }
@@ -130,14 +130,14 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
     [ApiValidationFilter]
-    public async Task<IActionResult> PutFunction(string functionId, [FromBody] UpdateFunctionDto request)
+    public async Task<IActionResult> PutUpdateFunction(string functionId, [FromBody] UpdateFunctionDto request)
     {
-        _logger.LogInformation("START: PutFunction");
+        _logger.LogInformation("START: PutUpdateFunction");
         try
         {
             await _mediator.Send(new UpdateFunctionCommand(functionId, request));
 
-            _logger.LogInformation("END: PutFunction");
+            _logger.LogInformation("END: PutUpdateFunction");
 
             return Ok(new ApiOkResponse(true));
         }
