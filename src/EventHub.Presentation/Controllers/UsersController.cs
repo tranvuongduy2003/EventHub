@@ -1,5 +1,7 @@
 using EventHub.Application.Commands.User.ChangePassword;
 using EventHub.Application.Commands.User.CreateUser;
+using EventHub.Application.Commands.User.Follow;
+using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
 using EventHub.Application.Queries.User.GetPaginatedUsers;
 using EventHub.Application.Queries.User.GetUserById;
@@ -12,6 +14,7 @@ using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
@@ -160,11 +163,12 @@ public class UsersController : ControllerBase
             throw;
         }
     }
-    
+
     [HttpPatch("{userId:guid}/change-password")]
     [SwaggerOperation(
         Summary = "Change a user's password",
-        Description = "Changes the password of an existing user based on the provided user ID and new password information."
+        Description =
+            "Changes the password of an existing user based on the provided user ID and new password information."
     )]
     [SwaggerResponse(200, "Password changed successfully")]
     [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
@@ -182,6 +186,90 @@ public class UsersController : ControllerBase
             await _mediator.Send(new ChangePasswordCommand(userId, request));
 
             _logger.LogInformation("END: PatchChangeUserPassword");
+
+            return Ok(new ApiOkResponse(true));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+        catch (BadRequestException e)
+        {
+            return NotFound(new ApiBadRequestResponse(e.Message));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [HttpPatch("follow/{followedUserId:guid}")]
+    [SwaggerOperation(
+        Summary = "Follow a user",
+        Description = "Allows the authenticated user to follow another user by specifying the followed user's ID."
+    )]
+    [SwaggerResponse(200, "User followed successfully")]
+    [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    public async Task<IActionResult> PatchFollowUser(Guid followedUserId)
+    {
+        _logger.LogInformation("START: PatchFollowUser");
+        try
+        {
+            var accessToken = Request
+                .Headers[HeaderNames.Authorization]
+                .ToString()
+                .Replace("Bearer ", "");
+
+            await _mediator.Send(new FollowCommand(accessToken, followedUserId));
+
+            _logger.LogInformation("END: PatchFollowUser");
+
+            return Ok(new ApiOkResponse(true));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+        catch (BadRequestException e)
+        {
+            return NotFound(new ApiBadRequestResponse(e.Message));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    
+    [HttpPatch("unfollow/{followedUserId:guid}")]
+    [SwaggerOperation(
+        Summary = "Unfollow a user",
+        Description = "Allows the authenticated user to unfollow another user by specifying the followed user's ID."
+    )]
+    [SwaggerResponse(200, "User unfollowed successfully")]
+    [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    public async Task<IActionResult> PatchUnfollowUser(Guid followedUserId)
+    {
+        _logger.LogInformation("START: PatchUnfollowUser");
+        try
+        {
+            var accessToken = Request
+                .Headers[HeaderNames.Authorization]
+                .ToString()
+                .Replace("Bearer ", "");
+
+            await _mediator.Send(new UnfollowCommand(accessToken, followedUserId));
+
+            _logger.LogInformation("END: PatchUnfollowUser");
 
             return Ok(new ApiOkResponse(true));
         }

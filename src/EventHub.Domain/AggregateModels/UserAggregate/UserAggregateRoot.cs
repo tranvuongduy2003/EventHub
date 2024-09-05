@@ -10,4 +10,16 @@ public class UserAggregateRoot : AggregateRoot
         new UserAggregateRoot().RaiseDomainEvent(
             new ChangeUserPasswordDomainEvent(Guid.NewGuid(), userId, oldPassword, newPassword));
     }
+    
+    public static async Task FollowUser(Guid followerId, Guid followedUserId)
+    {
+        new UserAggregateRoot().RaiseDomainEvent(
+            new FollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
+    }
+    
+    public static async Task UnfollowUser(Guid followerId, Guid followedUserId)
+    {
+        new UserAggregateRoot().RaiseDomainEvent(
+            new UnfollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
+    }
 }
