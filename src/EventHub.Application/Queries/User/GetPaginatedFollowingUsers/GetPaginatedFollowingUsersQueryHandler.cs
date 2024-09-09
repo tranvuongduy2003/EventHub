@@ -36,7 +36,7 @@ public class
     {
         _logger.LogInformation("BEGIN: GetPaginatedFollowingUsersQueryHandler");
 
-        var key = "User";
+        var key = $"user:following:{request.UserId}";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
 

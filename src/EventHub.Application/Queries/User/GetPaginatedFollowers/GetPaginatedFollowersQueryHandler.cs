@@ -34,7 +34,7 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
     {
         _logger.LogInformation("BEGIN: GetPaginatedFollowersQueryHandler");
         
-        var key = "User";
+        var key = $"user:follower:{request.UserId}";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
 

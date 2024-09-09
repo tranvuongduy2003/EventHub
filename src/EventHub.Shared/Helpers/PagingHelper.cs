@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using EventHub.Shared.Enums.Common;
 using EventHub.Shared.SeedWork;
 
@@ -21,8 +22,10 @@ public static class PagingHelper
                     (List<T>)current.Where(x =>
                         search.SearchValue != null
                         && search.SearchBy != null
-                        && x.GetType().GetProperty(search.SearchBy)
-                            .ToString()
+                        && ((string)TypeDescriptor
+                            .GetProperties(typeof(T))
+                            .Find(search.SearchBy, true)?
+                            .GetValue(x))
                             .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase)));
         }
 
@@ -31,8 +34,14 @@ public static class PagingHelper
             items = filter.Orders.Aggregate(items, (current, order) =>
                 order.OrderDirection switch
                 {
-                    EPageOrder.ASC => (List<T>)current.OrderBy(x => x.GetType().GetProperty(order.OrderBy)),
-                    EPageOrder.DESC => (List<T>)current.OrderByDescending(x => x.GetType().GetProperty(order.OrderBy)),
+                    EPageOrder.ASC => (List<T>)current.OrderBy(x => TypeDescriptor
+                        .GetProperties(typeof(T))
+                        .Find(order.OrderBy, true)?
+                        .GetValue(x)),
+                    EPageOrder.DESC => (List<T>)current.OrderByDescending(x => TypeDescriptor
+                        .GetProperties(typeof(T))
+                        .Find(order.OrderBy, true)?
+                        .GetValue(x)),
                     _ => current
                 });
         }

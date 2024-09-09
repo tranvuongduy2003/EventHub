@@ -31,7 +31,7 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
     {
         _logger.LogInformation("BEGIN: GetPaginatedUsersQueryHandler");
         
-        var key = "User";
+        var key = "user";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
 

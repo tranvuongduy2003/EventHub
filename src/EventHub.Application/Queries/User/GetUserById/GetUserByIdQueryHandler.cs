@@ -29,7 +29,7 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
     {
         _logger.LogInformation("BEGIN: GetUserByIdQueryHandler");
 
-        string key = $"User-{request.UserId}";
+        string key = $"user:{request.UserId}";
 
         var user = await _cacheService.GetData<Domain.AggregateModels.UserAggregate.User>(key);
 
