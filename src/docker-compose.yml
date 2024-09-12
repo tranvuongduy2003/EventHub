@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # services  
+  eventhub.cache:
+    image: redis:7.0.15-alpine
+    container_name: eventhub.cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache_redis_data:/data
+
+  eventhub.db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: eventhub.db
+    environment:
+      MSSQL_SA_PASSWORD: "@Admin123"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - sqlserver_data:/var/lib/sqlserver/data
+    ports:
+      - "1437:1433"
+
+  eventhub.seq:
+    image: datalust/seq:latest
+    container_name: eventhub.seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "8081:80"
+    volumes:
+      - seq_data:/data
+
+
+  eventhub.hangfire:
+    image: mongo
+    container_name: eventhub.hangfire
+    ports:
+      - "27018:27017"
+    volumes:
+      - hangfire_mongo_data:/data/db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "admin"
+      MONGO_INITDB_ROOT_PASSWORD: "admin"
+  
+  # api server      
+  eventhub.api:
+    image: ${DOCKER_REGISTRY-}eventhub-api:${PLATFORM:-windows}-${TAG:-latest}
+    container_name: eventhub.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnectionString=Server=eventhub.db,1433;Database=EventHubDB;User Id=sa;Password=@Admin123;TrustServerCertificate=True;Multipleactiveresultsets=true"
+      - "ConnectionStrings:CacheConnectionString=eventhub.cache:6379"
+      - "SeqConfiguration:ServerUrl=http://eventhub.seq:5341"
+      - "HangfireSettings:Storage:ConnectionString=mongodb://admin:admin@eventhub.hangfire:27017/hangfire-webapi?authSource=admin"
+    depends_on:
+      - eventhub.db
+      - eventhub.cache
+      - eventhub.seq
+    ports:
+      - "8002:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+
+# network section
+networks:
+  default:
+    name: eventhub
+    driver: bridge
+
+# volumes section
+volumes:
+  cache_redis_data:
+    name: cache_redis_data
+  sqlserver_data:
+    name: sqlserver_data
+  seq_data:
+    name: seq_data
+  hangfire_mongo_data:
+    name: hangfire_mongo_data

@@ -419,9 +419,9 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
-/src/DMSPortal.BackendServer/appsettings.json
-/src/DMSPortal.BackendServer/appsettings.Development.json
-/src/DMSPortal.BackendServer/appsettings.Production.json
+/src/EventHub.Presentation/appsettings.json
+/src/EventHub.Presentation/appsettings.Development.json
+/src/EventHub.Presentation/appsettings.Production.json
 
 # Logs
 logs
@@ -452,6 +452,5 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
-/src/EventHub.Presentation/appsettings.*.json
 .idea/
 dotnet-tools.json
