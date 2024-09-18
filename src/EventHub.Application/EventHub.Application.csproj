@@ -22,6 +22,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Commands\Event\DeleteEvent\"/>
+        <Folder Include="Commands\Event\FavouriteEvent\"/>
+        <Folder Include="Commands\Event\MakeEventPrivate\"/>
+        <Folder Include="Commands\Event\MakeEventPublic\"/>
+        <Folder Include="Commands\Event\RestoreEvent\"/>
+        <Folder Include="Commands\Event\UnfavouriteEvent\"/>
       <Folder Include="Commands\User\ChangePassword\" />
       <Folder Include="Commands\User\CreateUser\" />
       <Folder Include="Commands\User\UpdateUser\" />

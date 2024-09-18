@@ -8,10 +8,6 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
 {
     public CreateEventDtoValidator()
     {
-        RuleFor(x => x.AuthorId.ToString())
-            .NotEmpty().WithMessage("AuthorId is required")
-            .MaximumLength(50).WithMessage("AuthorId cannot over limit 50 characters");
-
         RuleFor(x => x.CoverImage)
             .NotNull().WithMessage("Cover image is required");
 
@@ -46,7 +42,7 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
 
         RuleFor(x => x.Categories)
             .NotNull().WithMessage("CategoryIds is required");
-        RuleForEach(x => x.Categories)
+        RuleForEach(x => x.Categories.Select(c => c.ToString()))
             .NotNull().WithMessage("Category's id is required")
             .MaximumLength(50).WithMessage("Category's id cannot over limit 50 characters");
 

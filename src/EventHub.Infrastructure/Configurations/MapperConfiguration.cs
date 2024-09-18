@@ -26,6 +26,7 @@ public static class MapperConfiguration
                 UserMapper.CreateMap(config);
                 FunctionMapper.CreateMap(config);
                 CategoryMapper.CreateMap(config);
+                EventMapper.CreateMap(config);
             });
         return services;
     }

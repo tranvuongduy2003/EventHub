@@ -8,9 +8,12 @@ using EventHub.Domain.AggregateModels.PaymentAggregate;
 using EventHub.Domain.AggregateModels.ReviewAggregate;
 using EventHub.Domain.AggregateModels.TicketAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Interfaces;
+using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Enums.Event;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.EventAggregate;
@@ -25,59 +28,112 @@ public class Event : AggregateRoot, IAuditable
     [Required]
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
-    public required string CoverImageFileName { get; set; } = string.Empty;
+    public string CoverImageFileName { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
-    public required string CoverImageUrl { get; set; } = string.Empty;
+    public string CoverImageUrl { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
-    public required string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(1000)]
     [Column(TypeName = "nvarchar(1000)")]
-    public required string Description { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(1000)]
     [Column(TypeName = "nvarchar(1000)")]
-    public required string Location { get; set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
 
-    [Required] 
-    public required DateTime StartTime { get; set; } = DateTime.UtcNow;
+    [Required] public DateTime StartTime { get; set; } = DateTime.UtcNow;
 
-    [Required] 
-    public required DateTime EndTime { get; set; } = DateTime.UtcNow;
+    [Required] public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    [Range(0.0, 1.0)] 
-    public double? Promotion { get; set; } = 0;
+    [Range(0.0, 1.0)] public double? Promotion { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
-    public int? NumberOfFavourites { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfFavourites { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
-    public int? NumberOfShares { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfShares { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
-    public int? NumberOfSoldTickets { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfSoldTickets { get; set; } = 0;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventStatus? Status { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public required EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public required EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
+    public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
-    public required bool IsPrivate { get; set; } = false;
+    public bool IsPrivate { get; set; } = false;
 
-    [Required]
-    public required Guid AuthorId { get; set; } = Guid.Empty;
+    [Required] public Guid AuthorId { get; set; } = Guid.Empty;
+
+    public static async Task UploadAndSaveEventSubImages(Guid eventId, IFormFileCollection subImages)
+    {
+        new Event().RaiseDomainEvent(
+            new UploadAndSaveEventSubImagesDomainEvent(Guid.NewGuid(), eventId, subImages));
+    }
+
+    public static async Task DeleteEventSubImages(Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new DeleteEventSubImagesDomainEvent(Guid.NewGuid(), eventId));
+    }
+
+    public static async Task CreateEmailContentOfEvent(Guid eventId, CreateEmailContentDto emailContent)
+    {
+        new Event().RaiseDomainEvent(
+            new CreateEmailContentOfEventDomainEvent(Guid.NewGuid(), eventId, emailContent));
+    }
+
+    public static async Task UpdateEmailContentOfEvent(Guid eventId, UpdateEmailContentDto emailContent)
+    {
+        new Event().RaiseDomainEvent(
+            new UpdateEmailContentOfEventDomainEvent(Guid.NewGuid(), eventId, emailContent));
+    }
+
+    public static async Task CreateTicketTypesOfEvent(Guid eventId, List<CreateTicketTypeDto> ticketTypes)
+    {
+        new Event().RaiseDomainEvent(
+            new CreateTicketTypesOfEventDomainEvent(Guid.NewGuid(), eventId, ticketTypes));
+    }
+
+    public static async Task UpdateTicketTypesInEvent(Guid eventId, List<UpdateTicketTypeDto> ticketTypes)
+    {
+        new Event().RaiseDomainEvent(
+            new UpdateTicketTypesInEventDomainEvent(Guid.NewGuid(), eventId, ticketTypes));
+    }
+
+    public static async Task AddEventToCategories(Guid eventId, List<Guid> categories)
+    {
+        new Event().RaiseDomainEvent(
+            new AddEventToCategoriesDomainEvent(Guid.NewGuid(), eventId, categories));
+    }
+
+    public static async Task UpdateCategoriesInEvent(Guid eventId, List<Guid> categories)
+    {
+        new Event().RaiseDomainEvent(
+            new UpdateCategoriesInEventDomainEvent(Guid.NewGuid(), eventId, categories));
+    }
+
+    public static async Task CreateReasonsToRegisterEvent(Guid eventId, List<string> reasons)
+    {
+        new Event().RaiseDomainEvent(
+            new CreateReasonsToRegisterEventDomainEvent(Guid.NewGuid(), eventId, reasons));
+    }
+
+    public static async Task UpdateReasonsInEvent(Guid eventId, List<string> reasons)
+    {
+        new Event().RaiseDomainEvent(
+            new UpdateReasonsInEventDomainEvent(Guid.NewGuid(), eventId, reasons));
+    }
 
     #region Relationships
 

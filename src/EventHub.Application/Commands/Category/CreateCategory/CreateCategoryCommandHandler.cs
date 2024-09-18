@@ -10,10 +10,10 @@ namespace EventHub.Application.Commands.Category.CreateCategory;
 
 public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryCommand, CategoryDto>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IFileService _fileService;
     private readonly ILogger<CreateCategoryCommandHandler> _logger;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateCategoryCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
         ILogger<CreateCategoryCommandHandler> logger)
@@ -26,7 +26,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: CreateCategoryCommandHandler");
+        _logger.LogInformation("BEGIN: CreateEventCommandHandler");
 
         var category = new Domain.AggregateModels.CategoryAggregate.Category
         {
@@ -35,7 +35,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
             IconImageUrl = string.Empty,
             IconImageFileName = string.Empty
         };
-        
+
         var iconImage = await _fileService.UploadAsync(request.IconImage, FileContainer.CATEGORIES);
         category.IconImageUrl = iconImage.Blob.Uri ?? "";
         category.IconImageFileName = iconImage.Blob.Name ?? "";
@@ -43,7 +43,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
         await _unitOfWork.Categories.CreateAsync(category);
         await _unitOfWork.CommitAsync();
 
-        _logger.LogInformation("END: CreateCategoryCommandHandler");
+        _logger.LogInformation("END: CreateEventCommandHandler");
 
         return _mapper.Map<CategoryDto>(category);
     }

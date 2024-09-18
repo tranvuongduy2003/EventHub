@@ -6,8 +6,12 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Event;
 
-public class CreateEventDto
+public class UpdateEventDto
 {
+    [SwaggerSchema("Unique identifier of the event")]
+    [DefaultValue("b0b4c582-12b6-49fd-a9e6-8d901a9f9d37")]
+    public Guid Id { get; set; }
+
     [SwaggerSchema("Cover image for the event")]
     public IFormFile CoverImage { get; set; }
 
@@ -64,6 +68,6 @@ public class CreateEventDto
     public IFormFileCollection? EventSubImages { get; set; } = null;
 
     [SwaggerSchema("Email content to be sent for event notifications")]
-    [DefaultValue(typeof(CreateEmailContentDto))]
-    public CreateEmailContentDto? EmailContent { get; set; } = null;
+    [DefaultValue(typeof(UpdateEmailContentDto))]
+    public UpdateEmailContentDto? EmailContent { get; set; } = null;
 }
