@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.EventAggregate;
 
-[Table("Events")]
+[Table("events")]
 public class Event : AggregateRoot, IAuditable
 {
     [Key]
@@ -99,6 +99,12 @@ public class Event : AggregateRoot, IAuditable
             new UpdateEmailContentOfEventDomainEvent(Guid.NewGuid(), eventId, emailContent));
     }
 
+    public static async Task DeleteEmailContent(Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new DeleteEmailContentDomainEvent(Guid.NewGuid(), eventId));
+    }
+
     public static async Task CreateTicketTypesOfEvent(Guid eventId, List<CreateTicketTypeDto> ticketTypes)
     {
         new Event().RaiseDomainEvent(
@@ -109,6 +115,12 @@ public class Event : AggregateRoot, IAuditable
     {
         new Event().RaiseDomainEvent(
             new UpdateTicketTypesInEventDomainEvent(Guid.NewGuid(), eventId, ticketTypes));
+    }
+
+    public static async Task DeleteEventTicketTypes(Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new DeleteEventTicketTypesDomainEvent(Guid.NewGuid(), eventId));
     }
 
     public static async Task AddEventToCategories(Guid eventId, List<Guid> categories)
@@ -123,6 +135,12 @@ public class Event : AggregateRoot, IAuditable
             new UpdateCategoriesInEventDomainEvent(Guid.NewGuid(), eventId, categories));
     }
 
+    public static async Task RemoveEventFromCategories(Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new RemoveEventFromCategoriesDomainEvent(Guid.NewGuid(), eventId));
+    }
+
     public static async Task CreateReasonsToRegisterEvent(Guid eventId, List<string> reasons)
     {
         new Event().RaiseDomainEvent(
@@ -133,6 +151,42 @@ public class Event : AggregateRoot, IAuditable
     {
         new Event().RaiseDomainEvent(
             new UpdateReasonsInEventDomainEvent(Guid.NewGuid(), eventId, reasons));
+    }
+
+    public static async Task DeleteEventReasons(Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new DeleteEventReasonsDomainEvent(Guid.NewGuid(), eventId));
+    }
+
+    public static async Task FavouriteEvent(Guid userId, Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new FavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
+    }
+
+    public static async Task UnfavouriteEvent(Guid userId, Guid eventId)
+    {
+        new Event().RaiseDomainEvent(
+            new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
+    }
+
+    public static async Task MakeEventsPrivate(Guid userId, List<Guid> events)
+    {
+        new Event().RaiseDomainEvent(
+            new MakeEventsPrivateDomainEvent(Guid.NewGuid(), userId, events));
+    }
+
+    public static async Task MakeEventsPublic(Guid userId, List<Guid> events)
+    {
+        new Event().RaiseDomainEvent(
+            new MakeEventsPublicDomainEvent(Guid.NewGuid(), userId, events));
+    }
+
+    public static async Task RestoreEvent(Guid userId, List<Guid> events)
+    {
+        new Event().RaiseDomainEvent(
+            new RestoreEventDomainEvent(Guid.NewGuid(), userId, events));
     }
 
     #region Relationships

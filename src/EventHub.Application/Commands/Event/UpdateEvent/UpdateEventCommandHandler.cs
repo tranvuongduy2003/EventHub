@@ -94,5 +94,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             await Domain.AggregateModels.EventAggregate.Event
                 .UpdateReasonsInEvent(@event.Id, request.Event.Reasons.ToList());
         }
+
+        _logger.LogInformation("END: UpdateEventCommandHandler");
     }
 }

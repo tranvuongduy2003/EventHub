@@ -4,6 +4,7 @@ using EventHub.Shared.Enums.Function;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -54,11 +55,19 @@ public class ClaimRequirementFilter : IAuthorizationFilter
 
         var principal = _tokenService.GetPrincipalFromToken(accessToken);
 
-        var permissionsClaim = principal.Claims.SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);
+        var permissionsClaim = principal.Claims
+            .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);
         if (permissionsClaim != null)
         {
             var permissions = JsonConvert.DeserializeObject<List<string>>(permissionsClaim.Value);
-            if (!permissions.Contains(_eFunctionCode + "_" + _eCommandCode)) context.Result = new ForbidResult();
+            if (!permissions.Contains(_eFunctionCode + "_" + _eCommandCode))
+            {
+                context.Result = new ForbidResult();
+            }
+
+            var userId = principal.Claims
+                .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+            context.HttpContext.Items["UserId"] = userId;
         }
         else
         {

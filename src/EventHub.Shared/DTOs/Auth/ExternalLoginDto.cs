@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Authentication;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Auth;
 
 public class ExternalLoginDto
 {
-    public AuthenticationProperties Properties { get; set; }
+    [SwaggerSchema("Authentication properties for the external login")]
+    public AuthenticationProperties Properties { get; set; } = new AuthenticationProperties();
 
-    public string Provider { get; set; }
+    [SwaggerSchema("Name of the external authentication provider (e.g., Google, Facebook)")]
+    [DefaultValue("Google")]
+    public string Provider { get; set; } = "Google";
 }

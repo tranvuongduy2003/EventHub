@@ -6,6 +6,7 @@ using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Enums.Event;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Event.CreateEvent;
@@ -17,15 +18,18 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     private readonly IMapper _mapper;
     private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public CreateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
-        ILogger<CreateEventCommandHandler> logger, ISerializeService serializeService)
+        ISerializeService serializeService, UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+        ILogger<CreateEventCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _fileService = fileService;
         _logger = logger;
         _serializeService = serializeService;
+        _userManager = userManager;
     }
 
     public async Task<EventDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
@@ -82,7 +86,16 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
                 .CreateReasonsToRegisterEvent(@event.Id, request.Event.Reasons.ToList());
         }
 
+        var user = await _userManager.FindByIdAsync(request.AuthorId.ToString());
+        if (user != null)
+        {
+            user.NumberOfCreatedEvents++;
+            await _userManager.UpdateAsync(user);
+        }
+
         var eventDto = _mapper.Map<EventDto>(@event);
+
+        _logger.LogInformation("END: CreateEventCommandHandler");
 
         return eventDto;
     }

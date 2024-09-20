@@ -28,8 +28,8 @@ namespace EventHub.Presentation.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly ILogger<AuthController> _logger;
+    private readonly IMediator _mediator;
 
     public AuthController(ILogger<AuthController> logger, IMediator mediator)
     {
@@ -40,7 +40,8 @@ public class AuthController : ControllerBase
     [HttpPost("signup")]
     [SwaggerOperation(
         Summary = "Sign up a new user",
-        Description = "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
+        Description =
+            "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
     )]
     [SwaggerResponse(200, "User successfully registered", typeof(SignInResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
@@ -70,7 +71,8 @@ public class AuthController : ControllerBase
     [HttpPost("validate-user")]
     [SwaggerOperation(
         Summary = "Validate user credentials",
-        Description = "Validates the provided user credentials and returns an appropriate response based on the validation result."
+        Description =
+            "Validates the provided user credentials and returns an appropriate response based on the validation result."
     )]
     [SwaggerResponse(200, "User credentials are valid")]
     [SwaggerResponse(400, "Invalid user credentials or request data")]
@@ -100,7 +102,8 @@ public class AuthController : ControllerBase
     [HttpPost("signin")]
     [SwaggerOperation(
         Summary = "Sign in a user",
-        Description = "Authenticates the user based on the provided credentials and returns a sign-in response if successful."
+        Description =
+            "Authenticates the user based on the provided credentials and returns a sign-in response if successful."
     )]
     [SwaggerResponse(200, "Successfully signed in", typeof(SignInResponseDto))]
     [SwaggerResponse(401, "Unauthorized - Invalid credentials")]
@@ -138,7 +141,6 @@ public class AuthController : ControllerBase
     )]
     [SwaggerResponse(200, "Successfully signed out")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-
     public async Task<IActionResult> SignOut()
     {
         _logger.LogInformation("START: SignOut");
@@ -161,7 +163,8 @@ public class AuthController : ControllerBase
     [HttpPost("external-login")]
     [SwaggerOperation(
         Summary = "Log in a user via an external provider",
-        Description = "Authenticates the user using an external authentication provider (e.g., Google, Facebook) and returns a login response if successful."
+        Description =
+            "Authenticates the user using an external authentication provider (e.g., Google, Facebook) and returns a login response if successful."
     )]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
@@ -186,7 +189,8 @@ public class AuthController : ControllerBase
     [HttpGet("external-auth-callback")]
     [SwaggerOperation(
         Summary = "Callback endpoint for external authentication",
-        Description = "Handles the callback from an external authentication provider and processes the authentication result."
+        Description =
+            "Handles the callback from an external authentication provider and processes the authentication result."
     )]
     [SwaggerResponse(400, "Bad Request - Invalid or missing returnUrl parameter")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the authentication callback")]
@@ -347,12 +351,9 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            var accessToken = Request
-                .Headers[HeaderNames.Authorization]
-                .ToString()
-                .Replace("Bearer ", "");
+            var userId = (Guid)HttpContext.Items["UserId"];
 
-            var user = await _mediator.Send(new GetUserProfileQuery(accessToken));
+            var user = await _mediator.Send(new GetUserProfileQuery(userId));
 
             _logger.LogInformation("END: GetUserProfile");
 

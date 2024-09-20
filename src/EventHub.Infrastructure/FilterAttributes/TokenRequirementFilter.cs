@@ -2,6 +2,7 @@
 using EventHub.Shared.HttpResponses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.Net.Http.Headers;
 
 namespace EventHub.Infrastructure.FilterAttributes;
@@ -35,5 +36,10 @@ public class TokenRequirementFilter : IAuthorizationFilter
 
         if (_tokenService.ValidateTokenExpired(accessToken))
             context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
+
+        var principal = _tokenService.GetPrincipalFromToken(accessToken);
+        var userId = principal.Claims
+            .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+        context.HttpContext.Items["UserId"] = userId;
     }
 }
