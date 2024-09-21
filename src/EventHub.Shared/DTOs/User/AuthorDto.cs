@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using EventHub.Shared.Enums.User;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,9 +17,6 @@ public class AuthorDto
 
     [SwaggerSchema("The phone number of the author.")]
     public string PhoneNumber { get; set; }
-
-    [SwaggerSchema("The date of birth of the author.")]
-    public DateTime? Dob { get; set; }
 
     [SwaggerSchema("The full name of the author.")]
     public string FullName { get; set; }

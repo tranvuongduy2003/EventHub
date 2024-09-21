@@ -12,8 +12,8 @@ public class SendMessageDtoValidator : AbstractValidator<SendMessageDto>
             .MaximumLength(50).WithMessage("ConversationId cannot over limit 50 characters");
 
         RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("UserId is required")
-            .MaximumLength(50).WithMessage("UserId cannot over limit 50 characters");
+            .NotEmpty().WithMessage("AuthorId is required")
+            .MaximumLength(50).WithMessage("AuthorId cannot over limit 50 characters");
 
         RuleFor(x => x.Content)
             .MaximumLength(1000)
@@ -24,7 +24,7 @@ public class SendMessageDtoValidator : AbstractValidator<SendMessageDto>
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.ImageUrl))
             .WithMessage("ImageUrl cannot over limit 255 characters");
-        
+
         RuleFor(x => x.ImageFileName)
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.ImageFileName))
@@ -34,7 +34,7 @@ public class SendMessageDtoValidator : AbstractValidator<SendMessageDto>
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.VideoUrl))
             .WithMessage("VideoUrl cannot over limit 255 characters");
-        
+
         RuleFor(x => x.VideoFileName)
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.VideoFileName))
@@ -44,7 +44,7 @@ public class SendMessageDtoValidator : AbstractValidator<SendMessageDto>
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.AudioUrl))
             .WithMessage("AudioUrl cannot over limit 255 characters");
-        
+
         RuleFor(x => x.AudioFileName)
             .MaximumLength(255)
             .When(x => !string.IsNullOrEmpty(x.AudioFileName))

@@ -8,8 +8,8 @@ public class UpdateUserPasswordDtoValidator : AbstractValidator<UpdateUserPasswo
     public UpdateUserPasswordDtoValidator()
     {
         RuleFor(x => x.UserId.ToString())
-            .NotEmpty().WithMessage("UserId is required")
-            .MaximumLength(50).WithMessage("UserId cannot over limit 50 characters");
+            .NotEmpty().WithMessage("AuthorId is required")
+            .MaximumLength(50).WithMessage("AuthorId cannot over limit 50 characters");
 
         RuleFor(x => x.OldPassword)
             .NotEmpty().WithMessage("Old password is required");

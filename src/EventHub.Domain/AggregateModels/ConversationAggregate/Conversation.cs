@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
-using EventHub.Domain.SeedWork.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.AggregateModels.ConversationAggregate;
@@ -15,15 +14,12 @@ public class Conversation : AggregateRoot
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] 
-    public required Guid EventId { get; set; } = Guid.Empty;
+    [Required] public required Guid EventId { get; set; } = Guid.Empty;
 
-    [Required]
-    public required Guid HostId { get; set; } = Guid.Empty;
+    [Required] public required Guid HostId { get; set; } = Guid.Empty;
 
-    [Required]
-    public required Guid UserId { get; set; } = Guid.Empty;
-    
+    [Required] public required Guid UserId { get; set; } = Guid.Empty;
+
     public Guid? LastMessageId { get; set; }
 
     [ForeignKey("EventId")]
@@ -34,7 +30,7 @@ public class Conversation : AggregateRoot
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User Host { get; set; } = null!;
 
-    [ForeignKey("UserId")]
+    [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User User { get; set; } = null!;
 

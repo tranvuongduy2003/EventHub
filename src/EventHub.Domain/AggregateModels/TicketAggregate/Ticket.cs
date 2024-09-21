@@ -5,7 +5,6 @@ using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.PaymentAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
-using EventHub.Domain.SeedWork.Entities;
 using EventHub.Shared.Enums.Ticket;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,36 +17,27 @@ public class Ticket : AggregateRoot
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required]
-    [MaxLength(50)]
-    public required string TicketNo { get; set; } = string.Empty;
+    [Required] [MaxLength(50)] public required string TicketNo { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
     public required string CustomerName { get; set; } = string.Empty;
 
-    [Required] 
-    [MaxLength(100)] 
-    [Phone] 
-    public required string CustomerPhone { get; set; } = string.Empty;
+    [Required] [MaxLength(100)] [Phone] public required string CustomerPhone { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [EmailAddress]
     public required string CustomerEmail { get; set; } = string.Empty;
 
-    [Required] 
-    public required Guid TicketTypeId { get; set; } = Guid.Empty;
+    [Required] public required Guid TicketTypeId { get; set; } = Guid.Empty;
 
-    [Required] 
-    public required Guid EventId { get; set; } = Guid.Empty;
+    [Required] public required Guid EventId { get; set; } = Guid.Empty;
 
-    [Required]
-    public required Guid UserId { get; set; } = Guid.Empty;
+    [Required] public required Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] 
-    public required Guid PaymentId { get; set; } = Guid.Empty;
+    [Required] public required Guid PaymentId { get; set; } = Guid.Empty;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required ETicketStatus Status { get; set; } = ETicketStatus.INACTIVE;
@@ -60,7 +50,7 @@ public class Ticket : AggregateRoot
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual Event Event { get; set; } = null!;
 
-    [ForeignKey("UserId")]
+    [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User User { get; set; } = null!;
 

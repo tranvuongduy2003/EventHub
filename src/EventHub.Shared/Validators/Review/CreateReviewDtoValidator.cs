@@ -7,10 +7,12 @@ public class CreateReviewDtoValidator : AbstractValidator<CreateReviewDto>
 {
     public CreateReviewDtoValidator()
     {
-        RuleFor(x => x.EventId).NotEmpty().WithMessage("Event's id is required")
+        RuleFor(x => x.EventId.ToString())
+            .NotEmpty().WithMessage("Event's id is required")
             .MaximumLength(50).WithMessage("Event's id cannot over limit 50 characters");
 
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("User's id is required")
+        RuleFor(x => x.AuthorId.ToString())
+            .NotEmpty().WithMessage("User's id is required")
             .MaximumLength(50).WithMessage("User's id cannot over limit 50 characters");
 
         RuleFor(x => x.Content)

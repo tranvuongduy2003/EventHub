@@ -7,16 +7,14 @@ using Microsoft.EntityFrameworkCore;
 namespace EventHub.Domain.AggregateModels.EventAggregate;
 
 [Table("FavouriteEvents")]
-[PrimaryKey("UserId", "EventId")]
+[PrimaryKey("AuthorId", "EventId")]
 public class FavouriteEvent : EntityBase
 {
-    [Required]
-    public required Guid UserId { get; set; } = Guid.Empty;
+    [Required] public required Guid UserId { get; set; } = Guid.Empty;
 
-    [Required] 
-    public required Guid EventId { get; set; } = Guid.Empty;
+    [Required] public required Guid EventId { get; set; } = Guid.Empty;
 
-    [ForeignKey("UserId")]
+    [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual User User { get; set; } = null!;
 

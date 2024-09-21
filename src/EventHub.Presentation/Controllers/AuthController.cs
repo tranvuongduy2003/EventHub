@@ -351,7 +351,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            var userId = (Guid)HttpContext.Items["UserId"];
+            var userId = (Guid)HttpContext.Items["AuthorId"];
 
             var user = await _mediator.Send(new GetUserProfileQuery(userId));
 
