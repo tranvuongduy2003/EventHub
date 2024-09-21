@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using EventHub.Shared.Enums.User;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.User;
 
@@ -20,10 +18,6 @@ public class AuthorDto
 
     [SwaggerSchema("The full name of the author.")]
     public string FullName { get; set; }
-
-    [SwaggerSchema("The gender of the author.")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EGender? Gender { get; set; }
 
     [SwaggerSchema("The avatar URL or path for the author.")]
     public string? Avatar { get; set; }

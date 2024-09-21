@@ -2,9 +2,9 @@
 
 public class JoinChatRoomDto
 {
-    public string EventId { get; set; }
+    public Guid EventId { get; set; }
 
-    public string HostId { get; set; }
+    public Guid HostId { get; set; }
 
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 }

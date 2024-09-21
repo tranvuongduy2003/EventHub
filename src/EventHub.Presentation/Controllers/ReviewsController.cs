@@ -89,7 +89,7 @@ public class ReviewsController : ControllerBase
             "Fetches a paginated list of reviews created by the event, based on the provided pagination filter."
     )]
     [SwaggerResponse(200, "Successfully retrieved the list of reviews", typeof(Pagination<ReviewDto>))]
-    [SwaggerResponse(404, "Not Found - Review with the specified ID not found")]
+    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     public async Task<IActionResult> GetPaginatedReviewsByEvent(Guid eventId, [FromQuery] PaginationFilter filter)
     {
@@ -121,7 +121,7 @@ public class ReviewsController : ControllerBase
     [SwaggerResponse(200, "Successfully retrieved the list of reviews", typeof(Pagination<ReviewDto>))]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
-    [SwaggerResponse(404, "Not Found - Review with the specified ID not found")]
+    [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedReviewsByUser(Guid userId, [FromQuery] PaginationFilter filter)

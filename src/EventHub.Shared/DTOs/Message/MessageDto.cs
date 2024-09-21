@@ -1,10 +1,10 @@
-﻿using EventHub.Shared.DTOs.Conversation;
+﻿using EventHub.Shared.DTOs.User;
 
 namespace EventHub.Shared.DTOs.Message;
 
 public class MessageDto
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     public string? Content { get; set; }
 
@@ -14,11 +14,7 @@ public class MessageDto
 
     public string? AudioUrl { get; set; } = string.Empty;
 
-    public string UserId { get; set; }
-
-    public ConversationUserDto User { get; set; }
-
-    public string ConversationId { get; set; }
+    public AuthorDto? Author { get; set; } = null;
 
     public DateTime CreatedAt { get; set; }
 

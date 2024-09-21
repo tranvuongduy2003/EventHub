@@ -7,11 +7,11 @@ public class SendMessageDtoValidator : AbstractValidator<SendMessageDto>
 {
     public SendMessageDtoValidator()
     {
-        RuleFor(x => x.ConversationId)
+        RuleFor(x => x.ConversationId.ToString())
             .NotEmpty().WithMessage("ConversationId is required")
             .MaximumLength(50).WithMessage("ConversationId cannot over limit 50 characters");
 
-        RuleFor(x => x.UserId)
+        RuleFor(x => x.AuthorId.ToString())
             .NotEmpty().WithMessage("AuthorId is required")
             .MaximumLength(50).WithMessage("AuthorId cannot over limit 50 characters");
 

@@ -7,13 +7,16 @@ public class JoinChatRoomDtoValidator : AbstractValidator<JoinChatRoomDto>
 {
     public JoinChatRoomDtoValidator()
     {
-        RuleFor(x => x.EventId).NotEmpty().WithMessage("EventId is required")
+        RuleFor(x => x.EventId.ToString())
+            .NotEmpty().WithMessage("EventId is required")
             .MaximumLength(50).WithMessage("EventId cannot over limit 50 characters");
 
-        RuleFor(x => x.HostId).NotEmpty().WithMessage("HostId is required")
+        RuleFor(x => x.HostId.ToString())
+            .NotEmpty().WithMessage("HostId is required")
             .MaximumLength(50).WithMessage("HostId cannot over limit 50 characters");
 
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("AuthorId is required")
+        RuleFor(x => x.UserId.ToString())
+            .NotEmpty().WithMessage("AuthorId is required")
             .MaximumLength(50).WithMessage("AuthorId cannot over limit 50 characters");
     }
 }

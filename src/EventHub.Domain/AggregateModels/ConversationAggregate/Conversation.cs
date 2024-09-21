@@ -34,5 +34,7 @@ public class Conversation : AggregateRoot
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User User { get; set; } = null!;
 
+    [ForeignKey("LastMessageId")] public virtual Message? LastMessage { get; set; } = null!;
+
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }
