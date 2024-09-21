@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.User;
@@ -22,8 +21,9 @@ public class SignUpCommand : ICommand<SignInResponseDto>
     /// The data transfer object containing the details required to create a new user account.
     /// </param>
     public SignUpCommand(CreateUserDto dto)
-        => (Email, PhoneNumber, Dob, FullName, Password, UserName, Gender, Bio, Avatar) 
-            = (dto.Email, dto.PhoneNumber, dto.Dob, dto.FullName, dto.Password, dto.UserName, dto.Gender, dto.Bio, dto.Avatar);
+        => (Email, PhoneNumber, Dob, FullName, Password, UserName, Gender, Bio, Avatar)
+            = (dto.Email, dto.PhoneNumber, dto.Dob, dto.FullName, dto.Password, dto.UserName, dto.Gender, dto.Bio,
+                dto.Avatar);
 
     /// <summary>
     /// Gets or sets the email address for the new user account.

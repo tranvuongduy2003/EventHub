@@ -1,20 +1,18 @@
 using AutoMapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.Enums.User;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Extensions;
 
 namespace EventHub.Application.Commands.User.UpdateUser;
 
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
-    private readonly IMapper _mapper;
-    private readonly ILogger<UpdateUserCommandHandler> _logger;
     private readonly IFileService _fileService;
+    private readonly ILogger<UpdateUserCommandHandler> _logger;
+    private readonly IMapper _mapper;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public UpdateUserCommandHandler(IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IFileService fileService,

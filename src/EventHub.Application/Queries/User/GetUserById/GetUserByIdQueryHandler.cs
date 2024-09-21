@@ -1,5 +1,5 @@
 using AutoMapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Exceptions;
@@ -10,10 +10,10 @@ namespace EventHub.Application.Queries.User.GetUserById;
 
 public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 {
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
-    private readonly ILogger<GetUserByIdQueryHandler> _logger;
     private readonly ICacheService _cacheService;
+    private readonly ILogger<GetUserByIdQueryHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetUserByIdQueryHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
         ILogger<GetUserByIdQueryHandler> logger, ICacheService cacheService, IMapper mapper)

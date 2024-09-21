@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
@@ -12,18 +12,18 @@ namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
 public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLoginCallbackCommand, SignInResponseDto>
 {
-    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
-    private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
-    private readonly ITokenService _tokenService;
+    private readonly IHangfireService _hangfireService;
     private readonly ILogger<ExternalLoginCallbackCommandHandler> _logger;
+    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly ITokenService _tokenService;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public ExternalLoginCallbackCommandHandler(
-        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, 
+        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        IHangfireService hangfireService, 
-        IEmailService emailService, 
+        IHangfireService hangfireService,
+        IEmailService emailService,
         ITokenService tokenService,
         ILogger<ExternalLoginCallbackCommandHandler> logger)
     {
@@ -34,11 +34,12 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
         _tokenService = tokenService;
         _logger = logger;
     }
-    
-    public async Task<SignInResponseDto> Handle(ExternalLoginCallbackCommand request, CancellationToken cancellationToken)
+
+    public async Task<SignInResponseDto> Handle(ExternalLoginCallbackCommand request,
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: ExternalLoginCallbackCommandHandler");
-        
+
         var info = await _signInManager.GetExternalLoginInfoAsync();
 
         var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -91,7 +92,7 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
-            
+
             _logger.LogInformation("END: ExternalLoginCallbackCommandHandler");
 
             return signInResponse;

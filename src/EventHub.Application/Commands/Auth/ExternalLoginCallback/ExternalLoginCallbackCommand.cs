@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
@@ -17,7 +16,7 @@ public class ExternalLoginCallbackCommand : ICommand<SignInResponseDto>
     /// </param>
     public ExternalLoginCallbackCommand(string returnUrl)
         => ReturnUrl = returnUrl;
-    
+
     /// <summary>
     /// Gets or sets the URL to which the user will be redirected after the external login callback process is complete.
     /// </summary>

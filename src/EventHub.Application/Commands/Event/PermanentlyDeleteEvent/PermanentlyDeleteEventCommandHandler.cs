@@ -1,5 +1,5 @@
-﻿using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.UnitOfWork;
+﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
 

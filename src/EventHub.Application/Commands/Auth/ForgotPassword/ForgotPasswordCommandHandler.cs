@@ -1,4 +1,4 @@
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
@@ -8,23 +8,24 @@ namespace EventHub.Application.Commands.Auth.ForgotPassword;
 
 public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, bool>
 {
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
-    private readonly IHangfireService _hangfireService;
     private readonly IEmailService _emailService;
+    private readonly IHangfireService _hangfireService;
     private readonly ILogger<ForgotPasswordCommandHandler> _logger;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
-    public ForgotPasswordCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IHangfireService hangfireService, IEmailService emailService, ILogger<ForgotPasswordCommandHandler> logger)
+    public ForgotPasswordCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+        IHangfireService hangfireService, IEmailService emailService, ILogger<ForgotPasswordCommandHandler> logger)
     {
         _userManager = userManager;
         _hangfireService = hangfireService;
         _emailService = emailService;
         _logger = logger;
     }
-    
+
     public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: ForgotPasswordCommandHandler");
-        
+
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null) throw new NotFoundException("User does not exist");
 

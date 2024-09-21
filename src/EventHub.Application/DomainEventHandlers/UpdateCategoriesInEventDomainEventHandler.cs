@@ -1,7 +1,7 @@
-﻿using EventHub.Domain.AggregateModels.EventAggregate;
+﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;

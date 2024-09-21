@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.SignalR", "src\Eve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Persistence", "src\EventHub.Persistence\EventHub.Persistence.csproj", "{9F7E0B80-878B-4EAD-8E02-448593A47985}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHub.Abstractions", "src\EventHub.Abstractions\EventHub.Abstractions.csproj", "{6682DC97-ED04-4746-B034-6D3F96ACF849}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,5 +63,9 @@ Global
 		{9F7E0B80-878B-4EAD-8E02-448593A47985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F7E0B80-878B-4EAD-8E02-448593A47985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F7E0B80-878B-4EAD-8E02-448593A47985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6682DC97-ED04-4746-B034-6D3F96ACF849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6682DC97-ED04-4746-B034-6D3F96ACF849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6682DC97-ED04-4746-B034-6D3F96ACF849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6682DC97-ED04-4746-B034-6D3F96ACF849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

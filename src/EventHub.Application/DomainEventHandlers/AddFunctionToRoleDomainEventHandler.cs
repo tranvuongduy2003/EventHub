@@ -1,9 +1,8 @@
-using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +12,9 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFunctionToRoleDomainEvent>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<AddFunctionToRoleDomainEventHandler> _logger;
     private readonly RoleManager<Role> _roleManager;
+    private readonly IUnitOfWork _unitOfWork;
 
     public AddFunctionToRoleDomainEventHandler(IUnitOfWork unitOfWork,
         ILogger<AddFunctionToRoleDomainEventHandler> logger, RoleManager<Role> roleManager)
@@ -44,13 +43,13 @@ public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFuncti
 
         if (isPermissionExisted)
             throw new BadRequestException("Permission already existed!");
-        
+
         var permissions = await _unitOfWork.CommandInFunctions
             .FindByCondition(x => x.FunctionId.Equals(notification.FunctionId))
             .Select(x => new Permission
             {
-                FunctionId = x.FunctionId, 
-                RoleId = notification.RoleId, 
+                FunctionId = x.FunctionId,
+                RoleId = notification.RoleId,
                 CommandId = x.CommandId
             })
             .ToListAsync();

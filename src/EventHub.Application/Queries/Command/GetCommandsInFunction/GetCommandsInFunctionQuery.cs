@@ -1,4 +1,3 @@
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Command;
 

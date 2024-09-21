@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 
 namespace EventHub.Application.Commands.Auth.ForgotPassword;
@@ -17,7 +16,7 @@ public class ForgotPasswordCommand : ICommand<bool>
     /// </param>
     public ForgotPasswordCommand(ForgotPasswordDto dto)
         => Email = dto.Email;
-    
+
     /// <summary>
     /// Gets or sets the email address associated with the user account for which the password reset is requested.
     /// </summary>

@@ -1,7 +1,7 @@
 ﻿using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Shared.DTOs.File;
 using EventHub.Shared.Settings;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +33,8 @@ public class AzureFileService : IFileService
         _azureBlobStorage = azureBlobStorage;
 
         var credential = new StorageSharedKeyCredential(_azureBlobStorage.StorageAccount, _azureBlobStorage.Key);
-        var blobUri = $"https://{_azureBlobStorage.StorageAccount}.blob.core.windows.net/{_azureBlobStorage.ContainerName}";
+        var blobUri =
+            $"https://{_azureBlobStorage.StorageAccount}.blob.core.windows.net/{_azureBlobStorage.ContainerName}";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
         _filesContainer = blobServiceClient.GetBlobContainerClient(_azureBlobStorage.ContainerName);
     }

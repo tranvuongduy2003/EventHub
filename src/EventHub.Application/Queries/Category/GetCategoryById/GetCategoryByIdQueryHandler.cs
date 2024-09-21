@@ -1,6 +1,6 @@
 using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -9,9 +9,9 @@ namespace EventHub.Application.Queries.Category.GetCategoryById;
 
 public class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByIdQuery, CategoryDto>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetCategoryByIdQueryHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
     public GetCategoryByIdQueryHandler(IUnitOfWork unitOfWork,
         ILogger<GetCategoryByIdQueryHandler> logger, IMapper mapper)

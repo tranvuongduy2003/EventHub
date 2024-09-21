@@ -1,5 +1,5 @@
 using AutoMapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.User;
@@ -13,9 +13,9 @@ namespace EventHub.Application.Commands.User.CreateUser;
 
 public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserDto>
 {
-    private readonly IMapper _mapper;
-    private readonly ILogger<CreateUserCommandHandler> _logger;
     private readonly IFileService _fileService;
+    private readonly ILogger<CreateUserCommandHandler> _logger;
+    private readonly IMapper _mapper;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public CreateUserCommandHandler(IMapper mapper, ILogger<CreateUserCommandHandler> logger, IFileService fileService,

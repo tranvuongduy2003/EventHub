@@ -1,5 +1,5 @@
 ﻿using System.Security.Authentication;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Shared.Settings;
 using Hangfire;
 using Hangfire.Console.Extensions;
@@ -11,8 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Quartz;
-using Quartz.Impl;
 
 namespace EventHub.Infrastructure.Configurations;
 

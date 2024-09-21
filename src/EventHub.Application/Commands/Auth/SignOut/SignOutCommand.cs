@@ -1,6 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
-using MediatR;
 
 namespace EventHub.Application.Commands.Auth.SignOut;
 

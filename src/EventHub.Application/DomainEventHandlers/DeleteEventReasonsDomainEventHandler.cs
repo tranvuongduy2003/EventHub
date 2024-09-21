@@ -1,6 +1,6 @@
-﻿using EventHub.Domain.Events;
+﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

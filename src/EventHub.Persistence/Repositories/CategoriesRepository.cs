@@ -1,5 +1,5 @@
-﻿using EventHub.Domain.AggregateModels.CategoryAggregate;
-using EventHub.Domain.Repositories;
+﻿using EventHub.Abstractions.Repositories;
+using EventHub.Domain.AggregateModels.CategoryAggregate;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.SeedWork.Repository;
 

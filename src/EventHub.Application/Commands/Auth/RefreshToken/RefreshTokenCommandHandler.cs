@@ -1,4 +1,4 @@
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Exceptions;
@@ -11,21 +11,22 @@ namespace EventHub.Application.Commands.Auth.RefreshToken;
 
 public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, SignInResponseDto>
 {
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
-    private readonly ITokenService _tokenService;
     private readonly ILogger<RefreshTokenCommandHandler> _logger;
+    private readonly ITokenService _tokenService;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
-    public RefreshTokenCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ITokenService tokenService, ILogger<RefreshTokenCommandHandler> logger)
+    public RefreshTokenCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+        ITokenService tokenService, ILogger<RefreshTokenCommandHandler> logger)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _logger = logger;
     }
-    
+
     public async Task<SignInResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: RefreshTokenCommandHandler");
-        
+
         if (string.IsNullOrEmpty(request.RefreshToken))
             throw new InvalidTokenException();
 
@@ -48,7 +49,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
             await _userManager.GenerateUserTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH);
 
         _logger.LogInformation("END: RefreshTokenCommandHandler");
-        
+
         var refreshResponse = new SignInResponseDto
         {
             AccessToken = newAccessToken,

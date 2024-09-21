@@ -1,4 +1,4 @@
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
@@ -26,7 +26,7 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand>
     {
         _logger.LogInformation("BEGIN: FollowCommandHandler");
 
-        if (string.IsNullOrEmpty(request.AccessToken)) 
+        if (string.IsNullOrEmpty(request.AccessToken))
             throw new UnauthorizedException("Unauthorized");
         var principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
 

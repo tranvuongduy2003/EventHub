@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Abstractions;
+﻿using EventHub.Abstractions;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
 using EventHub.Shared.ValueObjects;

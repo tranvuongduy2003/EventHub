@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;
@@ -20,7 +19,7 @@ public class RefreshTokenCommand : ICommand<SignInResponseDto>
     /// </param>
     public RefreshTokenCommand(string refreshToken, string accessToken)
         => (RefreshToken, AccessToken) = (refreshToken, accessToken);
-    
+
     /// <summary>
     /// Gets or sets the refresh token used to obtain new authentication tokens.
     /// </summary>

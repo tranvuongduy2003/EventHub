@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Persistence.Data;
 using EventHub.Shared.Settings;

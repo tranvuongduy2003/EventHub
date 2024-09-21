@@ -1,7 +1,7 @@
 using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Function;
 using EventHub.Shared.DTOs.Permission;
 using EventHub.Shared.Exceptions;
@@ -14,14 +14,15 @@ namespace EventHub.Application.Queries.Permission.GetPermissionsByUser;
 
 public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUserQuery, List<RolePermissionDto>>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetPermissionsByUserQueryHandler> _logger;
-    private readonly RoleManager<Role> _roleManager;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly IMapper _mapper;
+    private readonly RoleManager<Role> _roleManager;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetPermissionsByUserQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetPermissionsByUserQueryHandler> logger, RoleManager<Role> roleManager, UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
+        ILogger<GetPermissionsByUserQueryHandler> logger, RoleManager<Role> roleManager,
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -41,17 +42,17 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
 
         var permissions = _unitOfWork.Permissions
             .FindAll(false, x => x.Function);
-        
+
         var userRoleNames = await _userManager.GetRolesAsync(user);
         var userRoles = _roleManager.Roles
             .AsNoTracking()
             .Join(userRoleNames, r => r.Name, n => n, (role, name) => role);
-        
+
         var rolePermissions = await userRoles
             .LeftJoin(
-                permissions, 
-                r => r.Id, 
-                p => p.RoleId, 
+                permissions,
+                r => r.Id,
+                p => p.RoleId,
                 (role, permission) => new { Role = role, Permission = permission })
             .GroupBy(x => x.Role)
             .Select(group => new RolePermissionDto
@@ -64,7 +65,7 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
                         .ToList())
             })
             .ToListAsync();
-        
+
 
         _logger.LogInformation("END: GetPermissionsByUserQueryHandler");
 

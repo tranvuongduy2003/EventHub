@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
+using EventHub.Abstractions.SeedWork.Repository;
 using EventHub.Domain.SeedWork.Entities;
-using EventHub.Domain.SeedWork.Repository;
 using EventHub.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +17,9 @@ namespace EventHub.Persistence.SeedWork.Repository;
 /// </remarks>
 public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : EntityBase
 {
-    private readonly IRepositoryBase<T> _decorated;
     private readonly ICacheService _cacheService;
     private readonly ApplicationDbContext _context;
+    private readonly IRepositoryBase<T> _decorated;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CachedRepositoryBase{T}"/> class.
@@ -95,8 +95,8 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
                 current.Include(includeProperty));
         return items;
     }
-    
-    public Task<bool> ExistAsync(Guid id) 
+
+    public Task<bool> ExistAsync(Guid id)
         => _decorated.ExistAsync(id);
 
     public Task<bool> ExistAsync(Expression<Func<T, bool>> expression)

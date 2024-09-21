@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Auth;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
@@ -20,7 +19,7 @@ public class ExternalLoginCommand : ICommand<ExternalLoginDto>
     /// </param>
     public ExternalLoginCommand(string provider, string returnUrl)
         => (Provider, ReturnUrl) = (provider, returnUrl);
-    
+
     /// <summary>
     /// Gets or sets the name of the external authentication provider.
     /// </summary>

@@ -1,7 +1,7 @@
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -10,8 +10,8 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class FollowUserDomainEventHandler : IDomainEventHandler<FollowUserDomainEvent>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<FollowUserDomainEventHandler> _logger;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
     public FollowUserDomainEventHandler(IUnitOfWork unitOfWork,

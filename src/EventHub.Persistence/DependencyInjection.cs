@@ -1,8 +1,8 @@
-using EventHub.Domain.Abstractions;
-using EventHub.Domain.CachedRepositories;
-using EventHub.Domain.Repositories;
-using EventHub.Domain.SeedWork.Repository;
-using EventHub.Domain.SeedWork.UnitOfWork;
+using EventHub.Abstractions;
+using EventHub.Abstractions.CachedRepositories;
+using EventHub.Abstractions.Repositories;
+using EventHub.Abstractions.SeedWork.Repository;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;
@@ -29,7 +29,7 @@ public static class DependencyInjection
     {
         services
             .AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
-        
+
         services
             .AddTransient<ApplicationDbContextSeed>();
 
@@ -42,7 +42,7 @@ public static class DependencyInjection
             .AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>))
             .AddScoped(typeof(ICachedRepositoryBase<>), typeof(CachedRepositoryBase<>))
             .AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
         services
             .AddScoped<ICategoriesRepository, CategoriesRepository>()
             .AddScoped<ICommandInFunctionsRepository, CommandInFunctionsRepository>()

@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Abstractions;
+﻿using EventHub.Abstractions;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;
@@ -11,7 +11,6 @@ using EventHub.Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IHangfireService = EventHub.Domain.Abstractions.IHangfireService;
 
 namespace EventHub.Infrastructure;
 
@@ -44,7 +43,7 @@ public static class DependencyInjection
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
         services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
-        
+
         services
             .AddTransient<ISerializeService, SerializeService>()
             .AddTransient<ICacheService, CacheService>()
@@ -52,7 +51,8 @@ public static class DependencyInjection
             .AddTransient<IHangfireService, HangfireService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITokenService, TokenService>()
-            .AddTransient<IDateTimeProvider, DateTimeProvider>();;
+            .AddTransient<IDateTimeProvider, DateTimeProvider>();
+        ;
 
         return services;
     }

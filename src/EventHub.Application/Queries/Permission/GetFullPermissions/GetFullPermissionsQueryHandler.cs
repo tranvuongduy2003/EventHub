@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Permission;
 using Microsoft.Extensions.Logging;
@@ -9,8 +9,8 @@ namespace EventHub.Application.Queries.Permission.GetFullPermissions;
 
 public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQuery, List<FullPermissionDto>>
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
     private readonly ILogger<GetFullPermissionsQueryHandler> _logger;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
     public GetFullPermissionsQueryHandler(ISqlConnectionFactory sqlConnectionFactory,
         ILogger<GetFullPermissionsQueryHandler> logger)
@@ -38,7 +38,7 @@ public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQu
 		                    left join Commands sa on cif.CommandId = sa.Id
                         GROUP BY f.Id,f.Name, f.ParentId
                         order BY f.ParentId";
-        
+
         var permissions = await connection.QueryAsync<FullPermissionDto>(sql, commandType: CommandType.Text);
 
         _logger.LogInformation("END: GetFullPermissionsQueryHandler");

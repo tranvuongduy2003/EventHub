@@ -1,17 +1,7 @@
-﻿using EventHub.Domain.Abstractions;
-using EventHub.Domain.AggregateModels.CategoryAggregate;
-using EventHub.Domain.AggregateModels.ConversationAggregate;
-using EventHub.Domain.AggregateModels.EmailLoggerAggregate;
-using EventHub.Domain.AggregateModels.EventAggregate;
-using EventHub.Domain.AggregateModels.LabelAggregate;
-using EventHub.Domain.AggregateModels.PaymentAggregate;
-using EventHub.Domain.AggregateModels.PermissionAggregate;
-using EventHub.Domain.AggregateModels.ReviewAggregate;
-using EventHub.Domain.AggregateModels.TicketAggregate;
-using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.CachedRepositories;
-using EventHub.Domain.Repositories;
-using EventHub.Domain.SeedWork.UnitOfWork;
+﻿using EventHub.Abstractions;
+using EventHub.Abstractions.CachedRepositories;
+using EventHub.Abstractions.Repositories;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;
@@ -29,14 +19,21 @@ namespace EventHub.Persistence.SeedWork.UnitOfWork;
 /// </remarks>
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
     private readonly ICacheService _cacheService;
-    private bool _disposed;
+    private readonly ApplicationDbContext _context;
+
+    private CachedCategoriesRepository _cachedCategories;
+    private CachedEventsRepository _cachedEvents;
+    private CachedEventSubImagesRepository _cachedEventSubImages;
+    private CachedReasonsRepository _cachedReasons;
+    private CachedReviewsRepository _cachedReviews;
+    private CachedTicketTypesRepository _cachedTicketTypes;
 
     private CategoriesRepository _categories;
     private CommandInFunctionsRepository _commandInFunctions;
     private CommandsRepository _commands;
     private ConversationsRepository _conversations;
+    private bool _disposed;
     private EmailAttachmentsRepository _emailAttachments;
     private EmailContentsRepository _emailContents;
     private EmailLoggersRepository _emailLoggers;
@@ -54,19 +51,12 @@ public class UnitOfWork : IUnitOfWork
     private PaymentMethodsRepository _paymentMethods;
     private PaymentsRepository _payments;
     private PermissionsRepository _permissions;
-    private ReviewsRepository _reviews;
     private ReasonsRepository _reasons;
+    private ReviewsRepository _reviews;
     private TicketsRepository _tickets;
     private TicketTypesRepository _ticketTypes;
     private UserFollowersRepository _userFollowers;
     private UserPaymentMethodsRepository _userPaymentMethods;
-
-    private CachedCategoriesRepository _cachedCategories;
-    private CachedEventsRepository _cachedEvents;
-    private CachedEventSubImagesRepository _cachedEventSubImages;
-    private CachedReasonsRepository _cachedReasons;
-    private CachedReviewsRepository _cachedReviews;
-    private CachedTicketTypesRepository _cachedTicketTypes;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.

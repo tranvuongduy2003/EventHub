@@ -1,6 +1,6 @@
 using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Function;
 using Microsoft.Extensions.Logging;
 
@@ -8,17 +8,18 @@ namespace EventHub.Application.Commands.Function.CreateFunction;
 
 public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionCommand, FunctionDto>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly ILogger<CreateFunctionCommandHandler> _logger;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateFunctionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CreateFunctionCommandHandler> logger)
+    public CreateFunctionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
+        ILogger<CreateFunctionCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _logger = logger;
     }
-    
+
     public async Task<FunctionDto> Handle(CreateFunctionCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("BEGIN: CreateFunctionCommandHandler");
@@ -33,9 +34,9 @@ public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionComman
 
         await _unitOfWork.Functions.CreateAsync(function);
         await _unitOfWork.CommitAsync();
-        
+
         _logger.LogInformation("END: CreateFunctionCommandHandler");
-        
+
         return _mapper.Map<FunctionDto>(function);
     }
 }

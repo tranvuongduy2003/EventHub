@@ -1,7 +1,7 @@
 using AutoMapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
@@ -14,11 +14,11 @@ namespace EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
 public class
     GetPaginatedFollowingUsersQueryHandler : IQueryHandler<GetPaginatedFollowingUsersQuery, Pagination<UserDto>>
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
     private readonly ICacheService _cacheService;
     private readonly ILogger<GetPaginatedFollowingUsersQueryHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetPaginatedFollowingUsersQueryHandler(IUnitOfWork unitOfWork,
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ICacheService cacheService,

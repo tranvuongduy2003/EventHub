@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
+using EventHub.Abstractions.SeedWork.Repository;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.SeedWork.Interfaces;
-using EventHub.Domain.SeedWork.Repository;
 using EventHub.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 

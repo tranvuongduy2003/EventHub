@@ -1,4 +1,4 @@
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
@@ -11,10 +11,10 @@ namespace EventHub.Application.Commands.Auth.SignIn;
 
 public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInResponseDto>
 {
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly ILogger<SignInCommandHandler> _logger;
     private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
-    private readonly ILogger<SignInCommandHandler> _logger;
+    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public SignInCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
         SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, ITokenService tokenService,

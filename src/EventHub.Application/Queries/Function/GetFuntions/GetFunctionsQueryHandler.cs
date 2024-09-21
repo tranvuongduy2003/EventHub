@@ -1,6 +1,6 @@
 using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Function;
 using Microsoft.Extensions.Logging;
 
@@ -8,9 +8,9 @@ namespace EventHub.Application.Queries.Function.GetFuntions;
 
 public class GetFunctionsQueryHandler : IQueryHandler<GetFunctionsQuery, List<FunctionDto>>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetFunctionsQueryHandler> _logger;
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
     public GetFunctionsQueryHandler(IUnitOfWork unitOfWork,
         ILogger<GetFunctionsQueryHandler> logger, IMapper mapper)
@@ -26,9 +26,9 @@ public class GetFunctionsQueryHandler : IQueryHandler<GetFunctionsQuery, List<Fu
         _logger.LogInformation("BEGIN: GetFunctionsQueryHandler");
 
         var functions = _unitOfWork.Functions.FindAll();
-        
+
         _logger.LogInformation("END: GetFunctionsQueryHandler");
-        
+
         return _mapper.Map<List<FunctionDto>>(functions);
     }
 }

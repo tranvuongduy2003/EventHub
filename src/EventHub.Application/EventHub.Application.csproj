@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\EventHub.Abstractions\EventHub.Abstractions.csproj"/>
         <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
         <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj"/>
         <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />

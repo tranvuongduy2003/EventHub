@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.SeedWork.UnitOfWork;
 using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;

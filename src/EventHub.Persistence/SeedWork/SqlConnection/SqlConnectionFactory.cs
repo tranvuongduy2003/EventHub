@@ -1,5 +1,5 @@
 using System.Data;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using Microsoft.Extensions.Configuration;
 
 namespace EventHub.Persistence.SeedWork.SqlConnection;

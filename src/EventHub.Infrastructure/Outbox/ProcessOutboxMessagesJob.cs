@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using EventHub.Domain.Abstractions;
+using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.DomainEvent;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -28,10 +28,11 @@ public sealed class ProcessOutboxMessagesJob : IProcessOutboxMessagesJob
         TypeNameHandling = TypeNameHandling.All
     };
 
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
-    private readonly IPublisher _publisher;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
+    private readonly IPublisher _publisher;
+
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProcessOutboxMessagesJob"/> class.

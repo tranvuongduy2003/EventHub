@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Abstractions;
+﻿using EventHub.Abstractions;
 using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 
@@ -13,9 +13,9 @@ namespace EventHub.Infrastructure.Caching;
 /// </remarks>
 public class CacheService : ICacheService
 {
+    private readonly ILogger _logger;
     private readonly IDistributedCache _redisCacheService;
     private readonly ISerializeService _serializeService;
-    private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CacheService"/> class.

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
+using EventHub.Abstractions.Repositories;
 using EventHub.Domain.AggregateModels.PermissionAggregate;
-using EventHub.Domain.Repositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.SeedWork.Repository;
 using Microsoft.EntityFrameworkCore;

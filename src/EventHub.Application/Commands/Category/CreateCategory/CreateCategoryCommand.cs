@@ -1,5 +1,4 @@
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.DTOs.Category;
 using Microsoft.AspNetCore.Http;
 
@@ -46,4 +45,3 @@ public class CreateCategoryCommand : ICommand<CategoryDto>
     /// </value>
     public string Color { get; set; }
 }
-
