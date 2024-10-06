@@ -49,7 +49,7 @@ services:
   
   # api server      
   eventhub.api:
-    image: ${DOCKER_REGISTRY-}eventhub-api:${PLATFORM:-windows}-${TAG:-latest}
+    image: tranvuongduy2003/eventhub:latest
     container_name: eventhub.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
