@@ -11,21 +11,16 @@ namespace EventHub.Application.DomainEventHandlers;
 public class UploadAndSaveEventSubImagesDomainEventHandler : IDomainEventHandler<UploadAndSaveEventSubImagesDomainEvent>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<UploadAndSaveEventSubImagesDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UploadAndSaveEventSubImagesDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UploadAndSaveEventSubImagesDomainEventHandler> logger, IFileService fileService)
+    public UploadAndSaveEventSubImagesDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _fileService = fileService;
     }
 
     public async Task Handle(UploadAndSaveEventSubImagesDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UploadAndSaveEventSubImagesDomainEventHandler");
-
         var eventSubImages = new List<EventSubImage>();
         foreach (var subImageFile in notification.SubImages)
         {
@@ -41,7 +36,5 @@ public class UploadAndSaveEventSubImagesDomainEventHandler : IDomainEventHandler
 
         await _unitOfWork.EventSubImages.CreateListAsync(eventSubImages);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UploadAndSaveEventSubImagesDomainEventHandler");
     }
 }

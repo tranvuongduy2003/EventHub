@@ -9,22 +9,19 @@ namespace EventHub.Application.Queries.Command.GetCommandsNotInFunction;
 
 public class GetCommandsNotInFunctionQueryHandler : IQueryHandler<GetCommandsNotInFunctionQuery, List<CommandDto>>
 {
-    private readonly ILogger<GetCommandsNotInFunctionQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetCommandsNotInFunctionQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetCommandsNotInFunctionQueryHandler> logger, IMapper mapper)
+    public GetCommandsNotInFunctionQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<List<CommandDto>> Handle(GetCommandsNotInFunctionQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetCommandsNotInFunctionQueryHandler");
+
 
         var commandInFunctions = _unitOfWork.CommandInFunctions
             .FindByCondition(x => x.FunctionId.Equals(request.FunctionId));
@@ -33,7 +30,6 @@ public class GetCommandsNotInFunctionQueryHandler : IQueryHandler<GetCommandsNot
             .FindByCondition(x => !commandInFunctions.Any(cif => cif.CommandId == x.Id))
             .ToListAsync();
 
-        _logger.LogInformation("END: GetCommandsNotInFunctionQueryHandler");
 
         return _mapper.Map<List<CommandDto>>(commands);
     }

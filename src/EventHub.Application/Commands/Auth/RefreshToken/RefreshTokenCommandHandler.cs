@@ -25,8 +25,6 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
 
     public async Task<SignInResponseDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: RefreshTokenCommandHandler");
-
         if (string.IsNullOrEmpty(request.RefreshToken))
             throw new InvalidTokenException();
 
@@ -47,8 +45,6 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
         var newAccessToken = await _tokenService.GenerateAccessTokenAsync(user);
         var newRefreshToken =
             await _userManager.GenerateUserTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH);
-
-        _logger.LogInformation("END: RefreshTokenCommandHandler");
 
         var refreshResponse = new SignInResponseDto
         {

@@ -7,7 +7,6 @@ using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
 
@@ -15,27 +14,22 @@ public class
     GetPaginatedFollowingUsersQueryHandler : IQueryHandler<GetPaginatedFollowingUsersQuery, Pagination<UserDto>>
 {
     private readonly ICacheService _cacheService;
-    private readonly ILogger<GetPaginatedFollowingUsersQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetPaginatedFollowingUsersQueryHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ICacheService cacheService,
-        ILogger<GetPaginatedFollowingUsersQueryHandler> logger, IMapper mapper)
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ICacheService cacheService, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
         _cacheService = cacheService;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<UserDto>> Handle(GetPaginatedFollowingUsersQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPaginatedFollowingUsersQueryHandler");
-
         var key = $"user:following:{request.UserId}";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
@@ -58,7 +52,6 @@ public class
 
         var followingUserDtos = _mapper.Map<List<UserDto>>(followingUsers);
 
-        _logger.LogInformation("END: GetPaginatedFollowingUsersQueryHandler");
 
         return PagingHelper.Paginate<UserDto>(followingUserDtos, request.Filter);
     }

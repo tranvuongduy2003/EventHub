@@ -2,7 +2,6 @@ using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ForgotPassword;
 
@@ -10,22 +9,18 @@ public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordComman
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly ILogger<ForgotPasswordCommandHandler> _logger;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public ForgotPasswordCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        IHangfireService hangfireService, IEmailService emailService, ILogger<ForgotPasswordCommandHandler> logger)
+        IHangfireService hangfireService, IEmailService emailService)
     {
         _userManager = userManager;
         _hangfireService = hangfireService;
         _emailService = emailService;
-        _logger = logger;
     }
 
     public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: ForgotPasswordCommandHandler");
-
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null) throw new NotFoundException("User does not exist");
 
@@ -36,7 +31,6 @@ public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordComman
             _emailService
                 .SendResetPasswordEmailAsync(request.Email, resetPasswordUrl)
                 .Wait());
-        _logger.LogInformation("END: ForgotPasswordCommandHandler");
 
         return true;
     }

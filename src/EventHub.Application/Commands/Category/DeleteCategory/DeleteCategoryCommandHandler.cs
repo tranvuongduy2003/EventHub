@@ -10,7 +10,6 @@ namespace EventHub.Application.Commands.Category.DeleteCategory;
 public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryCommand>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<DeleteCategoryCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork, IFileService fileService,
@@ -18,13 +17,10 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
-        _logger = logger;
     }
 
     public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: DeleteCategoryCommandHandler");
-
         var category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
         if (category is null)
             throw new NotFoundException("Category does not exist!");
@@ -39,7 +35,5 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
 
         await _unitOfWork.Categories.SoftDeleteAsync(category);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: DeleteCategoryCommandHandler");
     }
 }

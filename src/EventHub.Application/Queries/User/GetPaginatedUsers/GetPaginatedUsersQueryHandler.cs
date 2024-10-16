@@ -6,32 +6,26 @@ using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.User.GetPaginatedUsers;
 
 public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuery, Pagination<UserDto>>
 {
     private readonly ICacheService _cacheService;
-    private readonly ILogger<GetPaginatedUsersQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetPaginatedUsersQueryHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        ICacheService cacheService,
-        ILogger<GetPaginatedUsersQueryHandler> logger, IMapper mapper)
+        ICacheService cacheService, IMapper mapper)
     {
         _userManager = userManager;
         _cacheService = cacheService;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<UserDto>> Handle(GetPaginatedUsersQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPaginatedUsersQueryHandler");
-
         var key = "user";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
@@ -49,7 +43,6 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
 
         var userDtos = _mapper.Map<List<UserDto>>(users);
 
-        _logger.LogInformation("END: GetPaginatedUsersQueryHandler");
 
         return PagingHelper.Paginate<UserDto>(userDtos, request.Filter);
     }

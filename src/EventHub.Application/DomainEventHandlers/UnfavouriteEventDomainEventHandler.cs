@@ -5,28 +5,22 @@ using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<UnfavouriteEventDomainEvent>
 {
-    private readonly ILogger<UnfavouriteEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public UnfavouriteEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UnfavouriteEventDomainEventHandler> logger, UserManager<User> userManager)
+    public UnfavouriteEventDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _userManager = userManager;
     }
 
     public async Task Handle(UnfavouriteEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UnfavouriteEventDomainEventHandler");
-
         var isEventExisted = await _unitOfWork.Events
             .ExistAsync(x => x.Id.Equals(notification.EventId));
         if (!isEventExisted)
@@ -50,7 +44,5 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
         }
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UnfavouriteEventDomainEventHandler");
     }
 }

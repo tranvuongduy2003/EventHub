@@ -11,23 +11,17 @@ namespace EventHub.Application.Commands.User.UpdateUser;
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<UpdateUserCommandHandler> _logger;
-    private readonly IMapper _mapper;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
-    public UpdateUserCommandHandler(IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IFileService fileService,
+    public UpdateUserCommandHandler(IFileService fileService,
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
     {
-        _mapper = mapper;
-        _logger = logger;
         _fileService = fileService;
         _userManager = userManager;
     }
 
     public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateUserCommandHandler");
-
         var user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
             throw new NotFoundException("User does not exist!");
@@ -53,7 +47,5 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 
         if (!result.Succeeded)
             throw new BadRequestException(result);
-
-        _logger.LogInformation("END: UpdateUserCommandHandler");
     }
 }

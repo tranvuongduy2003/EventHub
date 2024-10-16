@@ -4,28 +4,22 @@ using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class DeleteEventSubImagesDomainEventHandler : IDomainEventHandler<DeleteEventSubImagesDomainEvent>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<DeleteEventSubImagesDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteEventSubImagesDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService,
-        ILogger<DeleteEventSubImagesDomainEventHandler> logger)
+    public DeleteEventSubImagesDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
-        _logger = logger;
     }
 
     public async Task Handle(DeleteEventSubImagesDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: DeleteEventSubImagesDomainEventHandler");
-
         var subImages = await _unitOfWork.EventSubImages
             .FindByCondition(x => x.EventId.Equals(notification.EventId))
             .ToListAsync();
@@ -37,7 +31,5 @@ public class DeleteEventSubImagesDomainEventHandler : IDomainEventHandler<Delete
 
         await _unitOfWork.EventSubImages.DeleteListAsync(subImages);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: DeleteEventSubImagesDomainEventHandler");
     }
 }

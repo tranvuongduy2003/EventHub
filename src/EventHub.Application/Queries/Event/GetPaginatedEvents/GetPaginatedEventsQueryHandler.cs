@@ -12,22 +12,18 @@ namespace EventHub.Application.Queries.Event.GetPaginatedEvents;
 
 public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQuery, Pagination<EventDto>>
 {
-    private readonly ILogger<GetPaginatedEventsQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetPaginatedEventsQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetPaginatedEventsQueryHandler> logger, IMapper mapper)
+    public GetPaginatedEventsQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetPaginatedEventsQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPaginatedEventsQueryHandler");
 
         var cachedEvents = _unitOfWork.CachedEvents.FindAll();
         var eventCategories = _unitOfWork.EventCategories
@@ -52,7 +48,6 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
 
         var eventDtos = _mapper.Map<List<EventDto>>(events);
 
-        _logger.LogInformation("END: GetPaginatedEventsQueryHandler");
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

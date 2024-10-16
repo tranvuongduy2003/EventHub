@@ -7,35 +7,29 @@ using EventHub.Shared.Enums.Event;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Event.CreateEvent;
 
 public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, EventDto>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<CreateEventCommandHandler> _logger;
     private readonly IMapper _mapper;
     private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public CreateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
-        ISerializeService serializeService, UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        ILogger<CreateEventCommandHandler> logger)
+        ISerializeService serializeService, UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _fileService = fileService;
-        _logger = logger;
         _serializeService = serializeService;
         _userManager = userManager;
     }
 
     public async Task<EventDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: CreateEventCommandHandler");
-
         var isEventExisted = await _unitOfWork.CachedEvents
             .ExistAsync(e => e.Name.Equals(request.Event.Name, StringComparison.OrdinalIgnoreCase));
         if (isEventExisted)
@@ -94,8 +88,6 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
         }
 
         var eventDto = _mapper.Map<EventDto>(@event);
-
-        _logger.LogInformation("END: CreateEventCommandHandler");
 
         return eventDto;
     }

@@ -8,20 +8,15 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class MakeEventsPublicDomainEventHandler : IDomainEventHandler<MakeEventsPublicDomainEvent>
 {
-    private readonly ILogger<MakeEventsPublicDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public MakeEventsPublicDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<MakeEventsPublicDomainEventHandler> logger)
+    public MakeEventsPublicDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(MakeEventsPublicDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: MakeEventsPublicDomainEventHandler");
-
         var events = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(notification.UserId))
             .Join(
@@ -34,7 +29,5 @@ public class MakeEventsPublicDomainEventHandler : IDomainEventHandler<MakeEvents
                 setters.SetProperty(e => e.IsPrivate, false));
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: MakeEventsPublicDomainEventHandler");
     }
 }

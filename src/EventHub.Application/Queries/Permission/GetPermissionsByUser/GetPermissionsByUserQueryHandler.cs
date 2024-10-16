@@ -8,24 +8,20 @@ using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsByUser;
 
 public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUserQuery, List<RolePermissionDto>>
 {
-    private readonly ILogger<GetPermissionsByUserQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
-    public GetPermissionsByUserQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetPermissionsByUserQueryHandler> logger, RoleManager<Role> roleManager,
+    public GetPermissionsByUserQueryHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager,
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _roleManager = roleManager;
         _userManager = userManager;
         _mapper = mapper;
@@ -34,8 +30,6 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
     public async Task<List<RolePermissionDto>> Handle(GetPermissionsByUserQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPermissionsByUserQueryHandler");
-
         var user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
             throw new NotFoundException("User does not exist!");
@@ -66,8 +60,6 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
             })
             .ToListAsync();
 
-
-        _logger.LogInformation("END: GetPermissionsByUserQueryHandler");
 
         return rolePermissions;
     }

@@ -2,29 +2,23 @@
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Event.DeleteEvent;
 
 public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 {
-    private readonly ILogger<DeleteEventCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public DeleteEventCommandHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        ILogger<DeleteEventCommandHandler> logger)
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _logger = logger;
     }
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: DeleteEventCommandHandler");
-
         var @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
             throw new NotFoundException("Event does not exist!");
@@ -39,7 +33,5 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
         }
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: DeleteEventCommandHandler");
     }
 }

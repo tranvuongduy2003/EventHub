@@ -13,21 +13,16 @@ namespace EventHub.Application.DomainEventHandlers;
 public class UpdateEmailContentOfEventDomainEventHandler : IDomainEventHandler<UpdateEmailContentOfEventDomainEvent>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<UpdateEmailContentOfEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateEmailContentOfEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UpdateEmailContentOfEventDomainEventHandler> logger, IFileService fileService)
+    public UpdateEmailContentOfEventDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _fileService = fileService;
     }
 
     public async Task Handle(UpdateEmailContentOfEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateEmailContentOfEventDomainEventHandler");
-
         var emailContent = await _unitOfWork.EmailContents.GetByIdAsync(notification.EmailContent.Id);
         if (emailContent == null)
             throw new NotFoundException("EmailContent does not exist!");
@@ -64,7 +59,5 @@ public class UpdateEmailContentOfEventDomainEventHandler : IDomainEventHandler<U
 
         await _unitOfWork.EmailContents.UpdateAsync(emailContent);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UpdateEmailContentOfEventDomainEventHandler");
     }
 }

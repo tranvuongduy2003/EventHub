@@ -2,26 +2,20 @@
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class UpdateCategoriesInEventDomainEventHandler : IDomainEventHandler<UpdateCategoriesInEventDomainEvent>
 {
-    private readonly ILogger<UpdateCategoriesInEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateCategoriesInEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UpdateCategoriesInEventDomainEventHandler> logger)
+    public UpdateCategoriesInEventDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(UpdateCategoriesInEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateCategoriesInEventDomainEventHandler");
-
         var deletedEventCategories = _unitOfWork.EventCategories
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
         await _unitOfWork.EventCategories.DeleteListAsync(deletedEventCategories);
@@ -38,7 +32,5 @@ public class UpdateCategoriesInEventDomainEventHandler : IDomainEventHandler<Upd
 
         await _unitOfWork.EventCategories.CreateListAsync(eventCategories);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UpdateCategoriesInEventDomainEventHandler");
     }
 }

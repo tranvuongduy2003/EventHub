@@ -7,24 +7,21 @@ using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;
 
 public class
     GetPermissionsCategorizedByRolesQueryHandler : IQueryHandler<GetPermissionsCategorizedByRolesQuery,
-        List<RolePermissionDto>>
+    List<RolePermissionDto>>
 {
-    private readonly ILogger<GetPermissionsCategorizedByRolesQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetPermissionsCategorizedByRolesQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetPermissionsCategorizedByRolesQueryHandler> logger, RoleManager<Role> roleManager, IMapper mapper)
+    public GetPermissionsCategorizedByRolesQueryHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager,
+        IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _roleManager = roleManager;
         _mapper = mapper;
     }
@@ -32,8 +29,6 @@ public class
     public async Task<List<RolePermissionDto>> Handle(GetPermissionsCategorizedByRolesQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPermissionsCategorizedByRolesQueryHandler");
-
         var permissions = _unitOfWork.Permissions
             .FindAll(false, x => x.Function);
 
@@ -55,7 +50,6 @@ public class
             })
             .ToListAsync();
 
-        _logger.LogInformation("END: GetPermissionsCategorizedByRolesQueryHandler");
 
         return rolePermissions;
     }

@@ -7,34 +7,28 @@ using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.User.GetPaginatedFollowers;
 
 public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollowersQuery, Pagination<UserDto>>
 {
     private readonly ICacheService _cacheService;
-    private readonly ILogger<GetPaginatedFollowersQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetPaginatedFollowersQueryHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ICacheService cacheService,
-        ILogger<GetPaginatedFollowersQueryHandler> logger, IMapper mapper)
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, ICacheService cacheService, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
         _cacheService = cacheService;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<UserDto>> Handle(GetPaginatedFollowersQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetPaginatedFollowersQueryHandler");
-
         var key = $"user:follower:{request.UserId}";
 
         var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
@@ -57,7 +51,6 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
 
         var followerDtos = _mapper.Map<List<UserDto>>(followers);
 
-        _logger.LogInformation("END: GetPaginatedFollowersQueryHandler");
 
         return PagingHelper.Paginate<UserDto>(followerDtos, request.Filter);
     }

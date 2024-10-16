@@ -52,7 +52,6 @@ public static class DependencyInjection
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITokenService, TokenService>()
             .AddTransient<IDateTimeProvider, DateTimeProvider>();
-        ;
 
         return services;
     }

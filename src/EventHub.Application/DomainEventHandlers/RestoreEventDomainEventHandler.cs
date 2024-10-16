@@ -10,22 +10,17 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class RestoreEventDomainEventHandler : IDomainEventHandler<RestoreEventDomainEvent>
 {
-    private readonly ILogger<RestoreEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public RestoreEventDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager,
-        ILogger<RestoreEventDomainEventHandler> logger)
+    public RestoreEventDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _logger = logger;
     }
 
     public async Task Handle(RestoreEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: RestoreEventDomainEventHandler");
-
         var events = _unitOfWork.CachedEvents
             .FindByCondition(x =>
                 x.AuthorId.Equals(notification.UserId) &&
@@ -48,7 +43,5 @@ public class RestoreEventDomainEventHandler : IDomainEventHandler<RestoreEventDo
         }
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: RestoreEventDomainEventHandler");
     }
 }

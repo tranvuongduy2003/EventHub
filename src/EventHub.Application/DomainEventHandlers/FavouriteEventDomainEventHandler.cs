@@ -10,22 +10,17 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class FavouriteEventDomainEventHandler : IDomainEventHandler<FavouriteEventDomainEvent>
 {
-    private readonly ILogger<FavouriteEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public FavouriteEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<FavouriteEventDomainEventHandler> logger, UserManager<User> userManager)
+    public FavouriteEventDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _userManager = userManager;
     }
 
     public async Task Handle(FavouriteEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: FavouriteEventDomainEventHandler");
-
         var isEventExisted = await _unitOfWork.Events
             .ExistAsync(x => x.Id.Equals(notification.EventId));
         if (!isEventExisted)
@@ -52,7 +47,5 @@ public class FavouriteEventDomainEventHandler : IDomainEventHandler<FavouriteEve
         }
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: FavouriteEventDomainEventHandler");
     }
 }

@@ -5,28 +5,22 @@ using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class UnfollowUserDomainEventHandler : IDomainEventHandler<UnfollowUserDomainEvent>
 {
-    private readonly ILogger<UnfollowUserDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public UnfollowUserDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UnfollowUserDomainEventHandler> logger, UserManager<User> userManager)
+    public UnfollowUserDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _userManager = userManager;
     }
 
     public async Task Handle(UnfollowUserDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UnfollowUserDomainEventHandler");
-
         var follower = await _userManager.FindByIdAsync(notification.FollowerId.ToString());
         if (follower == null)
             throw new NotFoundException($"Follower does not exist!");
@@ -51,7 +45,5 @@ public class UnfollowUserDomainEventHandler : IDomainEventHandler<UnfollowUserDo
 
         await _userManager.UpdateAsync(follower);
         await _userManager.UpdateAsync(followedUser);
-
-        _logger.LogInformation("END: UnfollowUserDomainEventHandler");
     }
 }

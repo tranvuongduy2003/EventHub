@@ -10,22 +10,17 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class RemoveFunctionFromRoleDomainEventHandler : IDomainEventHandler<RemoveFunctionFromRoleDomainEvent>
 {
-    private readonly ILogger<RemoveFunctionFromRoleDomainEventHandler> _logger;
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public RemoveFunctionFromRoleDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<RemoveFunctionFromRoleDomainEventHandler> logger, RoleManager<Role> roleManager)
+    public RemoveFunctionFromRoleDomainEventHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _roleManager = roleManager;
     }
 
     public async Task Handle(RemoveFunctionFromRoleDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: RemoveFunctionFromRoleDomainEventHandler");
-
         var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
         if (!isFunctionExisted)
             throw new NotFoundException("Function does not exist!");
@@ -44,7 +39,5 @@ public class RemoveFunctionFromRoleDomainEventHandler : IDomainEventHandler<Remo
 
         await _unitOfWork.Permissions.DeleteListAsync(permissions);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: RemoveFunctionFromRoleDomainEventHandler");
     }
 }

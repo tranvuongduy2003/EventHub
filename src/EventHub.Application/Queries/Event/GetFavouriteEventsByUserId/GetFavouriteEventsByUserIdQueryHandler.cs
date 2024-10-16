@@ -13,23 +13,18 @@ public class
     GetFavouriteEventsByUserIdQueryHandler : IQueryHandler<GetFavouriteEventsByUserIdQuery,
         Pagination<EventDto>>
 {
-    private readonly ILogger<GetFavouriteEventsByUserIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFavouriteEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetFavouriteEventsByUserIdQueryHandler> logger, IMapper mapper)
+    public GetFavouriteEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetFavouriteEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetFavouriteEventsByUserIdQueryHandler");
-
         var cachedEvents = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(request.userId));
         var eventCategories = _unitOfWork.EventCategories
@@ -56,8 +51,6 @@ public class
             .ToList();
 
         var eventDtos = _mapper.Map<List<EventDto>>(events);
-
-        _logger.LogInformation("END: GetFavouriteEventsByUserIdQueryHandler");
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

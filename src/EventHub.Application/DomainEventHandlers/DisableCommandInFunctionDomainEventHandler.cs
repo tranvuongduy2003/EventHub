@@ -3,26 +3,20 @@ using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<DisableCommandInFunctionDomainEvent>
 {
-    private readonly ILogger<DisableCommandInFunctionDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DisableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<DisableCommandInFunctionDomainEventHandler> logger)
+    public DisableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(DisableCommandInFunctionDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: DisableCommandInFunctionDomainEventHandler");
-
         var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
         if (!isFunctionExisted)
             throw new NotFoundException("Function does not exist!");
@@ -41,7 +35,5 @@ public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<Di
 
         await _unitOfWork.CommandInFunctions.DeleteAsync(commandInFunction);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: DisableCommandInFunctionDomainEventHandler");
     }
 }

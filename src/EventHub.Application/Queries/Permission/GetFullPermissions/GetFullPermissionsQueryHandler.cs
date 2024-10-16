@@ -3,27 +3,21 @@ using Dapper;
 using EventHub.Abstractions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Permission;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Permission.GetFullPermissions;
 
 public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQuery, List<FullPermissionDto>>
 {
-    private readonly ILogger<GetFullPermissionsQueryHandler> _logger;
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-    public GetFullPermissionsQueryHandler(ISqlConnectionFactory sqlConnectionFactory,
-        ILogger<GetFullPermissionsQueryHandler> logger)
+    public GetFullPermissionsQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
-        _logger = logger;
     }
 
     public async Task<List<FullPermissionDto>> Handle(GetFullPermissionsQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetFullPermissionsQueryHandler");
-
         using IDbConnection connection = _sqlConnectionFactory.CreateConnection();
 
         var sql = @"SELECT f.Id,
@@ -41,7 +35,6 @@ public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQu
 
         var permissions = await connection.QueryAsync<FullPermissionDto>(sql, commandType: CommandType.Text);
 
-        _logger.LogInformation("END: GetFullPermissionsQueryHandler");
 
         return permissions.ToList();
     }

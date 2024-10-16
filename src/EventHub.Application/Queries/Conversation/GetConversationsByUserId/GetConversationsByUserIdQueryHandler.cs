@@ -15,25 +15,22 @@ namespace EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 public class
     GetConversationsByUserIdQueryHandler : IQueryHandler<GetConversationsByUserIdQuery, Pagination<ConversationDto>>
 {
-    private readonly ILogger<GetConversationsByUserIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetConversationsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        ILogger<GetConversationsByUserIdQueryHandler> logger, IMapper mapper)
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _logger = logger;
+
         _mapper = mapper;
     }
 
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetConversationsByUserIdQueryHandler");
 
         var isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId));
         if (!isUserExisted)
@@ -66,7 +63,6 @@ public class
 
         var conversationDtos = _mapper.Map<List<ConversationDto>>(conversations);
 
-        _logger.LogInformation("END: GetConversationsByUserIdQueryHandler");
 
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
     }

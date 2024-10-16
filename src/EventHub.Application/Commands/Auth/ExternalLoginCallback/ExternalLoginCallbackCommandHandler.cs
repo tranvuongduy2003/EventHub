@@ -14,7 +14,6 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly ILogger<ExternalLoginCallbackCommandHandler> _logger;
     private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
@@ -24,22 +23,18 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
         IHangfireService hangfireService,
         IEmailService emailService,
-        ITokenService tokenService,
-        ILogger<ExternalLoginCallbackCommandHandler> logger)
+        ITokenService tokenService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _hangfireService = hangfireService;
         _emailService = emailService;
         _tokenService = tokenService;
-        _logger = logger;
     }
 
     public async Task<SignInResponseDto> Handle(ExternalLoginCallbackCommand request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: ExternalLoginCallbackCommandHandler");
-
         var info = await _signInManager.GetExternalLoginInfoAsync();
 
         var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -92,8 +87,6 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
-
-            _logger.LogInformation("END: ExternalLoginCallbackCommandHandler");
 
             return signInResponse;
         }

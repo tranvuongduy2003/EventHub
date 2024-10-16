@@ -4,28 +4,22 @@ using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class CreateEmailContentOfEventDomainEventHandler : IDomainEventHandler<CreateEmailContentOfEventDomainEvent>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<CreateEmailContentOfEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateEmailContentOfEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<CreateEmailContentOfEventDomainEventHandler> logger, IFileService fileService)
+    public CreateEmailContentOfEventDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _fileService = fileService;
     }
 
     public async Task Handle(CreateEmailContentOfEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: CreateEmailContentOfEventDomainEventHandler");
-
         var emailContent = new EmailContent()
         {
             Content = notification.EmailContent.Content,
@@ -53,7 +47,5 @@ public class CreateEmailContentOfEventDomainEventHandler : IDomainEventHandler<C
             await _unitOfWork.EmailAttachments.CreateListAsync(emailAttachments);
             await _unitOfWork.CommitAsync();
         }
-
-        _logger.LogInformation("END: CreateEmailContentOfEventDomainEventHandler");
     }
 }

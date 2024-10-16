@@ -7,7 +7,6 @@ using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.SignUp;
 
@@ -15,7 +14,6 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly ILogger<SignUpCommnadHandler> _logger;
     private readonly IMapper _mapper;
     private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
@@ -26,8 +24,7 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
         IMapper mapper, SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
         ITokenService tokenService,
         IHangfireService hangfireService,
-        IEmailService emailService,
-        ILogger<SignUpCommnadHandler> logger)
+        IEmailService emailService)
     {
         _userManager = userManager;
         _mapper = mapper;
@@ -35,13 +32,10 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
         _tokenService = tokenService;
         _hangfireService = hangfireService;
         _emailService = emailService;
-        _logger = logger;
     }
 
     public async Task<SignInResponseDto> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: SignUpCommnadHandler");
-
         var useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
             throw new BadRequestException("Email already exists");
@@ -84,8 +78,6 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
                 _emailService
                     .SendRegistrationConfirmationEmailAsync(userToReturn.Email, userToReturn.FullName)
                     .Wait());
-
-            _logger.LogInformation("END: SignUpCommnadHandler");
 
             return signUpResponse;
         }

@@ -1,37 +1,30 @@
-﻿using AutoMapper;
-using EventHub.Abstractions;
+﻿using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Enums.Event;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Event.UpdateEvent;
 
 public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<UpdateEventCommandHandler> _logger;
-    private readonly IMapper _mapper;
+
     private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
-        ILogger<UpdateEventCommandHandler> logger, ISerializeService serializeService)
+    public UpdateEventCommandHandler(IUnitOfWork unitOfWork, IFileService fileService,
+        ISerializeService serializeService)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _fileService = fileService;
-        _logger = logger;
         _serializeService = serializeService;
     }
 
     public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateEventCommandHandler");
-
         var @event = await _unitOfWork.CachedEvents.GetByIdAsync(request.EventId);
         if (@event == null)
             throw new NotFoundException("Event does not exist!");
@@ -94,7 +87,5 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             await Domain.AggregateModels.EventAggregate.Event
                 .UpdateReasonsInEvent(@event.Id, request.Event.Reasons.ToList());
         }
-
-        _logger.LogInformation("END: UpdateEventCommandHandler");
     }
 }

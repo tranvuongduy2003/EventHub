@@ -11,21 +11,16 @@ namespace EventHub.Application.DomainEventHandlers;
 public class DeleteEmailContentDomainEventHandler : IDomainEventHandler<DeleteEmailContentDomainEvent>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<DeleteEmailContentDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteEmailContentDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService,
-        ILogger<DeleteEmailContentDomainEventHandler> logger)
+    public DeleteEmailContentDomainEventHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
-        _logger = logger;
     }
 
     public async Task Handle(DeleteEmailContentDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: DeleteEmailContentDomainEventHandler");
-
         var emailContents = _unitOfWork.EmailContents
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
 
@@ -48,7 +43,5 @@ public class DeleteEmailContentDomainEventHandler : IDomainEventHandler<DeleteEm
         await emailContents.ExecuteDeleteAsync();
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: DeleteEmailContentDomainEventHandler");
     }
 }

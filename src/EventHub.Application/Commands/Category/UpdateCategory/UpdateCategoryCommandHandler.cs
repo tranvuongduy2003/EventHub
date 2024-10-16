@@ -3,28 +3,22 @@ using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Category.UpdateCategory;
 
 public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand>
 {
     private readonly IFileService _fileService;
-    private readonly ILogger<UpdateCategoryCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateCategoryCommandHandler(IUnitOfWork unitOfWork, IFileService fileService,
-        ILogger<UpdateCategoryCommandHandler> logger)
+    public UpdateCategoryCommandHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
-        _logger = logger;
     }
 
     public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateCategoryCommandHandler");
-
         var category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
         if (category is null)
             throw new NotFoundException("Category does not exist!");
@@ -40,7 +34,5 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
 
         await _unitOfWork.Categories.UpdateAsync(category);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UpdateCategoryCommandHandler");
     }
 }

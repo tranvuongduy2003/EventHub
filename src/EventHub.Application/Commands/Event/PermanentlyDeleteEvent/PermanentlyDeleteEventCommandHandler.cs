@@ -1,26 +1,20 @@
 ﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Event.PermanentlyDeleteEvent;
 
 public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyDeleteEventCommand>
 {
-    private readonly ILogger<PermanentlyDeleteEventCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public PermanentlyDeleteEventCommandHandler(IUnitOfWork unitOfWork,
-        ILogger<PermanentlyDeleteEventCommandHandler> logger)
+    public PermanentlyDeleteEventCommandHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(PermanentlyDeleteEventCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: PermanentlyDeleteEventCommandHandler");
-
         var @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
             throw new NotFoundException("Event does not exist!");
@@ -43,7 +37,5 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
             .DeleteEventReasons(@event.Id);
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: PermanentlyDeleteEventCommandHandler");
     }
 }

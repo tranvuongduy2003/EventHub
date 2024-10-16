@@ -12,22 +12,18 @@ namespace EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
 
 public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEventsByUserIdQuery, Pagination<EventDto>>
 {
-    private readonly ILogger<GetDeletedEventsByUserIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetDeletedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetDeletedEventsByUserIdQueryHandler> logger, IMapper mapper)
+    public GetDeletedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetDeletedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetDeletedEventsByUserIdQueryHandler");
 
         var cachedEvents = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(request.userId) && x.IsDeleted);
@@ -53,7 +49,6 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
 
         var eventDtos = _mapper.Map<List<EventDto>>(events);
 
-        _logger.LogInformation("END: GetDeletedEventsByUserIdQueryHandler");
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

@@ -10,22 +10,18 @@ namespace EventHub.Application.Queries.Event.GetEventById;
 
 public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDetailDto>
 {
-    private readonly ILogger<GetEventByIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetEventByIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetEventByIdQueryHandler> logger, IMapper mapper)
+    public GetEventByIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<EventDetailDto> Handle(GetEventByIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetEventByIdQueryHandler");
 
         var cachedEvent = await _unitOfWork.CachedEvents
             .FindByCondition(x => x.Id.Equals(request.EventId))
@@ -41,7 +37,6 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
 
         var eventDto = _mapper.Map<EventDetailDto>(cachedEvent);
 
-        _logger.LogInformation("END: GetEventByIdQueryHandler");
 
         return eventDto;
     }

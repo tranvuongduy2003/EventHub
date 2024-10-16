@@ -12,22 +12,18 @@ namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 
 public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEventsByUserIdQuery, Pagination<EventDto>>
 {
-    private readonly ILogger<GetCreatedEventsByUserIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetCreatedEventsByUserIdQueryHandler> logger, IMapper mapper)
+    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetCreatedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetCreatedEventsByUserIdQueryHandler");
 
         var cachedEvents = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(request.userId));
@@ -53,7 +49,6 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
 
         var eventDtos = _mapper.Map<List<EventDto>>(events);
 
-        _logger.LogInformation("END: GetCreatedEventsByUserIdQueryHandler");
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

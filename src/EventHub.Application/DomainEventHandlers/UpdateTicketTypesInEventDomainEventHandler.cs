@@ -8,20 +8,15 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class UpdateTicketTypesInEventDomainEventHandler : IDomainEventHandler<UpdateTicketTypesInEventDomainEvent>
 {
-    private readonly ILogger<UpdateTicketTypesInEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateTicketTypesInEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UpdateTicketTypesInEventDomainEventHandler> logger)
+    public UpdateTicketTypesInEventDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(UpdateTicketTypesInEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateTicketTypesInEventDomainEventHandler");
-
         var createdTicketTypes = new List<TicketType>();
         foreach (var ticketType in notification.TicketTypes)
         {
@@ -51,7 +46,5 @@ public class UpdateTicketTypesInEventDomainEventHandler : IDomainEventHandler<Up
         }
 
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UpdateTicketTypesInEventDomainEventHandler");
     }
 }

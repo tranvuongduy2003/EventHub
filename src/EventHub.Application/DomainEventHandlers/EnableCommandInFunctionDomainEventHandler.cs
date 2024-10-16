@@ -9,20 +9,15 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class EnableCommandInFunctionDomainEventHandler : IDomainEventHandler<EnableCommandInFunctionDomainEvent>
 {
-    private readonly ILogger<EnableCommandInFunctionDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public EnableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<EnableCommandInFunctionDomainEventHandler> logger)
+    public EnableCommandInFunctionDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(EnableCommandInFunctionDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: EnableCommandInFunctionDomainEventHandler");
-
         var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
         if (!isFunctionExisted)
             throw new NotFoundException("Function does not exist!");
@@ -45,7 +40,5 @@ public class EnableCommandInFunctionDomainEventHandler : IDomainEventHandler<Ena
 
         await _unitOfWork.CommandInFunctions.CreateAsync(entity);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: EnableCommandInFunctionDomainEventHandler");
     }
 }

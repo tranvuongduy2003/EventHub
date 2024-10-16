@@ -14,22 +14,18 @@ namespace EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 public class
     GetConversationsByEventIdQueryHandler : IQueryHandler<GetConversationsByEventIdQuery, Pagination<ConversationDto>>
 {
-    private readonly ILogger<GetConversationsByEventIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetConversationsByEventIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetConversationsByEventIdQueryHandler> logger, IMapper mapper)
+    public GetConversationsByEventIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetConversationsByEventIdQueryHandler");
 
         var isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
         if (!isEventExisted)
@@ -61,7 +57,6 @@ public class
 
         var conversationDtos = _mapper.Map<List<ConversationDto>>(conversations);
 
-        _logger.LogInformation("END: GetConversationsByEventIdQueryHandler");
 
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
     }

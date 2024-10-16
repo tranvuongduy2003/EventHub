@@ -8,24 +8,18 @@ namespace EventHub.Application.Commands.Auth.ExternalLogin;
 public class ExternalLoginCommandHandler : ICommandHandler<ExternalLoginCommand, ExternalLoginDto>
 {
     private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
-    private readonly ILogger _logger;
 
-    public ExternalLoginCommandHandler(SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, ILogger<ExternalLoginCommandHandler> logger)
+    public ExternalLoginCommandHandler(SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager)
     {
         _signInManager = signInManager;
-        _logger = logger;
     }
-    
+
     public async Task<ExternalLoginDto> Handle(ExternalLoginCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: ExternalLoginCommandHandler");
-        
         var redirectUrl =
             $"https://eventhubsolutionbackendserverplan.azurewebsites.net/api/auth/external-auth-callback?returnUrl={request.ReturnUrl}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, redirectUrl);
         properties.AllowRefresh = true;
-        
-        _logger.LogInformation("END: ExternalLoginCommandHandler");
 
         var externalLoginResponse = new ExternalLoginDto
         {

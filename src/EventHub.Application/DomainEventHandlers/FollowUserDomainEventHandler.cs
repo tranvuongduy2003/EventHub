@@ -10,22 +10,17 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class FollowUserDomainEventHandler : IDomainEventHandler<FollowUserDomainEvent>
 {
-    private readonly ILogger<FollowUserDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
 
-    public FollowUserDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<FollowUserDomainEventHandler> logger, UserManager<User> userManager)
+    public FollowUserDomainEventHandler(IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _userManager = userManager;
     }
 
     public async Task Handle(FollowUserDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: FollowUserDomainEventHandler");
-
         var follower = await _userManager.FindByIdAsync(notification.FollowerId.ToString());
         if (follower == null)
             throw new NotFoundException($"Follower does not exist!");
@@ -54,7 +49,5 @@ public class FollowUserDomainEventHandler : IDomainEventHandler<FollowUserDomain
 
         await _userManager.UpdateAsync(follower);
         await _userManager.UpdateAsync(followedUser);
-
-        _logger.LogInformation("END: FollowUserDomainEventHandler");
     }
 }

@@ -12,22 +12,17 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFunctionToRoleDomainEvent>
 {
-    private readonly ILogger<AddFunctionToRoleDomainEventHandler> _logger;
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AddFunctionToRoleDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<AddFunctionToRoleDomainEventHandler> logger, RoleManager<Role> roleManager)
+    public AddFunctionToRoleDomainEventHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _roleManager = roleManager;
     }
 
     public async Task Handle(AddFunctionToRoleDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: AddFunctionToRoleDomainEventHandler");
-
         var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
         if (!isFunctionExisted)
             throw new NotFoundException("Function does not exist!");
@@ -56,7 +51,5 @@ public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFuncti
 
         await _unitOfWork.Permissions.CreateListAsync(permissions);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: AddFunctionToRoleDomainEventHandler");
     }
 }

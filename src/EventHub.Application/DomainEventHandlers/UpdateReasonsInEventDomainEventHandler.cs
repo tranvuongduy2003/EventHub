@@ -8,20 +8,15 @@ namespace EventHub.Application.DomainEventHandlers;
 
 public class UpdateReasonsInEventDomainEventHandler : IDomainEventHandler<UpdateReasonsInEventDomainEvent>
 {
-    private readonly ILogger<UpdateReasonsInEventDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateReasonsInEventDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<UpdateReasonsInEventDomainEventHandler> logger)
+    public UpdateReasonsInEventDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(UpdateReasonsInEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: UpdateReasonsInEventDomainEventHandler");
-
         var deletedReasons = _unitOfWork.Reasons
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
         await _unitOfWork.Reasons.DeleteListAsync(deletedReasons);
@@ -38,7 +33,5 @@ public class UpdateReasonsInEventDomainEventHandler : IDomainEventHandler<Update
 
         await _unitOfWork.Reasons.CreateListAsync(reasons);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: UpdateReasonsInEventDomainEventHandler");
     }
 }

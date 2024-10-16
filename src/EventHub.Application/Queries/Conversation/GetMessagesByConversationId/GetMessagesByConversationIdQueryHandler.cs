@@ -13,22 +13,18 @@ namespace EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 public class
     GetMessagesByConversationIdQueryHandler : IQueryHandler<GetMessagesByConversationIdQuery, Pagination<MessageDto>>
 {
-    private readonly ILogger<GetMessagesByConversationIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetMessagesByConversationIdQueryHandler(IUnitOfWork unitOfWork,
-        ILogger<GetMessagesByConversationIdQueryHandler> logger, IMapper mapper)
+    public GetMessagesByConversationIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<Pagination<MessageDto>> Handle(GetMessagesByConversationIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetMessagesByConversationIdQueryHandler");
 
         var isConversationExisted =
             await _unitOfWork.Conversations.ExistAsync(x => x.Id.Equals(request.ConversationId));
@@ -41,7 +37,6 @@ public class
 
         var messageDtos = _mapper.Map<List<MessageDto>>(messages);
 
-        _logger.LogInformation("END: GetMessagesByConversationIdQueryHandler");
 
         return PagingHelper.Paginate<MessageDto>(messageDtos, request.Filter);
     }

@@ -4,22 +4,19 @@ using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.User.GetUserById;
 
 public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 {
     private readonly ICacheService _cacheService;
-    private readonly ILogger<GetUserByIdQueryHandler> _logger;
     private readonly IMapper _mapper;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetUserByIdQueryHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        ILogger<GetUserByIdQueryHandler> logger, ICacheService cacheService, IMapper mapper)
+        ICacheService cacheService, IMapper mapper)
     {
         _userManager = userManager;
-        _logger = logger;
         _cacheService = cacheService;
         _mapper = mapper;
     }
@@ -27,8 +24,6 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
     public async Task<UserDto> Handle(GetUserByIdQuery request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: GetUserByIdQueryHandler");
-
         string key = $"user:{request.UserId}";
 
         var user = await _cacheService.GetData<Domain.AggregateModels.UserAggregate.User>(key);
@@ -43,7 +38,6 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 
         var userDto = _mapper.Map<UserDto>(user);
 
-        _logger.LogInformation("END: GetUserByIdQueryHandler");
 
         return userDto;
     }

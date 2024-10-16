@@ -11,17 +11,13 @@ public class AddEventToCategoriesDomainEventHandler : IDomainEventHandler<AddEve
     private readonly ILogger<AddEventToCategoriesDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AddEventToCategoriesDomainEventHandler(IUnitOfWork unitOfWork,
-        ILogger<AddEventToCategoriesDomainEventHandler> logger)
+    public AddEventToCategoriesDomainEventHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _logger = logger;
     }
 
     public async Task Handle(AddEventToCategoriesDomainEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("BEGIN: AddEventToCategoriesDomainEventHandler");
-
         var eventCategories = new List<EventCategory>();
         foreach (var categoryId in notification.Categories)
         {
@@ -34,7 +30,5 @@ public class AddEventToCategoriesDomainEventHandler : IDomainEventHandler<AddEve
 
         await _unitOfWork.EventCategories.CreateListAsync(eventCategories);
         await _unitOfWork.CommitAsync();
-
-        _logger.LogInformation("END: AddEventToCategoriesDomainEventHandler");
     }
 }
