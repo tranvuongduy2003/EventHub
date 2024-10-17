@@ -1,4 +1,3 @@
-using EventHub.Application;
 using EventHub.Infrastructure;
 using EventHub.Infrastructure.Logging;
 using EventHub.Persistence;
@@ -17,7 +16,6 @@ try
     builder.Host.UseSerilog(Serilogger.Configure);
     builder.Host.AddAppConfigurations();
 
-    builder.Services.ConfigureApplicationServices();
     builder.Services.ConfigurePersistenceServices(builder.Configuration);
     builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
     builder.Services.ConfigureSignalRServices(builder.Configuration);

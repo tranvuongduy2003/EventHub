@@ -1,8 +1,8 @@
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;

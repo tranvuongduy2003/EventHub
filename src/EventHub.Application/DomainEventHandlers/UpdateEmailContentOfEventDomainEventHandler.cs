@@ -1,9 +1,9 @@
 ﻿using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

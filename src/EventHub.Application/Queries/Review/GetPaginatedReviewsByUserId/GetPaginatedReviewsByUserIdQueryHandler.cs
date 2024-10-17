@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Review;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;

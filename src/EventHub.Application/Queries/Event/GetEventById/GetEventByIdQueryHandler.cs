@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Event;
-using EventHub.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

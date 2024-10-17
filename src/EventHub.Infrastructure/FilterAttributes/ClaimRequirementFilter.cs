@@ -66,7 +66,7 @@ public class ClaimRequirementFilter : IAuthorizationFilter
             }
 
             var userId = principal.Claims
-                .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+                .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti).Value;
             context.HttpContext.Items["AuthorId"] = userId;
         }
         else

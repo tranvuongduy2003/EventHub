@@ -7,13 +7,13 @@ using EventHub.Application.Commands.Auth.SignIn;
 using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
+using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Auth.GetUserProfile;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     [ApiValidationFilter]
-    public async Task<IActionResult> SignUp([FromBody] CreateUserDto dto)
+    public async Task<IActionResult> SignUp([FromBody] SignUpDto dto)
     {
         _logger.LogInformation("START: SignUp");
         try
@@ -351,7 +351,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             var user = await _mediator.Send(new GetUserProfileQuery(userId));
 

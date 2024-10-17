@@ -1,6 +1,7 @@
 ﻿using EventHub.Application.Commands.Review.CreateReview;
 using EventHub.Application.Commands.Review.DeleteReview;
 using EventHub.Application.Commands.Review.UpdateReview;
+using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Review.GetPaginatedReviews;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
@@ -8,7 +9,6 @@ using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Review;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;

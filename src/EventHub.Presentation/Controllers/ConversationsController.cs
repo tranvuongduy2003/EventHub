@@ -1,11 +1,11 @@
-﻿using EventHub.Application.Queries.Conversation.GetConversationsByEventId;
+﻿using EventHub.Application.Exceptions;
+using EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 using EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 using EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Conversation;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;

@@ -38,7 +38,7 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
 
     [Required]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public required EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
+    public EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
 
     [Range(0, double.PositiveInfinity)] 
     public int? NumberOfFollowers { get; set; } = 0;

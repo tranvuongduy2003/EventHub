@@ -1,10 +1,10 @@
 using EventHub.Application.Commands.Permission.AddFunctionToRole;
 using EventHub.Application.Commands.Permission.RemoveFunctionFromRole;
+using EventHub.Application.Exceptions;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Command;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

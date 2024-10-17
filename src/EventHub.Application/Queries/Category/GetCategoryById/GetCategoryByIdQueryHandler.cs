@@ -1,8 +1,8 @@
 using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Category;
-using EventHub.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;

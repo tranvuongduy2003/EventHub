@@ -34,12 +34,12 @@ public class TokenRequirementFilter : IAuthorizationFilter
             ? requestAuthorization.ToString().Replace("Bearer ", "")
             : responseAuthorization.ToString().Replace("Bearer ", "");
 
-        if (_tokenService.ValidateTokenExpired(accessToken))
+        if (!_tokenService.ValidateTokenExpired(accessToken))
             context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
 
         var principal = _tokenService.GetPrincipalFromToken(accessToken);
         var userId = principal.Claims
-            .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+            .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti).Value;
         context.HttpContext.Items["AuthorId"] = userId;
     }
 }

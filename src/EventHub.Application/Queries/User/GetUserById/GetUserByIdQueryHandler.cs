@@ -1,8 +1,8 @@
 using AutoMapper;
 using EventHub.Abstractions;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;
-using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Queries.User.GetUserById;

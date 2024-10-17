@@ -1,13 +1,13 @@
 using EventHub.Application.Commands.Category.CreateCategory;
 using EventHub.Application.Commands.Category.DeleteCategory;
 using EventHub.Application.Commands.Category.UpdateCategory;
+using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Category.GetCategoryById;
 using EventHub.Application.Queries.Category.GetPaginatedCategories;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;

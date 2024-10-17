@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.ConversationAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Conversation;
 using EventHub.Shared.DTOs.Message;
-using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;

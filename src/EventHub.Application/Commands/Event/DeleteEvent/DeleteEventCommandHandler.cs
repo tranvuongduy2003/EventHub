@@ -1,6 +1,6 @@
 ﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Commands.Event.DeleteEvent;

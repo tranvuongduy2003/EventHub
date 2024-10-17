@@ -1,4 +1,4 @@
-﻿namespace EventHub.Shared.Exceptions;
+﻿namespace EventHub.Shared.SeedWork;
 
 /// <summary>
 /// Represents an exception that can be thrown to return a specific HTTP response status code and optional value.
@@ -17,7 +17,7 @@ public class HttpResponseException : Exception
     public HttpResponseException(int statusCode, object value = null)
     {
         StatusCode = statusCode;
-        Value = value;
+        Message = value?.ToString() ?? "";
     }
 
     /// <summary>
@@ -34,5 +34,5 @@ public class HttpResponseException : Exception
     /// <value>
     /// An object representing additional data or an error message to include in the response. This can be null if no value is provided.
     /// </value>
-    public object Value { get; }
+    public string Message { get; }
 }

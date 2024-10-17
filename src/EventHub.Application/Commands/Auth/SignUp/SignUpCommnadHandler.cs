@@ -1,9 +1,9 @@
 using AutoMapper;
 using EventHub.Abstractions;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +45,13 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
         if (useByPhoneNumber != null)
             throw new BadRequestException("Phone number already exists");
 
-        var user = _mapper.Map<Domain.AggregateModels.UserAggregate.User>(request);
+        var user = new Domain.AggregateModels.UserAggregate.User
+        {
+            Email = request.Email, 
+            PhoneNumber = request.PhoneNumber, 
+            FullName = request.FullName,
+            UserName = request.UserName
+        };
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)

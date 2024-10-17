@@ -26,7 +26,6 @@
       <Folder Include="Commands\User\ChangePassword\" />
       <Folder Include="Commands\User\CreateUser\" />
       <Folder Include="Commands\User\UpdateUser\" />
-      <Folder Include="Exceptions\" />
     </ItemGroup>
 
     <ItemGroup>

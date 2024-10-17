@@ -1,9 +1,9 @@
 using AutoMapper;
 using EventHub.Abstractions;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.User;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Extensions;

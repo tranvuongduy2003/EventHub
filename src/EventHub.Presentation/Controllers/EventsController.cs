@@ -7,6 +7,7 @@ using EventHub.Application.Commands.Event.PermanentlyDeleteEvent;
 using EventHub.Application.Commands.Event.RestoreEvent;
 using EventHub.Application.Commands.Event.UnfavouriteEvent;
 using EventHub.Application.Commands.Event.UpdateEvent;
+using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 using EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
 using EventHub.Application.Queries.Event.GetEventById;
@@ -16,7 +17,6 @@ using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
-using EventHub.Shared.Exceptions;
 using EventHub.Shared.HttpResponses;
 using EventHub.Shared.SeedWork;
 using MediatR;
@@ -112,7 +112,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PostCreateEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             var events = await _mediator.Send(new CreateEventCommand(request, userId));
 
@@ -145,7 +145,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: GetCreatedEvents");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             var events = await _mediator.Send(new GetCreatedEventsByUserIdQuery(userId, filter));
 
@@ -178,7 +178,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PutUpdateEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new UpdateEventCommand(eventId, request, userId));
 
@@ -216,7 +216,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: DeleteEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new DeleteEventCommand(userId, eventId));
 
@@ -281,7 +281,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchRestoreDeletedEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new RestoreEventCommand(userId, events));
 
@@ -311,7 +311,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: GetDeletedEvents");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             var events = await _mediator.Send(new GetDeletedEventsByUserIdQuery(userId, filter));
 
@@ -342,7 +342,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchFavouriteEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new FavouriteEventCommand(userId, eventId));
 
@@ -380,7 +380,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchUnfavouriteEvent");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new UnfavouriteEventCommand(userId, eventId));
 
@@ -418,7 +418,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: GetFavouriteEvents");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             var events = await _mediator.Send(new GetFavouriteEventsByUserIdQuery(userId, filter));
 
@@ -447,7 +447,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchMakeEventsPrivate");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new MakeEventsPrivateCommand(userId, events));
 
@@ -476,7 +476,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchMakeEventsPublic");
         try
         {
-            var userId = (Guid)HttpContext.Items["AuthorId"];
+            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
 
             await _mediator.Send(new MakeEventsPublicCommand(userId, events));
 

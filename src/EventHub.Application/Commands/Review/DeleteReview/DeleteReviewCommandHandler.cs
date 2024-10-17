@@ -1,6 +1,6 @@
 ﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.Exceptions;
 
 namespace EventHub.Application.Commands.Review.DeleteReview;
 

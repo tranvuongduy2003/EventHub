@@ -1,3 +1,5 @@
+using EventHub.Application.Behaviors;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHub.Infrastructure.Configurations;
@@ -9,6 +11,8 @@ public static class MediatRConfiguration
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
+            config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
+            config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         });
 
         return services;
