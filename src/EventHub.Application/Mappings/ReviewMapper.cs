@@ -2,7 +2,7 @@
 using EventHub.Domain.AggregateModels.ReviewAggregate;
 using EventHub.Shared.DTOs.Review;
 
-namespace EventHub.Infrastructure.Mapper;
+namespace EventHub.Application.Mappings;
 
 public class ReviewMapper
 {

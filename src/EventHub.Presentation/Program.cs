@@ -1,5 +1,5 @@
 using EventHub.Infrastructure;
-using EventHub.Infrastructure.Logging;
+using EventHub.Infrastructure.Configurations;
 using EventHub.Persistence;
 using EventHub.Presentation.Extensions;
 using EventHub.SignalR;
@@ -13,7 +13,7 @@ Log.Information("Starting EvenHub API up");
 
 try
 {
-    builder.Host.UseSerilog(Serilogger.Configure);
+    builder.Host.UseSerilog(LoggingConfiguration.Configure);
     builder.Host.AddAppConfigurations();
 
     builder.Services.ConfigurePersistenceServices(builder.Configuration);

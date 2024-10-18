@@ -1,4 +1,4 @@
-﻿using EventHub.Infrastructure.Mapper;
+﻿using EventHub.Application.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHub.Infrastructure.Configurations;

@@ -2,7 +2,7 @@
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Shared.DTOs.User;
 
-namespace EventHub.Infrastructure.Mapper;
+namespace EventHub.Application.Mappings;
 
 public class UserMapper
 {

@@ -2,7 +2,7 @@
 using EventHub.Abstractions;
 using Hangfire;
 
-namespace EventHub.Infrastructure.Hangfire;
+namespace EventHub.Infrastructure.Services;
 
 /// <summary>
 /// Provides a service for interacting with Hangfire, a framework for background job processing.

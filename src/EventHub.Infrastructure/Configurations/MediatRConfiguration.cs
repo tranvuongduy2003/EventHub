@@ -13,6 +13,7 @@ public static class MediatRConfiguration
             config.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly);
             config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
             config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
         });
 
         return services;

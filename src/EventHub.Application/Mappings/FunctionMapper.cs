@@ -2,7 +2,7 @@ using AutoMapper;
 using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Shared.DTOs.Function;
 
-namespace EventHub.Infrastructure.Mapper;
+namespace EventHub.Application.Mappings;
 
 public class FunctionMapper
 {

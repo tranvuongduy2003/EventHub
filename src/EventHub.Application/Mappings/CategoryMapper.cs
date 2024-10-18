@@ -2,7 +2,7 @@ using AutoMapper;
 using EventHub.Domain.AggregateModels.CategoryAggregate;
 using EventHub.Shared.DTOs.Category;
 
-namespace EventHub.Infrastructure.Mapper;
+namespace EventHub.Application.Mappings;
 
 public class CategoryMapper
 {

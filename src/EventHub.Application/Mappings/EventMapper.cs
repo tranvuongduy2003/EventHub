@@ -2,7 +2,7 @@
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Shared.DTOs.Event;
 
-namespace EventHub.Infrastructure.Mapper;
+namespace EventHub.Application.Mappings;
 
 public class EventMapper
 {

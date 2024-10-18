@@ -8,14 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Caching\"/>
         <Folder Include="FilesSystem\"/>
         <Folder Include="FilterAttributes\"/>
-        <Folder Include="Hangfire\"/>
-        <Folder Include="Logging\"/>
         <Folder Include="Mailler\"/>
         <Folder Include="Middlewares\"/>
-        <Folder Include="Services\"/>
     </ItemGroup>
 
     <ItemGroup>

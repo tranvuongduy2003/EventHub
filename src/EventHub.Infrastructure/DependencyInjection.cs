@@ -1,10 +1,9 @@
 ﻿using EventHub.Abstractions;
+using EventHub.Application.Idempotence;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.FilesSystem;
-using EventHub.Infrastructure.Hangfire;
-using EventHub.Infrastructure.Idempotence;
 using EventHub.Infrastructure.Mailler;
 using EventHub.Infrastructure.Outbox;
 using EventHub.Infrastructure.Services;

@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace EventHub.Infrastructure.Logging;
+namespace EventHub.Infrastructure.Configurations;
 
 /// <summary>
 /// Provides a static configuration setup for Serilog logging based on the host environment and application configuration.
 /// </summary>
-public static class Serilogger
+public static class LoggingConfiguration
 {
     /// <summary>
     /// Gets an <see cref="Action{HostBuilderContext, LoggerConfiguration}"/> delegate for configuring Serilog.
