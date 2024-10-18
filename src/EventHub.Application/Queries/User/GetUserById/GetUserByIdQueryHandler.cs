@@ -1,5 +1,6 @@
 using AutoMapper;
 using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;

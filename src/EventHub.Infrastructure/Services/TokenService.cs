@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Persistence.Data;
 using EventHub.Shared.Settings;

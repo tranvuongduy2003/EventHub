@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace EventHub.Abstractions;
+namespace EventHub.Abstractions.Services;
 
 /// <summary>
 /// Defines a contract for interacting with Hangfire to manage background jobs.

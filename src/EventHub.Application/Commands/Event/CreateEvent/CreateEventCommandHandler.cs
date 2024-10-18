@@ -1,6 +1,7 @@
 using AutoMapper;
 using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Event;

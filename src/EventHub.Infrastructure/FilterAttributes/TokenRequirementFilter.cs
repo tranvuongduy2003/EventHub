@@ -1,4 +1,5 @@
 ﻿using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using EventHub.Shared.HttpResponses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

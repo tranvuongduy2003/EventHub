@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using EventHub.Domain.AggregateModels.UserAggregate;
 
-namespace EventHub.Abstractions;
+namespace EventHub.Abstractions.Services;
 
 /// <summary>
 /// Defines a contract for services that handle JWT token operations, including token generation, validation, and extraction of claims.

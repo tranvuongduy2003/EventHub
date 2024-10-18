@@ -1,4 +1,5 @@
 using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;

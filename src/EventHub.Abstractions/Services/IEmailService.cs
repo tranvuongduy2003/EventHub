@@ -1,6 +1,6 @@
 ﻿using EventHub.Shared.SeedWork;
 
-namespace EventHub.Abstractions;
+namespace EventHub.Abstractions.Services;
 
 /// <summary>
 /// Defines a contract for an email service that provides various email functionalities.

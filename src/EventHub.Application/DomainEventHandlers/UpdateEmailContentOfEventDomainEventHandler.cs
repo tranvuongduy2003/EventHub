@@ -1,5 +1,6 @@
 ﻿using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;

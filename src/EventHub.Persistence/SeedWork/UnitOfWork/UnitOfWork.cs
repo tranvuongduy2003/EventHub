@@ -2,6 +2,7 @@
 using EventHub.Abstractions.CachedRepositories;
 using EventHub.Abstractions.Repositories;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Abstractions.Services;
 using EventHub.Persistence.CachedRepositories;
 using EventHub.Persistence.Data;
 using EventHub.Persistence.Repositories;

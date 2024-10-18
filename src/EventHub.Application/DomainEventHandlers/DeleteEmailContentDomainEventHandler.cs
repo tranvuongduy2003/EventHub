@@ -1,5 +1,6 @@
 ﻿using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Abstractions.Services;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.ValueObjects;

@@ -1,4 +1,5 @@
 ﻿using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using EventHub.Application.Idempotence;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;

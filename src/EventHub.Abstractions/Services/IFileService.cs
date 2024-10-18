@@ -1,7 +1,7 @@
 ﻿using EventHub.Shared.DTOs.File;
 using Microsoft.AspNetCore.Http;
 
-namespace EventHub.Abstractions;
+namespace EventHub.Abstractions.Services;
 
 /// <summary>
 /// Defines the contract for file management services, including operations for uploading, downloading, and deleting files.

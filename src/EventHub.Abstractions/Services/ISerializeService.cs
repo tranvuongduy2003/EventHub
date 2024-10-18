@@ -1,4 +1,4 @@
-﻿namespace EventHub.Abstractions;
+﻿namespace EventHub.Abstractions.Services;
 
 /// <summary>
 /// Defines a contract for a service that handles object serialization and deserialization.

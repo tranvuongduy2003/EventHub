@@ -1,6 +1,7 @@
 using AutoMapper;
 using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Abstractions.Services;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Helpers;

@@ -1,4 +1,5 @@
 ﻿using EventHub.Abstractions;
+using EventHub.Abstractions.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 
