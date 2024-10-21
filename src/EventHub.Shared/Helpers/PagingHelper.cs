@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using EventHub.Shared.Enums.Common;
 using EventHub.Shared.SeedWork;
 
@@ -15,6 +16,10 @@ public static class PagingHelper
     /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
     public static Pagination<T> Paginate<T>(List<T> items, PaginationFilter filter)
     {
+        // Get total records of items in database
+        var totalCount = items.Count;
+        
+        // Retrieve list of items by search values
         if (filter.Searches.Any())
         {
             items = filter.Searches
@@ -29,6 +34,7 @@ public static class PagingHelper
                             .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase)));
         }
 
+        // Order list of items by order values
         if (filter.Orders.Any())
         {
             items = filter.Orders.Aggregate(items, (current, order) =>
@@ -46,6 +52,7 @@ public static class PagingHelper
                 });
         }
 
+        // Paging
         if (filter.TakeAll == false)
         {
             items = items
@@ -54,7 +61,8 @@ public static class PagingHelper
                 .ToList();
         }
 
-        var metadata = new Metadata(items.Count, filter.Page, filter.Size, filter.TakeAll);
+        // Summarize data
+        var metadata = new Metadata(totalCount, filter.Page, filter.Size, filter.TakeAll);
 
         return new Pagination<T>
         {
