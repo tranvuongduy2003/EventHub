@@ -5,6 +5,7 @@ using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Review.GetPaginatedReviews;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
+using EventHub.Application.Queries.Review.GetReviewById;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Review;
 using EventHub.Shared.Enums.Command;
@@ -134,6 +135,38 @@ public class ReviewsController : ControllerBase
             _logger.LogInformation("END: GetPaginatedReviewsByUser");
 
             return Ok(new ApiOkResponse(reviews));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+    
+    [HttpGet("{reviewId:guid}")]
+    [SwaggerOperation(
+        Summary = "Retrieve a review by its ID",
+        Description = "Fetches the details of a specific review based on the provided review ID."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the review", typeof(ReviewDto))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - Review with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetReviewById(Guid reviewId)
+    {
+        _logger.LogInformation("START: GetReviewById");
+        try
+        {
+            var review = await _mediator.Send(new GetReviewByIdQuery(reviewId));
+
+            _logger.LogInformation("END: GetReviewById");
+
+            return Ok(new ApiOkResponse(review));
         }
         catch (NotFoundException e)
         {
