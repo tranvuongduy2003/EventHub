@@ -1,5 +1,6 @@
 ﻿using EventHub.Infrastructure.Configurations;
 using EventHub.Persistence.Data;
+using EventHub.Presentation.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -13,7 +14,7 @@ public static class ApplicationExtensions
         
         // app.UseHttpsRedirection(); //production only
 
-        app.UseErrorWrapping();
+        app.UseMiddleware<ErrorWrappingMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseCors(appCors);

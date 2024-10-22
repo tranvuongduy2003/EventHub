@@ -1,9 +1,7 @@
 ﻿using EventHub.Shared.HttpResponses;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace EventHub.Infrastructure.Middlewares;
+namespace EventHub.Presentation.Middlewares;
 
 public class ErrorWrappingMiddleware
 {
