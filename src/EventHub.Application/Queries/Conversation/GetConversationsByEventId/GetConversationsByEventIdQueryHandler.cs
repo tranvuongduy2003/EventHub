@@ -6,8 +6,6 @@ using EventHub.Shared.DTOs.Conversation;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 
@@ -17,7 +15,7 @@ public class
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetConversationsByEventIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
+    public GetConversationsByEventIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -26,7 +24,6 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-
         var isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
         if (!isEventExisted)
             throw new NotFoundException("Event does not exist!");
@@ -40,11 +37,14 @@ public class
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)
-            .LeftJoin(
-                messages,
-                _conversation => _conversation.Id,
-                _message => _message.ConversationId,
-                (_conversation, _message) => new { Conversation = _conversation, Message = _message })
+            .ToList();
+
+        var conversationWithMessages = (
+                from _conversation in conversations
+                join _message in messages.DefaultIfEmpty()
+                    on _conversation.Id equals _message.ConversationId
+                select new { Conversation = _conversation, Message = _message }
+            )
             .GroupBy(x => x.Conversation)
             .AsEnumerable()
             .Select(group =>
@@ -55,7 +55,7 @@ public class
             })
             .ToList();
 
-        var conversationDtos = _mapper.Map<List<ConversationDto>>(conversations);
+        var conversationDtos = _mapper.Map<List<ConversationDto>>(conversationWithMessages);
 
 
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);

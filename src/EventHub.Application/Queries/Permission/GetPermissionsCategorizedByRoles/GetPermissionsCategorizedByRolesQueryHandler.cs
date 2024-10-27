@@ -5,14 +5,12 @@ using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Function;
 using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;
 
 public class
     GetPermissionsCategorizedByRolesQueryHandler : IQueryHandler<GetPermissionsCategorizedByRolesQuery,
-    List<RolePermissionDto>>
+        List<RolePermissionDto>>
 {
     private readonly IMapper _mapper;
     private readonly RoleManager<Role> _roleManager;
@@ -30,14 +28,17 @@ public class
         CancellationToken cancellationToken)
     {
         var permissions = _unitOfWork.Permissions
-            .FindAll(false, x => x.Function);
+            .FindAll(false, x => x.Function)
+            .ToList();
 
-        var rolePermissions = await _roleManager.Roles
-            .LeftJoin(
-                permissions,
-                r => r.Id,
-                p => p.RoleId,
-                (role, permission) => new { Role = role, Permission = permission })
+        var roles = _roleManager.Roles.ToList();
+
+        var rolePermissions = (
+                from _role in roles
+                join _permission in permissions.DefaultIfEmpty()
+                    on _role.Id equals _permission.RoleId
+                select new { Role = _role, Permission = _permission }
+            )
             .GroupBy(x => x.Role)
             .Select(group => new RolePermissionDto
             {
@@ -48,7 +49,7 @@ public class
                         .Select(g => g.Permission.Function)
                         .ToList())
             })
-            .ToListAsync();
+            .ToList();
 
 
         return rolePermissions;

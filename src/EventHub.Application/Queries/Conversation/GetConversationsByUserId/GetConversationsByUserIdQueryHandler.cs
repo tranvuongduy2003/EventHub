@@ -7,8 +7,6 @@ using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 
@@ -20,7 +18,7 @@ public class
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public GetConversationsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,IMapper mapper)
+        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
@@ -31,7 +29,6 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-
         var isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId));
         if (!isUserExisted)
             throw new NotFoundException("User does not exist!");
@@ -46,11 +43,14 @@ public class
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)
-            .LeftJoin(
-                messages,
-                _conversation => _conversation.Id,
-                _message => _message.ConversationId,
-                (_conversation, _message) => new { Conversation = _conversation, Message = _message })
+            .ToList();
+
+        var conversationWithMessages = (
+                from _conversation in conversations
+                join _message in messages.DefaultIfEmpty()
+                    on _conversation.Id equals _message.ConversationId
+                select new { Conversation = _conversation, Message = _message }
+            )
             .GroupBy(x => x.Conversation)
             .AsEnumerable()
             .Select(group =>

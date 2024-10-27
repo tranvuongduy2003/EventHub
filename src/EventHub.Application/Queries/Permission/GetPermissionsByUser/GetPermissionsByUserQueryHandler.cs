@@ -7,7 +7,6 @@ using EventHub.Shared.DTOs.Function;
 using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsByUser;
 
@@ -35,19 +34,21 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
             throw new NotFoundException("User does not exist!");
 
         var permissions = _unitOfWork.Permissions
-            .FindAll(false, x => x.Function);
+            .FindAll(false, x => x.Function)
+            .ToList();
 
         var userRoleNames = await _userManager.GetRolesAsync(user);
         var userRoles = _roleManager.Roles
             .AsNoTracking()
-            .Join(userRoleNames, r => r.Name, n => n, (role, name) => role);
+            .Join(userRoleNames, r => r.Name, n => n, (role, name) => role)
+            .ToList();
 
-        var rolePermissions = await userRoles
-            .LeftJoin(
-                permissions,
-                r => r.Id,
-                p => p.RoleId,
-                (role, permission) => new { Role = role, Permission = permission })
+        var rolePermissions = (
+                from _role in userRoles
+                join _permission in permissions.DefaultIfEmpty()
+                    on _role.Id equals _permission.RoleId
+                select new { Role = _role, Permission = _permission }
+            )
             .GroupBy(x => x.Role)
             .Select(group => new RolePermissionDto
             {
@@ -58,7 +59,7 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
                         .Select(g => g.Permission.Function)
                         .ToList())
             })
-            .ToListAsync();
+            .ToList();
 
 
         return rolePermissions;

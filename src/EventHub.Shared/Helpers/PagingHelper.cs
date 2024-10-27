@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using EventHub.Shared.Enums.Common;
 using EventHub.Shared.SeedWork;
 
@@ -18,20 +17,22 @@ public static class PagingHelper
     {
         // Get total records of items in database
         var totalCount = items.Count;
-        
+
         // Retrieve list of items by search values
         if (filter.Searches.Any())
         {
             items = filter.Searches
                 .Aggregate(items, (current, search) =>
-                    (List<T>)current.Where(x =>
-                        search.SearchValue != null
-                        && search.SearchBy != null
-                        && ((string)TypeDescriptor
-                            .GetProperties(typeof(T))
-                            .Find(search.SearchBy, true)?
-                            .GetValue(x))
-                            .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase)));
+                    current.Where(x =>
+                            search.SearchValue != null
+                            && search.SearchBy != null
+                            && ((string)TypeDescriptor
+                                .GetProperties(typeof(T))
+                                .Find(search.SearchBy, true)?
+                                .GetValue(x))
+                            .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase))
+                        .ToList()
+                );
         }
 
         // Order list of items by order values
@@ -40,14 +41,16 @@ public static class PagingHelper
             items = filter.Orders.Aggregate(items, (current, order) =>
                 order.OrderDirection switch
                 {
-                    EPageOrder.ASC => (List<T>)current.OrderBy(x => TypeDescriptor
-                        .GetProperties(typeof(T))
-                        .Find(order.OrderBy, true)?
-                        .GetValue(x)),
-                    EPageOrder.DESC => (List<T>)current.OrderByDescending(x => TypeDescriptor
-                        .GetProperties(typeof(T))
-                        .Find(order.OrderBy, true)?
-                        .GetValue(x)),
+                    EPageOrder.ASC => current.OrderBy(x => TypeDescriptor
+                            .GetProperties(typeof(T))
+                            .Find(order.OrderBy, true)?
+                            .GetValue(x))
+                        .ToList(),
+                    EPageOrder.DESC => current.OrderByDescending(x => TypeDescriptor
+                            .GetProperties(typeof(T))
+                            .Find(order.OrderBy, true)?
+                            .GetValue(x))
+                        .ToList(),
                     _ => current
                 });
         }

@@ -5,8 +5,6 @@ using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 
@@ -15,7 +13,7 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
+    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -24,19 +22,18 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
     public async Task<Pagination<EventDto>> Handle(GetCreatedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-
         var cachedEvents = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(request.userId));
         var eventCategories = _unitOfWork.EventCategories
             .FindAll()
             .Include(x => x.Category);
 
-        var events = cachedEvents
-            .LeftJoin(
-                eventCategories,
-                _event => _event.Id,
-                _eventCategory => _eventCategory.EventId,
-                (_event, _eventCategory) => new { Event = _event, EventCategory = _eventCategory })
+        var events = (
+                from _event in cachedEvents
+                join _eventCategory in eventCategories.DefaultIfEmpty()
+                    on _event.Id equals _eventCategory.EventId
+                select new { Event = _event, EventCategory = _eventCategory }
+            )
             .GroupBy(x => x.Event)
             .AsEnumerable()
             .Select(group =>
