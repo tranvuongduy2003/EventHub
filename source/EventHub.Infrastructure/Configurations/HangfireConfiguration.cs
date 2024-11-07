@@ -33,6 +33,11 @@ public static class HangfireConfiguration
         {
             EnabledSslProtocols = SslProtocols.Tls12
         };
+        mongoClientSettings.Credential = MongoCredential.CreateCredential(
+            hangfireSettings.Storage.AuthSource,
+            hangfireSettings.Storage.UserName,
+            hangfireSettings.Storage.Password
+        );
         var mongoClient = new MongoClient(mongoClientSettings);
         var mongoStorageOptions = new MongoStorageOptions
         {

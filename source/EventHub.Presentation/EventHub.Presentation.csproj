@@ -7,6 +7,7 @@
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
         <RootNamespace>EventHub.Presentation</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,11 +28,18 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\aspire\EventHub.ServiceDefaults\EventHub.ServiceDefaults.csproj" />
         <ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
         <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj"/>
         <ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj" />
         <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
         <ProjectReference Include="..\EventHub.SignalR\EventHub.SignalR.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

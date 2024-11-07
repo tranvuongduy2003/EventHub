@@ -9,6 +9,16 @@
     }
   },
   "profiles": {
+    "aspire": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:8000;http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Aspire"
+      }
+    },
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,

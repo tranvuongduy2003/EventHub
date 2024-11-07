@@ -3,6 +3,7 @@ using EventHub.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace EventHub.Infrastructure.Configurations;
 
@@ -25,7 +26,7 @@ public static class ApplicationDbContextConfiguration
                 provider.GetService<DateTrackingInterceptor>()!;
 
             optionsBuilder
-                .UseSqlServer(connectionString, builder => 
+                .UseSqlServer(connectionString, builder =>
                     builder.MigrationsAssembly("EventHub.Persistence"))
                 .AddInterceptors(
                     dateTrackingInterceptor,

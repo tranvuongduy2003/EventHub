@@ -454,3 +454,9 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea/
 dotnet-tools.json
+/aspire/EventHub.AppHost/cache_redis_data/
+/aspire/EventHub.AppHost/hangfire_mongo_data/
+/aspire/EventHub.AppHost/seq_data/
+aspire/EventHub.AppHost/appsettings.Development.json
+source/EventHub.Presentation/appsettings.Aspire.json
+source/EventHub.Presentation/appsettings.Development.json

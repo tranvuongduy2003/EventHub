@@ -22,13 +22,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Store dependencies
-        run: dotnet restore src/EventHub.Presentation/EventHub.Presentation.csproj
+        run: dotnet restore source/EventHub.Presentation/EventHub.Presentation.csproj
 
       - name: Build with dotnet
-        run: dotnet build src/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./build
+        run: dotnet build source/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./build
 
       - name: dotnet publish
-        run: dotnet publish src/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./publish
+        run: dotnet publish source/EventHub.Presentation/EventHub.Presentation.csproj -c Release -o ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

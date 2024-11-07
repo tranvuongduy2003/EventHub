@@ -9,6 +9,9 @@ var AppCors = "AppCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add .NET Aspire Services
+builder.AddServiceDefaults();
+
 Log.Information("Starting EvenHub API up");
 
 try
