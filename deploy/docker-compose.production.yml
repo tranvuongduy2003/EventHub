@@ -2,16 +2,26 @@ version: '3.8'
 
 services:
   eventhub.api:
-    image: eventhubcontainer.azurecr.io/eventhub-api:linux-latest
+    image: ${DOCKER_REGISTRY-}eventhub-api:${PLATFORM:-linux}-${TAG:-latest}
     container_name: eventhub.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings:DefaultConnectionString=Server=eventhub.db,1433;Database=EventHubDB;User Id=sa;Password=@Admin123;TrustServerCertificate=True;Multipleactiveresultsets=true"
       - "ConnectionStrings:CacheConnectionString=eventhub.cache:6379"
       - "SeqConfiguration:ServerUrl=http://eventhub.seq:5341"
       - "HangfireSettings:Storage:ConnectionString=mongodb://admin:admin@eventhub.hangfire:27017/hangfire-webapi?authSource=admin"
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: source/EventHub.Presentation/Dockerfile
     restart: always
+    ports:
+      - "5002:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+networks:
+  default:
+    name: eventhub
+    driver: bridge
