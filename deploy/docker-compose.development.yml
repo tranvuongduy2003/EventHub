@@ -20,11 +20,12 @@ services:
     volumes:
       - sqlserver_data:/var/lib/sqlserver/data
     ports:
-      - "1437:1433"
+      - "1433:1433"
 
   eventhub.seq:
     image: datalust/seq:latest
     container_name: eventhub.seq
+    restart: always
     environment:
       - ACCEPT_EULA=Y
     ports:
@@ -38,7 +39,7 @@ services:
     image: mongo
     container_name: eventhub.hangfire
     ports:
-      - "27018:27017"
+      - "27017:27017"
     volumes:
       - hangfire_mongo_data:/data/db
     restart: always
