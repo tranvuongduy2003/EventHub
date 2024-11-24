@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Persistence.Data;
@@ -57,22 +56,22 @@ public class TokenService : ITokenService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var query = from p in _context.Permissions
-            join c in _context.Commands
-                on p.CommandId equals c.Id
-            join f in _context.Functions
-                on p.FunctionId equals f.Id
-            join r in _roleManager.Roles on p.RoleId equals r.Id
-            where roles.Contains(r.Name)
-            select f.Id + "_" + c.Id;
-        var permissions = await query.Distinct().ToListAsync();
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+        IQueryable<string> query = from p in _context.Permissions
+                                   join c in _context.Commands
+                                       on p.CommandId equals c.Id
+                                   join f in _context.Functions
+                                       on p.FunctionId equals f.Id
+                                   join r in _roleManager.Roles on p.RoleId equals r.Id
+                                   where roles.Contains(r.Name ?? "")
+                                   select f.Id + "_" + c.Id;
+        List<string> permissions = await query.Distinct().ToListAsync();
 
         var claimList = new List<Claim>
         {
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Email, user.Email ?? ""),
             new(ClaimTypes.MobilePhone, user.PhoneNumber ?? ""),
             new(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
             new(ClaimTypes.Role, string.Join(";", roles)),
@@ -89,7 +88,7 @@ public class TokenService : ITokenService
                 SecurityAlgorithms.HmacSha256)
         };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
 
@@ -97,7 +96,7 @@ public class TokenService : ITokenService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
         var token = new JwtSecurityToken(
             _jwtOptions.Issuer,
@@ -112,37 +111,42 @@ public class TokenService : ITokenService
 
     public ClaimsPrincipal? GetPrincipalFromToken(string token)
     {
-        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = false
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
         if (securityToken is not JwtSecurityToken jwtSecurityToken ||
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                StringComparison.InvariantCultureIgnoreCase))
+                StringComparison.OrdinalIgnoreCase))
+        {
             throw new SecurityTokenException("Invalid token");
+        }
 
         return principal;
     }
 
     public bool ValidateTokenExpired(string token)
     {
-        if (token is null || token == "") return false;
+        if (string.IsNullOrEmpty(token))
+        {
+            return false;
+        }
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var jwtToken = tokenHandler.ReadToken(token);
+        SecurityToken jwtToken = tokenHandler.ReadToken(token);
 
-        if (jwtToken is null) return false;
+        if (jwtToken is null)
+        {
+            return false;
+        }
 
         return jwtToken.ValidTo > DateTime.UtcNow;
     }

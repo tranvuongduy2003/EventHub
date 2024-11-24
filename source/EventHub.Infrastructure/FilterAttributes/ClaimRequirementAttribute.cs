@@ -12,7 +12,7 @@ namespace EventHub.Infrastructure.FilterAttributes;
 /// based on claim requirements. It is used to specify that a user must have specific function and command claims
 /// to access the decorated action or controller.
 /// </remarks>
-public class ClaimRequirementAttribute : TypeFilterAttribute
+public sealed class ClaimRequirementAttribute : TypeFilterAttribute
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ClaimRequirementAttribute"/> class.

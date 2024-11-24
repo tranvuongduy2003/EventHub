@@ -1,5 +1,4 @@
-﻿using EventHub.Abstractions;
-using EventHub.Abstractions.CachedRepositories;
+﻿using EventHub.Abstractions.CachedRepositories;
 using EventHub.Abstractions.Repositories;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Abstractions.Services;
@@ -74,8 +73,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_categories == null)
-                _categories = new CategoriesRepository(_context);
+            _categories ??= new CategoriesRepository(_context);
             return _categories;
         }
     }
@@ -84,8 +82,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_commandInFunctions == null)
-                _commandInFunctions = new CommandInFunctionsRepository(_context);
+            _commandInFunctions ??= new CommandInFunctionsRepository(_context);
             return _commandInFunctions;
         }
     }
@@ -94,8 +91,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_commands == null)
-                _commands = new CommandsRepository(_context);
+            _commands ??= new CommandsRepository(_context);
             return _commands;
         }
     }
@@ -104,8 +100,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_conversations == null)
-                _conversations = new ConversationsRepository(_context);
+            _conversations ??= new ConversationsRepository(_context);
             return _conversations;
         }
     }
@@ -114,8 +109,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_emailAttachments == null)
-                _emailAttachments = new EmailAttachmentsRepository(_context);
+            _emailAttachments ??= new EmailAttachmentsRepository(_context);
             return _emailAttachments;
         }
     }
@@ -124,8 +118,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_emailContents == null)
-                _emailContents = new EmailContentsRepository(_context);
+            _emailContents ??= new EmailContentsRepository(_context);
             return _emailContents;
         }
     }
@@ -134,8 +127,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_emailLoggers == null)
-                _emailLoggers = new EmailLoggersRepository(_context);
+            _emailLoggers ??= new EmailLoggersRepository(_context);
             return _emailLoggers;
         }
     }
@@ -144,8 +136,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_eventCategories == null)
-                _eventCategories = new EventCategoriesRepository(_context);
+            _eventCategories ??= new EventCategoriesRepository(_context);
             return _eventCategories;
         }
     }
@@ -154,8 +145,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_events == null)
-                _events = new EventsRepository(_context);
+            _events ??= new EventsRepository(_context);
             return _events;
         }
     }
@@ -164,8 +154,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_eventSubImages == null)
-                _eventSubImages = new EventSubImagesRepository(_context);
+            _eventSubImages ??= new EventSubImagesRepository(_context);
             return _eventSubImages;
         }
     }
@@ -174,8 +163,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_favouriteEvents == null)
-                _favouriteEvents = new FavouriteEventsRepository(_context);
+            _favouriteEvents ??= new FavouriteEventsRepository(_context);
             return _favouriteEvents;
         }
     }
@@ -184,8 +172,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_functions == null)
-                _functions = new FunctionsRepository(_context);
+            _functions ??= new FunctionsRepository(_context);
             return _functions;
         }
     }
@@ -194,8 +181,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_invitations == null)
-                _invitations = new InvitationsRepository(_context);
+            _invitations ??= new InvitationsRepository(_context);
             return _invitations;
         }
     }
@@ -204,8 +190,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_labelInEvents == null)
-                _labelInEvents = new LabelInEventsRepository(_context);
+            _labelInEvents ??= new LabelInEventsRepository(_context);
             return _labelInEvents;
         }
     }
@@ -214,8 +199,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_labelInUsers == null)
-                _labelInUsers = new LabelInUsersRepository(_context);
+            _labelInUsers ??= new LabelInUsersRepository(_context);
             return _labelInUsers;
         }
     }
@@ -224,8 +208,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_labels == null)
-                _labels = new LabelsRepository(_context);
+            _labels ??= new LabelsRepository(_context);
             return _labels;
         }
     }
@@ -234,8 +217,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_messages == null)
-                _messages = new MessagesRepository(_context);
+            _messages ??= new MessagesRepository(_context);
             return _messages;
         }
     }
@@ -244,8 +226,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_paymentItems == null)
-                _paymentItems = new PaymentItemsRepository(_context);
+            _paymentItems ??= new PaymentItemsRepository(_context);
             return _paymentItems;
         }
     }
@@ -254,8 +235,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_paymentMethods == null)
-                _paymentMethods = new PaymentMethodsRepository(_context);
+            _paymentMethods ??= new PaymentMethodsRepository(_context);
             return _paymentMethods;
         }
     }
@@ -264,8 +244,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_payments == null)
-                _payments = new PaymentsRepository(_context);
+            _payments ??= new PaymentsRepository(_context);
             return _payments;
         }
     }
@@ -274,8 +253,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_permissions == null)
-                _permissions = new PermissionsRepository(_context);
+            _permissions ??= new PermissionsRepository(_context);
             return _permissions;
         }
     }
@@ -284,8 +262,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_reasons == null)
-                _reasons = new ReasonsRepository(_context);
+            _reasons ??= new ReasonsRepository(_context);
             return _reasons;
         }
     }
@@ -294,8 +271,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_reviews == null)
-                _reviews = new ReviewsRepository(_context);
+            _reviews ??= new ReviewsRepository(_context);
             return _reviews;
         }
     }
@@ -304,8 +280,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_tickets == null)
-                _tickets = new TicketsRepository(_context);
+            _tickets ??= new TicketsRepository(_context);
             return _tickets;
         }
     }
@@ -314,8 +289,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_ticketTypes == null)
-                _ticketTypes = new TicketTypesRepository(_context);
+            _ticketTypes ??= new TicketTypesRepository(_context);
             return _ticketTypes;
         }
     }
@@ -324,8 +298,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_userFollowers == null)
-                _userFollowers = new UserFollowersRepository(_context);
+            _userFollowers ??= new UserFollowersRepository(_context);
             return _userFollowers;
         }
     }
@@ -334,8 +307,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_userPaymentMethods == null)
-                _userPaymentMethods = new UserPaymentMethodsRepository(_context);
+            _userPaymentMethods ??= new UserPaymentMethodsRepository(_context);
             return _userPaymentMethods;
         }
     }
@@ -344,12 +316,9 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_categories == null)
-                _categories = new CategoriesRepository(_context);
-
-            if (_cachedCategories == null)
-                _cachedCategories =
-                    new CachedCategoriesRepository(_context, _categories, _cacheService);
+            _categories ??= new CategoriesRepository(_context);
+            _cachedCategories ??=
+                new CachedCategoriesRepository(_context, _categories, _cacheService);
             return _cachedCategories;
         }
     }
@@ -358,11 +327,8 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_events == null)
-                _events = new EventsRepository(_context);
-
-            if (_cachedEvents == null)
-                _cachedEvents = new CachedEventsRepository(_context, _events, _cacheService);
+            _events ??= new EventsRepository(_context);
+            _cachedEvents ??= new CachedEventsRepository(_context, _events, _cacheService);
             return _cachedEvents;
         }
     }
@@ -371,12 +337,9 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_eventSubImages == null)
-                _eventSubImages = new EventSubImagesRepository(_context);
-
-            if (_cachedEventSubImages == null)
-                _cachedEventSubImages =
-                    new CachedEventSubImagesRepository(_context, _eventSubImages, _cacheService);
+            _eventSubImages ??= new EventSubImagesRepository(_context);
+            _cachedEventSubImages ??=
+                new CachedEventSubImagesRepository(_context, _eventSubImages, _cacheService);
             return _cachedEventSubImages;
         }
     }
@@ -385,11 +348,8 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_reasons == null)
-                _reasons = new ReasonsRepository(_context);
-
-            if (_cachedReasons == null)
-                _cachedReasons = new CachedReasonsRepository(_context, _reasons, _cacheService);
+            _reasons ??= new ReasonsRepository(_context);
+            _cachedReasons ??= new CachedReasonsRepository(_context, _reasons, _cacheService);
             return _cachedReasons;
         }
     }
@@ -398,11 +358,8 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_reviews == null)
-                _reviews = new ReviewsRepository(_context);
-
-            if (_cachedReviews == null)
-                _cachedReviews = new CachedReviewsRepository(_context, _reviews, _cacheService);
+            _reviews ??= new ReviewsRepository(_context);
+            _cachedReviews ??= new CachedReviewsRepository(_context, _reviews, _cacheService);
             return _cachedReviews;
         }
     }
@@ -411,12 +368,9 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_ticketTypes == null)
-                _ticketTypes = new TicketTypesRepository(_context);
-
-            if (_cachedTicketTypes == null)
-                _cachedTicketTypes =
-                    new CachedTicketTypesRepository(_context, _ticketTypes, _cacheService);
+            _ticketTypes ??= new TicketTypesRepository(_context);
+            _cachedTicketTypes ??=
+                new CachedTicketTypesRepository(_context, _ticketTypes, _cacheService);
             return _cachedTicketTypes;
         }
     }
@@ -450,9 +404,10 @@ public class UnitOfWork : IUnitOfWork
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposed)
-            if (disposing)
-                _context.Dispose();
+        if (!_disposed && disposing)
+        {
+            _context.Dispose();
+        }
         _disposed = true;
     }
 }

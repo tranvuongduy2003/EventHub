@@ -1,5 +1,6 @@
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.AggregateModels.PermissionAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using Microsoft.EntityFrameworkCore;
@@ -17,23 +18,29 @@ public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<Di
 
     public async Task Handle(DisableCommandInFunctionDomainEvent notification, CancellationToken cancellationToken)
     {
-        var isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
+        bool isFunctionExisted = await _unitOfWork.Functions.ExistAsync(notification.FunctionId);
         if (!isFunctionExisted)
+        {
             throw new NotFoundException("Function does not exist!");
+        }
 
-        var isCommandExisted = await _unitOfWork.Commands.ExistAsync(notification.CommandId);
+        bool isCommandExisted = await _unitOfWork.Commands.ExistAsync(notification.CommandId);
         if (!isCommandExisted)
+        {
             throw new NotFoundException("Command does not exist!");
+        }
 
-        var commandInFunction = await _unitOfWork.CommandInFunctions
+        CommandInFunction commandInFunction = await _unitOfWork.CommandInFunctions
             .FindByCondition(x =>
-                x.FunctionId.Equals(notification.FunctionId) &&
-                x.CommandId.Equals(notification.CommandId))
-            .FirstOrDefaultAsync();
+                x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal) &&
+                x.CommandId.Equals(notification.CommandId, StringComparison.Ordinal))
+            .FirstOrDefaultAsync(cancellationToken);
         if (commandInFunction is null)
+        {
             throw new NotFoundException("This command is not existed in function.");
+        }
 
-        await _unitOfWork.CommandInFunctions.DeleteAsync(commandInFunction);
+        _unitOfWork.CommandInFunctions.Delete(commandInFunction);
         await _unitOfWork.CommitAsync();
     }
 }

@@ -14,7 +14,7 @@ public class ExternalLoginCallbackCommand : ICommand<SignInResponseDto>
     /// <param name="returnUrl">
     /// The URL to which the user will be redirected after the external login callback process is complete.
     /// </param>
-    public ExternalLoginCallbackCommand(string returnUrl)
+    public ExternalLoginCallbackCommand(Uri returnUrl)
         => ReturnUrl = returnUrl;
 
     /// <summary>
@@ -23,5 +23,5 @@ public class ExternalLoginCallbackCommand : ICommand<SignInResponseDto>
     /// <value>
     /// A string representing the return URL for redirection after the external login callback.
     /// </value>
-    public string ReturnUrl { get; set; }
+    public Uri ReturnUrl { get; set; }
 }

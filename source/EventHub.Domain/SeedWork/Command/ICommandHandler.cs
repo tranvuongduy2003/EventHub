@@ -26,7 +26,7 @@ public interface ICommandHandler<TCommand, TCommandResponse> : IRequestHandler<T
 /// to handle commands of type <typeparamref name="TCommand"/> that do not return a result. Implementations of this
 /// interface are responsible for executing the command's logic without producing a result.
 /// </remarks>
-public interface ICommandHandler<TCommand> : IRequestHandler<TCommand>
+public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
     where TCommand : ICommand
 {
 }

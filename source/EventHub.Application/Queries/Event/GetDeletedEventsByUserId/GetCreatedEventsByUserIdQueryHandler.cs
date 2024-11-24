@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Helpers;
@@ -22,11 +23,13 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
     public async Task<Pagination<EventDto>> Handle(GetDeletedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        var cachedEvents = _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId.Equals(request.userId) && x.IsDeleted);
-        var eventCategories = _unitOfWork.EventCategories
+        List<Domain.AggregateModels.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
+            .FindByCondition(x => x.AuthorId.Equals(request.userId) && x.IsDeleted)
+            .ToListAsync(cancellationToken);
+        List<EventCategory> eventCategories = await _unitOfWork.EventCategories
             .FindAll()
-            .Include(x => x.Category);
+            .Include(x => x.Category)
+            .ToListAsync(cancellationToken);
 
         var events = (
                 from _event in cachedEvents
@@ -38,14 +41,13 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
             .AsEnumerable()
             .Select(group =>
             {
-                var @event = group.Key;
+                Domain.AggregateModels.EventAggregate.Event @event = group.Key;
                 @event.Categories = group.Select(g => g.EventCategory.Category).ToList();
                 return @event;
             })
             .ToList();
 
-        var eventDtos = _mapper.Map<List<EventDto>>(events);
-
+        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

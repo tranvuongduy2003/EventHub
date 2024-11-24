@@ -30,11 +30,11 @@ public class Pagination<T>
 /// Represents a paginated result containing a list of items and custom metadata about the pagination.
 /// </summary>
 /// <typeparam name="T">The type of the items in the paginated list.</typeparam>
-/// <typeparam name="K">The type of the metadata associated with the pagination.</typeparam>
+/// <typeparam name="TMetadata">The type of the metadata associated with the pagination.</typeparam>
 /// <remarks>
 /// This class is used to encapsulate the result of a paginated query, including the list of items and custom metadata about the pagination.
 /// </remarks>
-public class Pagination<T, K>
+public class Pagination<T, TMetadata>
 {
     /// <summary>
     /// Gets or sets the list of items in the current page.
@@ -50,5 +50,5 @@ public class Pagination<T, K>
     /// <value>
     /// An instance of <typeparamref name="K"/> containing custom metadata about the pagination.
     /// </value>
-    public K Metadata { get; set; }
+    public TMetadata Metadata { get; set; }
 }

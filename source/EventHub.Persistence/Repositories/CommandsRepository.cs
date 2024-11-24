@@ -19,7 +19,7 @@ public class CommandsRepository : RepositoryBase<Command>, ICommandsRepository
 
     public async Task<bool> ExistAsync(string id)
     {
-        return await _context.Set<Command>().AnyAsync(x => x.GetType().GetProperty("Id").ToString() == id);
+        return await _context.Set<Command>().AnyAsync(x => x.GetType().GetProperty("Id")!.ToString() == id);
     }
 
     public async Task<Command> GetByIdAsync(string id)

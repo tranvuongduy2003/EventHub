@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.Repository;
 using EventHub.Abstractions.Services;
 using EventHub.Domain.SeedWork.Entities;
@@ -41,11 +40,9 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
 
     public IQueryable<T> FindAll(bool trackChanges = false)
     {
-        var key = $"{typeof(T).Name}";
+        string key = $"{typeof(T).Name}";
 
-        var items = _cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() as IQueryable<T>;
-
-        if (items == null || !items.Any())
+        if (_cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() is not IQueryable<T> items || !items.Any())
         {
             items = !trackChanges
                 ? Queryable.Where<T>(_context.Set<T>().AsNoTracking(), e => e.DeletedAt == null)
@@ -60,7 +57,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     public IQueryable<T> FindAll(bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = FindAll(trackChanges);
+        IQueryable<T> items = FindAll(trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
@@ -69,11 +66,10 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
 
     public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
     {
-        var key = $"{typeof(T).Name}";
+        string key = $"{typeof(T).Name}";
 
-        var items = _cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() as IQueryable<T>;
 
-        if (items == null || !items.Any())
+        if (_cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() is not IQueryable<T> items || !items.Any())
         {
             items = !trackChanges
                 ? Queryable.Where<T>(_context.Set<T>().AsNoTracking(), e => e.DeletedAt == null)
@@ -90,7 +86,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = FindByCondition(expression, trackChanges);
+        IQueryable<T> items = FindByCondition(expression, trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
@@ -107,13 +103,17 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     {
         string key = $"{typeof(T).Name}-{id}";
 
-        var entity = await _cacheService.GetData<T>(key);
+        T entity = await _cacheService.GetData<T>(key);
         if (entity != null)
+        {
             return entity;
+        }
 
         entity = await _context.Set<T>().FindAsync(id);
         if (entity != null)
+        {
             await _cacheService.SetData<T>(key, entity, TimeSpan.FromMinutes(2));
+        }
 
         return entity;
     }
@@ -125,13 +125,13 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
 
     public Task CreateListAsync(IEnumerable<T> entities) => _decorated.CreateListAsync(entities);
 
-    public Task UpdateAsync(T entity) => _decorated.UpdateAsync(entity);
+    public void Update(T entity) => _decorated.Update(entity);
 
-    public Task DeleteAsync(T entity) => _decorated.DeleteAsync(entity);
+    public void Delete(T entity) => _decorated.Delete(entity);
 
-    public Task DeleteListAsync(IEnumerable<T> entities) => _decorated.DeleteListAsync(entities);
+    public void DeleteList(IEnumerable<T> entities) => _decorated.DeleteList(entities);
 
-    public Task SoftDeleteAsync(T entity) => _decorated.SoftDeleteAsync(entity);
+    public void SoftDelete(T entity) => _decorated.SoftDelete(entity);
 
-    public Task RestoreAsync(T entity) => _decorated.RestoreAsync(entity);
+    public void Restore(T entity) => _decorated.Restore(entity);
 }

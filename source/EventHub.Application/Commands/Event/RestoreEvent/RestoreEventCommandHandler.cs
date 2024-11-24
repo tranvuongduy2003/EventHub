@@ -10,6 +10,9 @@ public class RestoreEventCommandHandler : ICommandHandler<RestoreEventCommand>
 
     public async Task Handle(RestoreEventCommand request, CancellationToken cancellationToken)
     {
-        await Domain.AggregateModels.EventAggregate.Event.RestoreEvent(request.UserId, request.Events);
+        await Task.Run(() =>
+        {
+            Domain.AggregateModels.EventAggregate.Event.RestoreEvent(request.UserId, request.Events);
+        }, cancellationToken);
     }
 }

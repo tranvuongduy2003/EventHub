@@ -9,7 +9,7 @@ public class PaymentDto
 {
     public Guid Id { get; set; }
 
-    public int TicketQuantity { get; set; } = 0;
+    public int TicketQuantity { get; set; }
 
     public string CustomerName { get; set; } = string.Empty;
 
@@ -19,16 +19,16 @@ public class PaymentDto
 
     public decimal TotalPrice { get; set; } = 0;
 
-    public double Discount { get; set; } = 0;
+    public double Discount { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
-    public EventDto? Event { get; set; } = null;
-    
-    public UserDto? Author { get; set; } = null;
+    public EventDto? Event { get; set; }
 
-    public UserPaymentMethodDto? UserPaymentMethod { get; set; } = null;
+    public UserDto? Author { get; set; }
+
+    public UserPaymentMethodDto? UserPaymentMethod { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

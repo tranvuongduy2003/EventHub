@@ -4,7 +4,7 @@ using EventHub.Shared.DTOs.User;
 
 namespace EventHub.Application.Mappings;
 
-public class UserMapper
+public sealed class UserMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {

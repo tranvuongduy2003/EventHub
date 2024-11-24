@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.AggregateModels.ConversationAggregate;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Conversation;
 using EventHub.Shared.Helpers;
@@ -29,23 +30,25 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        var isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId));
+        bool isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId), cancellationToken);
         if (!isUserExisted)
+        {
             throw new NotFoundException("User does not exist!");
+        }
 
-
-        var messages = _unitOfWork.Messages
+        List<Message> messages = await _unitOfWork.Messages
             .FindAll()
-            .Include(x => x.Author);
+            .Include(x => x.Author)
+            .ToListAsync(cancellationToken);
 
-        var conversations = _unitOfWork.Conversations
+        List<Domain.AggregateModels.ConversationAggregate.Conversation> conversations = await _unitOfWork.Conversations
             .FindByCondition(x => x.EventId.Equals(request.UserId))
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)
-            .ToList();
+            .ToListAsync(cancellationToken);
 
-        var conversationWithMessages = (
+        var conversationsWithMessages = (
                 from _conversation in conversations
                 join _message in messages.DefaultIfEmpty()
                     on _conversation.Id equals _message.ConversationId
@@ -55,14 +58,13 @@ public class
             .AsEnumerable()
             .Select(group =>
             {
-                var conversation = group.Key;
+                Domain.AggregateModels.ConversationAggregate.Conversation conversation = group.Key;
                 conversation.LastMessage = group.MaxBy(x => x.Message.CreatedAt)?.Message;
                 return conversation;
             })
             .ToList();
 
-        var conversationDtos = _mapper.Map<List<ConversationDto>>(conversations);
-
+        List<ConversationDto> conversationDtos = _mapper.Map<List<ConversationDto>>(conversationsWithMessages);
 
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
     }

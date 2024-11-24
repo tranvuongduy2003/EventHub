@@ -15,25 +15,27 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
 
     public async Task Handle(PermanentlyDeleteEventCommand request, CancellationToken cancellationToken)
     {
-        var @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        Domain.AggregateModels.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        await _unitOfWork.Events.DeleteAsync(@event);
+        _unitOfWork.Events.Delete(@event);
 
-        await Domain.AggregateModels.EventAggregate.Event
+        Domain.AggregateModels.EventAggregate.Event
             .DeleteEventSubImages(@event.Id);
 
-        await Domain.AggregateModels.EventAggregate.Event
+        Domain.AggregateModels.EventAggregate.Event
             .DeleteEmailContent(@event.Id);
 
-        await Domain.AggregateModels.EventAggregate.Event
+        Domain.AggregateModels.EventAggregate.Event
             .DeleteEventTicketTypes(@event.Id);
 
-        await Domain.AggregateModels.EventAggregate.Event
+        Domain.AggregateModels.EventAggregate.Event
             .RemoveEventFromCategories(@event.Id);
 
-        await Domain.AggregateModels.EventAggregate.Event
+        Domain.AggregateModels.EventAggregate.Event
             .DeleteEventReasons(@event.Id);
 
         await _unitOfWork.CommitAsync();

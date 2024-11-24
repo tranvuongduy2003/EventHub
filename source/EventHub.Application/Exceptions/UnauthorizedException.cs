@@ -13,7 +13,7 @@ public class UnauthorizedException : HttpResponseException
     /// <param name="value">
     /// An optional object that provides additional information about the unauthorized request. This value is passed to the base exception class.
     /// </param>
-    public UnauthorizedException(object value = null) : base(401, value)
+    public UnauthorizedException(object? value = null) : base(401, value)
     {
     }
 }

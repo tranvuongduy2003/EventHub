@@ -15,11 +15,13 @@ public class DeleteFunctionCommandHandler : ICommandHandler<DeleteFunctionComman
 
     public async Task Handle(DeleteFunctionCommand request, CancellationToken cancellationToken)
     {
-        var function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
+        Domain.AggregateModels.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
         if (function is null)
+        {
             throw new NotFoundException("Function does not exist!");
+        }
 
-        await _unitOfWork.Functions.DeleteAsync(function);
+        _unitOfWork.Functions.Delete(function);
         await _unitOfWork.CommitAsync();
     }
 }

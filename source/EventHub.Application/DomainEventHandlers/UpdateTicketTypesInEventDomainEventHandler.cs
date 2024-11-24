@@ -2,7 +2,7 @@
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using Microsoft.Extensions.Logging;
+using EventHub.Shared.DTOs.Event;
 
 namespace EventHub.Application.DomainEventHandlers;
 
@@ -18,15 +18,15 @@ public class UpdateTicketTypesInEventDomainEventHandler : IDomainEventHandler<Up
     public async Task Handle(UpdateTicketTypesInEventDomainEvent notification, CancellationToken cancellationToken)
     {
         var createdTicketTypes = new List<TicketType>();
-        foreach (var ticketType in notification.TicketTypes)
+        foreach (UpdateTicketTypeDto ticketType in notification.TicketTypes)
         {
             if (ticketType.Id != null)
             {
-                var ticketTypeEntity = await _unitOfWork.TicketTypes.GetByIdAsync(ticketType.Id ?? new Guid());
+                TicketType ticketTypeEntity = await _unitOfWork.TicketTypes.GetByIdAsync((Guid)ticketType.Id);
                 ticketTypeEntity.Name = ticketType.Name;
                 ticketTypeEntity.Quantity = ticketType.Quantity;
                 ticketTypeEntity.Price = ticketType.Price;
-                await _unitOfWork.TicketTypes.UpdateAsync(ticketTypeEntity);
+                _unitOfWork.TicketTypes.Update(ticketTypeEntity);
             }
             else
             {

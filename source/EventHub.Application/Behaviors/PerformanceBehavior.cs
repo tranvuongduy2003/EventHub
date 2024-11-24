@@ -13,7 +13,7 @@ namespace EventHub.Application.Behaviors;
 public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PerformanceBehavior{TRequest, TResponse}"/> class.
@@ -21,7 +21,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     /// <param name="logger">
     /// An instance of <see cref="ILogger{TRequest}"/> used to log performance warnings.
     /// </param>
-    public PerformanceBehavior(ILogger<TRequest> logger)
+    public PerformanceBehavior(ILogger logger)
     {
         _timer = new Stopwatch();
         _logger = logger;
@@ -39,15 +39,15 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     {
         _timer.Start();
 
-        var response = await next();
+        TResponse response = await next();
 
         _timer.Stop();
 
-        var elapsedMilliseconds = _timer.ElapsedMilliseconds;
+        long elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
         if (elapsedMilliseconds > 500)
         {
-            var requestName = typeof(TRequest).Name;
+            string requestName = typeof(TRequest).Name;
 
             _logger.LogWarning(
                 "Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}",

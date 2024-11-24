@@ -2,7 +2,6 @@
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
@@ -17,16 +16,14 @@ public class MakeEventsPublicDomainEventHandler : IDomainEventHandler<MakeEvents
 
     public async Task Handle(MakeEventsPublicDomainEvent notification, CancellationToken cancellationToken)
     {
-        var events = _unitOfWork.CachedEvents
+        IQueryable<Domain.AggregateModels.EventAggregate.Event> events = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(notification.UserId))
             .Join(
                 notification.Events,
                 _event => _event.Id,
                 _id => _id, (_event, _id) => _event);
 
-        await events
-            .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(e => e.IsPrivate, false));
+        await events.ExecuteUpdateAsync(setters => setters.SetProperty(e => e.IsPrivate, false), cancellationToken);
 
         await _unitOfWork.CommitAsync();
     }

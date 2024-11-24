@@ -19,8 +19,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// Asynchronously updates an existing entity.
     /// </summary>
     /// <param name="entity">The entity to update.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task UpdateAsync(T entity);
+    void Update(T entity);
 
     #endregion
 
@@ -119,36 +118,32 @@ public interface IRepositoryBase<T> where T : EntityBase
     #region Deletion Methods
 
     /// <summary>
-    /// Asynchronously deletes an existing entity.
+    /// Deletes an existing entity.
     /// </summary>
     /// <param name="entity">The entity to delete.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task DeleteAsync(T entity);
+    void Delete(T entity);
 
     /// <summary>
-    /// Asynchronously deletes a list of entities.
+    /// Deletes a list of entities.
     /// </summary>
     /// <param name="entities">The list of entities to delete.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task DeleteListAsync(IEnumerable<T> entities);
+    void DeleteList(IEnumerable<T> entities);
 
     #endregion
 
     #region Soft Deletion and Restoration Methods
 
     /// <summary>
-    /// Asynchronously performs a soft delete on an entity. The entity is marked as deleted but not actually removed from the database.
+    /// Performs a soft delete on an entity. The entity is marked as deleted but not actually removed from the database.
     /// </summary>
     /// <param name="entity">The entity to soft delete.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task SoftDeleteAsync(T entity);
+    void SoftDelete(T entity);
 
     /// <summary>
-    /// Asynchronously restores a soft-deleted entity. The entity is marked as active again.
+    /// Restores a soft-deleted entity. The entity is marked as active again.
     /// </summary>
     /// <param name="entity">The entity to restore.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task RestoreAsync(T entity);
+    void Restore(T entity);
 
     #endregion
 }

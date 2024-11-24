@@ -39,10 +39,10 @@ public class UpdateEventDto
     [SwaggerSchema("Optional promotion percentage for the event")]
     public double? Promotion { get; set; } = 0;
 
-    [SwaggerSchema("Type of event cycle (e.g., SINGLE, RECURRING)")]
+    [SwaggerSchema("Type of event cycle (e.g., ONETIME, RECURRING)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    [DefaultValue(nameof(EEventCycleType.SINGLE))]
-    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
+    [DefaultValue(nameof(EEventCycleType.ONETIME))]
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
 
     [SwaggerSchema("Payment type for the event (e.g., FREE, PAID)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -54,14 +54,14 @@ public class UpdateEventDto
     public bool IsPrivate { get; set; } = false;
 
     [SwaggerSchema("List of categories associated with the event")]
-    [DefaultValue(new[] { "Technology", "Conference" })]
+    [DefaultValue(typeof(string[]))]
     public List<Guid> Categories { get; set; } = new();
 
     [SwaggerSchema("Types of tickets available for the event")]
     public IEnumerable<string>? TicketTypes { get; set; } = new List<string>();
 
     [SwaggerSchema("Optional reasons associated with the event")]
-    [DefaultValue(new[] { "Networking", "Learning" })]
+    [DefaultValue(typeof(string[]))]
     public IEnumerable<string>? Reasons { get; set; } = new List<string>();
 
     [SwaggerSchema("Additional images for the event")]

@@ -4,6 +4,7 @@ using EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 using EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Conversation;
+using EventHub.Shared.DTOs.Message;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
 using EventHub.Shared.HttpResponses;
@@ -44,7 +45,7 @@ public class ConversationsController : ControllerBase
         _logger.LogInformation("START: GetConversationsByEvent");
         try
         {
-            var conversations = await _mediator.Send(new GetConversationsByEventIdQuery(eventId, filter));
+            Pagination<ConversationDto> conversations = await _mediator.Send(new GetConversationsByEventIdQuery(eventId, filter));
 
             _logger.LogInformation("END: GetConversationsByEvent");
 
@@ -53,10 +54,6 @@ public class ConversationsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -77,7 +74,7 @@ public class ConversationsController : ControllerBase
         _logger.LogInformation("START: GetConversationsByUser");
         try
         {
-            var conversations = await _mediator.Send(new GetConversationsByUserIdQuery(userId, filter));
+            Pagination<ConversationDto> conversations = await _mediator.Send(new GetConversationsByUserIdQuery(userId, filter));
 
             _logger.LogInformation("END: GetConversationsByUser");
 
@@ -87,10 +84,6 @@ public class ConversationsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpGet("{conversationId:guid}/messages")]
@@ -99,7 +92,7 @@ public class ConversationsController : ControllerBase
         Description =
             "Fetches a paginated list of messages created by the conversation, based on the provided pagination filter."
     )]
-    [SwaggerResponse(200, "Successfully retrieved the list of messages", typeof(Pagination<ConversationDto>))]
+    [SwaggerResponse(200, "Successfully retrieved the list of messages", typeof(Pagination<MessageDto>))]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Conversation with the specified ID not found")]
@@ -110,7 +103,7 @@ public class ConversationsController : ControllerBase
         _logger.LogInformation("START: GetMessagesByConversation");
         try
         {
-            var conversations = await _mediator.Send(new GetMessagesByConversationIdQuery(conversationId, filter));
+            Pagination<MessageDto> conversations = await _mediator.Send(new GetMessagesByConversationIdQuery(conversationId, filter));
 
             _logger.LogInformation("END: GetMessagesByConversation");
 
@@ -119,10 +112,6 @@ public class ConversationsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

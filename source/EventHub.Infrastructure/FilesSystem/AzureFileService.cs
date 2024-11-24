@@ -1,7 +1,8 @@
-﻿using Azure.Storage;
+﻿using Azure;
+using Azure.Storage;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Shared.DTOs.File;
 using EventHub.Shared.Settings;
@@ -34,16 +35,16 @@ public class AzureFileService : IFileService
         _azureBlobStorage = azureBlobStorage;
 
         var credential = new StorageSharedKeyCredential(_azureBlobStorage.StorageAccount, _azureBlobStorage.Key);
-        var blobUri =
+        string blobUri =
             $"https://{_azureBlobStorage.StorageAccount}.blob.core.windows.net/{_azureBlobStorage.ContainerName}";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
         _filesContainer = blobServiceClient.GetBlobContainerClient(_azureBlobStorage.ContainerName);
     }
 
-    public async Task<string> GetUriByFileNameAsync(string container, string fileName,
+    public Uri GetUriByFileNameAsync(string container, string fileName,
         string? storedPolicyName = null)
     {
-        var blobClient = _filesContainer.GetBlobClient($"{container}/{fileName}");
+        BlobClient blobClient = _filesContainer.GetBlobClient($"{container}/{fileName}");
 
         // Check if BlobContainerClient object has been authorized with Shared Key
         if (blobClient != null && blobClient.CanGenerateSasUri)
@@ -67,9 +68,9 @@ public class AzureFileService : IFileService
                 sasBuilder.Identifier = storedPolicyName;
             }
 
-            var sasURI = blobClient.GenerateSasUri(sasBuilder);
+            Uri sasURI = blobClient.GenerateSasUri(sasBuilder);
 
-            return sasURI.ToString();
+            return sasURI;
         }
 
         // Client object is not authorized via Shared Key
@@ -80,11 +81,11 @@ public class AzureFileService : IFileService
     {
         List<BlobDto> files = new();
 
-        await foreach (var file in _filesContainer.GetBlobsAsync())
+        await foreach (BlobItem file in _filesContainer.GetBlobsAsync())
         {
-            var uri = _filesContainer.Uri.ToString();
-            var name = file.Name;
-            var fullUri = $"{uri}/{name}";
+            string uri = _filesContainer.Uri.ToString();
+            string name = file.Name;
+            string fullUri = $"{uri}/{name}";
 
             files.Add(new BlobDto
             {
@@ -100,7 +101,7 @@ public class AzureFileService : IFileService
     public async Task<BlobResponseDto> UploadAsync(IFormFile blob, string container)
     {
         BlobResponseDto response = new();
-        var client = _filesContainer.GetBlobClient($"{container}/{blob.FileName}");
+        BlobClient client = _filesContainer.GetBlobClient($"{container}/{blob.FileName}");
 
         if (await client.ExistsAsync())
         {
@@ -113,7 +114,7 @@ public class AzureFileService : IFileService
         }
         else
         {
-            await using (var data = blob.OpenReadStream())
+            await using (Stream data = blob.OpenReadStream())
             {
                 await client.UploadAsync(data);
             }
@@ -131,19 +132,17 @@ public class AzureFileService : IFileService
 
     public async Task<BlobDto?> DownloadAsync(string container, string filename)
     {
-        var file = _filesContainer.GetBlobClient($"{container}/{filename}");
+        BlobClient blobClient = _filesContainer.GetBlobClient($"{container}/{filename}");
 
-        if (await file.ExistsAsync())
+        if (await blobClient.ExistsAsync())
         {
-            var data = await file.OpenReadAsync();
-            var blobContent = data;
+            Stream data = await blobClient.OpenReadAsync();
 
-            var content = await file.DownloadContentAsync();
+            Response<BlobDownloadResult> content = await blobClient.DownloadContentAsync();
 
-            var name = filename;
-            var contentType = content.Value.Details.ContentType;
+            string contentType = content.Value.Details.ContentType;
 
-            return new BlobDto { Content = blobContent, Name = name, ContentType = contentType };
+            return new BlobDto { Content = data, Name = filename, ContentType = contentType };
         }
 
         return null;
@@ -151,9 +150,9 @@ public class AzureFileService : IFileService
 
     public async Task<BlobResponseDto> DeleteAsync(string container, string filename)
     {
-        var file = _filesContainer.GetBlobClient($"{container}/{filename}");
+        BlobClient blobClient = _filesContainer.GetBlobClient($"{container}/{filename}");
 
-        await file.DeleteIfExistsAsync();
+        await blobClient.DeleteIfExistsAsync();
 
         return new BlobResponseDto { Error = false, Status = $"File: {filename} has been successfully deleted" };
     }

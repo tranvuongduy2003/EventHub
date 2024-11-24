@@ -42,5 +42,5 @@ public interface ICacheService
     /// This method removes the data associated with the specified key from the cache.
     /// If the key does not exist in the cache, this method will return null.
     /// </remarks>
-    Task<object> RemoveData(string key);
+    Task<bool> RemoveData(string key);
 }

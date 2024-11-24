@@ -4,7 +4,7 @@ using EventHub.Shared.DTOs.Function;
 
 namespace EventHub.Application.Mappings;
 
-public class FunctionMapper
+public sealed class FunctionMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {

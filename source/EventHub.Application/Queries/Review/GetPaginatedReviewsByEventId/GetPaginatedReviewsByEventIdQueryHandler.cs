@@ -24,18 +24,19 @@ public class
     public async Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-        var isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
+        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
         if (!isEventExisted)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        var reviews = await _unitOfWork.CachedReviews
+        List<Domain.AggregateModels.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
             .FindByCondition(x => x.EventId.Equals(request.EventId))
             .Include(x => x.Event)
             .Include(x => x.Author)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
-
+        List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
 
         return PagingHelper.Paginate<ReviewDto>(reviewDtos, request.Filter);
     }

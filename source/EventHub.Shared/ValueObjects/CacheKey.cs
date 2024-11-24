@@ -1,6 +1,6 @@
 ﻿namespace EventHub.Shared.ValueObjects;
 
-public class CacheKey
+public static class CacheKey
 {
     public const string AUTH = "AUTH";
 

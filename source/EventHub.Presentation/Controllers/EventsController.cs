@@ -48,18 +48,13 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> GetPaginatedEvents([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedEvents");
-        try
-        {
-            var events = await _mediator.Send(new GetPaginatedEventsQuery(filter));
 
-            _logger.LogInformation("END: GetPaginatedEvents");
+        Pagination<EventDto> events = await _mediator.Send(new GetPaginatedEventsQuery(filter));
 
-            return Ok(new ApiOkResponse(events));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedEvents");
+
+        return Ok(new ApiOkResponse(events));
+
     }
 
     [HttpGet("{eventId:guid}")]
@@ -67,7 +62,7 @@ public class EventsController : ControllerBase
         Summary = "Retrieve a event by its ID",
         Description = "Fetches the details of a specific event based on the provided event ID."
     )]
-    [SwaggerResponse(200, "Successfully retrieved the event", typeof(EventDto))]
+    [SwaggerResponse(200, "Successfully retrieved the event", typeof(EventDetailDto))]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
@@ -78,7 +73,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: GetEventById");
         try
         {
-            var @event = await _mediator.Send(new GetEventByIdQuery(eventId));
+            EventDetailDto @event = await _mediator.Send(new GetEventByIdQuery(eventId));
 
             _logger.LogInformation("END: GetEventById");
 
@@ -87,10 +82,6 @@ public class EventsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -112,21 +103,20 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PostCreateEvent");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
-            var events = await _mediator.Send(new CreateEventCommand(request, userId));
+            EventDto @event = await _mediator.Send(new CreateEventCommand(request, userId));
 
             _logger.LogInformation("END: PostCreateEvent");
 
-            return Ok(new ApiOkResponse(events));
+            return Ok(new ApiOkResponse(@event));
         }
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -143,20 +133,18 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> GetCreatedEvents([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetCreatedEvents");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            var events = await _mediator.Send(new GetCreatedEventsByUserIdQuery(userId, filter));
-
-            _logger.LogInformation("END: GetCreatedEvents");
-
-            return Ok(new ApiOkResponse(events));
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        Pagination<EventDto> events = await _mediator.Send(new GetCreatedEventsByUserIdQuery(userId, filter));
+
+        _logger.LogInformation("END: GetCreatedEvents");
+
+        return Ok(new ApiOkResponse(events));
+
     }
 
     [HttpPut("{eventId:guid}")]
@@ -178,7 +166,10 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PutUpdateEvent");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
             await _mediator.Send(new UpdateEventCommand(eventId, request, userId));
 
@@ -193,10 +184,6 @@ public class EventsController : ControllerBase
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -216,7 +203,10 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: DeleteEvent");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
             await _mediator.Send(new DeleteEventCommand(userId, eventId));
 
@@ -227,10 +217,6 @@ public class EventsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -260,10 +246,6 @@ public class EventsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpPatch("restore")]
@@ -279,20 +261,17 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> PatchRestoreDeletedEvent([FromBody] List<Guid> events)
     {
         _logger.LogInformation("START: PatchRestoreDeletedEvent");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            await _mediator.Send(new RestoreEventCommand(userId, events));
-
-            _logger.LogInformation("END: PatchRestoreDeletedEvent");
-
-            return Ok(new ApiOkResponse());
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        await _mediator.Send(new RestoreEventCommand(userId, events));
+
+        _logger.LogInformation("END: PatchRestoreDeletedEvent");
+
+        return Ok(new ApiOkResponse());
     }
 
     [HttpGet("get-deleted-events")]
@@ -309,20 +288,17 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> GetDeletedEvents([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetDeletedEvents");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            var events = await _mediator.Send(new GetDeletedEventsByUserIdQuery(userId, filter));
-
-            _logger.LogInformation("END: GetDeletedEvents");
-
-            return Ok(new ApiOkResponse(events));
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        Pagination<EventDto> events = await _mediator.Send(new GetDeletedEventsByUserIdQuery(userId, filter));
+
+        _logger.LogInformation("END: GetDeletedEvents");
+
+        return Ok(new ApiOkResponse(events));
     }
 
     [HttpPatch("favourite/{eventId:guid}")]
@@ -342,7 +318,10 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchFavouriteEvent");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
             await _mediator.Send(new FavouriteEventCommand(userId, eventId));
 
@@ -357,10 +336,6 @@ public class EventsController : ControllerBase
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -380,7 +355,10 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchUnfavouriteEvent");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
             await _mediator.Send(new UnfavouriteEventCommand(userId, eventId));
 
@@ -395,10 +373,6 @@ public class EventsController : ControllerBase
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -416,20 +390,17 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> GetFavouriteEvents([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetFavouriteEvents");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            var events = await _mediator.Send(new GetFavouriteEventsByUserIdQuery(userId, filter));
-
-            _logger.LogInformation("END: GetFavouriteEvents");
-
-            return Ok(new ApiOkResponse(events));
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        Pagination<EventDto> events = await _mediator.Send(new GetFavouriteEventsByUserIdQuery(userId, filter));
+
+        _logger.LogInformation("END: GetFavouriteEvents");
+
+        return Ok(new ApiOkResponse(events));
     }
 
     [HttpPatch("make-events-private")]
@@ -445,20 +416,17 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> PatchMakeEventsPrivate([FromBody] List<Guid> events)
     {
         _logger.LogInformation("START: PatchMakeEventsPrivate");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            await _mediator.Send(new MakeEventsPrivateCommand(userId, events));
-
-            _logger.LogInformation("END: PatchMakeEventsPrivate");
-
-            return Ok(new ApiOkResponse());
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        await _mediator.Send(new MakeEventsPrivateCommand(userId, events));
+
+        _logger.LogInformation("END: PatchMakeEventsPrivate");
+
+        return Ok(new ApiOkResponse());
     }
 
     [HttpPatch("make-events-public")]
@@ -474,19 +442,17 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> PatchMakeEventsPublic([FromBody] List<Guid> events)
     {
         _logger.LogInformation("START: PatchMakeEventsPublic");
-        try
+
+        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
-
-            await _mediator.Send(new MakeEventsPublicCommand(userId, events));
-
-            _logger.LogInformation("END: PatchMakeEventsPublic");
-
-            return Ok(new ApiOkResponse());
+            userId = Guid.NewGuid();
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+
+        await _mediator.Send(new MakeEventsPublicCommand(userId, events));
+
+        _logger.LogInformation("END: PatchMakeEventsPublic");
+
+        return Ok(new ApiOkResponse());
     }
 }

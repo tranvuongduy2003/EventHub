@@ -123,8 +123,5 @@ public interface IHangfireService
     /// </returns>
     string Schedule(Expression<Action> functionCall, DateTimeOffset enqueueAt);
 
-    // Note: The generic version of this method is commented out and may be implemented in the future.
-    // string Schedule<T>(Expression<Action<T>> functionCall, DateTimeOffset enqueueAt);
-
     #endregion
 }

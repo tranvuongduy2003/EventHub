@@ -52,7 +52,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: SignUp");
         try
         {
-            var signUpResponse = await _mediator.Send(new SignUpCommand(dto));
+            SignInResponseDto signUpResponse = await _mediator.Send(new SignUpCommand(dto));
 
             _logger.LogInformation("END: SignUp");
 
@@ -61,10 +61,6 @@ public class AuthController : ControllerBase
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -93,10 +89,6 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpPost("signin")]
@@ -114,7 +106,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: SignIn");
         try
         {
-            var signInResponse = await _mediator.Send(new SignInCommand(dto));
+            SignInResponseDto signInResponse = await _mediator.Send(new SignInCommand(dto));
 
             _logger.LogInformation("END: SignIn");
 
@@ -128,10 +120,6 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(new ApiUnauthorizedResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpPost("signout")]
@@ -141,23 +129,18 @@ public class AuthController : ControllerBase
     )]
     [SwaggerResponse(200, "Successfully signed out")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    public async Task<IActionResult> SignOut()
+    public async Task<IActionResult> LogOut()
     {
-        _logger.LogInformation("START: SignOut");
-        try
-        {
-            await _mediator.Send(new SignOutCommand());
+        _logger.LogInformation("START: LogOut");
 
-            _logger.LogInformation("END: SignOut");
+        await _mediator.Send(new SignOutCommand());
 
-            Response.Cookies.Delete("AuthTokenHolder");
+        _logger.LogInformation("END: LogOut");
 
-            return Ok(new ApiOkResponse());
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        Response.Cookies.Delete("AuthTokenHolder");
+
+        return Ok(new ApiOkResponse());
+
     }
 
     [HttpPost("external-login")]
@@ -167,23 +150,21 @@ public class AuthController : ControllerBase
             "Authenticates the user using an external authentication provider (e.g., Google, Facebook) and returns a login response if successful."
     )]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    public async Task<IActionResult> ExternalLogin(string provider, string returnUrl)
+    public async Task<IActionResult> ExternalLogin(string provider, Uri returnUrl)
     {
         _logger.LogInformation("START: ExternalLogin");
-        try
+
+        if (User.Identity != null)
         {
-            if (User.Identity != null) await _mediator.Send(new SignOutCommand());
-
-            var externalLoginResponse = await _mediator.Send(new ExternalLoginCommand(provider, returnUrl));
-
-            _logger.LogInformation("END: ExternalLogin");
-
-            return Challenge(externalLoginResponse.Properties, externalLoginResponse.Provider);
+            await _mediator.Send(new SignOutCommand());
         }
-        catch (Exception)
-        {
-            throw;
-        }
+
+        ExternalLoginDto externalLoginResponse = await _mediator.Send(new ExternalLoginCommand(provider, returnUrl));
+
+        _logger.LogInformation("END: ExternalLogin");
+
+        return Challenge(externalLoginResponse.Properties, externalLoginResponse.Provider);
+
     }
 
     [HttpGet("external-auth-callback")]
@@ -194,12 +175,12 @@ public class AuthController : ControllerBase
     )]
     [SwaggerResponse(400, "Bad Request - Invalid or missing returnUrl parameter")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the authentication callback")]
-    public async Task<IActionResult> ExternalLoginCallback([FromQuery] string returnUrl)
+    public async Task<IActionResult> ExternalLoginCallback([FromQuery] Uri returnUrl)
     {
         _logger.LogInformation("START: ExternalLoginCallback");
         try
         {
-            var signInResponse = await _mediator.Send(new ExternalLoginCallbackCommand(returnUrl));
+            SignInResponseDto signInResponse = await _mediator.Send(new ExternalLoginCallbackCommand(returnUrl));
 
             var options = new CookieOptions
             {
@@ -219,15 +200,11 @@ public class AuthController : ControllerBase
 
             _logger.LogInformation("END: ExternalLoginCallback");
 
-            return Redirect(returnUrl);
+            return Redirect(returnUrl.ToString());
         }
         catch (BadRequestException e)
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -246,12 +223,12 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: RefreshToken");
         try
         {
-            var accessToken = Request
+            string accessToken = Request
                 .Headers[HeaderNames.Authorization]
                 .ToString()
                 .Replace("Bearer ", "");
 
-            var refreshTokenResponse = await _mediator.Send(new RefreshTokenCommand(dto.RefreshToken, accessToken));
+            SignInResponseDto refreshTokenResponse = await _mediator.Send(new RefreshTokenCommand(dto.RefreshToken, accessToken));
 
             _logger.LogInformation("END: RefreshToken");
 
@@ -260,10 +237,6 @@ public class AuthController : ControllerBase
         catch (UnauthorizedException e)
         {
             return Unauthorized(new ApiUnauthorizedResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -292,10 +265,6 @@ public class AuthController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -330,10 +299,6 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new BadRequestException(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpGet("profile")]
@@ -351,9 +316,12 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            Guid.TryParse(HttpContext.Items["AuthorId"].ToString(), out var userId);
+            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            {
+                userId = Guid.NewGuid();
+            }
 
-            var user = await _mediator.Send(new GetUserProfileQuery(userId));
+            UserDto user = await _mediator.Send(new GetUserProfileQuery(userId));
 
             _logger.LogInformation("END: GetUserProfile");
 
@@ -362,10 +330,6 @@ public class AuthController : ControllerBase
         catch (UnauthorizedException e)
         {
             return Unauthorized(new ApiUnauthorizedResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

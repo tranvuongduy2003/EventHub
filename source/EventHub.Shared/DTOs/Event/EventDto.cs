@@ -56,9 +56,9 @@ public class EventDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventStatus? Status { get; set; }
 
-    [SwaggerSchema("Cycle type of the event (e.g., SINGLE, RECURRING)")]
+    [SwaggerSchema("Cycle type of the event (e.g., ONETIME, RECURRING)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
 
     [SwaggerSchema("Payment type for the event (e.g., FREE, PAID)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]

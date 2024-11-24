@@ -5,22 +5,22 @@ namespace EventHub.Domain.AggregateModels.PermissionAggregate;
 
 public class PermissionAggregateRoot : AggregateRoot
 {
-    public static async Task EnableCommandInFunction(string functionId, string commandId)
+    public static void EnableCommandInFunction(string functionId, string commandId)
     {
         new PermissionAggregateRoot().RaiseDomainEvent(new EnableCommandInFunctionDomainEvent(Guid.NewGuid(), functionId, commandId));
     }
-    
-    public static async Task DisableCommandInFunction(string functionId, string commandId)
+
+    public static void DisableCommandInFunction(string functionId, string commandId)
     {
         new PermissionAggregateRoot().RaiseDomainEvent(new DisableCommandInFunctionDomainEvent(Guid.NewGuid(), functionId, commandId));
     }
-    
-    public static async Task AddFunctionToRole(string functionId, Guid roleId)
+
+    public static void AddFunctionToRole(string functionId, Guid roleId)
     {
         new PermissionAggregateRoot().RaiseDomainEvent(new AddFunctionToRoleDomainEvent(Guid.NewGuid(), functionId, roleId));
     }
-    
-    public static async Task RemoveFunctionFromRole(string functionId, Guid roleId)
+
+    public static void RemoveFunctionFromRole(string functionId, Guid roleId)
     {
         new PermissionAggregateRoot().RaiseDomainEvent(new RemoveFunctionFromRoleDomainEvent(Guid.NewGuid(), functionId, roleId));
     }

@@ -1,5 +1,4 @@
 using AutoMapper;
-using EventHub.Abstractions;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Abstractions.Services;
 using EventHub.Domain.SeedWork.Query;
@@ -31,28 +30,27 @@ public class
     public async Task<Pagination<UserDto>> Handle(GetPaginatedFollowingUsersQuery request,
         CancellationToken cancellationToken)
     {
-        var key = $"user:following:{request.UserId}";
+        string key = $"user:following:{request.UserId}";
 
-        var users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
+        List<Domain.AggregateModels.UserAggregate.User> users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
 
         if (users == null || !users.Any())
         {
             users = await _userManager.Users
                 .AsNoTracking()
                 .Where(x => x.IsDeleted.Equals(false))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             await _cacheService.SetData<List<Domain.AggregateModels.UserAggregate.User>>(key, users,
                 TimeSpan.FromMinutes(2));
         }
 
-        var followingUsers = await _unitOfWork.UserFollowers
+        List<Domain.AggregateModels.UserAggregate.User> followingUsers = await _unitOfWork.UserFollowers
             .FindByCondition(x => x.FollowerId.Equals(request.UserId))
             .Join(users, userFollower => userFollower.FollowedId, user => user.Id, (_, user) => user)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var followingUserDtos = _mapper.Map<List<UserDto>>(followingUsers);
-
+        List<UserDto> followingUserDtos = _mapper.Map<List<UserDto>>(followingUsers);
 
         return PagingHelper.Paginate<UserDto>(followingUserDtos, request.Filter);
     }

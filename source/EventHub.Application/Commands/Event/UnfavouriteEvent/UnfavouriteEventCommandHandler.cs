@@ -10,7 +10,10 @@ public class UnfavouriteEventCommandHandler : ICommandHandler<UnfavouriteEventCo
 
     public async Task Handle(UnfavouriteEventCommand request, CancellationToken cancellationToken)
     {
-        await Domain.AggregateModels.EventAggregate.Event
+        await Task.Run(() =>
+        {
+            Domain.AggregateModels.EventAggregate.Event
             .UnfavouriteEvent(request.UserId, request.EventId);
+        }, cancellationToken);
     }
 }

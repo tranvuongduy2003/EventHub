@@ -18,13 +18,15 @@ public class UpdateFunctionCommandHandler : ICommandHandler<UpdateFunctionComman
 
     public async Task Handle(UpdateFunctionCommand request, CancellationToken cancellationToken)
     {
-        var function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
+        Domain.AggregateModels.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
         if (function is null)
+        {
             throw new NotFoundException("Function does not exist!");
+        }
 
         function = _mapper.Map<Domain.AggregateModels.PermissionAggregate.Function>(request.Function);
 
-        await _unitOfWork.Functions.UpdateAsync(function);
+        _unitOfWork.Functions.Update(function);
         await _unitOfWork.CommitAsync();
     }
 }

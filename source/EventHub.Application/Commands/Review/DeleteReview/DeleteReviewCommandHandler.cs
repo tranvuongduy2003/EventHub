@@ -15,11 +15,13 @@ public class DeleteReviewCommandHandler : ICommandHandler<DeleteReviewCommand>
 
     public async Task Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
     {
-        var review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
+        Domain.AggregateModels.ReviewAggregate.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
         if (review is null)
+        {
             throw new NotFoundException("Review does not exist!");
+        }
 
-        await _unitOfWork.Reviews.SoftDeleteAsync(review);
+        _unitOfWork.Reviews.SoftDelete(review);
         await _unitOfWork.CommitAsync();
     }
 }

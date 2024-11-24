@@ -8,9 +8,12 @@ public class ApiUnauthorizedResponse : ApiResponse
     public ApiUnauthorizedResponse(ModelStateDictionary modelState)
         : base(401)
     {
-        if (modelState.IsValid) throw new ArgumentException("ModelState must be invalid", nameof(modelState));
+        if (modelState.IsValid)
+        {
+            throw new ArgumentException("ModelState must be invalid", nameof(modelState));
+        }
 
-        Errors = Enumerable.ToArray<string>(modelState.SelectMany(x => x.Value.Errors)
+        Errors = Enumerable.ToArray<string>(modelState.SelectMany(x => x.Value!.Errors)
                 .Select(x => x.ErrorMessage));
     }
 

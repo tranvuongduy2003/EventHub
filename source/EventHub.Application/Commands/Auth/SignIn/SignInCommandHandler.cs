@@ -1,4 +1,3 @@
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
@@ -25,22 +24,29 @@ public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInRespons
 
     public async Task<SignInResponseDto> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
-        var user = _userManager.Users.FirstOrDefault(u =>
+        Domain.AggregateModels.UserAggregate.User user = _userManager.Users.FirstOrDefault(u =>
             u.Email == request.Identity || u.PhoneNumber == request.Identity);
         if (user == null)
+        {
             throw new NotFoundException("Invalid credentials");
+        }
 
-        var isValid = await _userManager.CheckPasswordAsync(user, request.Password);
-        if (isValid == false) throw new UnauthorizedException("Invalid credentials");
+        bool isValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        if (!isValid)
+        {
+            throw new UnauthorizedException("Invalid credentials");
+        }
 
         if (user.Status == EUserStatus.INACTIVE)
+        {
             throw new UnauthorizedException("Your account was disabled");
+        }
 
         await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
 
-        var accessToken = await _tokenService
+        string accessToken = await _tokenService
             .GenerateAccessTokenAsync(user);
-        var refreshToken = await _userManager
+        string refreshToken = await _userManager
             .GenerateUserTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH);
 
         await _userManager.SetAuthenticationTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH, refreshToken);

@@ -14,7 +14,7 @@ public class MessageDto
 
     public string? AudioUrl { get; set; } = string.Empty;
 
-    public AuthorDto? Author { get; set; } = null;
+    public AuthorDto? Author { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

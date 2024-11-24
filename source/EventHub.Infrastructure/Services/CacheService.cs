@@ -1,5 +1,4 @@
-﻿using EventHub.Abstractions;
-using EventHub.Abstractions.Services;
+﻿using EventHub.Abstractions.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 
@@ -39,52 +38,59 @@ public class CacheService : ICacheService
 
     public async Task<T> GetData<T>(string key)
     {
-        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>(key: {key})");
+        _logger.Information("BEGIN: GetData<{DataType}>(key: {KeyName})", typeof(T).Name, key);
 
-        var value = await _redisCacheService.GetStringAsync(key);
+        string value = await _redisCacheService.GetStringAsync(key);
         if (!string.IsNullOrEmpty(value))
+        {
             return _serializeService.Deserialize<T>(value);
+        }
 
-        _logger.Information($"END: GetData<{typeof(T).Name}>");
+        _logger.Information("END: GetData<{DataType}>", typeof(T).Name);
 
         return default;
     }
 
-    public async Task<bool> SetData<T>(string key, T value, TimeSpan? expirationTime = null)
+    public async Task<bool> SetData<T>(string key, T value, TimeSpan? expirationTime)
     {
-        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>(key: {key}, value: {value})");
+        _logger.Information("BEGIN: GetData<{DataType}>(key: {KeyName}, value: {Value})", typeof(T).Name, key, value);
 
         var options = new DistributedCacheEntryOptions();
+
         if (expirationTime.HasValue)
+        {
             options.SetAbsoluteExpiration(expirationTime.Value);
+        }
 
         await _redisCacheService.SetStringAsync(key, _serializeService.Serialize(value), options);
 
-        _logger.Information($"BEGIN: GetData<{typeof(T).Name}>");
+        _logger.Information("END: GetData<{DataType}>", typeof(T).Name);
 
         return true;
     }
 
-    public async Task<object> RemoveData(string key)
+    public async Task<bool> RemoveData(string key)
     {
         try
         {
-            _logger.Information($"BEGIN: RemoveData(key: {key})");
+            _logger.Information("BEGIN: RemoveData(key: {KeyName})", key);
 
-            var value = await _redisCacheService.GetStringAsync(key);
+            string value = await _redisCacheService.GetStringAsync(key);
             if (string.IsNullOrEmpty(value))
+            {
                 throw new Exception("Value is null or empty!");
+            }
 
             await _redisCacheService.RemoveAsync(key);
 
-            _logger.Information($"END: RemoveData");
+            _logger.Information("END: RemoveData");
 
             return true;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.Error("RemoveData: " + e.Message);
-            throw;
+            _logger.Error(ex, "RemoveData: {Message}", ex.Message);
+            return false;
         }
     }
 }

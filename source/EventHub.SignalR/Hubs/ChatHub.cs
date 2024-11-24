@@ -2,6 +2,7 @@
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.ConversationAggregate;
+using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.AggregateModels.UserAggregate;
 using EventHub.Infrastructure.FilterAttributes;
 using EventHub.Shared.DTOs.Conversation;
@@ -46,22 +47,30 @@ public class ChatHub : Hub
     {
         _logger.LogInformation("BEGIN: JoinChatRoom");
 
-        var @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
+        {
             throw new NotFoundException("Event does not exist");
+        }
 
         if (@event.AuthorId != request.HostId)
+        {
             throw new BadRequestException("Host does not belong to the event");
+        }
 
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
+        {
             throw new NotFoundException("User does not exist");
+        }
 
-        var host = await _userManager.FindByIdAsync(request.HostId.ToString());
+        User host = await _userManager.FindByIdAsync(request.HostId.ToString());
         if (host == null)
+        {
             throw new NotFoundException("Host does not exist");
+        }
 
-        var conversation = await _unitOfWork.Conversations
+        Conversation conversation = await _unitOfWork.Conversations
             .FindByCondition(x =>
                 x.HostId.Equals(request.HostId)
                 && x.EventId.Equals(request.EventId)
@@ -83,9 +92,9 @@ public class ChatHub : Hub
             await _unitOfWork.Conversations.CreateAsync(createdConversation);
             await _unitOfWork.CommitAsync();
 
-            var conversationDto = _mapper.Map<ConversationDto>(conversation);
+            ConversationDto conversationDto = _mapper.Map<ConversationDto>(conversation);
 
-            _logger.LogInformation($"JoinChatRoom: Created Context Connection id: {Context.ConnectionId}");
+            _logger.LogInformation("JoinChatRoom: Created Context Connection id: {ConnectionId}", Context.ConnectionId);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, createdConversation.Id.ToString());
 
@@ -96,9 +105,9 @@ public class ChatHub : Hub
         }
         else
         {
-            var conversationDto = _mapper.Map<ConversationDto>(conversation);
+            ConversationDto conversationDto = _mapper.Map<ConversationDto>(conversation);
 
-            _logger.LogInformation($"JoinChatRoom: Joined Context Connection id: {Context.ConnectionId}");
+            _logger.LogInformation("JoinChatRoom: Joined Context Connection id: {ConnectionId}", Context.ConnectionId);
 
             if (!_connections.Contains(conversation.Id))
             {
@@ -117,13 +126,17 @@ public class ChatHub : Hub
     {
         _logger.LogInformation("BEGIN: SendMessage");
 
-        var conversation = await _unitOfWork.Conversations.GetByIdAsync(request.ConversationId);
+        Conversation conversation = await _unitOfWork.Conversations.GetByIdAsync(request.ConversationId);
         if (conversation == null)
+        {
             throw new NotFoundException("Conversation does not exist");
+        }
 
-        var user = await _userManager.FindByIdAsync(request.AuthorId.ToString());
+        User user = await _userManager.FindByIdAsync(request.AuthorId.ToString());
         if (user == null)
+        {
             throw new NotFoundException("User does not exist");
+        }
 
         var message = new Message
         {
@@ -142,9 +155,9 @@ public class ChatHub : Hub
         await _unitOfWork.Messages.CreateAsync(message);
         await _unitOfWork.CommitAsync();
 
-        var messageDto = _mapper.Map<MessageDto>(message);
+        MessageDto messageDto = _mapper.Map<MessageDto>(message);
 
-        _logger.LogInformation($"SendMessage: Context Connection id: {Context.ConnectionId}");
+        _logger.LogInformation("SendMessage: Context Connection id: {ConnectionId}", Context.ConnectionId);
 
         if (!_connections.Contains(conversation.Id))
         {

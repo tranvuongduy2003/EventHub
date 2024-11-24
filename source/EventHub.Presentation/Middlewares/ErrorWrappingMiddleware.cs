@@ -22,7 +22,7 @@ public class ErrorWrappingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            _logger.LogError(ex, "{ErrorMessage}", ex.Message);
 
             context.Response.StatusCode = 500;
         }
@@ -33,7 +33,7 @@ public class ErrorWrappingMiddleware
 
             var response = new ApiResponse(context.Response.StatusCode);
 
-            var json = JsonConvert.SerializeObject(response);
+            string json = JsonConvert.SerializeObject(response);
 
             await context.Response.WriteAsync(json);
         }

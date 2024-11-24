@@ -24,7 +24,7 @@ public class PermissionsController : ControllerBase
         _logger = logger;
         _mediator = mediator;
     }
-    
+
     [HttpGet]
     [SwaggerOperation(
         Summary = "Retrieve all permissions for a function",
@@ -35,23 +35,18 @@ public class PermissionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetFullPermissions(string functionId)
+    public async Task<IActionResult> GetFullPermissions()
     {
         _logger.LogInformation("START: GetFullPermissions");
-        try
-        {
-            var permissions = await _mediator.Send(new GetFullPermissionsQuery());
 
-            _logger.LogInformation("END: GetFullPermissions");
+        List<FullPermissionDto> permissions = await _mediator.Send(new GetFullPermissionsQuery());
 
-            return Ok(new ApiOkResponse(permissions));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetFullPermissions");
+
+        return Ok(new ApiOkResponse(permissions));
+
     }
-    
+
     [HttpGet("roles")]
     [SwaggerOperation(
         Summary = "Retrieve permissions categorized by roles",
@@ -65,20 +60,14 @@ public class PermissionsController : ControllerBase
     public async Task<IActionResult> GetPermissionsCategorizedByRoles()
     {
         _logger.LogInformation("START: GetPermissionsCategorizedByRoles");
-        try
-        {
-            var permissions = await _mediator.Send(new GetPermissionsCategorizedByRolesQuery());
 
-            _logger.LogInformation("END: GetPermissionsCategorizedByRoles");
+        List<RolePermissionDto> permissions = await _mediator.Send(new GetPermissionsCategorizedByRolesQuery());
 
-            return Ok(new ApiOkResponse(permissions));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPermissionsCategorizedByRoles");
+
+        return Ok(new ApiOkResponse(permissions));
     }
-    
+
     [HttpGet("get-by-user/{userId:guid}")]
     [SwaggerOperation(
         Summary = "Retrieve permissions by user",
@@ -93,17 +82,11 @@ public class PermissionsController : ControllerBase
     public async Task<IActionResult> GetPermissionsByUser(Guid userId)
     {
         _logger.LogInformation("START: GetPermissionsByUser");
-        try
-        {
-            var permissions = await _mediator.Send(new GetPermissionsByUserQuery(userId));
 
-            _logger.LogInformation("END: GetPermissionsByUser");
+        List<RolePermissionDto> permissions = await _mediator.Send(new GetPermissionsByUserQuery(userId));
 
-            return Ok(new ApiOkResponse(permissions));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPermissionsByUser");
+
+        return Ok(new ApiOkResponse(permissions));
     }
 }

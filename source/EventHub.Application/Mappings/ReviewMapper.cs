@@ -4,7 +4,7 @@ using EventHub.Shared.DTOs.Review;
 
 namespace EventHub.Application.Mappings;
 
-public class ReviewMapper
+public sealed class ReviewMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {

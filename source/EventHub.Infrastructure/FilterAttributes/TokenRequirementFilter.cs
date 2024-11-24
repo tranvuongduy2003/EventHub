@@ -1,4 +1,4 @@
-﻿using EventHub.Abstractions;
+﻿using System.Security.Claims;
 using EventHub.Abstractions.Services;
 using EventHub.Shared.HttpResponses;
 using Microsoft.AspNetCore.Mvc;
@@ -28,19 +28,21 @@ public class TokenRequirementFilter : IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var requestAuthorization = context.HttpContext.Request.Headers[HeaderNames.Authorization];
-        var responseAuthorization = context.HttpContext.Response.Headers[HeaderNames.Authorization];
+        string requestAuthorization = context.HttpContext.Request.Headers[HeaderNames.Authorization];
+        string responseAuthorization = context.HttpContext.Response.Headers[HeaderNames.Authorization];
 
-        var accessToken = !string.IsNullOrEmpty(requestAuthorization)
+        string accessToken = !string.IsNullOrEmpty(requestAuthorization)
             ? requestAuthorization.ToString().Replace("Bearer ", "")
-            : responseAuthorization.ToString().Replace("Bearer ", "");
+            : responseAuthorization?.ToString().Replace("Bearer ", "") ?? "";
 
         if (!_tokenService.ValidateTokenExpired(accessToken))
+        {
             context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
+        }
 
-        var principal = _tokenService.GetPrincipalFromToken(accessToken);
-        var userId = principal.Claims
-            .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti).Value;
+        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(accessToken);
+        string userId = principal?.Claims?
+            .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "";
         context.HttpContext.Items["AuthorId"] = userId;
     }
 }

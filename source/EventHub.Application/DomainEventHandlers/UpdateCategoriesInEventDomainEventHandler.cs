@@ -16,12 +16,12 @@ public class UpdateCategoriesInEventDomainEventHandler : IDomainEventHandler<Upd
 
     public async Task Handle(UpdateCategoriesInEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        var deletedEventCategories = _unitOfWork.EventCategories
+        IQueryable<EventCategory> deletedEventCategories = _unitOfWork.EventCategories
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
-        await _unitOfWork.EventCategories.DeleteListAsync(deletedEventCategories);
+        _unitOfWork.EventCategories.DeleteList(deletedEventCategories);
 
         var eventCategories = new List<EventCategory>();
-        foreach (var categoryId in notification.Categories)
+        foreach (Guid categoryId in notification.Categories)
         {
             eventCategories.Add(new EventCategory()
             {

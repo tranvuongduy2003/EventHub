@@ -19,7 +19,7 @@ public class FunctionsRepository : RepositoryBase<Function>, IFunctionsRepositor
 
     public async Task<bool> ExistAsync(string id)
     {
-        return await _context.Set<Function>().AnyAsync(x => x.GetType().GetProperty("Id").ToString() == id);
+        return await _context.Set<Function>().AnyAsync(x => x.GetType().GetProperty("Id")!.ToString() == id);
     }
 
     public async Task<Function> GetByIdAsync(string id)

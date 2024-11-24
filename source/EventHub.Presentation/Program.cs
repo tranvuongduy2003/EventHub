@@ -5,20 +5,20 @@ using EventHub.Presentation.Extensions;
 using EventHub.SignalR;
 using Serilog;
 
-var AppCors = "AppCors";
+string AppCors = "AppCors";
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 Log.Information("Starting EvenHub API up");
 
 builder.Host.UseSerilog(LoggingConfiguration.Configure);
-builder.Host.AddAppConfigurations();
+builder.AddAppConfigurations();
 
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
-builder.Services.ConfigureSignalRServices(builder.Configuration);
+builder.Services.ConfigureSignalRServices();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseInfrastructure(AppCors);
 

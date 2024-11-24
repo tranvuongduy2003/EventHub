@@ -1,4 +1,3 @@
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
@@ -22,11 +21,14 @@ public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordComman
 
     public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null) throw new NotFoundException("User does not exist");
+        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+        {
+            throw new NotFoundException("User does not exist");
+        }
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var resetPasswordUrl = $"https://localhost:5173/reset-password?token={token}&email={request.Email}";
+        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetPasswordUrl = new Uri($"https://localhost:5173/reset-password?token={token}&email={request.Email}");
 
         _hangfireService.Enqueue(() =>
             _emailService

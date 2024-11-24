@@ -11,6 +11,9 @@ public class AddFunctionToRoleCommandHandler : ICommandHandler<AddFunctionToRole
 
     public async Task Handle(AddFunctionToRoleCommand request, CancellationToken cancellationToken)
     {
-        await PermissionAggregateRoot.AddFunctionToRole(request.FunctionId, request.RoleId);
+        await Task.Run(() =>
+        {
+            PermissionAggregateRoot.AddFunctionToRole(request.FunctionId, request.RoleId);
+        }, cancellationToken);
     }
 }

@@ -4,7 +4,7 @@ using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.Helpers;
 using EventHub.Shared.SeedWork;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
 
@@ -13,7 +13,7 @@ public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCate
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetPaginatedCategoriesQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
+    public GetPaginatedCategoriesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -23,9 +23,11 @@ public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCate
         CancellationToken cancellationToken)
     {
 
-        var cachedCategories = _unitOfWork.CachedCategories.FindAll();
+        List<Domain.AggregateModels.CategoryAggregate.Category> cachedCategories = await _unitOfWork.CachedCategories
+            .FindAll()
+            .ToListAsync(cancellationToken);
 
-        var categories = _mapper.Map<List<CategoryDto>>(cachedCategories);
+        List<CategoryDto> categories = _mapper.Map<List<CategoryDto>>(cachedCategories);
 
         return PagingHelper.Paginate<CategoryDto>(categories, request.Filter);
     }

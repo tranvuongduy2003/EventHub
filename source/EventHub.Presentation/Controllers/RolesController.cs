@@ -24,7 +24,7 @@ public class RolesController : ControllerBase
         _logger = logger;
         _mediator = mediator;
     }
-    
+
     [HttpPost("{roleId:guid}/add-function/{functionId}")]
     [SwaggerOperation(
         Summary = "Add a function to a role",
@@ -56,12 +56,8 @@ public class RolesController : ControllerBase
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
-    
+
     [HttpPost("{roleId:guid}/remove-function/{functionId}")]
     [SwaggerOperation(
         Summary = "Remove a function from a role",
@@ -88,10 +84,6 @@ public class RolesController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

@@ -1,4 +1,4 @@
-using EventHub.Abstractions;
+using System.Security.Claims;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.UserAggregate;
@@ -23,12 +23,14 @@ public class UnfollowCommandHandler : ICommandHandler<UnfollowCommand>
     public async Task Handle(UnfollowCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.AccessToken))
+        {
             throw new UnauthorizedException("Unauthorized");
-        var principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
+        }
+        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
 
-        var user = await _userManager.FindByIdAsync(principal.Claims
-            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
+            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        await UserAggregateRoot.UnfollowUser(user?.Id ?? default, request.FollowedUserId);
+        UserAggregateRoot.UnfollowUser(user?.Id ?? Guid.NewGuid(), request.FollowedUserId);
     }
 }

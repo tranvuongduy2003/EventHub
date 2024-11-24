@@ -1,8 +1,8 @@
 ﻿namespace EventHub.Shared.ValueObjects;
 
-public class SystemConstants
+public static class SystemConstants
 {
-    public class Claims
+    public static class Claims
     {
         public const string Permissions = "Permissions";
     }

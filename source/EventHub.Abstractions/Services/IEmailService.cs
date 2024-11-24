@@ -61,5 +61,5 @@ public interface IEmailService
     /// <returns>
     /// A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
-    Task SendResetPasswordEmailAsync(string email, string resetPasswordUrl);
+    Task SendResetPasswordEmailAsync(string email, Uri resetPasswordUrl);
 }

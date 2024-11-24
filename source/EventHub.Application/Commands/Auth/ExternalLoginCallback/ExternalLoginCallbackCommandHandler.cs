@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
@@ -7,7 +6,6 @@ using EventHub.Shared.DTOs.Auth;
 using EventHub.Shared.Enums.User;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
 
@@ -36,13 +34,13 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
     public async Task<SignInResponseDto> Handle(ExternalLoginCallbackCommand request,
         CancellationToken cancellationToken)
     {
-        var info = await _signInManager.GetExternalLoginInfoAsync();
+        ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
 
-        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        string email = info?.Principal.FindFirstValue(ClaimTypes.Email);
 
         if (!string.IsNullOrEmpty(email))
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
@@ -50,21 +48,25 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
                 {
                     UserName = email,
                     Email = email,
-                    PhoneNumber = info.Principal.FindFirstValue(ClaimTypes.MobilePhone),
+                    PhoneNumber = info!.Principal.FindFirstValue(ClaimTypes.MobilePhone),
                     FullName = info.Principal.FindFirstValue(ClaimTypes.Name),
                     Status = EUserStatus.ACTIVE
                 };
 
-                var result = await _userManager.CreateAsync(user);
+                IdentityResult result = await _userManager.CreateAsync(user);
 
                 if (result.Succeeded)
+                {
                     await _userManager.AddToRolesAsync(user, new List<string>
                     {
                         nameof(EUserRole.CUSTOMER),
                         nameof(EUserRole.ORGANIZER)
                     });
+                }
                 else
+                {
                     throw new BadRequestException(result);
+                }
 
 
                 _hangfireService.Enqueue(() =>
@@ -75,10 +77,10 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
 
             await _signInManager.SignInAsync(user, false);
 
-            var accessToken = await _tokenService
+            string accessToken = await _tokenService
                 .GenerateAccessTokenAsync(user);
-            var refreshToken = await _userManager
-                .GenerateUserTokenAsync(user, info.LoginProvider, TokenTypes.REFRESH);
+            string refreshToken = await _userManager
+                .GenerateUserTokenAsync(user, info!.LoginProvider, TokenTypes.REFRESH);
 
             await _userManager
                 .SetAuthenticationTokenAsync(user, info.LoginProvider, TokenTypes.REFRESH, refreshToken);

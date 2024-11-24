@@ -22,12 +22,13 @@ public class GetPaginatedReviewsQueryHandler : IQueryHandler<GetPaginatedReviews
     public async Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsQuery request,
         CancellationToken cancellationToken)
     {
-        var reviews = await _unitOfWork.CachedReviews.FindAll()
+        List<Domain.AggregateModels.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
+            .FindAll()
             .Include(x => x.Event)
             .Include(x => x.Author)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
+        List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
 
         return PagingHelper.Paginate<ReviewDto>(reviewDtos, request.Filter);
     }

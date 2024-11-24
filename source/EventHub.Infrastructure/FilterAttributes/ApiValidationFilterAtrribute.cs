@@ -12,7 +12,7 @@ namespace EventHub.Infrastructure.FilterAttributes;
 /// If the model state is invalid, it sets the result to a `BadRequestObjectResult` with details about the validation errors.
 /// This helps in providing consistent validation responses for API requests.
 /// </remarks>
-public class ApiValidationFilterAttribute : ActionFilterAttribute
+public sealed class ApiValidationFilterAttribute : ActionFilterAttribute
 {
     /// <summary>
     /// Executes the validation logic before the action method executes.

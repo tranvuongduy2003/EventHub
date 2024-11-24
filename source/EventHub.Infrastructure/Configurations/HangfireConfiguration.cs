@@ -18,12 +18,14 @@ public static class HangfireConfiguration
 {
     public static IServiceCollection ConfigureHangfireServices(this IServiceCollection services)
     {
-        var hangfireSettings = services.GetOptions<HangfireSettings>("HangfireSettings");
+        HangfireSettings hangfireSettings = services.GetOptions<HangfireSettings>("HangfireSettings");
         if (hangfireSettings == null
             || hangfireSettings.Storage == null
             || string.IsNullOrEmpty(hangfireSettings.Storage.ConnectionString)
             || string.IsNullOrEmpty(hangfireSettings.Storage.DBProvider))
-            throw new ArgumentNullException("HangfireSettings is not configured properly!");
+        {
+            throw new NullReferenceException("HangfireSettings is not configured properly!");
+        }
 
         var mongoUrlBuilder = new MongoUrlBuilder(hangfireSettings.Storage.ConnectionString);
 
@@ -31,7 +33,7 @@ public static class HangfireConfiguration
             new MongoUrl(hangfireSettings.Storage.ConnectionString));
         mongoClientSettings.SslSettings = new SslSettings
         {
-            EnabledSslProtocols = SslProtocols.Tls12
+            EnabledSslProtocols = SslProtocols.None
         };
         var mongoClient = new MongoClient(mongoClientSettings);
         var mongoStorageOptions = new MongoStorageOptions
@@ -72,7 +74,7 @@ public static class HangfireConfiguration
             .GetRequiredService<IRecurringJobManager>()
             .AddOrUpdate<IProcessOutboxMessagesJob>(
                 "outbox-processor",
-                job => job.Execute(null),
+                (job) => job.Execute(null!),
                 "0/15 * * * * *");
 
         return app;
@@ -80,9 +82,9 @@ public static class HangfireConfiguration
 
     public static IApplicationBuilder UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)
     {
-        var configureDashboard = configuration.GetSection("HangfireSettings:Dashboard").Get<Dashboard>();
-        var hangfireSettings = configuration.GetSection("HangfireSettings").Get<HangfireSettings>();
-        var hangfireRoute = hangfireSettings?.Route;
+        Dashboard configureDashboard = configuration.GetSection("HangfireSettings:Dashboard").Get<Dashboard>();
+        HangfireSettings hangfireSettings = configuration.GetSection("HangfireSettings").Get<HangfireSettings>();
+        string hangfireRoute = hangfireSettings?.Route;
 
         app.UseHangfireDashboard(hangfireRoute, new DashboardOptions
         {

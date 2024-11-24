@@ -1,4 +1,4 @@
-using EventHub.Abstractions;
+using System.Security.Claims;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.AggregateModels.UserAggregate;
@@ -24,11 +24,11 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand>
     {
         if (string.IsNullOrEmpty(request.AccessToken))
             throw new UnauthorizedException("Unauthorized");
-        var principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
+        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
 
-        var user = await _userManager.FindByIdAsync(principal.Claims
-            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
+            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        await UserAggregateRoot.FollowUser(user?.Id ?? default, request.FollowedUserId);
+        UserAggregateRoot.FollowUser(user?.Id ?? Guid.NewGuid(), request.FollowedUserId);
     }
 }

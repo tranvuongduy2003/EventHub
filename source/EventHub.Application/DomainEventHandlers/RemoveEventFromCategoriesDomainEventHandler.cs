@@ -18,7 +18,7 @@ public class RemoveEventFromCategoriesDomainEventHandler : IDomainEventHandler<R
     {
         await _unitOfWork.EventCategories
             .FindByCondition(x => x.EventId.Equals(notification.EventId))
-            .ExecuteDeleteAsync();
+            .ExecuteDeleteAsync(cancellationToken);
 
         await _unitOfWork.CommitAsync();
     }

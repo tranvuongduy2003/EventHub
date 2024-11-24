@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Text.Json.Serialization;
 using EventHub.Shared.Enums.User;
 using Swashbuckle.AspNetCore.Annotations;
@@ -51,7 +50,7 @@ public class UserDto
     public int? NumberOfCreatedEvents { get; set; } = 0;
 
     [SwaggerSchema("Roles of the user")]
-    public IEnumerable<string> Roles { get; set; } = null;
+    public IEnumerable<string> Roles { get; set; } = null!;
 
     [SwaggerSchema("The datetime that the user was created")]
     public DateTime CreatedAt { get; set; }

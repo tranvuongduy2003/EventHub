@@ -2,7 +2,6 @@
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
@@ -19,7 +18,7 @@ public class DeleteEventReasonsDomainEventHandler : IDomainEventHandler<DeleteEv
     {
         await _unitOfWork.Reasons
             .FindByCondition(x => x.EventId.Equals(notification.EventId))
-            .ExecuteDeleteAsync();
+            .ExecuteDeleteAsync(cancellationToken);
 
         await _unitOfWork.CommitAsync();
     }

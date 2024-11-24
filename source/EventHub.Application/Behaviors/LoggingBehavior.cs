@@ -8,7 +8,7 @@ namespace EventHub.Application.Behaviors;
 /// </summary>
 /// <typeparam name="TRequest">The type of the request being handled.</typeparam>
 /// <typeparam name="TResponse">The type of the response from the handler.</typeparam>
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
@@ -41,11 +41,11 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"BEGIN: {typeof(TRequest).Name}Handler");
+        _logger.LogInformation("BEGIN: {TRequestName}Handler", typeof(TRequest).Name);
 
-        var response = await next();
+        TResponse response = await next();
 
-        _logger.LogInformation($"END: {typeof(TRequest).Name}Handler");
+        _logger.LogInformation("END: {TRequestName}Handler", typeof(TRequest).Name);
 
         return response;
     }

@@ -1,25 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="Bogus" Version="35.6.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
+	</ItemGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Bogus" Version="35.6.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-      <PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\EventHub.Abstractions\EventHub.Abstractions.csproj"/>
-      <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Migrations\" />
-    </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj"/>
+		<ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj"/>
+	</ItemGroup>
 </Project>

@@ -15,14 +15,16 @@ public class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
 
     public async Task Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
     {
-        var review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
+        Domain.AggregateModels.ReviewAggregate.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
         if (review is null)
+        {
             throw new NotFoundException("Review does not exist!");
+        }
 
         review.Content = request.Review.Content;
         review.Rate = request.Review.Rate;
 
-        await _unitOfWork.Reviews.UpdateAsync(review);
+        _unitOfWork.Reviews.Update(review);
         await _unitOfWork.CommitAsync();
     }
 }

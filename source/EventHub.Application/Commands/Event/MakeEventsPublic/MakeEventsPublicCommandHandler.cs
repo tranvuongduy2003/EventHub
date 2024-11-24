@@ -10,6 +10,9 @@ public class MakeEventsPublicCommandHandler : ICommandHandler<MakeEventsPublicCo
 
     public async Task Handle(MakeEventsPublicCommand request, CancellationToken cancellationToken)
     {
-        await Domain.AggregateModels.EventAggregate.Event.MakeEventsPublic(request.UserId, request.Events);
+        await Task.Run(() =>
+        {
+            Domain.AggregateModels.EventAggregate.Event.MakeEventsPublic(request.UserId, request.Events);
+        }, cancellationToken);
     }
 }

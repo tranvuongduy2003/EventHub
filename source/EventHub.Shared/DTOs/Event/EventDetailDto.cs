@@ -58,10 +58,10 @@ public class EventDetailDto
     [DefaultValue(nameof(EEventStatus.OPENING))]
     public EEventStatus? Status { get; set; }
 
-    [SwaggerSchema("Type of event cycle (e.g., SINGLE, RECURRING)")]
+    [SwaggerSchema("Type of event cycle (e.g., ONETIME, RECURRING)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    [DefaultValue(nameof(EEventCycleType.SINGLE))]
-    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
+    [DefaultValue(nameof(EEventCycleType.ONETIME))]
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
 
     [SwaggerSchema("Payment type for the event (e.g., FREE, PAID)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -73,7 +73,7 @@ public class EventDetailDto
     public bool IsPrivate { get; set; } = false;
 
     [SwaggerSchema("List of URLs for additional event images")]
-    [DefaultValue(new[] { "https://example.com/sub-image1.jpg", "https://example.com/sub-image2.jpg" })]
+    [DefaultValue(typeof(Uri[]))]
     public List<string> EventSubImageUrls { get; set; } = new();
 
     [SwaggerSchema("List of reasons associated with the event")]

@@ -19,13 +19,15 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
-        var @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        Domain.AggregateModels.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        await _unitOfWork.Events.SoftDeleteAsync(@event);
+        _unitOfWork.Events.SoftDelete(@event);
 
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user != null)
         {
             user.NumberOfCreatedEvents--;

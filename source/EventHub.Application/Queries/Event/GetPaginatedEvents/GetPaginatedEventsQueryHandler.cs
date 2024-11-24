@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Event;
 using EventHub.Shared.Helpers;
@@ -22,10 +23,12 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
     public async Task<Pagination<EventDto>> Handle(GetPaginatedEventsQuery request,
         CancellationToken cancellationToken)
     {
-        var cachedEvents = _unitOfWork.CachedEvents.FindAll();
-        var eventCategories = _unitOfWork.EventCategories
+        List<Domain.AggregateModels.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents.FindAll()
+            .ToListAsync(cancellationToken);
+        List<EventCategory> eventCategories = await _unitOfWork.EventCategories
             .FindAll()
-            .Include(x => x.Category);
+            .Include(x => x.Category)
+            .ToListAsync(cancellationToken);
 
         var events = (
                 from _event in cachedEvents
@@ -37,13 +40,13 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
             .AsEnumerable()
             .Select(group =>
             {
-                var @event = group.Key;
+                Domain.AggregateModels.EventAggregate.Event @event = group.Key;
                 @event.Categories = group.Select(g => g.EventCategory.Category).ToList();
                 return @event;
             })
             .ToList();
 
-        var eventDtos = _mapper.Map<List<EventDto>>(events);
+        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
     }

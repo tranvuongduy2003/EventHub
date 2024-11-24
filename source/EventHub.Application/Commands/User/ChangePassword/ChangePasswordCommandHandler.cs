@@ -11,6 +11,9 @@ public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordComman
 
     public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        await UserAggregateRoot.ChangeUserPassword(request.UserId, request.OldPassword, request.NewPassword);
+        await Task.Run(() =>
+        {
+            UserAggregateRoot.ChangeUserPassword(request.UserId, request.OldPassword, request.NewPassword);
+        }, cancellationToken);
     }
 }

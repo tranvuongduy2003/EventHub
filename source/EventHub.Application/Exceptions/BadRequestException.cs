@@ -13,7 +13,7 @@ public class BadRequestException : HttpResponseException
     /// <param name="value">
     /// An optional object that provides additional information about the bad request. This value is passed to the base exception class.
     /// </param>
-    public BadRequestException(object value = null) : base(400, value)
+    public BadRequestException(object? value = null) : base(400, value)
     {
     }
 }

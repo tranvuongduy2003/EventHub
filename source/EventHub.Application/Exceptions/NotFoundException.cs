@@ -13,7 +13,7 @@ public class NotFoundException : HttpResponseException
     /// <param name="value">
     /// An optional object that provides additional information about the resource that was not found. This value is passed to the base exception class.
     /// </param>
-    public NotFoundException(object value = null) : base(404, value)
+    public NotFoundException(object? value = null) : base(404, value)
     {
     }
 }

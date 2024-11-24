@@ -1,6 +1,6 @@
-﻿using EventHub.Abstractions;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Abstractions.Services;
+using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Shared.ValueObjects;
@@ -21,16 +21,16 @@ public class DeleteEventSubImagesDomainEventHandler : IDomainEventHandler<Delete
 
     public async Task Handle(DeleteEventSubImagesDomainEvent notification, CancellationToken cancellationToken)
     {
-        var subImages = await _unitOfWork.EventSubImages
+        List<EventSubImage> subImages = await _unitOfWork.EventSubImages
             .FindByCondition(x => x.EventId.Equals(notification.EventId))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        foreach (var image in subImages)
+        foreach (EventSubImage image in subImages)
         {
             await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{notification.EventId}", image.ImageFileName);
         }
 
-        await _unitOfWork.EventSubImages.DeleteListAsync(subImages);
+        _unitOfWork.EventSubImages.DeleteList(subImages);
         await _unitOfWork.CommitAsync();
     }
 }

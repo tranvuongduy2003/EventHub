@@ -7,7 +7,7 @@ public class CreatePaymentDto
 {
     public string EventId { get; set; }
 
-    public int TicketQuantity { get; set; } = 0;
+    public int TicketQuantity { get; set; }
 
     public string UserId { get; set; }
 
@@ -19,7 +19,7 @@ public class CreatePaymentDto
 
     public decimal TotalPrice { get; set; } = 0;
 
-    public double Discount { get; set; } = 0;
+    public double Discount { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }

@@ -17,7 +17,7 @@ public class ExternalLoginCommand : ICommand<ExternalLoginDto>
     /// <param name="returnUrl">
     /// The URL to which the user will be redirected after the external login process is complete.
     /// </param>
-    public ExternalLoginCommand(string provider, string returnUrl)
+    public ExternalLoginCommand(string provider, Uri returnUrl)
         => (Provider, ReturnUrl) = (provider, returnUrl);
 
     /// <summary>
@@ -34,5 +34,5 @@ public class ExternalLoginCommand : ICommand<ExternalLoginDto>
     /// <value>
     /// A string representing the return URL for redirection after the external login process.
     /// </value>
-    public string ReturnUrl { get; set; }
+    public Uri ReturnUrl { get; set; }
 }

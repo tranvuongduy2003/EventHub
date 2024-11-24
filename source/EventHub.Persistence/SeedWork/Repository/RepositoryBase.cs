@@ -38,7 +38,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
 
     public IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = FindAll(trackChanges);
+        IQueryable<T> items = FindAll(trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
@@ -55,7 +55,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties)
     {
-        var items = FindByCondition(expression, trackChanges);
+        IQueryable<T> items = FindByCondition(expression, trackChanges);
         items = includeProperties
             .Aggregate(items, (current, includeProperty) =>
                 current.Include(includeProperty));
@@ -64,7 +64,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
 
     public async Task<bool> ExistAsync(Guid id)
     {
-        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id").ToString()) == id);
+        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id")!.ToString() ?? "") == id);
     }
 
     public async Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
@@ -92,28 +92,30 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         await _context.Set<T>().AddRangeAsync(entities);
     }
 
-    public async Task UpdateAsync(T entity)
+    public void Update(T entity)
     {
         if (_context.Entry(entity).State != EntityState.Unchanged)
+        {
             _context.Entry(entity).CurrentValues.SetValues(entity);
+        }
     }
 
-    public async Task DeleteAsync(T entity)
+    public void Delete(T entity)
     {
         _context.Set<T>().Remove(entity);
     }
 
-    public async Task DeleteListAsync(IEnumerable<T> entities)
+    public void DeleteList(IEnumerable<T> entities)
     {
         _context.Set<T>().RemoveRange(entities);
     }
 
-    public async Task SoftDeleteAsync(T entity)
+    public void SoftDelete(T entity)
     {
         _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = DateTime.UtcNow;
     }
 
-    public async Task RestoreAsync(T entity)
+    public void Restore(T entity)
     {
         _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = null;
     }

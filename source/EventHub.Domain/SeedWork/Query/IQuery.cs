@@ -11,7 +11,7 @@ namespace EventHub.Domain.SeedWork.Query;
 /// that will return a result of type <typeparamref name="T"/>. Implementations of this interface are typically
 /// used in query-based architectures where the intention is to retrieve data without modifying the state.
 /// </remarks>
-public interface IQuery<T> : IRequest<T>;
+public interface IQuery<out T> : IRequest<T>;
 
 /// <summary>
 /// Represents a query that no returns.

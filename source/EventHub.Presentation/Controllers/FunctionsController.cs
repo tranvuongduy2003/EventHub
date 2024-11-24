@@ -44,18 +44,12 @@ public class FunctionsController : ControllerBase
     public async Task<IActionResult> PostCreateFunction([FromBody] CreateFunctionDto request)
     {
         _logger.LogInformation("START: PostCreateFunction");
-        try
-        {
-            var function = await _mediator.Send(new CreateFunctionCommand(request));
 
-            _logger.LogInformation("END: PostCreateFunction");
+        FunctionDto function = await _mediator.Send(new CreateFunctionCommand(request));
 
-            return Ok(new ApiCreatedResponse(function));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: PostCreateFunction");
+
+        return Ok(new ApiCreatedResponse(function));
     }
 
     [HttpGet]
@@ -72,18 +66,12 @@ public class FunctionsController : ControllerBase
     public async Task<IActionResult> GetFunctions()
     {
         _logger.LogInformation("START: GetFunctions");
-        try
-        {
-            var functions = await _mediator.Send(new GetFunctionsQuery());
 
-            _logger.LogInformation("END: GetFunctions");
+        List<FunctionDto> functions = await _mediator.Send(new GetFunctionsQuery());
 
-            return Ok(new ApiOkResponse(functions));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetFunctions");
+
+        return Ok(new ApiOkResponse(functions));
     }
 
     [HttpGet("{functionId}")]
@@ -102,7 +90,7 @@ public class FunctionsController : ControllerBase
         _logger.LogInformation("START: GetFunctionById");
         try
         {
-            var function = await _mediator.Send(new GetFunctionByIdQuery(functionId));
+            FunctionDto function = await _mediator.Send(new GetFunctionByIdQuery(functionId));
 
             _logger.LogInformation("END: GetFunctionById");
 
@@ -111,10 +99,6 @@ public class FunctionsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -145,10 +129,6 @@ public class FunctionsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpDelete("{functionId}")]
@@ -176,10 +156,6 @@ public class FunctionsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -215,10 +191,6 @@ public class FunctionsController : ControllerBase
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpPost("{functionId}/disable-command/{commandId}")]
@@ -247,10 +219,6 @@ public class FunctionsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

@@ -10,6 +10,9 @@ public class MakeEventsPrivateCommandHandler : ICommandHandler<MakeEventsPrivate
 
     public async Task Handle(MakeEventsPrivateCommand request, CancellationToken cancellationToken)
     {
-        await Domain.AggregateModels.EventAggregate.Event.MakeEventsPrivate(request.UserId, request.Events);
+        await Task.Run(() =>
+        {
+            Domain.AggregateModels.EventAggregate.Event.MakeEventsPrivate(request.UserId, request.Events);
+        }, cancellationToken);
     }
 }

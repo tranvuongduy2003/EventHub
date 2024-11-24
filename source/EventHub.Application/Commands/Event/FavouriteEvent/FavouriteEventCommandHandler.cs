@@ -10,7 +10,10 @@ public class FavouriteEventCommandHandler : ICommandHandler<FavouriteEventComman
 
     public async Task Handle(FavouriteEventCommand request, CancellationToken cancellationToken)
     {
-        await Domain.AggregateModels.EventAggregate.Event
-            .FavouriteEvent(request.UserId, request.EventId);
+        await Task.Run(() =>
+        {
+            Domain.AggregateModels.EventAggregate.Event
+                .FavouriteEvent(request.UserId, request.EventId);
+        }, cancellationToken);
     }
 }

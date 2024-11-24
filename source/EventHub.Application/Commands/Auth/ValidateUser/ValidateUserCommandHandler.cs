@@ -16,14 +16,18 @@ public class ValidateUserCommandHandler : ICommandHandler<ValidateUserCommand, b
 
     public async Task<bool> Handle(ValidateUserCommand request, CancellationToken cancellationToken)
     {
-        var useByEmail = await _userManager.FindByEmailAsync(request.Email);
+        Domain.AggregateModels.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
+        {
             throw new BadRequestException("Email already exists");
+        }
 
-        var useByPhoneNumber = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+        Domain.AggregateModels.UserAggregate.User useByPhoneNumber = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken);
         if (useByPhoneNumber != null)
+        {
             throw new BadRequestException("Phone number already exists");
+        }
 
         return true;
     }

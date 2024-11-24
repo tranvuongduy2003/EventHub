@@ -14,11 +14,10 @@ namespace EventHub.Shared.SeedWork;
 /// </remarks>
 public class PaginationFilter
 {
-    private IEnumerable<Order> _orders = new List<Order>();
+    private List<Order> _orders = new List<Order>();
     private int _page = 1;
-    private IEnumerable<Search> _searches = new List<Search>();
+    private List<Search> _searches = new List<Search>();
     private int _size = 10;
-    private bool _takeAll = false;
 
 
     /// <summary>
@@ -62,7 +61,7 @@ public class PaginationFilter
     public IEnumerable<Order> Orders
     {
         get => _orders;
-        set => _orders = value;
+        set => _orders = value.ToList();
     }
 
     /// <summary>
@@ -76,7 +75,7 @@ public class PaginationFilter
     public IEnumerable<Search> Searches
     {
         get => _searches;
-        set => _searches = value;
+        set => _searches = value.ToList();
     }
 
     /// <summary>
@@ -88,11 +87,7 @@ public class PaginationFilter
     [DefaultValue(false)]
     [SwaggerSchema("If takeAll equals true, skip paging and get all items")]
     [FromQuery(Name = "takeAll")]
-    public bool TakeAll
-    {
-        get => _takeAll;
-        set => _takeAll = value;
-    }
+    public bool TakeAll { get; set; }
 }
 
 /// <summary>

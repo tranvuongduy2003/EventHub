@@ -26,7 +26,7 @@ public interface IQueryHandler<TQuery, TQueryResponse> : IRequestHandler<TQuery,
 /// of type <typeparamref name="TQuery"/> that do not return a result. Implementations of this interface are responsible
 /// for executing the query's logic without producing a result.
 /// </remarks>
-public interface IQueryHandler<TQuery> : IRequestHandler<TQuery>
+public interface IQueryHandler<in TQuery> : IRequestHandler<TQuery>
     where TQuery : IQuery
 {
 }

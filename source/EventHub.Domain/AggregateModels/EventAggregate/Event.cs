@@ -66,124 +66,124 @@ public class Event : AggregateRoot, IAuditable
     public EEventStatus? Status { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.SINGLE;
+    public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
-    public bool IsPrivate { get; set; } = false;
+    public bool IsPrivate { get; set; }
 
     [Required] public Guid AuthorId { get; set; } = Guid.Empty;
 
-    public static async Task UploadAndSaveEventSubImages(Guid eventId, IFormFileCollection subImages)
+    public static void UploadAndSaveEventSubImages(Guid eventId, IFormFileCollection subImages)
     {
         new Event().RaiseDomainEvent(
             new UploadAndSaveEventSubImagesDomainEvent(Guid.NewGuid(), eventId, subImages));
     }
 
-    public static async Task DeleteEventSubImages(Guid eventId)
+    public static void DeleteEventSubImages(Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new DeleteEventSubImagesDomainEvent(Guid.NewGuid(), eventId));
     }
 
-    public static async Task CreateEmailContentOfEvent(Guid eventId, CreateEmailContentDto emailContent)
+    public static void CreateEmailContentOfEvent(Guid eventId, CreateEmailContentDto emailContent)
     {
         new Event().RaiseDomainEvent(
             new CreateEmailContentOfEventDomainEvent(Guid.NewGuid(), eventId, emailContent));
     }
 
-    public static async Task UpdateEmailContentOfEvent(Guid eventId, UpdateEmailContentDto emailContent)
+    public static void UpdateEmailContentOfEvent(Guid eventId, UpdateEmailContentDto emailContent)
     {
         new Event().RaiseDomainEvent(
             new UpdateEmailContentOfEventDomainEvent(Guid.NewGuid(), eventId, emailContent));
     }
 
-    public static async Task DeleteEmailContent(Guid eventId)
+    public static void DeleteEmailContent(Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new DeleteEmailContentDomainEvent(Guid.NewGuid(), eventId));
     }
 
-    public static async Task CreateTicketTypesOfEvent(Guid eventId, List<CreateTicketTypeDto> ticketTypes)
+    public static void CreateTicketTypesOfEvent(Guid eventId, List<CreateTicketTypeDto> ticketTypes)
     {
         new Event().RaiseDomainEvent(
             new CreateTicketTypesOfEventDomainEvent(Guid.NewGuid(), eventId, ticketTypes));
     }
 
-    public static async Task UpdateTicketTypesInEvent(Guid eventId, List<UpdateTicketTypeDto> ticketTypes)
+    public static void UpdateTicketTypesInEvent(Guid eventId, List<UpdateTicketTypeDto> ticketTypes)
     {
         new Event().RaiseDomainEvent(
             new UpdateTicketTypesInEventDomainEvent(Guid.NewGuid(), eventId, ticketTypes));
     }
 
-    public static async Task DeleteEventTicketTypes(Guid eventId)
+    public static void DeleteEventTicketTypes(Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new DeleteEventTicketTypesDomainEvent(Guid.NewGuid(), eventId));
     }
 
-    public static async Task AddEventToCategories(Guid eventId, List<Guid> categories)
+    public static void AddEventToCategories(Guid eventId, List<Guid> categories)
     {
         new Event().RaiseDomainEvent(
             new AddEventToCategoriesDomainEvent(Guid.NewGuid(), eventId, categories));
     }
 
-    public static async Task UpdateCategoriesInEvent(Guid eventId, List<Guid> categories)
+    public static void UpdateCategoriesInEvent(Guid eventId, List<Guid> categories)
     {
         new Event().RaiseDomainEvent(
             new UpdateCategoriesInEventDomainEvent(Guid.NewGuid(), eventId, categories));
     }
 
-    public static async Task RemoveEventFromCategories(Guid eventId)
+    public static void RemoveEventFromCategories(Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new RemoveEventFromCategoriesDomainEvent(Guid.NewGuid(), eventId));
     }
 
-    public static async Task CreateReasonsToRegisterEvent(Guid eventId, List<string> reasons)
+    public static void CreateReasonsToRegisterEvent(Guid eventId, List<string> reasons)
     {
         new Event().RaiseDomainEvent(
             new CreateReasonsToRegisterEventDomainEvent(Guid.NewGuid(), eventId, reasons));
     }
 
-    public static async Task UpdateReasonsInEvent(Guid eventId, List<string> reasons)
+    public static void UpdateReasonsInEvent(Guid eventId, List<string> reasons)
     {
         new Event().RaiseDomainEvent(
             new UpdateReasonsInEventDomainEvent(Guid.NewGuid(), eventId, reasons));
     }
 
-    public static async Task DeleteEventReasons(Guid eventId)
+    public static void DeleteEventReasons(Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new DeleteEventReasonsDomainEvent(Guid.NewGuid(), eventId));
     }
 
-    public static async Task FavouriteEvent(Guid userId, Guid eventId)
+    public static void FavouriteEvent(Guid userId, Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new FavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
     }
 
-    public static async Task UnfavouriteEvent(Guid userId, Guid eventId)
+    public static void UnfavouriteEvent(Guid userId, Guid eventId)
     {
         new Event().RaiseDomainEvent(
             new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
     }
 
-    public static async Task MakeEventsPrivate(Guid userId, List<Guid> events)
+    public static void MakeEventsPrivate(Guid userId, List<Guid> events)
     {
         new Event().RaiseDomainEvent(
             new MakeEventsPrivateDomainEvent(Guid.NewGuid(), userId, events));
     }
 
-    public static async Task MakeEventsPublic(Guid userId, List<Guid> events)
+    public static void MakeEventsPublic(Guid userId, List<Guid> events)
     {
         new Event().RaiseDomainEvent(
             new MakeEventsPublicDomainEvent(Guid.NewGuid(), userId, events));
     }
 
-    public static async Task RestoreEvent(Guid userId, List<Guid> events)
+    public static void RestoreEvent(Guid userId, List<Guid> events)
     {
         new Event().RaiseDomainEvent(
             new RestoreEventDomainEvent(Guid.NewGuid(), userId, events));

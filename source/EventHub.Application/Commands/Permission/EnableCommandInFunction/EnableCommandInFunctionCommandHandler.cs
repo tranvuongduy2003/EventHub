@@ -11,6 +11,9 @@ public class EnableCommandInFunctionCommandHandler : ICommandHandler<EnableComma
 
     public async Task Handle(EnableCommandInFunctionCommand request, CancellationToken cancellationToken)
     {
-        await PermissionAggregateRoot.EnableCommandInFunction(request.FunctionId, request.CommandId);
+        await Task.Run(() =>
+        {
+            PermissionAggregateRoot.EnableCommandInFunction(request.FunctionId, request.CommandId);
+        }, cancellationToken);
     }
 }

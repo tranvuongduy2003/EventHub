@@ -40,24 +40,24 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
 
-    [Range(0, double.PositiveInfinity)] 
+    [Range(0, double.PositiveInfinity)]
     public int? NumberOfFollowers { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
+    [Range(0, double.PositiveInfinity)]
     public int? NumberOfFolloweds { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
+    [Range(0, double.PositiveInfinity)]
     public int? NumberOfFavourites { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)] 
+    [Range(0, double.PositiveInfinity)]
     public int? NumberOfCreatedEvents { get; set; } = 0;
 
-    public bool IsDeleted { get; set; } = false;
-    
+    public bool IsDeleted { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }
-    
+
     public DateTime? DeletedAt { get; set; }
 
     public virtual ICollection<LabelInUser> LabelInUsers { get; set; } = new List<LabelInUser>();

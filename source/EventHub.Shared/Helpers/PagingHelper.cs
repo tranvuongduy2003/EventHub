@@ -16,7 +16,7 @@ public static class PagingHelper
     public static Pagination<T> Paginate<T>(List<T> items, PaginationFilter filter)
     {
         // Get total records of items in database
-        var totalCount = items.Count;
+        int totalCount = items.Count;
 
         // Retrieve list of items by search values
         if (filter.Searches.Any())
@@ -29,7 +29,7 @@ public static class PagingHelper
                             && ((string)TypeDescriptor
                                 .GetProperties(typeof(T))
                                 .Find(search.SearchBy, true)?
-                                .GetValue(x))
+                                .GetValue(x))!
                             .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase))
                         .ToList()
                 );
@@ -56,7 +56,7 @@ public static class PagingHelper
         }
 
         // Paging
-        if (filter.TakeAll == false)
+        if (!filter.TakeAll)
         {
             items = items
                 .Skip((filter.Page - 1) * filter.Size)

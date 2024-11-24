@@ -4,7 +4,6 @@ using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
@@ -21,7 +20,7 @@ public class RestoreEventDomainEventHandler : IDomainEventHandler<RestoreEventDo
 
     public async Task Handle(RestoreEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        var events = _unitOfWork.CachedEvents
+        IQueryable<Domain.AggregateModels.EventAggregate.Event> events = _unitOfWork.CachedEvents
             .FindByCondition(x =>
                 x.AuthorId.Equals(notification.UserId) &&
                 x.IsDeleted)
@@ -33,9 +32,9 @@ public class RestoreEventDomainEventHandler : IDomainEventHandler<RestoreEventDo
 
         await events.ExecuteUpdateAsync(setters => setters
             .SetProperty(e => e.IsDeleted, false)
-            .SetProperty(e => e.DeletedAt, (DateTime?)null));
+            .SetProperty(e => e.DeletedAt, (DateTime?)null), cancellationToken);
 
-        var user = await _userManager.FindByIdAsync(notification.UserId.ToString());
+        User user = await _userManager.FindByIdAsync(notification.UserId.ToString());
         if (user != null)
         {
             user.NumberOfCreatedEvents += events.ToList().Count;

@@ -1,9 +1,9 @@
-﻿using EventHub.Abstractions;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Event;
+using EventHub.Shared.DTOs.File;
 using EventHub.Shared.Enums.Event;
 using EventHub.Shared.ValueObjects;
 
@@ -26,14 +26,18 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 
     public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken)
     {
-        var @event = await _unitOfWork.CachedEvents.GetByIdAsync(request.EventId);
+        Domain.AggregateModels.EventAggregate.Event @event = await _unitOfWork.CachedEvents.GetByIdAsync(request.EventId);
         if (@event == null)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        var isSameNameEventExisted = await _unitOfWork.CachedEvents
+        bool isSameNameEventExisted = await _unitOfWork.CachedEvents
             .ExistAsync(e => e.Name.Equals(request.Event.Name, StringComparison.OrdinalIgnoreCase));
         if (isSameNameEventExisted)
+        {
             throw new BadRequestException($"Event '{request.Event.Name}' already existed!");
+        }
 
         @event.Name = request.Event.Name;
         @event.Description = request.Event.Description;
@@ -46,24 +50,24 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         @event.IsPrivate = request.Event.IsPrivate;
 
         await _fileService.DeleteAsync(FileContainer.EVENTS, @event.CoverImageFileName);
-        var coverImage = await _fileService.UploadAsync(request.Event.CoverImage, FileContainer.EVENTS);
+        BlobResponseDto coverImage = await _fileService.UploadAsync(request.Event.CoverImage, FileContainer.EVENTS);
         @event.CoverImageUrl = coverImage.Blob.Uri ?? "";
         @event.CoverImageFileName = coverImage.Blob.Name ?? "";
 
-        await _unitOfWork.Events.UpdateAsync(@event);
+        _unitOfWork.Events.Update(@event);
         await _unitOfWork.CommitAsync();
 
         if (request.Event.EventSubImages != null && request.Event.EventSubImages.Any())
         {
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .DeleteEventSubImages(@event.Id);
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .UploadAndSaveEventSubImages(@event.Id, request.Event.EventSubImages);
         }
 
         if (request.Event.EmailContent != null)
         {
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .UpdateEmailContentOfEvent(@event.Id, request.Event.EmailContent);
         }
 
@@ -73,19 +77,19 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             var ticketTypes = request.Event.TicketTypes
                 .Select(x => _serializeService.Deserialize<UpdateTicketTypeDto>(x))
                 .ToList();
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .UpdateTicketTypesInEvent(@event.Id, ticketTypes);
         }
 
         if (request.Event.Categories.Any())
         {
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .UpdateCategoriesInEvent(@event.Id, request.Event.Categories);
         }
 
         if (request.Event.Reasons != null && request.Event.Reasons.Any())
         {
-            await Domain.AggregateModels.EventAggregate.Event
+            Domain.AggregateModels.EventAggregate.Event
                 .UpdateReasonsInEvent(@event.Id, request.Event.Reasons.ToList());
         }
     }

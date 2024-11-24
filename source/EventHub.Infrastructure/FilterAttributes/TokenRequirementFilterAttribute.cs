@@ -5,7 +5,7 @@ namespace EventHub.Infrastructure.FilterAttributes;
 /// <summary>
 /// Represents an attribute that applies a <see cref="TokenRequirementFilter"/> to an action or controller.
 /// </summary>
-public class TokenRequirementFilterAttribute : TypeFilterAttribute
+public sealed class TokenRequirementFilterAttribute : TypeFilterAttribute
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TokenRequirementFilterAttribute"/> class.
@@ -13,6 +13,6 @@ public class TokenRequirementFilterAttribute : TypeFilterAttribute
     public TokenRequirementFilterAttribute()
         : base(typeof(TokenRequirementFilter))
     {
-        Arguments = new object[] { };
+        Arguments = Array.Empty<object>();
     }
 }

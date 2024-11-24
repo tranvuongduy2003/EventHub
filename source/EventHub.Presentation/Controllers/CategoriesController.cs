@@ -44,18 +44,12 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> PostCreateCategory([FromForm] CreateCategoryDto request)
     {
         _logger.LogInformation("START: PostCreateCategory");
-        try
-        {
-            var category = await _mediator.Send(new CreateCategoryCommand(request));
 
-            _logger.LogInformation("END: PostCreateCategory");
+        CategoryDto category = await _mediator.Send(new CreateCategoryCommand(request));
 
-            return Ok(new ApiCreatedResponse(category));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: PostCreateCategory");
+
+        return Ok(new ApiCreatedResponse(category));
     }
 
     [HttpGet]
@@ -68,18 +62,13 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> GetPaginatedCategories([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedCategories");
-        try
-        {
-            var categories = await _mediator.Send(new GetPaginatedCategoriesQuery(filter));
 
-            _logger.LogInformation("END: GetPaginatedCategories");
+        Pagination<CategoryDto> categories = await _mediator.Send(new GetPaginatedCategoriesQuery(filter));
 
-            return Ok(new ApiOkResponse(categories));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedCategories");
+
+        return Ok(new ApiOkResponse(categories));
+
     }
 
     [HttpGet("{categoryId:guid}")]
@@ -98,7 +87,7 @@ public class CategoriesController : ControllerBase
         _logger.LogInformation("START: GetCategoryById");
         try
         {
-            var category = await _mediator.Send(new GetCategoryByIdQuery(categoryId));
+            CategoryDto category = await _mediator.Send(new GetCategoryByIdQuery(categoryId));
 
             _logger.LogInformation("END: GetCategoryById");
 
@@ -107,10 +96,6 @@ public class CategoriesController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -142,10 +127,6 @@ public class CategoriesController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpDelete("{categoryId:guid}")]
@@ -173,10 +154,6 @@ public class CategoriesController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

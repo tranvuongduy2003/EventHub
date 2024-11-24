@@ -12,7 +12,7 @@ namespace EventHub.Domain.SeedWork.Command;
 /// typically used to perform actions that may modify the state of the system and are intended for
 /// operations rather than queries.
 /// </remarks>
-public interface ICommand<T> : IRequest<T>;
+public interface ICommand<out T> : IRequest<T>;
 
 /// <summary>
 /// Represents a command that performs an action and no returns.

@@ -1,5 +1,3 @@
-using AutoMapper;
-using EventHub.Abstractions;
 using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
@@ -15,20 +13,18 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly IMapper _mapper;
     private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
     private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
 
     public SignUpCommnadHandler(
         UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        IMapper mapper, SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
+        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
         ITokenService tokenService,
         IHangfireService hangfireService,
         IEmailService emailService)
     {
         _userManager = userManager;
-        _mapper = mapper;
         _signInManager = signInManager;
         _tokenService = tokenService;
         _hangfireService = hangfireService;
@@ -37,27 +33,31 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 
     public async Task<SignInResponseDto> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
-        var useByEmail = await _userManager.FindByEmailAsync(request.Email);
+        Domain.AggregateModels.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
+        {
             throw new BadRequestException("Email already exists");
+        }
 
-        var useByPhoneNumber = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
+        Domain.AggregateModels.UserAggregate.User useByPhoneNumber = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken);
         if (useByPhoneNumber != null)
+        {
             throw new BadRequestException("Phone number already exists");
+        }
 
         var user = new Domain.AggregateModels.UserAggregate.User
         {
-            Email = request.Email, 
-            PhoneNumber = request.PhoneNumber, 
+            Email = request.Email,
+            PhoneNumber = request.PhoneNumber,
             FullName = request.FullName,
             UserName = request.UserName
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        IdentityResult result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
-            var userToReturn = await _userManager.FindByEmailAsync(request.Email);
+            Domain.AggregateModels.UserAggregate.User userToReturn = await _userManager.FindByEmailAsync(request.Email);
 
             await _userManager.AddToRolesAsync(user, new List<string>
             {
@@ -67,8 +67,8 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 
             await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
 
-            var accessToken = await _tokenService.GenerateAccessTokenAsync(user);
-            var refreshToken =
+            string accessToken = await _tokenService.GenerateAccessTokenAsync(user);
+            string refreshToken =
                 await _userManager
                     .GenerateUserTokenAsync(user, TokenProviders.DEFAULT, TokenTypes.REFRESH);
 
@@ -81,10 +81,13 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
                 RefreshToken = refreshToken
             };
 
-            _hangfireService.Enqueue(() =>
-                _emailService
-                    .SendRegistrationConfirmationEmailAsync(userToReturn.Email, userToReturn.FullName)
-                    .Wait());
+            if (userToReturn != null && !string.IsNullOrEmpty(userToReturn.Email) && !string.IsNullOrEmpty(userToReturn.FullName))
+            {
+                _hangfireService.Enqueue(() =>
+                    _emailService
+                        .SendRegistrationConfirmationEmailAsync(userToReturn.Email, userToReturn.FullName)
+                        .Wait());
+            }
 
             return signUpResponse;
         }

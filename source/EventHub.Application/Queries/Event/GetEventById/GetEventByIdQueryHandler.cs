@@ -4,7 +4,6 @@ using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Event;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Event.GetEventById;
 
@@ -13,7 +12,7 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetEventByIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
+    public GetEventByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -23,20 +22,21 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
         CancellationToken cancellationToken)
     {
 
-        var cachedEvent = await _unitOfWork.CachedEvents
+        List<Domain.AggregateModels.EventAggregate.Event> cachedEvent = await _unitOfWork.CachedEvents
             .FindByCondition(x => x.Id.Equals(request.EventId))
             .Include(x => x.Author)
             .Include(x => x.EmailContent)
             .Include(x => x.Reasons)
             .Include(x => x.TicketTypes)
             .Include(x => x.EventSubImages)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         if (cachedEvent == null)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        var eventDto = _mapper.Map<EventDetailDto>(cachedEvent);
-
+        EventDetailDto eventDto = _mapper.Map<EventDetailDto>(cachedEvent);
 
         return eventDto;
     }

@@ -25,14 +25,11 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
         RuleFor(x => x.StartTime)
             .NotEmpty().WithMessage("Start time is required")
             .LessThan(x => x.EndTime)
-            .When(x => x.EndTime != null)
             .WithMessage("Start time must be less than end time");
-        ;
 
         RuleFor(x => x.EndTime)
             .NotEmpty().WithMessage("End time is required")
             .GreaterThan(x => x.StartTime)
-            .When(x => x.StartTime != null)
             .WithMessage("End time must be greater than start time");
 
         RuleFor(x => x.Promotion)
@@ -53,8 +50,6 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
             .NotNull()
             .When(x => x.EventPaymentType == EEventPaymentType.PAID)
             .WithMessage("TicketTypes is required");
-        //RuleForEach(x => x.TicketTypes.Select(type => JsonConvert.DeserializeObject<TicketTypeCreateRequest>(type))).NotNull().WithMessage("Ticket Type is required")
-        //    .SetValidator(new CreateTicketTypeDtoValidator());
 
         RuleFor(x => x.Reasons)
             .NotNull().WithMessage("Reasons is required");
@@ -71,8 +66,10 @@ public class CreateEventDtoValidator : AbstractValidator<CreateEventDto>
         RuleFor(x => x.EventCycleType)
             .NotNull().WithMessage("EEventCycleType is required");
 
-        RuleFor(x => x.EmailContent)
-            .SetValidator(new CreateEmailContentDtoValidator())
-            .When(x => x.EmailContent != null);
+        When(x => x.EmailContent != null, () =>
+        {
+            RuleFor(x => x.EmailContent!)
+                .SetValidator(new CreateEmailContentDtoValidator());
+        });
     }
 }

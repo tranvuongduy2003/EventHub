@@ -18,7 +18,7 @@ public class DeleteEventTicketTypesDomainEventHandler : IDomainEventHandler<Dele
     {
         await _unitOfWork.TicketTypes
             .FindByCondition(x => x.EventId.Equals(notification.EventId))
-            .ExecuteDeleteAsync();
+            .ExecuteDeleteAsync(cancellationToken);
 
         await _unitOfWork.CommitAsync();
     }

@@ -10,7 +10,7 @@ public class ConversationDto
 
     public ConversationUserDto User { get; set; }
 
-    public ConversationLastMessageDto? LastMessage { get; set; } = null;
+    public ConversationLastMessageDto? LastMessage { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

@@ -23,7 +23,7 @@ public class CommandsController : ControllerBase
         _logger = logger;
         _mediator = mediator;
     }
-    
+
     [HttpGet("get-in-function/{functionId}")]
     [SwaggerOperation(
         Summary = "Retrieve commands associated with a specific function",
@@ -38,20 +38,15 @@ public class CommandsController : ControllerBase
     public async Task<IActionResult> GetCommandsInFunction(string functionId)
     {
         _logger.LogInformation("START: GetCommandsInFunction");
-        try
-        {
-            var commands = await _mediator.Send(new GetCommandsInFunctionQuery(functionId));
 
-            _logger.LogInformation("END: GetCommandsInFunction");
+        List<CommandDto> commands = await _mediator.Send(new GetCommandsInFunctionQuery(functionId));
 
-            return Ok(new ApiOkResponse(commands));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetCommandsInFunction");
+
+        return Ok(new ApiOkResponse(commands));
+
     }
-    
+
     [HttpGet("get-not-in-function/{functionId}")]
     [SwaggerOperation(
         Summary = "Retrieve commands not associated with a specific function",
@@ -66,17 +61,12 @@ public class CommandsController : ControllerBase
     public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
     {
         _logger.LogInformation("START: GetCommandsNotInFunction");
-        try
-        {
-            var commands = await _mediator.Send(new GetCommandsNotInFunctionQuery(functionId));
 
-            _logger.LogInformation("END: GetCommandsNotInFunction");
+        List<CommandDto> commands = await _mediator.Send(new GetCommandsNotInFunctionQuery(functionId));
 
-            return Ok(new ApiOkResponse(commands));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetCommandsNotInFunction");
+
+        return Ok(new ApiOkResponse(commands));
+
     }
 }

@@ -7,9 +7,11 @@ public static class CachingConfiguration
 {
     public static IServiceCollection ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("CacheConnectionString");
+        string connectionString = configuration.GetConnectionString("CacheConnectionString");
         if (connectionString == null || string.IsNullOrEmpty(connectionString))
-            throw new ArgumentNullException("CacheConnectionString is not configured.");
+        {
+            throw new NullReferenceException("CacheConnectionString is not configured.");
+        }
 
         // Redis Configuration
         services.AddStackExchangeRedisCache(options => { options.Configuration = connectionString; });

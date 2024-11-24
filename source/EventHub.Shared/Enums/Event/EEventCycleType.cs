@@ -3,5 +3,5 @@
 public enum EEventCycleType
 {
     RECURRING,
-    SINGLE
+    ONETIME
 }

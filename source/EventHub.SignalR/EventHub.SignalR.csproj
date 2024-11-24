@@ -1,24 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1"/>
+		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.27.0"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8"/>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
+		<PackageReference Include="SignalRSwaggerGen.Core" Version="1.2.0"/>
+	</ItemGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="13.0.1"/>
-        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.27.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
-        <PackageReference Include="SignalRSwaggerGen.Core" Version="1.2.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\EventHub.Abstractions\EventHub.Abstractions.csproj"/>
-      <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
-        <ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj"/>
-      <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EventHub.Abstractions\EventHub.Abstractions.csproj" />
+		<ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>

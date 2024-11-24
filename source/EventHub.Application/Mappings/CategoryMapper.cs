@@ -4,7 +4,7 @@ using EventHub.Shared.DTOs.Category;
 
 namespace EventHub.Application.Mappings;
 
-public class CategoryMapper
+public sealed class CategoryMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {

@@ -45,18 +45,12 @@ public class ReviewsController : ControllerBase
     public async Task<IActionResult> PostCreateReview([FromBody] CreateReviewDto request)
     {
         _logger.LogInformation("START: PostCreateReview");
-        try
-        {
-            var review = await _mediator.Send(new CreateReviewCommand(request));
 
-            _logger.LogInformation("END: PostCreateReview");
+        ReviewDto review = await _mediator.Send(new CreateReviewCommand(request));
 
-            return Ok(new ApiCreatedResponse(review));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: PostCreateReview");
+
+        return Ok(new ApiCreatedResponse(review));
     }
 
     [HttpGet]
@@ -69,18 +63,12 @@ public class ReviewsController : ControllerBase
     public async Task<IActionResult> GetPaginatedReviews([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedReviews");
-        try
-        {
-            var reviews = await _mediator.Send(new GetPaginatedReviewsQuery(filter));
 
-            _logger.LogInformation("END: GetPaginatedReviews");
+        Pagination<ReviewDto> reviews = await _mediator.Send(new GetPaginatedReviewsQuery(filter));
 
-            return Ok(new ApiOkResponse(reviews));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedReviews");
+
+        return Ok(new ApiOkResponse(reviews));
     }
 
     [HttpGet("get-by-event/{eventId:guid}")]
@@ -97,7 +85,7 @@ public class ReviewsController : ControllerBase
         _logger.LogInformation("START: GetPaginatedReviewsByEvent");
         try
         {
-            var reviews = await _mediator.Send(new GetPaginatedReviewsByEventIdQuery(eventId, filter));
+            Pagination<ReviewDto> reviews = await _mediator.Send(new GetPaginatedReviewsByEventIdQuery(eventId, filter));
 
             _logger.LogInformation("END: GetPaginatedReviewsByEvent");
 
@@ -106,10 +94,6 @@ public class ReviewsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -130,7 +114,7 @@ public class ReviewsController : ControllerBase
         _logger.LogInformation("START: GetPaginatedReviewsByUser");
         try
         {
-            var reviews = await _mediator.Send(new GetPaginatedReviewsByUserIdQuery(userId, filter));
+            Pagination<ReviewDto> reviews = await _mediator.Send(new GetPaginatedReviewsByUserIdQuery(userId, filter));
 
             _logger.LogInformation("END: GetPaginatedReviewsByUser");
 
@@ -140,12 +124,8 @@ public class ReviewsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
-    
+
     [HttpGet("{reviewId:guid}")]
     [SwaggerOperation(
         Summary = "Retrieve a review by its ID",
@@ -162,7 +142,7 @@ public class ReviewsController : ControllerBase
         _logger.LogInformation("START: GetReviewById");
         try
         {
-            var review = await _mediator.Send(new GetReviewByIdQuery(reviewId));
+            ReviewDto review = await _mediator.Send(new GetReviewByIdQuery(reviewId));
 
             _logger.LogInformation("END: GetReviewById");
 
@@ -171,10 +151,6 @@ public class ReviewsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -206,10 +182,6 @@ public class ReviewsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     [HttpDelete("{reviewId:guid}")]
@@ -237,10 +209,6 @@ public class ReviewsController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }

@@ -52,7 +52,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PostCreateUser");
         try
         {
-            var user = await _mediator.Send(new CreateUserCommand(request));
+            UserDto user = await _mediator.Send(new CreateUserCommand(request));
 
             _logger.LogInformation("END: PostCreateUser");
 
@@ -61,10 +61,6 @@ public class UsersController : ControllerBase
         catch (BadRequestException e)
         {
             return NotFound(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
@@ -81,18 +77,12 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetPaginatedUsers([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedUsers");
-        try
-        {
-            var users = await _mediator.Send(new GetPaginatedUsersQuery(filter));
 
-            _logger.LogInformation("END: GetPaginatedUsers");
+        Pagination<UserDto> users = await _mediator.Send(new GetPaginatedUsersQuery(filter));
 
-            return Ok(new ApiOkResponse(users));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedUsers");
+
+        return Ok(new ApiOkResponse(users));
     }
 
     [HttpGet("{userId:guid}")]
@@ -111,7 +101,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: GetUserById");
         try
         {
-            var user = await _mediator.Send(new GetUserByIdQuery(userId));
+            UserDto user = await _mediator.Send(new GetUserByIdQuery(userId));
 
             _logger.LogInformation("END: GetUserById");
 
@@ -120,10 +110,7 @@ public class UsersController : ControllerBase
         catch (NotFoundException e)
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
+
         }
     }
 
@@ -159,10 +146,7 @@ public class UsersController : ControllerBase
         catch (BadRequestException e)
         {
             return NotFound(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
+
         }
     }
 
@@ -198,13 +182,10 @@ public class UsersController : ControllerBase
         catch (BadRequestException e)
         {
             return NotFound(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
+
         }
     }
-    
+
     [HttpGet("{userId:guid}/followers")]
     [SwaggerOperation(
         Summary = "Retrieve a list of followers of a user by its ID",
@@ -219,20 +200,16 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetPaginatedFollowers(Guid userId, [FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedFollowers");
-        try
-        {
-            var users = await _mediator.Send(new GetPaginatedFollowersQuery(userId, filter));
 
-            _logger.LogInformation("END: GetPaginatedFollowers");
+        Pagination<UserDto> users = await _mediator.Send(new GetPaginatedFollowersQuery(userId, filter));
 
-            return Ok(new ApiOkResponse(users));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedFollowers");
+
+        return Ok(new ApiOkResponse(users));
+
     }
-    
+
+
     [HttpGet("{userId:guid}/following-users")]
     [SwaggerOperation(
         Summary = "Retrieve a list of following users of a user by its ID",
@@ -247,18 +224,13 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetPaginatedFollowingUsers(Guid userId, [FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedFollowingUsers");
-        try
-        {
-            var users = await _mediator.Send(new GetPaginatedFollowingUsersQuery(userId, filter));
 
-            _logger.LogInformation("END: GetPaginatedFollowingUsers");
+        Pagination<UserDto> users = await _mediator.Send(new GetPaginatedFollowingUsersQuery(userId, filter));
 
-            return Ok(new ApiOkResponse(users));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        _logger.LogInformation("END: GetPaginatedFollowingUsers");
+
+        return Ok(new ApiOkResponse(users));
+
     }
 
     [HttpPatch("follow/{followedUserId:guid}")]
@@ -278,7 +250,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PatchFollowUser");
         try
         {
-            var accessToken = Request
+            string accessToken = Request
                 .Headers[HeaderNames.Authorization]
                 .ToString()
                 .Replace("Bearer ", "");
@@ -296,13 +268,10 @@ public class UsersController : ControllerBase
         catch (BadRequestException e)
         {
             return NotFound(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
+
         }
     }
-    
+
     [HttpPatch("unfollow/{followedUserId:guid}")]
     [SwaggerOperation(
         Summary = "Unfollow a user",
@@ -320,7 +289,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PatchUnfollowUser");
         try
         {
-            var accessToken = Request
+            string accessToken = Request
                 .Headers[HeaderNames.Authorization]
                 .ToString()
                 .Replace("Bearer ", "");
@@ -338,10 +307,7 @@ public class UsersController : ControllerBase
         catch (BadRequestException e)
         {
             return NotFound(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using EventHub.Abstractions;
+﻿using System.Globalization;
 using EventHub.Abstractions.Services;
 using EventHub.Shared.SeedWork;
 using EventHub.Shared.Settings;
@@ -36,38 +36,39 @@ public class EmailService : IEmailService
 
     public async Task SendMail(MailContent mailContent)
     {
-        var email = new MimeMessage();
+        using var email = new MimeMessage();
         email.Sender = new MailboxAddress(_emailSettings.DisplayName, _emailSettings.Email);
         email.From.Add(new MailboxAddress(_emailSettings.DisplayName, _emailSettings.Email));
         email.To.Add(MailboxAddress.Parse(mailContent.To));
         email.Subject = mailContent.Subject;
 
 
-        var builder = new BodyBuilder();
-        builder.HtmlBody = mailContent.Body;
+        var builder = new BodyBuilder
+        {
+            HtmlBody = mailContent.Body
+        };
         email.Body = builder.ToMessageBody();
 
         using var smtp = new SmtpClient();
 
         try
         {
-            smtp.Connect(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_emailSettings.Email, _emailSettings.Password);
+            await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_emailSettings.Email, _emailSettings.Password);
             await smtp.SendAsync(email);
         }
         catch (Exception ex)
         {
             Directory.CreateDirectory("mailssave");
-            var emailsavefile = string.Format(@"mailssave/{0}.eml", Guid.NewGuid());
+            string emailsavefile = string.Format(CultureInfo.InvariantCulture, @"mailssave/{0}.eml", Guid.NewGuid());
             await email.WriteToAsync(emailsavefile);
 
-            _logger.LogInformation("Email sending email, save at - " + emailsavefile);
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "Email sending email, save at - {FileName}", emailsavefile);
         }
 
-        smtp.Disconnect(true);
+        await smtp.DisconnectAsync(true);
 
-        _logger.LogInformation("send mail to " + mailContent.To);
+        _logger.LogInformation("Send mail to {ToAddress}", mailContent.To);
     }
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -82,11 +83,11 @@ public class EmailService : IEmailService
 
     public async Task SendRegistrationConfirmationEmailAsync(string email, string userName)
     {
-        var FullPath = Path.Combine("Templates/", "SignUpEmailTemplate.html");
+        string FullPath = Path.Combine("Templates/", "SignUpEmailTemplate.html");
 
         var str = new StreamReader(FullPath);
 
-        var mailText = str.ReadToEnd();
+        string mailText = await str.ReadToEndAsync();
 
         str.Close();
 
@@ -95,17 +96,17 @@ public class EmailService : IEmailService
         await SendEmailAsync(email, "Registration Confirmation", mailText);
     }
 
-    public async Task SendResetPasswordEmailAsync(string email, string resetPasswordUrl)
+    public async Task SendResetPasswordEmailAsync(string email, Uri resetPasswordUrl)
     {
-        var FullPath = Path.Combine("Templates/", "ResetPasswordEmailTemplate.html");
+        string FullPath = Path.Combine("Templates/", "ResetPasswordEmailTemplate.html");
 
         var str = new StreamReader(FullPath);
 
-        var mailText = str.ReadToEnd();
+        string mailText = await str.ReadToEndAsync();
 
         str.Close();
 
-        mailText = mailText.Replace("[resetPasswordUrl]", resetPasswordUrl);
+        mailText = mailText.Replace("[resetPasswordUrl]", resetPasswordUrl.ToString());
 
         await SendEmailAsync(email, "Reset Your Password", mailText);
     }

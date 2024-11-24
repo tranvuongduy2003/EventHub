@@ -5,6 +5,7 @@ using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Function;
 using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;
 
@@ -27,9 +28,9 @@ public class
     public async Task<List<RolePermissionDto>> Handle(GetPermissionsCategorizedByRolesQuery request,
         CancellationToken cancellationToken)
     {
-        var permissions = _unitOfWork.Permissions
+        List<Domain.AggregateModels.PermissionAggregate.Permission> permissions = await _unitOfWork.Permissions
             .FindAll(false, x => x.Function)
-            .ToList();
+            .ToListAsync(cancellationToken);
 
         var roles = _roleManager.Roles.ToList();
 

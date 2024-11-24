@@ -4,7 +4,7 @@ using EventHub.Persistence.Outbox;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventHub.Application.Idempotence;
+namespace EventHub.Infrastructure.Idempotence;
 
 /// <summary>
 /// An idempotent domain event handler that ensures a domain event is processed only once.

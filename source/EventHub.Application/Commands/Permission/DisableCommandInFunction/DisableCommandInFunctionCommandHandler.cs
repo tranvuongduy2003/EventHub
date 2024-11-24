@@ -11,6 +11,9 @@ public class DisableCommandInFunctionCommandHandler : ICommandHandler<DisableCom
 
     public async Task Handle(DisableCommandInFunctionCommand request, CancellationToken cancellationToken)
     {
-        await PermissionAggregateRoot.DisableCommandInFunction(request.FunctionId, request.CommandId);
+        await Task.Run(() =>
+        {
+            PermissionAggregateRoot.DisableCommandInFunction(request.FunctionId, request.CommandId);
+        }, cancellationToken);
     }
 }

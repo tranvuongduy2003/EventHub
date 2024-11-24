@@ -14,6 +14,6 @@ public class EmailContentDto
     public string Content { get; set; } = string.Empty;
 
     [SwaggerSchema("List of URLs pointing to the attachments for the email")]
-    [DefaultValue(new[] { "https://example.com/attachment1.pdf", "https://example.com/attachment2.jpg" })]
+    [DefaultValue(typeof(Uri[]))]
     public List<string> AttachmentUrls { get; set; } = new();
 }

@@ -16,16 +16,14 @@ public class MakeEventsPrivateDomainEventHandler : IDomainEventHandler<MakeEvent
 
     public async Task Handle(MakeEventsPrivateDomainEvent notification, CancellationToken cancellationToken)
     {
-        var events = _unitOfWork.CachedEvents
+        IQueryable<Domain.AggregateModels.EventAggregate.Event> events = _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(notification.UserId))
             .Join(
                 notification.Events,
                 _event => _event.Id,
                 _id => _id, (_event, _id) => _event);
 
-        await events
-            .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(e => e.IsPrivate, true));
+        await events.ExecuteUpdateAsync(setters => setters.SetProperty(e => e.IsPrivate, true), cancellationToken);
 
         await _unitOfWork.CommitAsync();
     }

@@ -2,7 +2,6 @@
 using EventHub.Domain.AggregateModels.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.DomainEventHandlers;
 
@@ -17,12 +16,12 @@ public class UpdateReasonsInEventDomainEventHandler : IDomainEventHandler<Update
 
     public async Task Handle(UpdateReasonsInEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        var deletedReasons = _unitOfWork.Reasons
+        IQueryable<Reason> deletedReasons = _unitOfWork.Reasons
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
-        await _unitOfWork.Reasons.DeleteListAsync(deletedReasons);
+        _unitOfWork.Reasons.DeleteList(deletedReasons);
 
         var reasons = new List<Reason>();
-        foreach (var reason in notification.Reasons)
+        foreach (string reason in notification.Reasons)
         {
             reasons.Add(new Reason()
             {

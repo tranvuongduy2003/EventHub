@@ -21,22 +21,26 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
 
     public async Task Handle(UnfavouriteEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        var isEventExisted = await _unitOfWork.Events
+        bool isEventExisted = await _unitOfWork.Events
             .ExistAsync(x => x.Id.Equals(notification.EventId));
         if (!isEventExisted)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        var favouriteEvent = await _unitOfWork.FavouriteEvents
+        Domain.AggregateModels.EventAggregate.FavouriteEvent favouriteEvent = await _unitOfWork.FavouriteEvents
             .FindByCondition(x =>
                 x.EventId.Equals(notification.EventId) &&
                 x.UserId.Equals(notification.UserId))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
         if (favouriteEvent == null)
+        {
             throw new BadRequestException("User has not subscribed this event before");
+        }
 
-        await _unitOfWork.FavouriteEvents.DeleteAsync(favouriteEvent);
+        _unitOfWork.FavouriteEvents.Delete(favouriteEvent);
 
-        var user = await _userManager.FindByIdAsync(notification.UserId.ToString());
+        User user = await _userManager.FindByIdAsync(notification.UserId.ToString());
         if (user != null)
         {
             user.NumberOfFavourites--;

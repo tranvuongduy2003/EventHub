@@ -1,6 +1,6 @@
 ﻿namespace EventHub.Shared.ValueObjects;
 
-public class FileContainer
+public static class FileContainer
 {
     public const string USERS = "users";
 

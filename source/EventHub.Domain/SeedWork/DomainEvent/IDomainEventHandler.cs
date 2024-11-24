@@ -13,7 +13,7 @@ namespace EventHub.Domain.SeedWork.DomainEvent;
 /// within an event-driven system. Implementations of this interface should provide the logic for
 /// handling specific domain events and performing necessary actions when those events occur.
 /// </remarks>
-public interface IDomainEventHandler<TEvent> : INotificationHandler<TEvent>
+public interface IDomainEventHandler<in TEvent> : INotificationHandler<TEvent>
     where TEvent : IDomainEvent
 {
 }

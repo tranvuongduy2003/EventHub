@@ -22,7 +22,7 @@ public interface IFileService
     /// <remarks>
     /// If a stored policy name is provided, the URI will be generated based on the policy.
     /// </remarks>
-    Task<string> GetUriByFileNameAsync(string container, string fileName, string? storedPolicyName = null);
+    Uri GetUriByFileNameAsync(string container, string fileName, string? storedPolicyName = null);
 
     /// <summary>
     /// Lists all files in the storage system.
