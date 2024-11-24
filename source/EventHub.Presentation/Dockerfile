@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "./"]
 COPY ["source/EventHub.Presentation/EventHub.Presentation.csproj", "source/EventHub.Presentation/"]
 COPY ["source/EventHub.Abstractions/EventHub.Abstractions.csproj", "source/EventHub.Abstractions/"]
 COPY ["source/EventHub.Domain/EventHub.Domain.csproj", "source/EventHub.Domain/"]
