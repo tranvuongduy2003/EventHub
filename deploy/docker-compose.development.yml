@@ -46,6 +46,21 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
+  
+  minio:
+    image: minio/minio:latest
+    container_name: eventhub.minio
+    ports:
+      - "9000:9000" # MinIO Console
+      - "9001:9001" # MinIO Admin Console
+    restart: always
+    volumes:
+      - minio_data:/data 
+      - minio_config:/root/.minio
+    environment:
+      MINIO_ROOT_USER: minioadmin 
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
 
 
 # network section
@@ -64,3 +79,7 @@ volumes:
     name: seq_data
   hangfire_mongo_data:
     name: hangfire_mongo_data
+  minio_data:
+    name: minio_data
+  minio_config:
+    name: minio_config

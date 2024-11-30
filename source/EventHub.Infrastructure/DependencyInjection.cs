@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.ConfigureAppSettings(configuration);
         services.ConfigureApplication();
         services.ConfigureAuthetication();
+        services.ConfigureMinioStorage();
         services.ConfigureDependencyInjection();
 
         return services;
@@ -45,9 +46,12 @@ public static class DependencyInjection
         services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
         services
+            .AddSingleton<IFileService, MinioFileService>()
+            .AddSingleton<IFileService, AzureFileService>();
+
+        services
             .AddTransient<ISerializeService, SerializeService>()
             .AddTransient<ICacheService, CacheService>()
-            .AddTransient<IFileService, AzureFileService>()
             .AddTransient<IHangfireService, HangfireService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITokenService, TokenService>()

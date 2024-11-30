@@ -13,6 +13,10 @@ public static class SettingsConfiguration
             .Get<JwtOptions>();
         services.AddSingleton<JwtOptions>(jwtOptions!);
 
+        MinioStorage minioStorage = configuration.GetSection(nameof(MinioStorage))
+            .Get<MinioStorage>();
+        services.AddSingleton<MinioStorage>(minioStorage!);
+
         AzureBlobStorage azureBlobStorage = configuration.GetSection(nameof(AzureBlobStorage))
             .Get<AzureBlobStorage>();
         services.AddSingleton<AzureBlobStorage>(azureBlobStorage!);

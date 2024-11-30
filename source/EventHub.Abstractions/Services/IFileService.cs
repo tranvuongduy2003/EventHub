@@ -13,56 +13,47 @@ namespace EventHub.Abstractions.Services;
 public interface IFileService
 {
     /// <summary>
-    /// Retrieves the URI of a file in the specified container.
+    /// Retrieves the URI of a file in the specified bucketName.
     /// </summary>
-    /// <param name="container">The name of the container where the file is stored.</param>
-    /// <param name="fileName">The name of the file for which to retrieve the URI.</param>
-    /// <param name="storedPolicyName">An optional name of a stored access policy for the container.</param>
+    /// <param name="bucketName">The name of the bucketName where the file is stored.</param>
+    /// <param name="objectName">The name of the file for which to retrieve the URI.</param>
+    /// <param name="storedPolicyName">An optional name of a stored access policy for the bucketName.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the URI of the file.</returns>
     /// <remarks>
     /// If a stored policy name is provided, the URI will be generated based on the policy.
     /// </remarks>
-    Uri GetUriByFileNameAsync(string container, string fileName, string? storedPolicyName = null);
+    Task<Uri> GetUriByFileNameAsync(string bucketName, string objectName);
 
     /// <summary>
-    /// Lists all files in the storage system.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a list of file metadata.</returns>
-    /// <remarks>
-    /// The list of files returned includes metadata about each file, such as names and other relevant information.
-    /// </remarks>
-    Task<List<BlobDto>> ListAsync();
-
-    /// <summary>
-    /// Uploads a file to the specified container.
+    /// Uploads a file to the specified bucketName.
     /// </summary>
     /// <param name="blob">The file to upload.</param>
-    /// <param name="container">The name of the container to upload the file to.</param>
+    /// <param name="bucketName">The name of the bucketName to upload the file to.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the response details of the uploaded file.</returns>
     /// <remarks>
-    /// The file is uploaded to the specified container. The response details include information about the uploaded file.
+    /// The file is uploaded to the specified bucketName. The response details include information about the uploaded file.
     /// </remarks>
-    Task<BlobResponseDto> UploadAsync(IFormFile blob, string container);
+    Task<BlobResponseDto> UploadAsync(IFormFile blob, string bucketName);
 
     /// <summary>
-    /// Downloads a file from the specified container.
+    /// Downloads a file from the specified bucketName.
     /// </summary>
-    /// <param name="container">The name of the container where the file is stored.</param>
-    /// <param name="filename">The name of the file to download.</param>
+    /// <param name="bucketName">The name of the bucketName where the file is stored.</param>
+    /// <param name="objectName">The name of the file to download.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the file metadata and content if available, or null if not found.</returns>
     /// <remarks>
     /// If the file is found, the metadata and content are returned. If the file does not exist, the result will be null.
     /// </remarks>
-    Task<BlobDto?> DownloadAsync(string container, string filename);
+    Task<BlobDto?> DownloadAsync(string bucketName, string objectName);
 
     /// <summary>
-    /// Deletes a file from the specified container.
+    /// Deletes a file from the specified bucketName.
     /// </summary>
-    /// <param name="container">The name of the container where the file is stored.</param>
-    /// <param name="filename">The name of the file to delete.</param>
+    /// <param name="bucketName">The name of the bucketName where the file is stored.</param>
+    /// <param name="objectName">The name of the file to delete.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the response details of the deleted file.</returns>
     /// <remarks>
-    /// The file is removed from the specified container. The response details include information about the deleted file.
+    /// The file is removed from the specified bucketName. The response details include information about the deleted file.
     /// </remarks>
-    Task<BlobResponseDto> DeleteAsync(string container, string filename);
+    Task<BlobResponseDto> DeleteAsync(string bucketName, string objectName);
 }
