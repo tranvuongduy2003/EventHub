@@ -1,0 +1,52 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: latest
+  IMAGE_NAME: eventhub-api
+  GIT_STRATEGY: "clone"
+
+build:
+  stage: build
+  script:
+    - echo "Copy environment variables to repository"
+    - cp /home/eventhub/eventhub-api/appsettings.Development.json ./source/EventHub.Presentation/appsettings.json
+
+    - echo "Build docker image"
+    - docker build -t $CI_REGISTRY/$IMAGE_NAME:$IMAGE_TAG -f source/EventHub.Presentation/Dockerfile .
+
+    - echo "Push image to local registry"
+    - docker push $CI_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+
+    - echo "Remove unused image"
+    - docker image prune -a -f
+  tags:
+    - eventhub-api-runner
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  needs:
+    - build
+  script:
+    - echo "Pull image from local registry"
+    - docker pull $CI_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+
+    - echo "Remove current running container"
+    - docker stop $IMAGE_NAME || true
+    - docker rm $IMAGE_NAME || true
+
+    - echo "Run a new container from pulled image"
+    - docker run -d
+      --name $IMAGE_NAME
+      --network eventhub
+      -p 8001:80
+      -e "ASPNETCORE_ENVIRONMENT=Development"
+      -e "ASPNETCORE_URLS=http://+:80"
+      $CI_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+  tags:
+    - eventhub-api-runner
+  only:
+    - master

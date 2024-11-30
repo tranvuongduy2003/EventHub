@@ -46,8 +46,7 @@ public static class DependencyInjection
         services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
         services
-            .AddSingleton<IFileService, MinioFileService>()
-            .AddSingleton<IFileService, AzureFileService>();
+            .AddSingleton<IFileService, MinioFileService>();
 
         services
             .AddTransient<ISerializeService, SerializeService>()

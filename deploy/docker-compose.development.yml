@@ -20,7 +20,7 @@ services:
     volumes:
       - sqlserver_data:/var/lib/sqlserver/data
     ports:
-      - "1434:1433"
+      - "1433:1433"
 
   eventhub.seq:
     image: datalust/seq:latest
@@ -30,7 +30,7 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "5341:5341"
-      - "8081:80"
+      - "3038:80"
     volumes:
       - seq_data:/data
   
@@ -39,7 +39,7 @@ services:
     image: mongo
     container_name: eventhub.hangfire
     ports:
-      - "27018:27017"
+      - "27017:27017"
     volumes:
       - hangfire_mongo_data:/data/db
     restart: always
@@ -47,7 +47,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
   
-  minio:
+  eventhub.minio:
     image: minio/minio:latest
     container_name: eventhub.minio
     ports:

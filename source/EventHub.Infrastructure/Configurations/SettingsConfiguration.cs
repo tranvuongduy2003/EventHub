@@ -17,10 +17,6 @@ public static class SettingsConfiguration
             .Get<MinioStorage>();
         services.AddSingleton<MinioStorage>(minioStorage!);
 
-        AzureBlobStorage azureBlobStorage = configuration.GetSection(nameof(AzureBlobStorage))
-            .Get<AzureBlobStorage>();
-        services.AddSingleton<AzureBlobStorage>(azureBlobStorage!);
-
         EmailSettings emailSettings = configuration.GetSection(nameof(EmailSettings))
             .Get<EmailSettings>();
         services.AddSingleton<EmailSettings>(emailSettings!);
