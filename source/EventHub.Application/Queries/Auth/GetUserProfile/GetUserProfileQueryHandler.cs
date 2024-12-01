@@ -20,8 +20,11 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
 
     public async Task<UserDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-        if (user == null) throw new UnauthorizedException("Unauthorized");
+        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        if (user == null)
+        {
+            throw new UnauthorizedException("Unauthorized");
+        }
 
         var roles = await _userManager.GetRolesAsync(user);
         var userDto = _mapper.Map<UserDto>(user);

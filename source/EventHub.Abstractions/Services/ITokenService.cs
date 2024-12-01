@@ -35,9 +35,9 @@ public interface ITokenService
     /// The JWT token from which to extract the claims principal. This token contains the claims associated with the user.
     /// </param>
     /// <returns>
-    /// A <see cref="ClaimsPrincipal"/> object representing the claims extracted from the token, or null if the token is invalid or cannot be parsed.
+    /// A <see cref="ClaimsIdentity"/> object representing the claims extracted from the token, or null if the token is invalid or cannot be parsed.
     /// </returns>
-    ClaimsPrincipal? GetPrincipalFromToken(string token);
+    Task<ClaimsIdentity?> GetPrincipalFromToken(string token);
 
     /// <summary>
     /// Validates whether the provided token has expired.

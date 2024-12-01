@@ -40,7 +40,7 @@ public class TokenRequirementFilter : IAuthorizationFilter
             context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
         }
 
-        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(accessToken);
+        ClaimsIdentity principal = _tokenService.GetPrincipalFromToken(accessToken).GetAwaiter().GetResult();
         string userId = principal?.Claims?
             .SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "";
         context.HttpContext.Items["AuthorId"] = userId;

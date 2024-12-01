@@ -54,7 +54,7 @@ public class ClaimRequirementFilter : IAuthorizationFilter
             return;
         }
 
-        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(accessToken);
+        ClaimsIdentity principal = _tokenService.GetPrincipalFromToken(accessToken).GetAwaiter().GetResult();
 
         Claim permissionsClaim = principal?.Claims
             .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);

@@ -1,5 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text;
 using EventHub.Abstractions.Services;
 using EventHub.Domain.AggregateModels.UserAggregate;
@@ -8,8 +7,11 @@ using EventHub.Shared.Settings;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Serilog;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace EventHub.Infrastructure.Services;
 
@@ -25,6 +27,7 @@ public class TokenService : ITokenService
 {
     private readonly ApplicationDbContext _context;
     private readonly JwtOptions _jwtOptions;
+    private readonly ILogger _logger;
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
 
@@ -44,9 +47,10 @@ public class TokenService : ITokenService
     /// An instance of <see cref="JwtOptions"/> containing configuration settings for JWT tokens.
     /// </param>
     public TokenService(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager,
-        JwtOptions jwtOptions)
+        JwtOptions jwtOptions, ILogger logger)
     {
         _jwtOptions = jwtOptions;
+        _logger = logger;
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -54,7 +58,7 @@ public class TokenService : ITokenService
 
     public async Task<string> GenerateAccessTokenAsync(User user)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JsonWebTokenHandler();
 
         byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
@@ -88,28 +92,30 @@ public class TokenService : ITokenService
                 SecurityAlgorithms.HmacSha256)
         };
 
-        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        string token = tokenHandler.CreateToken(tokenDescriptor);
+        return token;
     }
 
     public string GenerateRefreshToken()
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JsonWebTokenHandler();
 
         byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
-        var token = new JwtSecurityToken(
-            _jwtOptions.Issuer,
-            _jwtOptions.Audience,
-            expires: DateTime.UtcNow.AddHours(24),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience,
+            Expires = DateTime.UtcNow.AddHours(24),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256)
-        );
+        };
 
-        return tokenHandler.WriteToken(token);
+        string token = tokenHandler.CreateToken(tokenDescriptor);
+        return token;
     }
 
-    public ClaimsPrincipal? GetPrincipalFromToken(string token)
+    public async Task<ClaimsIdentity?> GetPrincipalFromToken(string token)
     {
         byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
@@ -117,19 +123,20 @@ public class TokenService : ITokenService
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = _jwtOptions.Issuer,
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JsonWebTokenHandler();
 
-        ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                StringComparison.OrdinalIgnoreCase))
+        TokenValidationResult principal = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
+        if (principal.Exception is not null)
         {
-            throw new SecurityTokenException("Invalid token");
+            _logger.Error(principal.Exception.Message);
+            throw new SecurityTokenException("invalid_token");
         }
 
-        return principal;
+        return principal.ClaimsIdentity;
     }
 
     public bool ValidateTokenExpired(string token)
@@ -139,7 +146,7 @@ public class TokenService : ITokenService
             return false;
         }
 
-        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JsonWebTokenHandler();
 
         SecurityToken jwtToken = tokenHandler.ReadToken(token);
 

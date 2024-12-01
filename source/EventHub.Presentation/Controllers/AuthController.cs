@@ -316,7 +316,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }

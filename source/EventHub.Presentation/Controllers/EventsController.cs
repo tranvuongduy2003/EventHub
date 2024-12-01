@@ -103,7 +103,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PostCreateEvent");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }
@@ -134,7 +134,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetCreatedEvents");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }
@@ -166,7 +166,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PutUpdateEvent");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }
@@ -203,7 +203,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: DeleteEvent");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }
@@ -262,7 +262,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchRestoreDeletedEvent");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }
@@ -289,7 +289,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetDeletedEvents");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }
@@ -318,7 +318,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchFavouriteEvent");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }
@@ -355,7 +355,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchUnfavouriteEvent");
         try
         {
-            if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
             {
                 userId = Guid.NewGuid();
             }
@@ -391,7 +391,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetFavouriteEvents");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }
@@ -417,7 +417,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchMakeEventsPrivate");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }
@@ -443,7 +443,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchMakeEventsPublic");
 
-        if (Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
+        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
         {
             userId = Guid.NewGuid();
         }

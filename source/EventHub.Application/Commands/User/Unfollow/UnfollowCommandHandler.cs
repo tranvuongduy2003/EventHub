@@ -26,7 +26,7 @@ public class UnfollowCommandHandler : ICommandHandler<UnfollowCommand>
         {
             throw new UnauthorizedException("Unauthorized");
         }
-        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
+        ClaimsIdentity principal = await _tokenService.GetPrincipalFromToken(request.AccessToken);
 
         Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
             .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");

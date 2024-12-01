@@ -13,7 +13,7 @@ namespace EventHub.Application.Behaviors;
 public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger _logger;
+    private readonly ILogger<PerformanceBehavior<TRequest, TResponse>> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PerformanceBehavior{TRequest, TResponse}"/> class.
@@ -21,7 +21,7 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     /// <param name="logger">
     /// An instance of <see cref="ILogger{TRequest}"/> used to log performance warnings.
     /// </param>
-    public PerformanceBehavior(ILogger logger)
+    public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger)
     {
         _timer = new Stopwatch();
         _logger = logger;

@@ -23,8 +23,10 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand>
     public async Task Handle(FollowCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.AccessToken))
+        {
             throw new UnauthorizedException("Unauthorized");
-        ClaimsPrincipal principal = _tokenService.GetPrincipalFromToken(request.AccessToken);
+        }
+        ClaimsIdentity principal = await _tokenService.GetPrincipalFromToken(request.AccessToken);
 
         Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
             .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");

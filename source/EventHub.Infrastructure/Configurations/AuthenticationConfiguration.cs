@@ -11,12 +11,12 @@ public static class AuthenticationConfiguration
 {
     public static IServiceCollection ConfigureAuthetication(this IServiceCollection services)
     {
-        var jwtOptions = services.GetOptions<JwtOptions>("JwtOptions");
-        var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
+        JwtOptions jwtOptions = services.GetOptions<JwtOptions>("JwtOptions");
+        byte[] key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
 
-        var authentication = services.GetOptions<Authentication>("Authentication");
-        var googleAuthentication = authentication.Google;
-        var facebookAuthentication = authentication.Facebook;
+        Authentication authentication = services.GetOptions<Authentication>("Authentication");
+        ProviderOptions googleAuthentication = authentication.Google;
+        ProviderOptions facebookAuthentication = authentication.Facebook;
 
 
         services

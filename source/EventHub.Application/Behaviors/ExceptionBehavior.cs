@@ -10,7 +10,7 @@ namespace EventHub.Application.Behaviors;
 /// <typeparam name="TResponse">The type of the response from the handler.</typeparam>
 public class ExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ExceptionBehavior<TRequest, TResponse>> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExceptionBehavior{TRequest,TResponse}"/> class.
@@ -18,7 +18,7 @@ public class ExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
     /// <param name="logger">
     /// The logger used to record errors when an unhandled exception occurs during the request handling process.
     /// </param>
-    public ExceptionBehavior(ILogger logger)
+    public ExceptionBehavior(ILogger<ExceptionBehavior<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }
