@@ -36,11 +36,14 @@ public class MinioFileService : IFileService
 
         string objectName = blob.FileName;
 
-        await _minioClient.StatObjectAsync(
-            new StatObjectArgs()
-                .WithBucket(bucketName)
-                .WithObject(objectName));
+        bool isBucketExisted = await _minioClient.BucketExistsAsync(new BucketExistsArgs()
+            .WithBucket(bucketName));
 
+        if (!isBucketExisted)
+        {
+            await _minioClient.MakeBucketAsync(new MakeBucketArgs()
+                .WithBucket(bucketName));
+        }
 
         using (Stream stream = blob.OpenReadStream())
         {
