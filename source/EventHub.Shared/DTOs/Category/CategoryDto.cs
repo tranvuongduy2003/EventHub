@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Shared.DTOs.Category;

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using EventHub.Shared.DTOs.Category;
 using EventHub.Shared.DTOs.User;
 using EventHub.Shared.Enums.Event;
@@ -12,43 +11,33 @@ public class EventDto
     [SwaggerSchema("Unique identifier of the event")]
     public Guid Id { get; set; }
 
-    [DefaultValue("")]
     [SwaggerSchema("URL of the cover image for the event")]
     public string CoverImageUrl { get; set; } = string.Empty;
 
-    [DefaultValue("")]
     [SwaggerSchema("Name of the event")]
     public string Name { get; set; } = string.Empty;
 
-    [DefaultValue("")]
     [SwaggerSchema("Detailed description of the event")]
     public string Description { get; set; } = string.Empty;
 
-    [DefaultValue("")]
     [SwaggerSchema("Location where the event will be held")]
     public string Location { get; set; } = string.Empty;
 
-    [DefaultValue(typeof(DateTime), "")]
     [SwaggerSchema("Start time of the event (UTC)")]
     public DateTime StartTime { get; set; } = DateTime.UtcNow;
 
-    [DefaultValue(typeof(DateTime), "")]
     [SwaggerSchema("End time of the event (UTC)")]
     public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    [DefaultValue(0)]
     [SwaggerSchema("Optional promotion discount for the event (in percentage)")]
     public double? Promotion { get; set; } = 0;
 
-    [DefaultValue(0)]
     [SwaggerSchema("The number of times this event has been marked as a favorite")]
     public int? NumberOfFavourites { get; set; } = 0;
 
-    [DefaultValue(0)]
     [SwaggerSchema("The number of times this event has been shared")]
     public int? NumberOfShares { get; set; } = 0;
 
-    [DefaultValue(0)]
     [SwaggerSchema("The total number of tickets sold for this event")]
     public int? NumberOfSoldTickets { get; set; } = 0;
 
@@ -64,7 +53,6 @@ public class EventDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
 
-    [DefaultValue(false)]
     [SwaggerSchema("Indicates if the event is private")]
     public bool IsPrivate { get; set; } = false;
 

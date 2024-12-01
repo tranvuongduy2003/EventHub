@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace EventHub.Infrastructure.Configurations;
@@ -38,6 +37,7 @@ public static class SwaggerConfiguration
             });
             option.AddSignalRSwaggerGen();
             option.EnableAnnotations();
+            option.UseInlineDefinitionsForEnums();
             option.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "EventHub APIs Documentation",
