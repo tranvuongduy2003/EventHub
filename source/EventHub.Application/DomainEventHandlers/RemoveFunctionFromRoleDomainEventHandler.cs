@@ -39,9 +39,11 @@ public class RemoveFunctionFromRoleDomainEventHandler : IDomainEventHandler<Remo
             .ToList();
 
         if (!permissions.Any())
+        {
             throw new NotFoundException("Permission does not exist!");
+        }
 
-        _unitOfWork.Permissions.DeleteList(permissions);
+        await _unitOfWork.Permissions.DeleteList(permissions);
         await _unitOfWork.CommitAsync();
     }
 }

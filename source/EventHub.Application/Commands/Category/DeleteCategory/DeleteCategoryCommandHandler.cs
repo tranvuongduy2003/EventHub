@@ -3,7 +3,6 @@ using EventHub.Abstractions.Services;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.Category.DeleteCategory;
 
@@ -12,8 +11,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
     private readonly IFileService _fileService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork, IFileService fileService,
-        ILogger<DeleteCategoryCommandHandler> logger)
+    public DeleteCategoryCommandHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
@@ -27,7 +25,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
             throw new NotFoundException("Category does not exist!");
         }
 
-        bool isEventCategoryExisted = await _unitOfWork.EventCategories.ExistAsync(request.Id);
+        bool isEventCategoryExisted = await _unitOfWork.EventCategories.ExistAsync(x => x.CategoryId.Equals(request.Id));
         if (isEventCategoryExisted)
         {
             throw new BadRequestException($"Existing more than 1 events in category {category.Name}");
@@ -38,7 +36,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
             await _fileService.DeleteAsync(category.IconImageFileName, FileContainer.CATEGORIES);
         }
 
-        _unitOfWork.Categories.SoftDelete(category);
+        await _unitOfWork.CachedCategories.SoftDelete(category);
         await _unitOfWork.CommitAsync();
     }
 }

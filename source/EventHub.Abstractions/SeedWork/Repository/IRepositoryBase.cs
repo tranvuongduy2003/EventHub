@@ -19,7 +19,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// Asynchronously updates an existing entity.
     /// </summary>
     /// <param name="entity">The entity to update.</param>
-    void Update(T entity);
+    Task Update(T entity);
 
     #endregion
 
@@ -121,13 +121,13 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// Deletes an existing entity.
     /// </summary>
     /// <param name="entity">The entity to delete.</param>
-    void Delete(T entity);
+    Task Delete(T entity);
 
     /// <summary>
     /// Deletes a list of entities.
     /// </summary>
     /// <param name="entities">The list of entities to delete.</param>
-    void DeleteList(IEnumerable<T> entities);
+    Task DeleteList(IEnumerable<T> entities);
 
     #endregion
 
@@ -137,13 +137,13 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// Performs a soft delete on an entity. The entity is marked as deleted but not actually removed from the database.
     /// </summary>
     /// <param name="entity">The entity to soft delete.</param>
-    void SoftDelete(T entity);
+    Task SoftDelete(T entity);
 
     /// <summary>
     /// Restores a soft-deleted entity. The entity is marked as active again.
     /// </summary>
     /// <param name="entity">The entity to restore.</param>
-    void Restore(T entity);
+    Task Restore(T entity);
 
     #endregion
 }

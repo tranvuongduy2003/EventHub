@@ -68,7 +68,6 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     {
         string key = $"{typeof(T).Name}";
 
-
         if (_cacheService.GetData<List<T>>(key).GetAwaiter().GetResult() is not IQueryable<T> items || !items.Any())
         {
             items = !trackChanges
@@ -109,7 +108,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
             return entity;
         }
 
-        entity = await _context.Set<T>().FindAsync(id);
+        entity = await _decorated.GetByIdAsync(id);
         if (entity != null)
         {
             await _cacheService.SetData<T>(key, entity, TimeSpan.FromMinutes(2));
@@ -121,17 +120,73 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     public Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
         => _decorated.GetByIdAsync(id, includeProperties);
 
-    public Task CreateAsync(T entity) => _decorated.CreateAsync(entity);
+    public async Task CreateAsync(T entity)
+    {
+        await _decorated.CreateAsync(entity);
 
-    public Task CreateListAsync(IEnumerable<T> entities) => _decorated.CreateListAsync(entities);
+        string key = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(key);
+    }
 
-    public void Update(T entity) => _decorated.Update(entity);
+    public async Task CreateListAsync(IEnumerable<T> entities)
+    {
+        await _decorated.CreateListAsync(entities);
 
-    public void Delete(T entity) => _decorated.Delete(entity);
+        string key = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(key);
+    }
 
-    public void DeleteList(IEnumerable<T> entities) => _decorated.DeleteList(entities);
+    public async Task Update(T entity)
+    {
+        await _decorated.Update(entity);
 
-    public void SoftDelete(T entity) => _decorated.SoftDelete(entity);
+        string listKey = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(listKey);
 
-    public void Restore(T entity) => _decorated.Restore(entity);
+        string entityKey = $"{typeof(T).Name}-{((dynamic)entity).Id}";
+        await _cacheService.RemoveData(entityKey);
+    }
+
+    public async Task Delete(T entity)
+    {
+        await _decorated.Delete(entity);
+
+        string listKey = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(listKey);
+
+        string entityKey = $"{typeof(T).Name}-{((dynamic)entity).Id}";
+        await _cacheService.RemoveData(entityKey);
+    }
+
+    public async Task DeleteList(IEnumerable<T> entities)
+    {
+        string listKey = $"{typeof(T).Name}";
+        await _decorated.DeleteList(entities);
+        await _cacheService.RemoveData(listKey);
+
+        foreach (T entity in entities)
+        {
+            string entityKey = $"{typeof(T).Name}-{((dynamic)entity).Id}";
+            await _cacheService.RemoveData(entityKey);
+        }
+    }
+
+    public async Task SoftDelete(T entity)
+    {
+        await _decorated.SoftDelete(entity);
+
+        string listKey = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(listKey);
+
+        string entityKey = $"{typeof(T).Name}-{((dynamic)entity).Id}";
+        await _cacheService.RemoveData(entityKey);
+    }
+
+    public async Task Restore(T entity)
+    {
+        await _decorated.Restore(entity);
+
+        string listKey = $"{typeof(T).Name}";
+        await _cacheService.RemoveData(listKey);
+    }
 }

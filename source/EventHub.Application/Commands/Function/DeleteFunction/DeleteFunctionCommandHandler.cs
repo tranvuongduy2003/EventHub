@@ -21,7 +21,7 @@ public class DeleteFunctionCommandHandler : ICommandHandler<DeleteFunctionComman
             throw new NotFoundException("Function does not exist!");
         }
 
-        _unitOfWork.Functions.Delete(function);
+        await _unitOfWork.Functions.Delete(function);
         await _unitOfWork.CommitAsync();
     }
 }

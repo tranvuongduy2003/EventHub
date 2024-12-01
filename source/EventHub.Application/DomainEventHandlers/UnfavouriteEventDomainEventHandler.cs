@@ -38,7 +38,7 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
             throw new BadRequestException("User has not subscribed this event before");
         }
 
-        _unitOfWork.FavouriteEvents.Delete(favouriteEvent);
+        await _unitOfWork.FavouriteEvents.Delete(favouriteEvent);
 
         User user = await _userManager.FindByIdAsync(notification.UserId.ToString());
         if (user != null)

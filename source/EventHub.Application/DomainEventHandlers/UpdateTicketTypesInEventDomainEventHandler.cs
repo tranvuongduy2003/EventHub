@@ -26,7 +26,7 @@ public class UpdateTicketTypesInEventDomainEventHandler : IDomainEventHandler<Up
                 ticketTypeEntity.Name = ticketType.Name;
                 ticketTypeEntity.Quantity = ticketType.Quantity;
                 ticketTypeEntity.Price = ticketType.Price;
-                _unitOfWork.TicketTypes.Update(ticketTypeEntity);
+                await _unitOfWork.TicketTypes.Update(ticketTypeEntity);
             }
             else
             {

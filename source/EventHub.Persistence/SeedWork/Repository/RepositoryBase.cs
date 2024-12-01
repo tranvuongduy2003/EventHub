@@ -64,22 +64,32 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
 
     public async Task<bool> ExistAsync(Guid id)
     {
-        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id")!.ToString() ?? "") == id);
+        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id")!.ToString() ?? "") == id && !x.IsDeleted);
     }
 
     public async Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
     {
-        return await _context.Set<T>().AnyAsync(expression);
+        return await _context.Set<T>().Where(x => !x.IsDeleted).AnyAsync(expression);
     }
 
     public async Task<T> GetByIdAsync(Guid id)
     {
-        return await _context.Set<T>().FindAsync(id);
+        T entity = await _context.Set<T>().FindAsync(id);
+        if (entity is not null && !entity.IsDeleted)
+        {
+            return entity;
+        }
+        return null;
     }
 
     public async Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
     {
-        return await _context.Set<T>().FindAsync(id, includeProperties);
+        T entity = await _context.Set<T>().FindAsync(id, includeProperties);
+        if (entity is not null && !entity.IsDeleted)
+        {
+            return entity;
+        }
+        return null;
     }
 
     public async Task CreateAsync(T entity)
@@ -92,31 +102,48 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         await _context.Set<T>().AddRangeAsync(entities);
     }
 
-    public void Update(T entity)
+    public async Task Update(T entity)
     {
-        if (_context.Entry(entity).State != EntityState.Unchanged)
+        await Task.Run(() =>
         {
-            _context.Entry(entity).CurrentValues.SetValues(entity);
-        }
+            if (_context.Entry(entity).State != EntityState.Unchanged)
+            {
+                _context.Entry(entity).CurrentValues.SetValues(entity);
+            }
+        });
     }
 
-    public void Delete(T entity)
+    public async Task Delete(T entity)
     {
-        _context.Set<T>().Remove(entity);
+        await Task.Run(() =>
+        {
+            _context.Set<T>().Remove(entity);
+        });
     }
 
-    public void DeleteList(IEnumerable<T> entities)
+    public async Task DeleteList(IEnumerable<T> entities)
     {
-        _context.Set<T>().RemoveRange(entities);
+        await Task.Run(() =>
+        {
+            _context.Set<T>().RemoveRange(entities);
+        });
     }
 
-    public void SoftDelete(T entity)
+    public async Task SoftDelete(T entity)
     {
-        _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = DateTime.UtcNow;
+        await Task.Run(() =>
+        {
+            _context.Entry(entity).Property(nameof(ISoftDeletable.IsDeleted)).CurrentValue = true;
+            _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = DateTime.UtcNow;
+        });
     }
 
-    public void Restore(T entity)
+    public async Task Restore(T entity)
     {
-        _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = null;
+        await Task.Run(() =>
+        {
+            _context.Entry(entity).Property(nameof(ISoftDeletable.IsDeleted)).CurrentValue = false;
+            _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = null;
+        });
     }
 }

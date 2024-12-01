@@ -30,7 +30,7 @@ public class DeleteEventSubImagesDomainEventHandler : IDomainEventHandler<Delete
             await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{notification.EventId}", image.ImageFileName);
         }
 
-        _unitOfWork.EventSubImages.DeleteList(subImages);
+        await _unitOfWork.EventSubImages.DeleteList(subImages);
         await _unitOfWork.CommitAsync();
     }
 }

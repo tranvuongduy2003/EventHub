@@ -26,7 +26,7 @@ public class UpdateFunctionCommandHandler : ICommandHandler<UpdateFunctionComman
 
         function = _mapper.Map<Domain.AggregateModels.PermissionAggregate.Function>(request.Function);
 
-        _unitOfWork.Functions.Update(function);
+        await _unitOfWork.Functions.Update(function);
         await _unitOfWork.CommitAsync();
     }
 }

@@ -43,7 +43,7 @@ public class UnfollowUserDomainEventHandler : IDomainEventHandler<UnfollowUserDo
             throw new BadRequestException("User has not been followed before");
         }
 
-        _unitOfWork.UserFollowers.Delete(userFollower);
+        await _unitOfWork.UserFollowers.Delete(userFollower);
         await _unitOfWork.CommitAsync();
 
         follower.NumberOfFolloweds -= 1;

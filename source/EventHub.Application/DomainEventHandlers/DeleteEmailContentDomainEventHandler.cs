@@ -40,7 +40,7 @@ public class DeleteEmailContentDomainEventHandler : IDomainEventHandler<DeleteEm
                 attachment.AttachmentFileName);
         }
 
-        _unitOfWork.EmailAttachments.DeleteList(attachments);
+        await _unitOfWork.EmailAttachments.DeleteList(attachments);
 
         await emailContents.ExecuteDeleteAsync(cancellationToken);
 

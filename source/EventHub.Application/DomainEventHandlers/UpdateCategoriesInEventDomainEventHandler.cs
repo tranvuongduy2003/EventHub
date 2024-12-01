@@ -18,7 +18,7 @@ public class UpdateCategoriesInEventDomainEventHandler : IDomainEventHandler<Upd
     {
         IQueryable<EventCategory> deletedEventCategories = _unitOfWork.EventCategories
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
-        _unitOfWork.EventCategories.DeleteList(deletedEventCategories);
+        await _unitOfWork.EventCategories.DeleteList(deletedEventCategories);
 
         var eventCategories = new List<EventCategory>();
         foreach (Guid categoryId in notification.Categories)

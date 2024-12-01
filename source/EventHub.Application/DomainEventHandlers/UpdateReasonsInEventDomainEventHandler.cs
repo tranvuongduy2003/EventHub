@@ -18,7 +18,7 @@ public class UpdateReasonsInEventDomainEventHandler : IDomainEventHandler<Update
     {
         IQueryable<Reason> deletedReasons = _unitOfWork.Reasons
             .FindByCondition(x => x.EventId.Equals(notification.EventId));
-        _unitOfWork.Reasons.DeleteList(deletedReasons);
+        await _unitOfWork.Reasons.DeleteList(deletedReasons);
 
         var reasons = new List<Reason>();
         foreach (string reason in notification.Reasons)

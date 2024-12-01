@@ -54,7 +54,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         @event.CoverImageUrl = coverImage.Blob.Uri ?? "";
         @event.CoverImageFileName = coverImage.Blob.Name ?? "";
 
-        _unitOfWork.Events.Update(@event);
+        await _unitOfWork.Events.Update(@event);
         await _unitOfWork.CommitAsync();
 
         if (request.Event.EventSubImages != null && request.Event.EventSubImages.Any())

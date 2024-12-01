@@ -60,7 +60,7 @@ public class UpdateEmailContentOfEventDomainEventHandler : IDomainEventHandler<U
             await _unitOfWork.EmailAttachments.CreateListAsync(emailAttachments);
         }
 
-        _unitOfWork.EmailContents.Update(emailContent);
+        await _unitOfWork.EmailContents.Update(emailContent);
         await _unitOfWork.CommitAsync();
     }
 }

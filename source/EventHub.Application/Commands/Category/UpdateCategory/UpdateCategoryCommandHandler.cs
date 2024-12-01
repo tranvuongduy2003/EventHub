@@ -37,7 +37,7 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
         category.IconImageUrl = iconImage.Blob.Uri ?? "";
         category.IconImageFileName = iconImage.Blob.Name ?? "";
 
-        _unitOfWork.Categories.Update(category);
+        await _unitOfWork.CachedCategories.Update(category);
         await _unitOfWork.CommitAsync();
     }
 }

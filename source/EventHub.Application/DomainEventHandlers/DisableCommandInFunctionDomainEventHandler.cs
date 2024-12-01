@@ -40,7 +40,7 @@ public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<Di
             throw new NotFoundException("This command is not existed in function.");
         }
 
-        _unitOfWork.CommandInFunctions.Delete(commandInFunction);
+        await _unitOfWork.CommandInFunctions.Delete(commandInFunction);
         await _unitOfWork.CommitAsync();
     }
 }

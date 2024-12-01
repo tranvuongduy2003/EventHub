@@ -25,7 +25,7 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
             throw new NotFoundException("Event does not exist!");
         }
 
-        _unitOfWork.Events.SoftDelete(@event);
+        await _unitOfWork.Events.SoftDelete(@event);
 
         Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user != null)

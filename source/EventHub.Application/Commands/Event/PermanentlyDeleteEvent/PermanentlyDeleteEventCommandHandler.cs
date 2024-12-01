@@ -21,7 +21,7 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
             throw new NotFoundException("Event does not exist!");
         }
 
-        _unitOfWork.Events.Delete(@event);
+        await _unitOfWork.Events.Delete(@event);
 
         Domain.AggregateModels.EventAggregate.Event
             .DeleteEventSubImages(@event.Id);

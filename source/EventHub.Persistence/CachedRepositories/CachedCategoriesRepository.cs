@@ -1,4 +1,3 @@
-using EventHub.Abstractions;
 using EventHub.Abstractions.CachedRepositories;
 using EventHub.Abstractions.SeedWork.Repository;
 using EventHub.Abstractions.Services;
