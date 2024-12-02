@@ -194,7 +194,12 @@ public class ApplicationDbContextSeed
                 {
                     Id = EFunctionCode.SYSTEM_PERMISSION.GetDisplayName(), Name = "Permissions",
                     ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/permission"
-                }
+                },
+                new()
+                {
+                    Id = EFunctionCode.SYSTEM_COMMAND.GetDisplayName(), Name = "Commands",
+                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/command"
+                },
             });
 
             await _context.SaveChangesAsync();

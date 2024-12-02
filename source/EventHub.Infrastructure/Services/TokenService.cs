@@ -133,7 +133,7 @@ public class TokenService : ITokenService
         if (principal.Exception is not null)
         {
             _logger.Error(principal.Exception.Message);
-            throw new SecurityTokenException("invalid_token");
+            return null;
         }
 
         return principal.ClaimsIdentity;

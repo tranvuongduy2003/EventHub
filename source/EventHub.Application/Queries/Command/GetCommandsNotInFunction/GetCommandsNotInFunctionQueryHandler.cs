@@ -22,13 +22,14 @@ public class GetCommandsNotInFunctionQueryHandler : IQueryHandler<GetCommandsNot
         CancellationToken cancellationToken)
     {
         List<CommandInFunction> commandInFunctions = await _unitOfWork.CommandInFunctions
-           .FindByCondition(x => x.FunctionId.Equals(request.FunctionId, StringComparison.Ordinal))
+           .FindByCondition(x => x.FunctionId == request.FunctionId)
            .ToListAsync(cancellationToken);
 
-        List<Domain.AggregateModels.PermissionAggregate.Command> commands = await _unitOfWork.Commands
-            .FindByCondition(x => !commandInFunctions.Any(cif => cif.CommandId == x.Id))
-            .ToListAsync(cancellationToken);
-
+        var commands = _unitOfWork.Commands
+            .FindAll()
+            .AsEnumerable()
+            .Where(x => !commandInFunctions.Any(cif => cif.CommandId == x.Id))
+            .ToList();
 
         return _mapper.Map<List<CommandDto>>(commands);
     }

@@ -43,13 +43,21 @@ public class FunctionsController : ControllerBase
     [ApiValidationFilter]
     public async Task<IActionResult> PostCreateFunction([FromBody] CreateFunctionDto request)
     {
-        _logger.LogInformation("START: PostCreateFunction");
+        try
+        {
 
-        FunctionDto function = await _mediator.Send(new CreateFunctionCommand(request));
+            _logger.LogInformation("START: PostCreateFunction");
 
-        _logger.LogInformation("END: PostCreateFunction");
+            FunctionDto function = await _mediator.Send(new CreateFunctionCommand(request));
 
-        return Ok(new ApiCreatedResponse(function));
+            _logger.LogInformation("END: PostCreateFunction");
+
+            return Ok(new ApiCreatedResponse(function));
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new ApiNotFoundResponse(ex.Message));
+        }
     }
 
     [HttpGet]

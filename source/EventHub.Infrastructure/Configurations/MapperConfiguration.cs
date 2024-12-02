@@ -10,10 +10,12 @@ public static class MapperConfiguration
         services
             .AddAutoMapper(config =>
             {
-                UserMapper.CreateMap(config);
-                FunctionMapper.CreateMap(config);
                 CategoryMapper.CreateMap(config);
+                CommandMapper.CreateMap(config);
                 EventMapper.CreateMap(config);
+                FunctionMapper.CreateMap(config);
+                ReviewMapper.CreateMap(config);
+                UserMapper.CreateMap(config);
             });
         return services;
     }

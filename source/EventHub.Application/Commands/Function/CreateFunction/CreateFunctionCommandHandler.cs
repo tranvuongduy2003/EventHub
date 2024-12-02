@@ -1,5 +1,6 @@
 using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Shared.DTOs.Function;
 
@@ -18,6 +19,13 @@ public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionComman
 
     public async Task<FunctionDto> Handle(CreateFunctionCommand request, CancellationToken cancellationToken)
     {
+        bool isParentFucntionExisted = await _unitOfWork.Functions.ExistAsync(x => x.Id == request.ParentId);
+
+        if (!isParentFucntionExisted)
+        {
+            throw new NotFoundException("ParentId does not exist!");
+        }
+
         var function = new Domain.AggregateModels.PermissionAggregate.Function()
         {
             Name = request.Name,

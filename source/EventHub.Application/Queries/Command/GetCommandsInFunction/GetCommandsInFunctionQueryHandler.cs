@@ -2,7 +2,6 @@ using AutoMapper;
 using EventHub.Abstractions.SeedWork.UnitOfWork;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Shared.DTOs.Command;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 
@@ -17,16 +16,16 @@ public class GetCommandsInFunctionQueryHandler : IQueryHandler<GetCommandsInFunc
         _mapper = mapper;
     }
 
-    public async Task<List<CommandDto>> Handle(GetCommandsInFunctionQuery request,
+    public Task<List<CommandDto>> Handle(GetCommandsInFunctionQuery request,
         CancellationToken cancellationToken)
     {
-
-        List<Domain.AggregateModels.PermissionAggregate.Command> commands = await _unitOfWork.CommandInFunctions
-            .FindByCondition(x => x.FunctionId.Equals(request.FunctionId, StringComparison.Ordinal), includeProperties: x => x.Command)
+        var commands = _unitOfWork.CommandInFunctions
+            .FindByCondition(x => x.FunctionId == request.FunctionId, includeProperties: x => x.Command)
+            .AsEnumerable()
             .DistinctBy(x => x.CommandId)
             .Select(x => x.Command)
-            .ToListAsync(cancellationToken);
+            .ToList();
 
-        return _mapper.Map<List<CommandDto>>(commands);
+        return Task.FromResult(_mapper.Map<List<CommandDto>>(commands));
     }
 }

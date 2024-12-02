@@ -2,6 +2,7 @@
 using EventHub.Abstractions.Services;
 using EventHub.Shared.Enums.Command;
 using EventHub.Shared.Enums.Function;
+using EventHub.Shared.HttpResponses;
 using EventHub.Shared.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -50,13 +51,19 @@ public class ClaimRequirementFilter : IAuthorizationFilter
 
         if (string.IsNullOrEmpty(accessToken))
         {
-            context.Result = new ForbidResult();
+            context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
             return;
         }
 
         ClaimsIdentity principal = _tokenService.GetPrincipalFromToken(accessToken).GetAwaiter().GetResult();
 
-        Claim permissionsClaim = principal?.Claims
+        if (principal is null)
+        {
+            context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
+            return;
+        }
+
+        Claim permissionsClaim = principal.Claims
             .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);
         if (permissionsClaim != null)
         {
