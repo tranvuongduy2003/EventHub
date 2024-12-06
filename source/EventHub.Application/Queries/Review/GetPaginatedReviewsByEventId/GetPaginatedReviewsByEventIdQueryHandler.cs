@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Review;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Review;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
@@ -30,7 +31,7 @@ public class
             throw new NotFoundException("Event does not exist!");
         }
 
-        List<Domain.AggregateModels.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
+        List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
             .FindByCondition(x => x.EventId.Equals(request.EventId))
             .Include(x => x.Event)
             .Include(x => x.Author)

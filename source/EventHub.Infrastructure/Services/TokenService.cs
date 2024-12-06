@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 using System.Text;
-using EventHub.Abstractions.Services;
-using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Persistence.Data;
-using EventHub.Shared.Settings;
-using EventHub.Shared.ValueObjects;
+using EventHub.Application.Abstractions;
+using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Infrastructure.Persistence.Data;
+using EventHub.Domain.Shared.Constants;
+using EventHub.Domain.Shared.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;

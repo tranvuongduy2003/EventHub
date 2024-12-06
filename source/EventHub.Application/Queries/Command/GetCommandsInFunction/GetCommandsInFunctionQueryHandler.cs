@@ -1,7 +1,8 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Command;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Command;
 
 namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 

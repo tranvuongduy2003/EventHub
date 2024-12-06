@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Message;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.Aggregates.ConversationAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Message;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
@@ -26,17 +29,18 @@ public class
         CancellationToken cancellationToken)
     {
 
-        var isConversationExisted =
+        bool isConversationExisted =
             await _unitOfWork.Conversations.ExistAsync(x => x.Id.Equals(request.ConversationId));
         if (!isConversationExisted)
+        {
             throw new NotFoundException("Conversation does not exist!");
+        }
 
-        var messages = _unitOfWork.Messages
+        IIncludableQueryable<Message, Domain.Aggregates.UserAggregate.User> messages = _unitOfWork.Messages
             .FindByCondition(x => x.ConversationId.Equals(request.ConversationId))
             .Include(x => x.Author);
 
-        var messageDtos = _mapper.Map<List<MessageDto>>(messages);
-
+        List<MessageDto> messageDtos = _mapper.Map<List<MessageDto>>(messages);
 
         return PagingHelper.Paginate<MessageDto>(messageDtos, request.Filter);
     }

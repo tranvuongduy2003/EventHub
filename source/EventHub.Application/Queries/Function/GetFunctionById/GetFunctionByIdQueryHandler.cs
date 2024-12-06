@@ -1,7 +1,8 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Function;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Function;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Queries.Function.GetFunctionById;
@@ -21,9 +22,8 @@ public class GetFunctionByIdQueryHandler : IQueryHandler<GetFunctionByIdQuery, F
         CancellationToken cancellationToken)
     {
 
-        var function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
-
-
+        Domain.Aggregates.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
+        
         return _mapper.Map<FunctionDto>(function);
     }
 }

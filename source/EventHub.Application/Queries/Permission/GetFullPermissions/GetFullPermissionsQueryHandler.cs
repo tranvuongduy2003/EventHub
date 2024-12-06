@@ -1,8 +1,8 @@
 using System.Data;
 using Dapper;
-using EventHub.Abstractions;
+using EventHub.Application.DTOs.Permission;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Permission;
 
 namespace EventHub.Application.Queries.Permission.GetFullPermissions;
 
@@ -20,7 +20,7 @@ public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQu
     {
         using IDbConnection connection = _sqlConnectionFactory.CreateConnection();
 
-        var sql = @"SELECT f.Id,
+        string sql = @"SELECT f.Id,
 	                       f.Name,
 	                       f.ParentId,
 	                       sum(case when sa.Id = 'CREATE' then 1 else 0 end) as HasCreate,
@@ -33,9 +33,8 @@ public class GetFullPermissionsQueryHandler : IQueryHandler<GetFullPermissionsQu
                         GROUP BY f.Id,f.Name, f.ParentId
                         order BY f.ParentId";
 
-        var permissions = await connection.QueryAsync<FullPermissionDto>(sql, commandType: CommandType.Text);
-
-
+        IEnumerable<FullPermissionDto> permissions = await connection.QueryAsync<FullPermissionDto>(sql, commandType: CommandType.Text);
+        
         return permissions.ToList();
     }
 }

@@ -1,9 +1,9 @@
 using AutoMapper;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.User;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.User;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +13,9 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
 {
     private readonly ICacheService _cacheService;
     private readonly IMapper _mapper;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public GetPaginatedUsersQueryHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+    public GetPaginatedUsersQueryHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,
         ICacheService cacheService, IMapper mapper)
     {
         _userManager = userManager;
@@ -28,7 +28,7 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
     {
         string key = "user";
 
-        List<Domain.AggregateModels.UserAggregate.User> users = await _cacheService.GetData<List<Domain.AggregateModels.UserAggregate.User>>(key);
+        List<Domain.Aggregates.UserAggregate.User> users = await _cacheService.GetData<List<Domain.Aggregates.UserAggregate.User>>(key);
 
         if (users == null || !users.Any())
         {
@@ -37,7 +37,7 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
                 .Where(x => x.IsDeleted.Equals(false))
                 .ToListAsync(cancellationToken);
 
-            await _cacheService.SetData<List<Domain.AggregateModels.UserAggregate.User>>(key, users,
+            await _cacheService.SetData<List<Domain.Aggregates.UserAggregate.User>>(key, users,
                 TimeSpan.FromMinutes(2));
         }
 

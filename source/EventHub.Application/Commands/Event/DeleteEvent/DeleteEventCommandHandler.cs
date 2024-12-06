@@ -1,6 +1,7 @@
-﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+﻿using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Commands.Event.DeleteEvent;
@@ -8,10 +9,10 @@ namespace EventHub.Application.Commands.Event.DeleteEvent;
 public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public DeleteEventCommandHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
@@ -19,7 +20,7 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event == null)
         {
             throw new NotFoundException("Event does not exist!");
@@ -27,7 +28,7 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 
         await _unitOfWork.Events.SoftDelete(@event);
 
-        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user != null)
         {
             user.NumberOfCreatedEvents--;

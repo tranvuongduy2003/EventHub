@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Auth;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Auth;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -12,9 +12,9 @@ namespace EventHub.Application.Commands.Auth.RefreshToken;
 public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, SignInResponseDto>
 {
     private readonly ITokenService _tokenService;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public RefreshTokenCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+    public RefreshTokenCommandHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,
         ITokenService tokenService)
     {
         _userManager = userManager;
@@ -34,7 +34,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
         }
         ClaimsIdentity principal = await _tokenService.GetPrincipalFromToken(request.AccessToken);
 
-        Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
             .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");
         if (user == null)
         {

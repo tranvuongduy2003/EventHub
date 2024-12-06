@@ -1,11 +1,11 @@
+using EventHub.Application.Attributes;
+using EventHub.Application.DTOs.Permission;
 using EventHub.Application.Queries.Permission.GetFullPermissions;
 using EventHub.Application.Queries.Permission.GetPermissionsByUser;
 using EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;
-using EventHub.Infrastructure.FilterAttributes;
-using EventHub.Shared.DTOs.Permission;
-using EventHub.Shared.Enums.Command;
-using EventHub.Shared.Enums.Function;
-using EventHub.Shared.HttpResponses;
+using EventHub.Domain.Shared.Enums.Command;
+using EventHub.Domain.Shared.Enums.Function;
+using EventHub.Domain.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

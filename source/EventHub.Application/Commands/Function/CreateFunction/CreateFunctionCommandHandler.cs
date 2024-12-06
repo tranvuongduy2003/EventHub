@@ -1,8 +1,9 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Function;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Function;
+using EventHub.Domain.SeedWork.Persistence;
 
 namespace EventHub.Application.Commands.Function.CreateFunction;
 
@@ -26,7 +27,7 @@ public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionComman
             throw new NotFoundException("ParentId does not exist!");
         }
 
-        var function = new Domain.AggregateModels.PermissionAggregate.Function()
+        var function = new Domain.Aggregates.PermissionAggregate.Function()
         {
             Name = request.Name,
             Url = request.Url,

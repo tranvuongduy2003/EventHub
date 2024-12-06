@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Function;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Function;
 
 namespace EventHub.Application.Commands.Function.UpdateFunction;
 
@@ -21,7 +21,13 @@ public class UpdateFunctionCommand : ICommand
     /// The data transfer object containing the updated details of the function.
     /// </param>
     public UpdateFunctionCommand(string id, UpdateFunctionDto request)
-        => (Id, Function) = (id, request);
+    {
+        Id = id;
+        Name = request.Name;
+        Url = request.Url;
+        SortOrder = request.SortOrder;
+        ParentId = request.ParentId;
+    }
 
     /// <summary>
     /// Gets or sets the unique identifier of the function to be updated.
@@ -31,11 +37,11 @@ public class UpdateFunctionCommand : ICommand
     /// </value>
     public string Id { get; set; }
 
-    /// <summary>
-    /// Gets or sets the data transfer object containing the updated details of the function.
-    /// </summary>
-    /// <value>
-    /// An <see cref="UpdateFunctionDto"/> instance with the new details for the function.
-    /// </value>
-    public UpdateFunctionDto Function { get; set; }
+    public string Name { get; set; }
+
+    public string Url { get; set; }
+
+    public int SortOrder { get; set; }
+
+    public string? ParentId { get; set; }
 }

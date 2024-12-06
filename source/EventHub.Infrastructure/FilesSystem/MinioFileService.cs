@@ -1,5 +1,5 @@
-﻿using EventHub.Abstractions.Services;
-using EventHub.Shared.DTOs.File;
+﻿using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.File;
 using Microsoft.AspNetCore.Http;
 using Minio;
 using Minio.DataModel;

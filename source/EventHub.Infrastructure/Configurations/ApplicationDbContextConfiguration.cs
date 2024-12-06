@@ -1,5 +1,5 @@
-﻿using EventHub.Persistence.Data;
-using EventHub.Persistence.Interceptors;
+﻿using EventHub.Infrastructure.Persistence.Data;
+using EventHub.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +28,7 @@ public static class ApplicationDbContextConfiguration
 
             optionsBuilder
                 .UseSqlServer(connectionString, builder =>
-                    builder.MigrationsAssembly("EventHub.Persistence"))
+                    builder.MigrationsAssembly("EventHub.Infrastructure.Persistence"))
                 .AddInterceptors(
                     dateTrackingInterceptor,
                     convertDomainEventsToOutboxMessagesInterceptor

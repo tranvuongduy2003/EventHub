@@ -397,3 +397,6 @@ indent_size = 4
 end_of_line = crlf
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_prefer_conditional_expression_over_return = true:none
+
+# CA1515: Keep exception types public
+dotnet_diagnostic.CA1515.severity = none

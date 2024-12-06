@@ -1,9 +1,10 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Function;
+using EventHub.Application.DTOs.Permission;
+using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Function;
-using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ public class
     public async Task<List<RolePermissionDto>> Handle(GetPermissionsCategorizedByRolesQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.AggregateModels.PermissionAggregate.Permission> permissions = await _unitOfWork.Permissions
+        List<Domain.Aggregates.PermissionAggregate.Permission> permissions = await _unitOfWork.Permissions
             .FindAll(false, x => x.Function)
             .ToListAsync(cancellationToken);
 

@@ -12,7 +12,7 @@ public class MakeEventsPublicCommandHandler : ICommandHandler<MakeEventsPublicCo
     {
         await Task.Run(() =>
         {
-            Domain.AggregateModels.EventAggregate.Event.MakeEventsPublic(request.UserId, request.Events);
+            Domain.Aggregates.EventAggregate.Event.MakeEventsPublic(request.UserId, request.Events);
         }, cancellationToken);
     }
 }

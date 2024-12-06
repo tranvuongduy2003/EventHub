@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using EventHub.Abstractions.Services;
-using EventHub.Shared.SeedWork;
-using EventHub.Shared.Settings;
+using EventHub.Application.Abstractions;
+using EventHub.Domain.Shared.SeedWork;
+using EventHub.Domain.Shared.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;

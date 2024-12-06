@@ -1,11 +1,11 @@
 using AutoMapper;
-using EventHub.Abstractions;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.File;
+using EventHub.Application.DTOs.User;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.User;
-using EventHub.Shared.Enums.User;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
+using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Extensions;
 
@@ -15,10 +15,10 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserD
 {
     private readonly IFileService _fileService;
     private readonly IMapper _mapper;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public CreateUserCommandHandler(IMapper mapper, IFileService fileService,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager)
     {
         _mapper = mapper;
         _fileService = fileService;
@@ -27,7 +27,7 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserD
 
     public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new Domain.AggregateModels.UserAggregate.User()
+        var user = new Domain.Aggregates.UserAggregate.User()
         {
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
@@ -41,15 +41,17 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserD
 
         if (request.Avatar != null)
         {
-            var avatarImage = await _fileService.UploadAsync(request.Avatar, FileContainer.USERS);
+            BlobResponseDto avatarImage = await _fileService.UploadAsync(request.Avatar, FileContainer.USERS);
             user.AvatarUrl = avatarImage.Blob.Uri;
             user.AvatarFileName = avatarImage.Blob.Name;
         }
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        IdentityResult result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
+        {
             throw new BadRequestException(result);
+        }
 
         await _userManager.AddToRolesAsync(user,
             new List<string> { EUserRole.CUSTOMER.GetDisplayName(), EUserRole.ORGANIZER.GetDisplayName() });

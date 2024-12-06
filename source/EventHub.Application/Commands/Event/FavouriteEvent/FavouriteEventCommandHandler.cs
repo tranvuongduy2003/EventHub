@@ -12,7 +12,7 @@ public class FavouriteEventCommandHandler : ICommandHandler<FavouriteEventComman
     {
         await Task.Run(() =>
         {
-            Domain.AggregateModels.EventAggregate.Event
+            Domain.Aggregates.EventAggregate.Event
                 .FavouriteEvent(request.UserId, request.EventId);
         }, cancellationToken);
     }

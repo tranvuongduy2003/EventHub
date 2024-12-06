@@ -1,10 +1,10 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Category;
+using EventHub.Application.DTOs.File;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Category;
-using EventHub.Shared.DTOs.File;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Constants;
 
 namespace EventHub.Application.Commands.Category.CreateCategory;
 
@@ -23,7 +23,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = new Domain.AggregateModels.CategoryAggregate.Category
+        var category = new Domain.Aggregates.CategoryAggregate.Category
         {
             Color = request.Color,
             Name = request.Name,

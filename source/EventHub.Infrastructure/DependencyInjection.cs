@@ -1,5 +1,4 @@
-﻿using EventHub.Abstractions;
-using EventHub.Abstractions.Services;
+﻿using EventHub.Application.Abstractions;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;
@@ -7,7 +6,9 @@ using EventHub.Infrastructure.FilesSystem;
 using EventHub.Infrastructure.Idempotence;
 using EventHub.Infrastructure.Mailler;
 using EventHub.Infrastructure.Outbox;
+using EventHub.Infrastructure.Persistence;
 using EventHub.Infrastructure.Services;
+using EventHub.Infrastructure.SignalR;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,8 @@ public static class DependencyInjection
         services.ConfigureAuthetication();
         services.ConfigureMinioStorage();
         services.ConfigureDependencyInjection();
+        services.ConfigurePersistenceServices();
+        services.ConfigureSignalRServices();
 
         return services;
     }

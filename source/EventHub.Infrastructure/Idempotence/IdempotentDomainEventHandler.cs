@@ -1,6 +1,6 @@
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Persistence.Data;
-using EventHub.Persistence.Outbox;
+using EventHub.Infrastructure.Persistence.Data;
+using EventHub.Infrastructure.Persistence.Outbox;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

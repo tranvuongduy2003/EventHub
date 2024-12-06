@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Domain.SeedWork.Interfaces;
+using EventHub.Domain.Aggregates.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.SeedWork.Entities;

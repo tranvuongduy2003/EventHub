@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EventHub.Domain.AggregateModels.ReviewAggregate;
-using EventHub.Shared.DTOs.Review;
+using EventHub.Application.DTOs.Review;
+using EventHub.Domain.Aggregates.ReviewAggregate;
 
 namespace EventHub.Application.Mappings;
 

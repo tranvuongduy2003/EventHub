@@ -1,8 +1,9 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Category;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Category;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;
 
@@ -21,7 +22,7 @@ public class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByIdQuery, C
     public async Task<CategoryDto> Handle(GetCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.CategoryAggregate.Category cachedCategory = await _unitOfWork.CachedCategories.GetByIdAsync(request.CategoryId);
+        Domain.Aggregates.CategoryAggregate.Category cachedCategory = await _unitOfWork.CachedCategories.GetByIdAsync(request.CategoryId);
 
         if (cachedCategory == null)
         {

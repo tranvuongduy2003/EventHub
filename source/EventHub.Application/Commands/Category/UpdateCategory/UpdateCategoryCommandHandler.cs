@@ -1,9 +1,9 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.File;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.File;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Constants;
 
 namespace EventHub.Application.Commands.Category.UpdateCategory;
 
@@ -20,20 +20,20 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
 
     public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.CategoryAggregate.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
+        Domain.Aggregates.CategoryAggregate.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
         if (category is null)
         {
             throw new NotFoundException("Category does not exist!");
         }
 
-        category.Color = request.Category.Color;
-        category.Name = request.Category.Name;
+        category.Color = request.Color;
+        category.Name = request.Name;
 
         if (!string.IsNullOrEmpty(category.IconImageFileName))
         {
             await _fileService.DeleteAsync(category.IconImageFileName, FileContainer.CATEGORIES);
         }
-        BlobResponseDto iconImage = await _fileService.UploadAsync(request.Category.IconImage, FileContainer.CATEGORIES);
+        BlobResponseDto iconImage = await _fileService.UploadAsync(request.IconImage, FileContainer.CATEGORIES);
         category.IconImageUrl = iconImage.Blob.Uri ?? "";
         category.IconImageFileName = iconImage.Blob.Name ?? "";
 

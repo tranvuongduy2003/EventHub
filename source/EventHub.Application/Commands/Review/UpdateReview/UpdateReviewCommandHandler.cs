@@ -1,6 +1,7 @@
-﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+﻿using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.Persistence;
 
 namespace EventHub.Application.Commands.Review.UpdateReview;
 
@@ -15,14 +16,14 @@ public class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
 
     public async Task Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.ReviewAggregate.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
+        Domain.Aggregates.ReviewAggregate.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
         if (review is null)
         {
             throw new NotFoundException("Review does not exist!");
         }
 
-        review.Content = request.Review.Content;
-        review.Rate = request.Review.Rate;
+        review.Content = request.Content;
+        review.Rate = request.Rate;
 
         await _unitOfWork.Reviews.Update(review);
         await _unitOfWork.CommitAsync();

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EventHub.Domain.AggregateModels.EventAggregate;
-using EventHub.Shared.DTOs.Event;
+using EventHub.Application.DTOs.Event;
+using EventHub.Domain.Aggregates.EventAggregate;
 
 namespace EventHub.Application.Mappings;
 

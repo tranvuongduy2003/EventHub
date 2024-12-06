@@ -1,7 +1,9 @@
-﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Domain.AggregateModels.UserAggregate;
+﻿using EventHub.Application.Abstractions;
+using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +22,7 @@ public class RestoreEventDomainEventHandler : IDomainEventHandler<RestoreEventDo
 
     public async Task Handle(RestoreEventDomainEvent notification, CancellationToken cancellationToken)
     {
-        IQueryable<Domain.AggregateModels.EventAggregate.Event> events = _unitOfWork.CachedEvents
+        IQueryable<Event> events = _unitOfWork.CachedEvents
             .FindByCondition(x =>
                 x.AuthorId.Equals(notification.UserId) &&
                 x.IsDeleted)

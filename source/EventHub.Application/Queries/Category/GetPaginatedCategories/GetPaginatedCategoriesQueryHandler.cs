@@ -1,9 +1,10 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Category;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Category;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
@@ -23,7 +24,7 @@ public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCate
         CancellationToken cancellationToken)
     {
 
-        List<Domain.AggregateModels.CategoryAggregate.Category> cachedCategories = await _unitOfWork.CachedCategories
+        List<Domain.Aggregates.CategoryAggregate.Category> cachedCategories = await _unitOfWork.CachedCategories
             .FindAll()
             .ToListAsync(cancellationToken);
 

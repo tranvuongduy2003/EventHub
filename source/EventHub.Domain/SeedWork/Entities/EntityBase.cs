@@ -1,6 +1,4 @@
-﻿using EventHub.Domain.SeedWork.Interfaces;
-
-namespace EventHub.Domain.SeedWork.Entities;
+﻿namespace EventHub.Domain.SeedWork.Entities;
 
 public abstract class EntityBase : IEntityBase
 {

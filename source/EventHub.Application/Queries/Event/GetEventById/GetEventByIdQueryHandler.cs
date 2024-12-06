@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Event;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Event;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Event.GetEventById;
@@ -22,7 +23,7 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
         CancellationToken cancellationToken)
     {
 
-        List<Domain.AggregateModels.EventAggregate.Event> cachedEvent = await _unitOfWork.CachedEvents
+        List<Domain.Aggregates.EventAggregate.Event> cachedEvent = await _unitOfWork.CachedEvents
             .FindByCondition(x => x.Id.Equals(request.EventId))
             .Include(x => x.Author)
             .Include(x => x.EmailContent)

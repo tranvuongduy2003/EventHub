@@ -1,9 +1,9 @@
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Auth;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Auth;
-using EventHub.Shared.Enums.User;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
+using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +13,13 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public SignUpCommnadHandler(
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
         ITokenService tokenService,
         IHangfireService hangfireService,
         IEmailService emailService)
@@ -33,20 +33,20 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
 
     public async Task<SignInResponseDto> Handle(SignUpCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
+        Domain.Aggregates.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
         {
             throw new BadRequestException("Email already exists");
         }
 
-        Domain.AggregateModels.UserAggregate.User useByPhoneNumber = await _userManager.Users
+        Domain.Aggregates.UserAggregate.User useByPhoneNumber = await _userManager.Users
             .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken);
         if (useByPhoneNumber != null)
         {
             throw new BadRequestException("Phone number already exists");
         }
 
-        var user = new Domain.AggregateModels.UserAggregate.User
+        var user = new Domain.Aggregates.UserAggregate.User
         {
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
@@ -57,7 +57,7 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
         IdentityResult result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
-            Domain.AggregateModels.UserAggregate.User userToReturn = await _userManager.FindByEmailAsync(request.Email);
+            Domain.Aggregates.UserAggregate.User userToReturn = await _userManager.FindByEmailAsync(request.Email);
 
             await _userManager.AddToRolesAsync(user, new List<string>
             {

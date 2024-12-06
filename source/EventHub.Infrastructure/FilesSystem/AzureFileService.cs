@@ -3,9 +3,9 @@ using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
-using EventHub.Abstractions.Services;
-using EventHub.Shared.DTOs.File;
-using EventHub.Shared.Settings;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.File;
+using EventHub.Domain.Shared.Settings;
 using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Infrastructure.FilesSystem;

@@ -1,10 +1,11 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Function;
+using EventHub.Application.DTOs.Permission;
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Function;
-using EventHub.Shared.DTOs.Permission;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,10 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
     private readonly IMapper _mapper;
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public GetPermissionsByUserQueryHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _roleManager = roleManager;
@@ -29,15 +30,17 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
     public async Task<List<RolePermissionDto>> Handle(GetPermissionsByUserQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
+        {
             throw new NotFoundException("User does not exist!");
+        }
 
         var permissions = _unitOfWork.Permissions
             .FindAll(false, x => x.Function)
             .ToList();
 
-        var userRoleNames = await _userManager.GetRolesAsync(user);
+        IList<string> userRoleNames = await _userManager.GetRolesAsync(user);
         var userRoles = _roleManager.Roles
             .AsNoTracking()
             .Join(userRoleNames, r => r.Name, n => n, (role, name) => role)

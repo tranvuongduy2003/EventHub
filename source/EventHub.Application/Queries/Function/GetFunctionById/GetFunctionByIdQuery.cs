@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Function;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Function;
 
 namespace EventHub.Application.Queries.Function.GetFunctionById;
 

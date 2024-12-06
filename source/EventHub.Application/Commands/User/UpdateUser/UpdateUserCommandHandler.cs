@@ -1,21 +1,19 @@
-using AutoMapper;
-using EventHub.Abstractions;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.File;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace EventHub.Application.Commands.User.UpdateUser;
 
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
     private readonly IFileService _fileService;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public UpdateUserCommandHandler(IFileService fileService,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager)
     {
         _fileService = fileService;
         _userManager = userManager;
@@ -23,9 +21,11 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 
     public async Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
+        {
             throw new NotFoundException("User does not exist!");
+        }
 
         user.Email = request.Email;
         user.PhoneNumber = request.PhoneNumber;
@@ -38,15 +38,19 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
         if (request.Avatar != null)
         {
             if (!string.IsNullOrEmpty(user.AvatarFileName))
+            {
                 await _fileService.DeleteAsync(user.AvatarFileName, FileContainer.USERS);
-            var avatarImage = await _fileService.UploadAsync(request.Avatar, FileContainer.USERS);
+            }
+            BlobResponseDto avatarImage = await _fileService.UploadAsync(request.Avatar, FileContainer.USERS);
             user.AvatarUrl = avatarImage.Blob.Uri;
             user.AvatarFileName = avatarImage.Blob.Name;
         }
 
-        var result = await _userManager.UpdateAsync(user);
+        IdentityResult result = await _userManager.UpdateAsync(user);
 
         if (!result.Succeeded)
+        {
             throw new BadRequestException(result);
+        }
     }
 }

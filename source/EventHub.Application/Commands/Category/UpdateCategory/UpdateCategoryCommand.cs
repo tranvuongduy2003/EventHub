@@ -1,5 +1,6 @@
+using EventHub.Application.DTOs.Category;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Category;
+using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Category.UpdateCategory;
 
@@ -14,6 +15,13 @@ public class UpdateCategoryCommand : ICommand
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateCategoryCommand"/> class.
     /// </summary>
+    public UpdateCategoryCommand()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateCategoryCommand"/> class.
+    /// </summary>
     /// <param name="id">
     /// The unique identifier of the category to be updated.
     /// </param>
@@ -21,7 +29,7 @@ public class UpdateCategoryCommand : ICommand
     /// The data transfer object containing the updated details of the category.
     /// </param>
     public UpdateCategoryCommand(Guid id, UpdateCategoryDto request)
-        => (Id, Category) = (id, request);
+        => (Id, Name, IconImage, Color) = (id, request.Name, request.IconImage, request.Color);
 
     /// <summary>
     /// Gets or sets the unique identifier of the category to be updated.
@@ -32,10 +40,26 @@ public class UpdateCategoryCommand : ICommand
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the data transfer object containing the updated details of the category.
+    /// Gets or sets the name of the new category.
     /// </summary>
     /// <value>
-    /// An <see cref="UpdateCategoryDto"/> instance with the new details for the category.
+    /// A string representing the name of the category.
     /// </value>
-    public UpdateCategoryDto Category { get; set; }
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the icon image file for the new category.
+    /// </summary>
+    /// <value>
+    /// An <see cref="IFormFile"/> representing the icon image of the category.
+    /// </value>
+    public IFormFile IconImage { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color associated with the new category.
+    /// </summary>
+    /// <value>
+    /// A string representing the color associated with the category.
+    /// </value>
+    public string Color { get; set; }
 }

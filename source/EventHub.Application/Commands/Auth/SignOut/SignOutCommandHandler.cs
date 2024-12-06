@@ -5,9 +5,9 @@ namespace EventHub.Application.Commands.Auth.SignOut;
 
 public class SignOutCommandHandler : ICommandHandler<SignOutCommand>
 {
-    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
-    public SignOutCommandHandler(SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager)
+    public SignOutCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _signInManager = signInManager;
     }

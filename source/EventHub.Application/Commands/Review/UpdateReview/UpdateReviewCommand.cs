@@ -1,5 +1,5 @@
-﻿using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Review;
+﻿using EventHub.Application.DTOs.Review;
+using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Review.UpdateReview;
 
@@ -21,7 +21,7 @@ public class UpdateReviewCommand : ICommand
     /// The data transfer object containing the updated review details.
     /// </param>
     public UpdateReviewCommand(Guid id, UpdateReviewDto request)
-        => (Id, Review) = (id, request);
+        => (Id, Content, Rate) = (id, request.Content, request.Rate);
 
     /// <summary>
     /// Gets or sets the unique identifier of the review to be updated.
@@ -31,11 +31,7 @@ public class UpdateReviewCommand : ICommand
     /// </value>
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// Gets or sets the updated review details.
-    /// </summary>
-    /// <value>
-    /// An <see cref="UpdateReviewDto"/> containing the updated review information.
-    /// </value>
-    public UpdateReviewDto Review { get; set; }
+    public string? Content { get; set; }
+
+    public double Rate { get; set; }
 }

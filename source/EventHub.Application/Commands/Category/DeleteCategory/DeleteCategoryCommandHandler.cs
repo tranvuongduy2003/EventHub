@@ -1,8 +1,8 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Constants;
 
 namespace EventHub.Application.Commands.Category.DeleteCategory;
 
@@ -19,7 +19,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
 
     public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.CategoryAggregate.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
+        Domain.Aggregates.CategoryAggregate.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
         if (category is null)
         {
             throw new NotFoundException("Category does not exist!");

@@ -1,10 +1,10 @@
+using EventHub.Application.Attributes;
+using EventHub.Application.DTOs.Command;
 using EventHub.Application.Queries.Command.GetCommandsInFunction;
 using EventHub.Application.Queries.Command.GetCommandsNotInFunction;
-using EventHub.Infrastructure.FilterAttributes;
-using EventHub.Shared.DTOs.Command;
-using EventHub.Shared.Enums.Command;
-using EventHub.Shared.Enums.Function;
-using EventHub.Shared.HttpResponses;
+using EventHub.Domain.Shared.Enums.Command;
+using EventHub.Domain.Shared.Enums.Function;
+using EventHub.Domain.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,6 +14,7 @@ namespace EventHub.Presentation.Controllers;
 [Route("api/v1/commands")]
 [ApiController]
 public class CommandsController : ControllerBase
+#pragma warning restore CA1515
 {
     private readonly IMediator _mediator;
     private readonly ILogger<CommandsController> _logger;

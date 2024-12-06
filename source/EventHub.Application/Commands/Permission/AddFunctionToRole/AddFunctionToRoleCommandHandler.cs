@@ -1,4 +1,4 @@
-using EventHub.Domain.AggregateModels.PermissionAggregate;
+using EventHub.Domain.Aggregates.PermissionAggregate;
 using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Permission.AddFunctionToRole;

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Conversation;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.Aggregates.ConversationAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Conversation;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 
@@ -24,11 +27,13 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-        var isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
+        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
         if (!isEventExisted)
+        {
             throw new NotFoundException("Event does not exist!");
+        }
 
-        var messages = _unitOfWork.Messages
+        IIncludableQueryable<Message, Domain.Aggregates.UserAggregate.User> messages = _unitOfWork.Messages
             .FindAll()
             .Include(x => x.Author);
 
@@ -49,15 +54,14 @@ public class
             .AsEnumerable()
             .Select(group =>
             {
-                var conversation = group.Key;
+                Domain.Aggregates.ConversationAggregate.Conversation conversation = group.Key;
                 conversation.LastMessage = group.MaxBy(x => x.Message.CreatedAt)?.Message;
                 return conversation;
             })
             .ToList();
 
-        var conversationDtos = _mapper.Map<List<ConversationDto>>(conversationWithMessages);
-
-
+        List<ConversationDto> conversationDtos = _mapper.Map<List<ConversationDto>>(conversationWithMessages);
+        
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
     }
 }

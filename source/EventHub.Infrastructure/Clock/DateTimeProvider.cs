@@ -1,4 +1,4 @@
-using EventHub.Abstractions;
+using EventHub.Application.Abstractions;
 
 namespace EventHub.Infrastructure.Clock;
 

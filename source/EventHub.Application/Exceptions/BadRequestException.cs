@@ -1,4 +1,4 @@
-﻿using EventHub.Shared.SeedWork;
+﻿using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Exceptions;
 

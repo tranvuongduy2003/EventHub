@@ -1,12 +1,12 @@
 ﻿using EventHub.Infrastructure.Configurations;
-using EventHub.Persistence.Data;
+using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Presentation.Middlewares;
-using EventHub.SignalR.Hubs;
+using EventHub.Infrastructure.SignalR.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Presentation.Extensions;
 
-public static class ApplicationExtensions
+internal static class ApplicationExtensions
 {
     public static void UseInfrastructure(this WebApplication app, string appCors)
     {

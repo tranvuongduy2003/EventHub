@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EventHub.Domain.AggregateModels.PermissionAggregate;
-using EventHub.Shared.DTOs.Command;
+using EventHub.Application.DTOs.Command;
+using EventHub.Domain.Aggregates.PermissionAggregate;
 
 namespace EventHub.Application.Mappings;
 

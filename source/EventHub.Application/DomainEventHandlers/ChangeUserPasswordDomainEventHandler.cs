@@ -1,5 +1,5 @@
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using Microsoft.AspNetCore.Identity;
@@ -17,13 +17,18 @@ public class ChangeUserPasswordDomainEventHandler : IDomainEventHandler<ChangeUs
 
     public async Task Handle(ChangeUserPasswordDomainEvent notification, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(notification.UserId.ToString());
+        User user = await _userManager.FindByIdAsync(notification.UserId.ToString());
         if (user == null)
+        {
             throw new NotFoundException("User does not exist!");
+        }
 
-        var result = await _userManager.ChangePasswordAsync(user, notification.OldPassword, notification.NewPassword);
+        IdentityResult result =
+            await _userManager.ChangePasswordAsync(user, notification.OldPassword, notification.NewPassword);
 
         if (!result.Succeeded)
+        {
             throw new BadRequestException(result);
+        }
     }
 }

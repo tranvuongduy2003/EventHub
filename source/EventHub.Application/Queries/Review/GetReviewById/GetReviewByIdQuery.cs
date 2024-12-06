@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Review;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Review;
 
 namespace EventHub.Application.Queries.Review.GetReviewById;
 

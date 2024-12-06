@@ -1,4 +1,4 @@
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.User.ChangePassword;

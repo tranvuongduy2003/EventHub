@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Review;
 using EventHub.Application.Exceptions;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Review;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,10 @@ public class
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public GetPaginatedReviewsByUserIdQueryHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager, IMapper mapper)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
@@ -34,7 +35,7 @@ public class
             throw new NotFoundException("User does not exist!");
         }
 
-        List<Domain.AggregateModels.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
+        List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
             .FindByCondition(x => x.AuthorId.Equals(request.UserId))
             .Include(x => x.Event)
             .Include(x => x.Author)

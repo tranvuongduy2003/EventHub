@@ -1,6 +1,6 @@
 ﻿using System.Security.Authentication;
-using EventHub.Abstractions;
-using EventHub.Shared.Settings;
+using EventHub.Application.Abstractions;
+using EventHub.Domain.Shared.Settings;
 using Hangfire;
 using Hangfire.Console.Extensions;
 using Hangfire.Mongo;

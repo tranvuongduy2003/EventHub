@@ -7,22 +7,22 @@ namespace EventHub.Application.Commands.Auth.ValidateUser;
 
 public class ValidateUserCommandHandler : ICommandHandler<ValidateUserCommand, bool>
 {
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public ValidateUserCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager)
+    public ValidateUserCommandHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager)
     {
         _userManager = userManager;
     }
 
     public async Task<bool> Handle(ValidateUserCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
+        Domain.Aggregates.UserAggregate.User useByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (useByEmail != null)
         {
             throw new BadRequestException("Email already exists");
         }
 
-        Domain.AggregateModels.UserAggregate.User useByPhoneNumber = await _userManager.Users
+        Domain.Aggregates.UserAggregate.User useByPhoneNumber = await _userManager.Users
             .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber, cancellationToken);
         if (useByPhoneNumber != null)
         {

@@ -1,8 +1,9 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.DomainEventHandlers;

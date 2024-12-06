@@ -17,7 +17,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
-		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.26.0" />
+		<PackageReference Include="Microsoft.Azure.SignalR" Version="1.27.0" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Microsoft.OpenApi" Version="1.6.15" />
@@ -37,11 +37,12 @@
 		<PackageReference Include="StackExchange.Redis" Version="2.8.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.2" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
-		<ProjectReference Include="..\EventHub.Persistence\EventHub.Persistence.csproj" />
-		<ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
+	  <ProjectReference Include="..\EventHub.Infrastructure.Persistence\EventHub.Infrastructure.Persistence.csproj" />
+	  <ProjectReference Include="..\EventHub.Infrastructure.SignalR\EventHub.Infrastructure.SignalR.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="FilterAttributes\" />
 	</ItemGroup>
 
 </Project>

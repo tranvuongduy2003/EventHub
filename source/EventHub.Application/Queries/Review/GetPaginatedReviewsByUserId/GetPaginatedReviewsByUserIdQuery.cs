@@ -1,6 +1,6 @@
-﻿using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Review;
-using EventHub.Shared.SeedWork;
+﻿using EventHub.Application.DTOs.Review;
+using EventHub.Domain.SeedWork.Query;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
 

@@ -1,7 +1,8 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.Persistence;
 
 namespace EventHub.Application.Commands.Function.UpdateFunction;
 
@@ -18,13 +19,13 @@ public class UpdateFunctionCommandHandler : ICommandHandler<UpdateFunctionComman
 
     public async Task Handle(UpdateFunctionCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
+        Domain.Aggregates.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
         if (function is null)
         {
             throw new NotFoundException("Function does not exist!");
         }
 
-        function = _mapper.Map<Domain.AggregateModels.PermissionAggregate.Function>(request.Function);
+        function = _mapper.Map<Domain.Aggregates.PermissionAggregate.Function>(request);
 
         await _unitOfWork.Functions.Update(function);
         await _unitOfWork.CommitAsync();

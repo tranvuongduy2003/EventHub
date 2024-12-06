@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Domain.AggregateModels.EventAggregate;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Event;
+using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Event;
-using EventHub.Shared.Helpers;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
@@ -23,7 +24,7 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
     public async Task<Pagination<EventDto>> Handle(GetDeletedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.AggregateModels.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
+        List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
             .FindByCondition(x => x.AuthorId.Equals(request.userId) && x.IsDeleted)
             .ToListAsync(cancellationToken);
         List<EventCategory> eventCategories = await _unitOfWork.EventCategories
@@ -41,7 +42,7 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
             .AsEnumerable()
             .Select(group =>
             {
-                Domain.AggregateModels.EventAggregate.Event @event = group.Key;
+                Domain.Aggregates.EventAggregate.Event @event = group.Key;
                 @event.Categories = group.Select(g => g.EventCategory.Category).ToList();
                 return @event;
             })

@@ -1,4 +1,4 @@
-﻿using EventHub.Shared.Settings;
+﻿using EventHub.Domain.Shared.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

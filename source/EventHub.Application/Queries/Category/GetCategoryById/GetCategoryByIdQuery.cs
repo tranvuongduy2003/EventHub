@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Category;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Category;
 
 namespace EventHub.Application.Queries.Category.GetCategoryById;
 

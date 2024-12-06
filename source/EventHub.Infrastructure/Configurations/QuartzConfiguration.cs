@@ -1,4 +1,4 @@
-using EventHub.Abstractions;
+using EventHub.Application.Abstractions;
 using EventHub.Infrastructure.Outbox;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;

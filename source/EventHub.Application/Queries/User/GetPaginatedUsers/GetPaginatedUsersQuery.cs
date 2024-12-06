@@ -1,6 +1,6 @@
+using EventHub.Application.DTOs.User;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.User;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Queries.User.GetPaginatedUsers;
 

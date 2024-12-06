@@ -1,8 +1,9 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -21,20 +22,26 @@ public class FollowUserDomainEventHandler : IDomainEventHandler<FollowUserDomain
 
     public async Task Handle(FollowUserDomainEvent notification, CancellationToken cancellationToken)
     {
-        var follower = await _userManager.FindByIdAsync(notification.FollowerId.ToString());
+        User follower = await _userManager.FindByIdAsync(notification.FollowerId.ToString());
         if (follower == null)
+        {
             throw new NotFoundException($"Follower does not exist!");
+        }
 
-        var followedUser = await _userManager.FindByIdAsync(notification.FollowedUserId.ToString());
+        User followedUser = await _userManager.FindByIdAsync(notification.FollowedUserId.ToString());
         if (followedUser == null)
+        {
             throw new NotFoundException($"Followed user does not exist!");
+        }
 
-        var isFollowed = await _unitOfWork.UserFollowers
+        bool isFollowed = await _unitOfWork.UserFollowers
             .ExistAsync(x =>
                 x.FollowerId.Equals(notification.FollowerId) &&
                 x.FollowedId.Equals(notification.FollowedUserId));
         if (isFollowed)
+        {
             throw new BadRequestException("User has been followed before");
+        }
 
         var userFollower = new UserFollower
         {

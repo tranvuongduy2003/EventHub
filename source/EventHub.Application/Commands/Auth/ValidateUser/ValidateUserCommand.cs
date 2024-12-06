@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.User;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.User;
 
 namespace EventHub.Application.Commands.Auth.ValidateUser;
 

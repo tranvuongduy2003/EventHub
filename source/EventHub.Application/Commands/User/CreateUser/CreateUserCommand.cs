@@ -1,6 +1,6 @@
+using EventHub.Application.DTOs.User;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.User;
-using EventHub.Shared.Enums.User;
+using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.User.CreateUser;

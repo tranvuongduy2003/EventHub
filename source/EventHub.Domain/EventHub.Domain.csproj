@@ -8,8 +8,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="Quartz" Version="3.13.0" />
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj"/>
+      <ProjectReference Include="..\EventHub.Domain.Shared\EventHub.Domain.Shared.csproj" />
     </ItemGroup>
 </Project>

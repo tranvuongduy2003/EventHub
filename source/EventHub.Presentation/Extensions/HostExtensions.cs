@@ -1,6 +1,6 @@
 ﻿namespace EventHub.Presentation.Extensions;
 
-public static class HostExtensions
+internal static class HostExtensions
 {
     public static void AddAppConfigurations(this WebApplicationBuilder builder)
     {

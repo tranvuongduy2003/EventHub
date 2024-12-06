@@ -1,21 +1,21 @@
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Auth;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Auth;
-using EventHub.Shared.Enums.User;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
+using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Commands.Auth.SignIn;
 
 public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInResponseDto>
 {
-    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public SignInCommandHandler(UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
-        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager, ITokenService tokenService)
+    public SignInCommandHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, ITokenService tokenService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -24,7 +24,7 @@ public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInRespons
 
     public async Task<SignInResponseDto> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.UserAggregate.User user = _userManager.Users.FirstOrDefault(u =>
+        Domain.Aggregates.UserAggregate.User user = _userManager.Users.FirstOrDefault(u =>
             u.Email == request.Identity || u.PhoneNumber == request.Identity);
         if (user == null)
         {

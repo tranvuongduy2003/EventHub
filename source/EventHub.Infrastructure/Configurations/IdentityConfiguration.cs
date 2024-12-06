@@ -1,6 +1,6 @@
-﻿using EventHub.Domain.AggregateModels.UserAggregate;
-using EventHub.Persistence.Data;
-using EventHub.Shared.ValueObjects;
+﻿using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Infrastructure.Persistence.Data;
+using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

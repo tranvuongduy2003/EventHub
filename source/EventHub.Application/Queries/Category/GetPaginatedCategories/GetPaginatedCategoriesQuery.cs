@@ -1,6 +1,6 @@
+using EventHub.Application.DTOs.Category;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Category;
-using EventHub.Shared.SeedWork;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Queries.Category.GetPaginatedCategories;
 

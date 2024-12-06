@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Function;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Function;
 
 namespace EventHub.Application.Commands.Function.CreateFunction;
 
@@ -11,6 +11,13 @@ namespace EventHub.Application.Commands.Function.CreateFunction;
 /// </remarks>
 public class CreateFunctionCommand : ICommand<FunctionDto>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateFunctionCommand"/> class.
+    /// </summary>
+    public CreateFunctionCommand()
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateFunctionCommand"/> class.
     /// </summary>

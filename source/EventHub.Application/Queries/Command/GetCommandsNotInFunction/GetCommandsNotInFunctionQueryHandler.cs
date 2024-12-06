@@ -1,8 +1,9 @@
 using AutoMapper;
-using EventHub.Abstractions.SeedWork.UnitOfWork;
-using EventHub.Domain.AggregateModels.PermissionAggregate;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Command;
+using EventHub.Domain.Aggregates.PermissionAggregate;
+using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Command;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.Command.GetCommandsNotInFunction;

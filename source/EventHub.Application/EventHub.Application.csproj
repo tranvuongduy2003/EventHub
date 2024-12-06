@@ -1,16 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-		<ProjectReference Include="..\EventHub.Abstractions\EventHub.Abstractions.csproj" />
-		<ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
-		<ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="Dapper" Version="2.1.35" />
 		<PackageReference Include="MediatR" Version="12.4.0" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.1" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.2.1" />
 	</ItemGroup>
-
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
+	</ItemGroup>
 </Project>

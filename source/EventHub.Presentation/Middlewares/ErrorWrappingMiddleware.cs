@@ -1,4 +1,4 @@
-﻿using EventHub.Shared.HttpResponses;
+﻿using EventHub.Domain.Shared.HttpResponses;
 using Newtonsoft.Json;
 
 namespace EventHub.Presentation.Middlewares;

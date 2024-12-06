@@ -1,9 +1,10 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.PermissionAggregate;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.PermissionAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
-﻿using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Message;
-using EventHub.Shared.SeedWork;
+﻿using EventHub.Application.DTOs.Message;
+using EventHub.Domain.SeedWork.Query;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 

@@ -1,5 +1,5 @@
-﻿using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Review;
+﻿using EventHub.Application.DTOs.Review;
+using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Review.CreateReview;
 

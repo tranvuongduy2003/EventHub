@@ -1,6 +1,7 @@
-using EventHub.Abstractions.SeedWork.UnitOfWork;
+using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
+using EventHub.Domain.SeedWork.Persistence;
 
 namespace EventHub.Application.Commands.Function.DeleteFunction;
 
@@ -15,7 +16,7 @@ public class DeleteFunctionCommandHandler : ICommandHandler<DeleteFunctionComman
 
     public async Task Handle(DeleteFunctionCommand request, CancellationToken cancellationToken)
     {
-        Domain.AggregateModels.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
+        Domain.Aggregates.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
         if (function is null)
         {
             throw new NotFoundException("Function does not exist!");

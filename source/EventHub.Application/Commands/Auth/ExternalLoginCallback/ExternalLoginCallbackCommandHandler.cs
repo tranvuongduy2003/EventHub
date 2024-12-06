@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using EventHub.Abstractions.Services;
+using EventHub.Application.Abstractions;
+using EventHub.Application.DTOs.Auth;
 using EventHub.Application.Exceptions;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Auth;
-using EventHub.Shared.Enums.User;
-using EventHub.Shared.ValueObjects;
+using EventHub.Domain.Shared.Constants;
+using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Commands.Auth.ExternalLoginCallback;
@@ -13,13 +13,13 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
 {
     private readonly IEmailService _emailService;
     private readonly IHangfireService _hangfireService;
-    private readonly SignInManager<Domain.AggregateModels.UserAggregate.User> _signInManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly ITokenService _tokenService;
-    private readonly UserManager<Domain.AggregateModels.UserAggregate.User> _userManager;
+    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
     public ExternalLoginCallbackCommandHandler(
-        SignInManager<Domain.AggregateModels.UserAggregate.User> signInManager,
-        UserManager<Domain.AggregateModels.UserAggregate.User> userManager,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager,
         IHangfireService hangfireService,
         IEmailService emailService,
         ITokenService tokenService)
@@ -40,11 +40,11 @@ public class ExternalLoginCallbackCommandHandler : ICommandHandler<ExternalLogin
 
         if (!string.IsNullOrEmpty(email))
         {
-            Domain.AggregateModels.UserAggregate.User user = await _userManager.FindByEmailAsync(email);
+            Domain.Aggregates.UserAggregate.User user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
-                user = new Domain.AggregateModels.UserAggregate.User
+                user = new Domain.Aggregates.UserAggregate.User
                 {
                     UserName = email,
                     Email = email,

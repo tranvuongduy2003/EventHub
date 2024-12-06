@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Auth;
 using EventHub.Domain.SeedWork.Command;
-using EventHub.Shared.DTOs.Auth;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
 

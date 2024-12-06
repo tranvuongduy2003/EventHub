@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Command;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Command;
 
 namespace EventHub.Application.Queries.Command.GetCommandsInFunction;
 

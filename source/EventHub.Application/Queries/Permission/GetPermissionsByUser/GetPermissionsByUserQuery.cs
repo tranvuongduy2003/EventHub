@@ -1,5 +1,5 @@
+using EventHub.Application.DTOs.Permission;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Permission;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsByUser;
 

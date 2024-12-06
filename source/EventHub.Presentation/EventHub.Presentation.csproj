@@ -13,15 +13,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
-		<ProjectReference Include="..\EventHub.Shared\EventHub.Shared.csproj" />
-		<ProjectReference Include="..\EventHub.SignalR\EventHub.SignalR.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Content Include="..\..\.dockerignore">
 			<Link>.dockerignore</Link>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\EventHub.Infrastructure\EventHub.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

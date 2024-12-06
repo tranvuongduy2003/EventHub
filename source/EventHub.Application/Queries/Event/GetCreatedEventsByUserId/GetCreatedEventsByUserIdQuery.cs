@@ -1,6 +1,6 @@
-﻿using EventHub.Domain.SeedWork.Query;
-using EventHub.Shared.DTOs.Event;
-using EventHub.Shared.SeedWork;
+﻿using EventHub.Application.DTOs.Event;
+using EventHub.Domain.SeedWork.Query;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 

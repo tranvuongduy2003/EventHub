@@ -1,8 +1,10 @@
-﻿using EventHub.Abstractions.SeedWork.UnitOfWork;
+﻿using EventHub.Application.Abstractions;
 using EventHub.Application.Exceptions;
-using EventHub.Domain.AggregateModels.UserAggregate;
+using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
+using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +30,7 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
             throw new NotFoundException("Event does not exist!");
         }
 
-        Domain.AggregateModels.EventAggregate.FavouriteEvent favouriteEvent = await _unitOfWork.FavouriteEvents
+        FavouriteEvent favouriteEvent = await _unitOfWork.FavouriteEvents
             .FindByCondition(x =>
                 x.EventId.Equals(notification.EventId) &&
                 x.UserId.Equals(notification.UserId))

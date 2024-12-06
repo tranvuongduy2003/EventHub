@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using EventHub.Shared.Settings;
+using EventHub.Domain.Shared.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
