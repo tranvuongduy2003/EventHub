@@ -1,0 +1,28 @@
+name: Build, push, and deploy Docker image for EventHub API
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  DOCKER_IMAGE_NAME: tranvuongduy2003/eventhub-api:linux-latest  # Replace with your Docker Hub repo name
+  CONTAINER_NAME: "eventhub.api"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t $DOCKER_IMAGE_NAME -f source/EventHub.Presentation/Dockerfile .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push $DOCKER_IMAGE_NAME
