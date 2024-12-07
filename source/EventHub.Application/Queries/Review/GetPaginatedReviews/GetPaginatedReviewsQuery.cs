@@ -1,4 +1,4 @@
-﻿using EventHub.Application.DTOs.Review;
+﻿using EventHub.Application.SeedWork.DTOs.Review;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.SeedWork;
 

@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Infrastructure.Persistence.Data;

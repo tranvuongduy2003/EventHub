@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 using Microsoft.AspNetCore.Http;
 

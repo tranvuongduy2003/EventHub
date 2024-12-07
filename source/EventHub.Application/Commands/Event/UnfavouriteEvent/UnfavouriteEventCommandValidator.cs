@@ -6,10 +6,6 @@ public class UnfavouriteEventCommandValidator : AbstractValidator<UnfavouriteEve
 {
     public UnfavouriteEventCommandValidator()
     {
-        RuleFor(x => x.UserId.ToString())
-            .NotEmpty()
-            .WithMessage("User ID is required");
-
         RuleFor(x => x.EventId.ToString())
             .NotEmpty()
             .WithMessage("Event ID is required");

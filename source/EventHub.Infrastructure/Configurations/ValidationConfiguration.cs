@@ -12,7 +12,7 @@ public static class ValidationConfiguration
         services
             .AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters()
-            .AddValidatorsFromAssembly(Domain.Shared.AssemblyReference.Assembly)
+            .AddValidatorsFromAssembly(Application.AssemblyReference.Assembly)
             .AddFluentValidationRulesToSwagger();
 
         return services;

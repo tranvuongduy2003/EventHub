@@ -1,4 +1,4 @@
-﻿using EventHub.Application.DTOs.Event;
+﻿using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Http;
@@ -29,14 +29,9 @@ public class UpdateEventCommand : ICommand
     /// <param name="request">
     /// An <see cref="UpdateEventDto"/> object containing the updated event details.
     /// </param>
-    /// <param name="authorId">
-    /// A <see cref="Guid"/> representing the unique identifier of the user updating the event.
-    /// </param>
-    public UpdateEventCommand(Guid eventId, UpdateEventDto request, Guid authorId)
+    public UpdateEventCommand(Guid eventId, UpdateEventDto request)
     {
         EventId = eventId;
-        AuthorId = authorId;
-
         // Copy properties from request
         Id = request.Id;
         CoverImage = request.CoverImage;
@@ -97,12 +92,4 @@ public class UpdateEventCommand : ICommand
     public IFormFileCollection? EventSubImages { get; set; }
 
     public UpdateEmailContentCommand? EmailContent { get; set; }
-
-    /// <summary>
-    /// Gets or sets the unique identifier of the user who is updating the event.
-    /// </summary>
-    /// <value>
-    /// A <see cref="Guid"/> representing the author's ID.
-    /// </value>
-    public Guid AuthorId { get; set; }
 }

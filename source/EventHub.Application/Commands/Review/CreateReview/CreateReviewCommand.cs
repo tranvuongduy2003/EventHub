@@ -1,4 +1,4 @@
-﻿using EventHub.Application.DTOs.Review;
+﻿using EventHub.Application.SeedWork.DTOs.Review;
 using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Review.CreateReview;
@@ -18,15 +18,7 @@ public class CreateReviewCommand : ICommand<ReviewDto>
     /// The data transfer object containing the details for the new review.
     /// </param>
     public CreateReviewCommand(CreateReviewDto request)
-        => (AuthorId, EventId, Content, Rate) = (request.AuthorId, request.EventId, request.Content, request.Rate);
-
-    /// <summary>
-    /// Gets or sets the unique identifier of the author of the review.
-    /// </summary>
-    /// <value>
-    /// A <see cref="Guid"/> representing the unique identifier of the user who wrote the review.
-    /// </value>
-    public Guid AuthorId { get; set; }
+        => (EventId, Content, Rate) = (request.EventId, request.Content, request.Rate);
 
     /// <summary>
     /// Gets or sets the unique identifier of the event being reviewed.

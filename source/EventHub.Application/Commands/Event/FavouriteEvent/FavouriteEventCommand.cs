@@ -11,13 +11,10 @@ namespace EventHub.Application.Commands.Event.FavouriteEvent;
 /// <summary>
 /// Gets the unique identifier of the user who is marking the event as a favorite.
 /// </summary>
-/// <param name="UserId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
 /// <summary>
 /// Gets the unique identifier of the event being marked as a favorite.
 /// </summary>
 /// <param name="EventId">
 /// A <see cref="Guid"/> representing the unique identifier of the event.
 /// </param>
-public record FavouriteEventCommand(Guid UserId, Guid EventId) : ICommand;
+public record FavouriteEventCommand(Guid EventId) : ICommand;

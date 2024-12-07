@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Category;
+using EventHub.Application.SeedWork.DTOs.Category;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.SeedWork;
 

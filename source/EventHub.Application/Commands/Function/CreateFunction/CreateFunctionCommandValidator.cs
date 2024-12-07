@@ -1,5 +1,3 @@
-using EventHub.Application.DTOs.Function;
-using EventHub.Domain.SeedWork.Command;
 using FluentValidation;
 
 namespace EventHub.Application.Commands.Function.CreateFunction;

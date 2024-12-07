@@ -1,8 +1,8 @@
-using EventHub.Application.Attributes;
-using EventHub.Application.DTOs.Permission;
 using EventHub.Application.Queries.Permission.GetFullPermissions;
 using EventHub.Application.Queries.Permission.GetPermissionsByUser;
 using EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;

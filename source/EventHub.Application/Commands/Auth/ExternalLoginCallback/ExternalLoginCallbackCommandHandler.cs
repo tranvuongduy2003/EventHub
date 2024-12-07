@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Auth;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Auth;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Constants;
 using EventHub.Domain.Shared.Enums.User;

@@ -1,13 +1,13 @@
-using EventHub.Application.Attributes;
 using EventHub.Application.Commands.Function.CreateFunction;
 using EventHub.Application.Commands.Function.DeleteFunction;
 using EventHub.Application.Commands.Function.UpdateFunction;
 using EventHub.Application.Commands.Permission.DisableCommandInFunction;
 using EventHub.Application.Commands.Permission.EnableCommandInFunction;
-using EventHub.Application.DTOs.Function;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Function.GetFunctionById;
 using EventHub.Application.Queries.Function.GetFuntions;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Function;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -40,7 +40,6 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.CREATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostCreateFunction([FromBody] CreateFunctionDto request)
     {
         try
@@ -121,7 +120,6 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(404, "Not Found - Function with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateFunction(string functionId, [FromBody] UpdateFunctionDto request)
     {
         _logger.LogInformation("START: PutUpdateFunction");
@@ -179,7 +177,6 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(404, "Not Found - Function or command with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostEnableCommandInFunction(string functionId, string commandId)
     {
         _logger.LogInformation("START: PostEnableCommandInFunction");
@@ -212,7 +209,6 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(404, "Not Found - Function or command with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostDisableCommandInFunction(string functionId, string commandId)
     {
         _logger.LogInformation("START: PostDisableCommandInFunction");

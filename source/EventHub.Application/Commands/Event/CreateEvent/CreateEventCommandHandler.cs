@@ -1,10 +1,10 @@
 #region Usings
 
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Event;
-using EventHub.Application.DTOs.File;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.File;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
@@ -12,6 +12,7 @@ using EventHub.Domain.Shared.Constants;
 using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 #endregion
 
@@ -29,6 +30,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
     #endregion
 
@@ -38,13 +40,15 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     /// Initializes a new instance of the CreateEventCommandHandler
     /// </summary>
     public CreateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
-        ISerializeService serializeService, UserManager<Domain.Aggregates.UserAggregate.User> userManager)
+        ISerializeService serializeService, UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _fileService = fileService;
         _serializeService = serializeService;
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     #endregion
@@ -59,6 +63,9 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     /// <returns>The created event DTO</returns>
     public async Task<EventDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
+        var authorId = Guid.Parse(_signInManager.Context.User.Claims
+            .FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "");
+        
         // Check if event with same name already exists
         bool isEventExisted = await _unitOfWork.CachedEvents
             .ExistAsync(e => e.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase));
@@ -69,7 +76,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
 
         // Create and map the event
         Domain.Aggregates.EventAggregate.Event @event = _mapper.Map<Domain.Aggregates.EventAggregate.Event>(request);
-        @event.AuthorId = request.AuthorId;
+        @event.AuthorId = authorId;
 
         // Handle cover image upload
         BlobResponseDto coverImage = await _fileService.UploadAsync(request.CoverImage, FileContainer.EVENTS);
@@ -115,7 +122,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
             {
                 var emailAttachments = new List<EmailAttachment>();
                 foreach (IFormFile attachment in request.EmailContent.Attachments)
-                { 
+                {
                     BlobResponseDto attachmentFile =
                         await _fileService.UploadAsync(attachment, $"{FileContainer.EVENTS}/{@event.Id}");
                     var emailAttachment = new EmailAttachment()
@@ -185,7 +192,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
         }
 
         // Update user's created events count
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.AuthorId.ToString());
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(authorId.ToString());
         if (user != null)
         {
             user.NumberOfCreatedEvents++;

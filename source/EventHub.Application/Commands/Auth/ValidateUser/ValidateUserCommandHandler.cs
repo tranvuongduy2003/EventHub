@@ -1,4 +1,4 @@
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

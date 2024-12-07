@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using EventHub.Application.Attributes;
-using EventHub.Application.DTOs.Conversation;
-using EventHub.Application.DTOs.Message;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.DTOs.Conversation;
+using EventHub.Application.SeedWork.DTOs.Message;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.ConversationAggregate;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
@@ -42,7 +41,6 @@ public class ChatHub : Hub
         _logger.LogInformation("END: TestConnection");
     }
 
-    [ApiValidationFilter]
     public async Task JoinChatRoom(JoinChatRoomDto request)
     {
         _logger.LogInformation("BEGIN: JoinChatRoom");
@@ -121,7 +119,6 @@ public class ChatHub : Hub
         _logger.LogInformation("END: JoinChatRoom");
     }
 
-    [ApiValidationFilter]
     public async Task SendMessage(SendMessageDto request)
     {
         _logger.LogInformation("BEGIN: SendMessage");

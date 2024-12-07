@@ -1,8 +1,7 @@
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Function;
-using EventHub.Application.DTOs.Permission;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.DTOs.Function;
+using EventHub.Application.SeedWork.DTOs.Permission;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;

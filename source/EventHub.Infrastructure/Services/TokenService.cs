@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Text;
-using EventHub.Application.Abstractions;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Domain.Shared.Constants;
@@ -12,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Serilog;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
+using EventHub.Application.SeedWork.Abstractions;
 
 namespace EventHub.Infrastructure.Services;
 

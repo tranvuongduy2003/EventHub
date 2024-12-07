@@ -1,4 +1,4 @@
-﻿using EventHub.Application.Mappings;
+﻿using EventHub.Application.SeedWork.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventHub.Infrastructure.Configurations;

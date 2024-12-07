@@ -1,8 +1,9 @@
 using AutoMapper;
-using EventHub.Application.DTOs.User;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Queries.Auth.GetUserProfile;
 
@@ -10,17 +11,21 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
 {
     private readonly IMapper _mapper;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
-    public GetUserProfileQueryHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+    public GetUserProfileQueryHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
         IMapper mapper)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
         _mapper = mapper;
     }
 
     public async Task<UserDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "";
+
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             throw new UnauthorizedException("Unauthorized");

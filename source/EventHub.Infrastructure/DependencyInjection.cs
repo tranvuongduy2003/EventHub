@@ -1,4 +1,4 @@
-﻿using EventHub.Application.Abstractions;
+﻿using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;

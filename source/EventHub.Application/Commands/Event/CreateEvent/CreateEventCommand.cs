@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Http;
@@ -23,10 +23,7 @@ public class CreateEventCommand : ICommand<EventDto>
     /// <param name="request">
     /// A <see cref="CreateEventDto"/> object containing the details of the event to be created.
     /// </param>
-    /// <param name="authorId">
-    /// A <see cref="Guid"/> representing the unique identifier of the user who is creating the event.
-    /// </param>
-    public CreateEventCommand(CreateEventDto request, Guid authorId)
+    public CreateEventCommand(CreateEventDto request)
     {
         CoverImage = request.CoverImage;
         Name = request.Name;
@@ -43,7 +40,6 @@ public class CreateEventCommand : ICommand<EventDto>
         Reasons = request.Reasons;
         EventSubImages = request.EventSubImages;
         EmailContent = request.EmailContent != null ? new CreateEmailContentCommand(request.EmailContent) : null;
-        AuthorId = authorId;
     }
 
     public IFormFile CoverImage { get; set; }
@@ -75,12 +71,4 @@ public class CreateEventCommand : ICommand<EventDto>
     public IFormFileCollection? EventSubImages { get; set; }
 
     public CreateEmailContentCommand? EmailContent { get; set; }
-
-    /// <summary>
-    /// Gets or sets the unique identifier of the user who is creating the event.
-    /// </summary>
-    /// <value>
-    /// A <see cref="Guid"/> representing the author's ID.
-    /// </value>
-    public Guid AuthorId { get; set; }
 }

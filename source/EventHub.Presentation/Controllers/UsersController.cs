@@ -1,15 +1,15 @@
-using EventHub.Application.Attributes;
 using EventHub.Application.Commands.User.ChangePassword;
 using EventHub.Application.Commands.User.CreateUser;
 using EventHub.Application.Commands.User.Follow;
 using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
-using EventHub.Application.DTOs.User;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.User.GetPaginatedFollowers;
 using EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
 using EventHub.Application.Queries.User.GetPaginatedUsers;
 using EventHub.Application.Queries.User.GetUserById;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -46,7 +46,6 @@ public class UsersController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.CREATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostCreateUser([FromForm] CreateUserDto request)
     {
         _logger.LogInformation("START: PostCreateUser");
@@ -127,7 +126,6 @@ public class UsersController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateUser(Guid userId, [FromForm] UpdateUserDto request)
     {
         _logger.LogInformation("START: PutUpdateUser");
@@ -163,7 +161,6 @@ public class UsersController : ControllerBase
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PatchChangeUserPassword(Guid userId, [FromBody] UpdateUserPasswordDto request)
     {
         _logger.LogInformation("START: PatchChangeUserPassword");
@@ -250,12 +247,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PatchFollowUser");
         try
         {
-            string accessToken = Request
-                .Headers[HeaderNames.Authorization]
-                .ToString()
-                .Replace("Bearer ", "");
-
-            await _mediator.Send(new FollowCommand(accessToken, followedUserId));
+            await _mediator.Send(new FollowCommand(followedUserId));
 
             _logger.LogInformation("END: PatchFollowUser");
 
@@ -289,12 +281,7 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PatchUnfollowUser");
         try
         {
-            string accessToken = Request
-                .Headers[HeaderNames.Authorization]
-                .ToString()
-                .Replace("Bearer ", "");
-
-            await _mediator.Send(new UnfollowCommand(accessToken, followedUserId));
+            await _mediator.Send(new UnfollowCommand(followedUserId));
 
             _logger.LogInformation("END: PatchUnfollowUser");
 

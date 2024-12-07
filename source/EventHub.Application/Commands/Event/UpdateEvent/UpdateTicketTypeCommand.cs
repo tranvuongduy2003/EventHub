@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Event.UpdateEvent;

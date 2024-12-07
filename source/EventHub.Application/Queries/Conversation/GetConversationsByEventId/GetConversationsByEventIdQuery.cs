@@ -1,4 +1,4 @@
-﻿using EventHub.Application.DTOs.Conversation;
+﻿using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.SeedWork;
 

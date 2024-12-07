@@ -1,5 +1,4 @@
-using EventHub.Application.Abstractions;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.PermissionAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;

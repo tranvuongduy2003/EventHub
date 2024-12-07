@@ -1,8 +1,8 @@
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.File;
-using EventHub.Application.DTOs.User;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.File;
+using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Constants;
 using EventHub.Domain.Shared.Enums.User;

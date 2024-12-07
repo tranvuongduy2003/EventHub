@@ -1,6 +1,7 @@
-using EventHub.Application.DTOs.Auth;
+using EventHub.Application.SeedWork.DTOs.Auth;
 using EventHub.Domain.SeedWork.Command;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Application.Commands.Auth.ExternalLogin;
@@ -18,8 +19,10 @@ public class ExternalLoginCommandHandler : ICommandHandler<ExternalLoginCommand,
     {
         return await Task.Run(() =>
         {
+            HttpContext httpContext = _signInManager.Context;
+            string domainName = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
             string redirectUrl =
-                $"https://eventhubsolutionbackendserverplan.azurewebsites.net/api/auth/external-auth-callback?returnUrl={request.ReturnUrl}";
+                $"{domainName}/api/v1/auth/external-auth-callback?returnUrl={request.ReturnUrl}";
             AuthenticationProperties properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, redirectUrl);
             properties.AllowRefresh = true;
 

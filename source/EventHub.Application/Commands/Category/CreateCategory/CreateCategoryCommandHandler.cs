@@ -1,7 +1,7 @@
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Category;
-using EventHub.Application.DTOs.File;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Category;
+using EventHub.Application.SeedWork.DTOs.File;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.Shared.Constants;
@@ -28,7 +28,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
             Color = request.Color,
             Name = request.Name,
             IconImageUrl = string.Empty,
-            IconImageFileName = string.Empty
+            IconImageFileName = string.Empty,
         };
 
         BlobResponseDto iconImage = await _fileService.UploadAsync(request.IconImage, FileContainer.CATEGORIES);

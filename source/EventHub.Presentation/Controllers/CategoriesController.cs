@@ -1,11 +1,11 @@
-using EventHub.Application.Attributes;
 using EventHub.Application.Commands.Category.CreateCategory;
 using EventHub.Application.Commands.Category.DeleteCategory;
 using EventHub.Application.Commands.Category.UpdateCategory;
-using EventHub.Application.DTOs.Category;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Category.GetCategoryById;
 using EventHub.Application.Queries.Category.GetPaginatedCategories;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Category;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -40,7 +40,6 @@ public class CategoriesController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.CREATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostCreateCategory([FromForm] CreateCategoryDto request)
     {
         _logger.LogInformation("START: PostCreateCategory");
@@ -111,7 +110,6 @@ public class CategoriesController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateCategory(Guid categoryId, [FromForm] UpdateCategoryDto request)
     {
         _logger.LogInformation("START: PutUpdateCategory");

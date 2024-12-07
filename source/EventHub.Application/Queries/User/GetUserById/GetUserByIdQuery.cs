@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.User;
+using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.SeedWork.Query;
 
 namespace EventHub.Application.Queries.User.GetUserById;

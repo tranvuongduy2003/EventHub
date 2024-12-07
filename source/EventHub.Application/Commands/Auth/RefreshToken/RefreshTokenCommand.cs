@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Auth;
+using EventHub.Application.SeedWork.DTOs.Auth;
 using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Auth.RefreshToken;

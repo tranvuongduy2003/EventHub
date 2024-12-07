@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using Hangfire;
 
 namespace EventHub.Infrastructure.Services;

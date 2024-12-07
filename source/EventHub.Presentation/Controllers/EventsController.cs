@@ -1,5 +1,4 @@
-﻿using EventHub.Application.Attributes;
-using EventHub.Application.Commands.Event.CreateEvent;
+﻿using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.Commands.Event.DeleteEvent;
 using EventHub.Application.Commands.Event.FavouriteEvent;
 using EventHub.Application.Commands.Event.MakeEventsPrivate;
@@ -8,13 +7,14 @@ using EventHub.Application.Commands.Event.PermanentlyDeleteEvent;
 using EventHub.Application.Commands.Event.RestoreEvent;
 using EventHub.Application.Commands.Event.UnfavouriteEvent;
 using EventHub.Application.Commands.Event.UpdateEvent;
-using EventHub.Application.DTOs.Event;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 using EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
 using EventHub.Application.Queries.Event.GetEventById;
 using EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
 using EventHub.Application.Queries.Event.GetPaginatedEvents;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Event;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -54,7 +54,6 @@ public class EventsController : ControllerBase
         _logger.LogInformation("END: GetPaginatedEvents");
 
         return Ok(new ApiOkResponse(events));
-
     }
 
     [HttpGet("{eventId:guid}")]
@@ -97,18 +96,12 @@ public class EventsController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.CREATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostCreateEvent([FromForm] CreateEventDto request)
     {
         _logger.LogInformation("START: PostCreateEvent");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            EventDto @event = await _mediator.Send(new CreateEventCommand(request, userId));
+            EventDto @event = await _mediator.Send(new CreateEventCommand(request));
 
             _logger.LogInformation("END: PostCreateEvent");
 
@@ -144,7 +137,6 @@ public class EventsController : ControllerBase
         _logger.LogInformation("END: GetCreatedEvents");
 
         return Ok(new ApiOkResponse(events));
-
     }
 
     [HttpPut("{eventId:guid}")]
@@ -160,18 +152,12 @@ public class EventsController : ControllerBase
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateEvent(Guid eventId, [FromForm] UpdateEventDto request)
     {
         _logger.LogInformation("START: PutUpdateEvent");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            await _mediator.Send(new UpdateEventCommand(eventId, request, userId));
+            await _mediator.Send(new UpdateEventCommand(eventId, request));
 
             _logger.LogInformation("END: PutUpdateEvent");
 
@@ -203,12 +189,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: DeleteEvent");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            await _mediator.Send(new DeleteEventCommand(userId, eventId));
+            await _mediator.Send(new DeleteEventCommand(eventId));
 
             _logger.LogInformation("END: DeleteEvent");
 
@@ -318,12 +299,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchFavouriteEvent");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            await _mediator.Send(new FavouriteEventCommand(userId, eventId));
+            await _mediator.Send(new FavouriteEventCommand(eventId));
 
             _logger.LogInformation("END: PatchFavouriteEvent");
 
@@ -355,12 +331,7 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PatchUnfavouriteEvent");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            await _mediator.Send(new UnfavouriteEventCommand(userId, eventId));
+            await _mediator.Send(new UnfavouriteEventCommand(eventId));
 
             _logger.LogInformation("END: PatchUnfavouriteEvent");
 

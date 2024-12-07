@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Persistence;
 using MediatR;

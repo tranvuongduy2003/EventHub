@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.User;
+using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.SeedWork.Query;
 
 namespace EventHub.Application.Queries.Auth.GetUserProfile;
@@ -12,7 +12,4 @@ namespace EventHub.Application.Queries.Auth.GetUserProfile;
 /// <summary>
 /// Gets the unique identifier of the user whose profile is being retrieved.
 /// </summary>
-/// <param name="UserId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
-public record GetUserProfileQuery(Guid UserId) : IQuery<UserDto>;
+public record GetUserProfileQuery() : IQuery<UserDto>;

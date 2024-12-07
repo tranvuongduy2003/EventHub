@@ -1,5 +1,4 @@
-﻿using EventHub.Application.Abstractions;
-using EventHub.Domain.Aggregates.EventAggregate;
+﻿using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;

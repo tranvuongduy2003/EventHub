@@ -1,5 +1,4 @@
-﻿using EventHub.Application.Abstractions;
-using EventHub.Domain.Aggregates.EventAggregate;
+﻿using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Persistence;

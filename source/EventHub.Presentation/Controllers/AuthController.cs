@@ -1,5 +1,4 @@
-﻿using EventHub.Application.Attributes;
-using EventHub.Application.Commands.Auth.ExternalLogin;
+﻿using EventHub.Application.Commands.Auth.ExternalLogin;
 using EventHub.Application.Commands.Auth.ExternalLoginCallback;
 using EventHub.Application.Commands.Auth.ForgotPassword;
 using EventHub.Application.Commands.Auth.RefreshToken;
@@ -8,10 +7,11 @@ using EventHub.Application.Commands.Auth.SignIn;
 using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
-using EventHub.Application.DTOs.Auth;
-using EventHub.Application.DTOs.User;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Auth.GetUserProfile;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Auth;
+using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -46,7 +46,6 @@ public class AuthController : ControllerBase
     [SwaggerResponse(200, "User successfully registered", typeof(SignInResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
-    [ApiValidationFilter]
     public async Task<IActionResult> SignUp([FromBody] SignUpDto dto)
     {
         _logger.LogInformation("START: SignUp");
@@ -73,7 +72,6 @@ public class AuthController : ControllerBase
     [SwaggerResponse(200, "User credentials are valid")]
     [SwaggerResponse(400, "Invalid user credentials or request data")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
-    [ApiValidationFilter]
     public async Task<IActionResult> ValidateUser([FromBody] ValidateUserDto dto)
     {
         _logger.LogInformation("START: ValidateUser");
@@ -216,8 +214,7 @@ public class AuthController : ControllerBase
     [SwaggerResponse(200, "Successfully refreshed the token", typeof(SignInResponseDto))]
     [SwaggerResponse(401, "Unauthorized - Invalid or expired refresh token")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [TokenRequirementFilter]
-    [ApiValidationFilter]
+    [TokenRequirement]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
     {
         _logger.LogInformation("START: RefreshToken");
@@ -249,8 +246,7 @@ public class AuthController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - Invalid or missing credentials")]
     [SwaggerResponse(404, "Not Found - User with the provided email address not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [TokenRequirementFilter]
-    [ApiValidationFilter]
+    [TokenRequirement]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
         _logger.LogInformation("START: ForgotPassword");
@@ -278,8 +274,7 @@ public class AuthController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - Invalid or expired credentials")]
     [SwaggerResponse(404, "Not Found - User or resource not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [TokenRequirementFilter]
-    [ApiValidationFilter]
+    [TokenRequirement]
     public async Task<IActionResult> ResetPassword([FromBody] ResetUserPasswordDto dto)
     {
         _logger.LogInformation("START: ResetPassword");
@@ -316,12 +311,7 @@ public class AuthController : ControllerBase
         _logger.LogInformation("START: GetUserProfile");
         try
         {
-            if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-            {
-                userId = Guid.NewGuid();
-            }
-
-            UserDto user = await _mediator.Send(new GetUserProfileQuery(userId));
+            UserDto user = await _mediator.Send(new GetUserProfileQuery());
 
             _logger.LogInformation("END: GetUserProfile");
 

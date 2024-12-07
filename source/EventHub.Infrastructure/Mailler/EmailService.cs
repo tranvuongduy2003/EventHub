@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.Shared.SeedWork;
 using EventHub.Domain.Shared.Settings;
 using MailKit.Net.Smtp;

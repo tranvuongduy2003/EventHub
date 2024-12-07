@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using EventHub.Application.DTOs.Permission;
+using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 

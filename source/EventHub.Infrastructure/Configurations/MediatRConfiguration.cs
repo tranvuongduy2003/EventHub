@@ -1,4 +1,4 @@
-using EventHub.Application.Behaviors;
+using EventHub.Application.SeedWork.Behaviors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +14,7 @@ public static class MediatRConfiguration
             config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ExceptionBehavior<,>));
             config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+            config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         });
 
         return services;

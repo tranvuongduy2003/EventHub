@@ -1,6 +1,6 @@
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Auth;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Auth;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Constants;
 using EventHub.Domain.Shared.Enums.User;
@@ -42,7 +42,7 @@ public class SignInCommandHandler : ICommandHandler<SignInCommand, SignInRespons
             throw new UnauthorizedException("Your account was disabled");
         }
 
-        await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+        await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
 
         string accessToken = await _tokenService
             .GenerateAccessTokenAsync(user);

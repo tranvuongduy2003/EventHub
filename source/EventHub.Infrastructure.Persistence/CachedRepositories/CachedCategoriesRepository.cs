@@ -1,4 +1,4 @@
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.Aggregates.CategoryAggregate;
 using EventHub.Domain.CachedRepositories;
 using EventHub.Domain.SeedWork.Persistence;

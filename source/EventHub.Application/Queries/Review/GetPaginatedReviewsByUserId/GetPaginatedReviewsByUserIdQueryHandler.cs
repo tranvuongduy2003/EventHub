@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Review;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.DTOs.Review;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;

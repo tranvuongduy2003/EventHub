@@ -11,13 +11,10 @@ namespace EventHub.Application.Commands.Event.UnfavouriteEvent;
 /// <summary>
 /// Gets the unique identifier of the user who is unfavoriting the event.
 /// </summary>
-/// <param name="UserId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
 /// <summary>
 /// Gets the unique identifier of the event being unfavorited.
 /// </summary>
 /// <param name="EventId">
 /// A <see cref="Guid"/> representing the unique identifier of the event.
 /// </param>
-public record UnfavouriteEventCommand(Guid UserId, Guid EventId) : ICommand;
+public record UnfavouriteEventCommand(Guid EventId) : ICommand;

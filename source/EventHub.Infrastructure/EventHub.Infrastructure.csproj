@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
+	  <Compile Remove="FilterAttributes\**" />
+	  <EmbeddedResource Remove="FilterAttributes\**" />
+	  <None Remove="FilterAttributes\**" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.21.1" />
 		<PackageReference Include="Dapper" Version="2.1.35" />
@@ -40,9 +45,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\EventHub.Infrastructure.Persistence\EventHub.Infrastructure.Persistence.csproj" />
 	  <ProjectReference Include="..\EventHub.Infrastructure.SignalR\EventHub.Infrastructure.SignalR.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="FilterAttributes\" />
 	</ItemGroup>
 
 </Project>

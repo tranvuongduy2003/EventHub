@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Auth;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Auth;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
@@ -13,11 +13,14 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
 {
     private readonly ITokenService _tokenService;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
     public RefreshTokenCommandHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
         ITokenService tokenService)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
         _tokenService = tokenService;
     }
 
@@ -32,10 +35,11 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
         {
             throw new UnauthorizedException("Unauthorized");
         }
-        ClaimsIdentity principal = await _tokenService.GetPrincipalFromToken(request.AccessToken);
 
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(principal?.Claims
-            .FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value ?? "");
+        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))
+            ?.Value ?? "";
+
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             throw new UnauthorizedException("Unauthorized");

@@ -1,6 +1,6 @@
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.File;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.File;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;

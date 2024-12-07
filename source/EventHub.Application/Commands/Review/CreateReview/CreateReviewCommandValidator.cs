@@ -6,10 +6,6 @@ public class CreateReviewCommandValidator : AbstractValidator<CreateReviewComman
 {
     public CreateReviewCommandValidator()
     {
-        RuleFor(x => x.AuthorId)
-            .NotEmpty()
-            .WithMessage("Author ID is required");
-
         RuleFor(x => x.EventId)
             .NotEmpty()
             .WithMessage("Event ID is required");

@@ -1,8 +1,8 @@
-using EventHub.Application.Attributes;
 using EventHub.Application.Commands.Permission.AddFunctionToRole;
 using EventHub.Application.Commands.Permission.RemoveFunctionFromRole;
-using EventHub.Application.DTOs.Command;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Command;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;

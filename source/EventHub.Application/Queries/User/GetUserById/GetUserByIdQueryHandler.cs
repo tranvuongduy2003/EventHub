@@ -1,7 +1,7 @@
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.User;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 

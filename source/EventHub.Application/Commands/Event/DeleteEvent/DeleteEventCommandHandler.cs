@@ -1,8 +1,8 @@
-﻿using EventHub.Application.Abstractions;
-using EventHub.Application.Exceptions;
+﻿using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Commands.Event.DeleteEvent;
 
@@ -10,12 +10,14 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
     public DeleteEventCommandHandler(IUnitOfWork unitOfWork,
-        UserManager<Domain.Aggregates.UserAggregate.User> userManager)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     public async Task Handle(DeleteEventCommand request, CancellationToken cancellationToken)
@@ -28,7 +30,9 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 
         await _unitOfWork.Events.SoftDelete(@event);
 
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "";
+        
+        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user != null)
         {
             user.NumberOfCreatedEvents--;

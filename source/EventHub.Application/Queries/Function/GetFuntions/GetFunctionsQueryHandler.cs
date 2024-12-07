@@ -1,6 +1,5 @@
 using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Function;
+using EventHub.Application.SeedWork.DTOs.Function;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.EntityFrameworkCore;

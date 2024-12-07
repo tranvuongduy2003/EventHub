@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Permission;
+using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Domain.SeedWork.Query;
 
 namespace EventHub.Application.Queries.Permission.GetPermissionsCategorizedByRoles;

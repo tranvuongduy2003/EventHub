@@ -1,13 +1,13 @@
-﻿using EventHub.Application.Attributes;
-using EventHub.Application.Commands.Review.CreateReview;
+﻿using EventHub.Application.Commands.Review.CreateReview;
 using EventHub.Application.Commands.Review.DeleteReview;
 using EventHub.Application.Commands.Review.UpdateReview;
-using EventHub.Application.DTOs.Review;
-using EventHub.Application.Exceptions;
 using EventHub.Application.Queries.Review.GetPaginatedReviews;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
 using EventHub.Application.Queries.Review.GetReviewById;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Review;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
@@ -41,7 +41,6 @@ public class ReviewsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.CREATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PostCreateReview([FromBody] CreateReviewDto request)
     {
         _logger.LogInformation("START: PostCreateReview");
@@ -166,7 +165,6 @@ public class ReviewsController : ControllerBase
     [SwaggerResponse(404, "Not Found - Review with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.UPDATE)]
-    [ApiValidationFilter]
     public async Task<IActionResult> PutUpdateReview(Guid reviewId, [FromBody] UpdateReviewDto request)
     {
         _logger.LogInformation("START: PutUpdateReview");

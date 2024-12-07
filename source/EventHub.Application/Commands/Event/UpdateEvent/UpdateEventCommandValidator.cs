@@ -74,9 +74,5 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
             RuleFor(x => x.EmailContent!)
                 .SetValidator(new UpdateEmailContentCommandValidator());
         });
-
-        RuleFor(x => x.AuthorId.ToString())
-            .NotEmpty()
-            .WithMessage("Author ID is required");
     }
 }

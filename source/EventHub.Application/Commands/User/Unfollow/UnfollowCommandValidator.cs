@@ -6,10 +6,6 @@ public class UnfollowCommandValidator : AbstractValidator<UnfollowCommand>
 {
     public UnfollowCommandValidator()
     {
-        RuleFor(x => x.AccessToken)
-            .NotEmpty()
-            .WithMessage("Access token is required");
-
         RuleFor(x => x.FollowedUserId.ToString())
             .NotEmpty()
             .WithMessage("Unfollowed user ID is required");

@@ -1,5 +1,5 @@
 ﻿using System.Security.Authentication;
-using EventHub.Application.Abstractions;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.Shared.Settings;
 using Hangfire;
 using Hangfire.Console.Extensions;

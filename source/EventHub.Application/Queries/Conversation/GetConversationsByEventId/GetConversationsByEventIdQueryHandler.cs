@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using EventHub.Application.Abstractions;
-using EventHub.Application.DTOs.Conversation;
-using EventHub.Application.Exceptions;
+using EventHub.Application.SeedWork.DTOs.Conversation;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.ConversationAggregate;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;

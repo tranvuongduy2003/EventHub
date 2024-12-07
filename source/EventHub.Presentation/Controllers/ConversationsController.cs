@@ -1,10 +1,10 @@
-﻿using EventHub.Application.Attributes;
-using EventHub.Application.DTOs.Conversation;
-using EventHub.Application.DTOs.Message;
-using EventHub.Application.Exceptions;
-using EventHub.Application.Queries.Conversation.GetConversationsByEventId;
+﻿using EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 using EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 using EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Conversation;
+using EventHub.Application.SeedWork.DTOs.Message;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;

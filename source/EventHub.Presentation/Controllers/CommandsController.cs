@@ -1,7 +1,7 @@
-using EventHub.Application.Attributes;
-using EventHub.Application.DTOs.Command;
 using EventHub.Application.Queries.Command.GetCommandsInFunction;
 using EventHub.Application.Queries.Command.GetCommandsNotInFunction;
+using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Command;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;

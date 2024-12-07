@@ -1,4 +1,4 @@
-using EventHub.Application.DTOs.Command;
+using EventHub.Application.SeedWork.DTOs.Command;
 using EventHub.Domain.SeedWork.Query;
 
 namespace EventHub.Application.Queries.Command.GetCommandsNotInFunction;
