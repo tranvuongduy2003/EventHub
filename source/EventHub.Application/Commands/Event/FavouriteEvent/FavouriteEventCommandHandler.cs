@@ -17,8 +17,7 @@ public class FavouriteEventCommandHandler : ICommandHandler<FavouriteEventComman
     {
         await Task.Run(() =>
         {
-            var userId = Guid.Parse(_signInManager.Context.User.Claims
-                .FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "");
+            var userId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
             Domain.Aggregates.EventAggregate.Event
                 .FavouriteEvent(userId, request.EventId);

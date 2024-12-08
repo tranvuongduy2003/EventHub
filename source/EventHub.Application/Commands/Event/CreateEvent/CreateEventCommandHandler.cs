@@ -63,9 +63,8 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     /// <returns>The created event DTO</returns>
     public async Task<EventDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        var authorId = Guid.Parse(_signInManager.Context.User.Claims
-            .FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "");
-        
+        var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
+
         // Check if event with same name already exists
         bool isEventExisted = await _unitOfWork.CachedEvents
             .ExistAsync(e => e.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase));

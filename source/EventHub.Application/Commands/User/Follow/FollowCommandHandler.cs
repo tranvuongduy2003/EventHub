@@ -1,6 +1,3 @@
-using System.Security.Claims;
-using EventHub.Application.SeedWork.Abstractions;
-using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Command;
 using Microsoft.AspNetCore.Identity;
@@ -22,9 +19,7 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand>
 
     public async Task Handle(FollowCommand request, CancellationToken cancellationToken)
     {
-        string userId = _signInManager.Context.User.Claims
-            .FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))
-            ?.Value ?? "";
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
         Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
 

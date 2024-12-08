@@ -23,9 +23,7 @@ public class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, R
 
     public async Task<ReviewDto> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
     {
-        var authorId = Guid.Parse(_signInManager.Context.User.Claims
-            .FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))
-            ?.Value ?? "");
+        var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
         var review = new Domain.Aggregates.ReviewAggregate.Review
         {

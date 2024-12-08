@@ -13,7 +13,7 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
-    public GetUserProfileQueryHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager,SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
+    public GetUserProfileQueryHandler(UserManager<Domain.Aggregates.UserAggregate.User> userManager, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
         IMapper mapper)
     {
         _userManager = userManager;
@@ -23,7 +23,7 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
 
     public async Task<UserDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
-        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "";
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
         Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user == null)

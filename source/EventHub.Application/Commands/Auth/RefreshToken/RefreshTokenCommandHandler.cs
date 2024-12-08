@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.Auth;
 using EventHub.Application.SeedWork.Exceptions;
@@ -36,8 +35,7 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, S
             throw new UnauthorizedException("Unauthorized");
         }
 
-        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))
-            ?.Value ?? "";
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
         Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user == null)

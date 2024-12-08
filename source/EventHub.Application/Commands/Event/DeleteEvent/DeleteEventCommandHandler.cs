@@ -30,8 +30,8 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
 
         await _unitOfWork.Events.SoftDelete(@event);
 
-        string userId = _signInManager.Context.User.Claims.FirstOrDefault(x => x.Equals(JwtRegisteredClaimNames.Jti))?.Value ?? "";
-        
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
+
         Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
         if (user != null)
         {
