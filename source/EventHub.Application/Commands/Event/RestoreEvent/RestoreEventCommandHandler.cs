@@ -12,7 +12,7 @@ public class RestoreEventCommandHandler : ICommandHandler<RestoreEventCommand>
     {
         await Task.Run(() =>
         {
-            Domain.Aggregates.EventAggregate.Event.RestoreEvent(request.UserId, request.Events);
+            Domain.Aggregates.EventAggregate.Event.RestoreEvent(request.Events);
         }, cancellationToken);
     }
 }

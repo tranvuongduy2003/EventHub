@@ -37,7 +37,7 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
         {
             users = await _userManager.Users
                 .AsNoTracking()
-                .Where(x => x.IsDeleted.Equals(false))
+                .Where(x => !x.IsDeleted)
                 .ToListAsync(cancellationToken);
 
             await _cacheService.SetData<List<Domain.Aggregates.UserAggregate.User>>(key, users,
@@ -45,7 +45,7 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
         }
 
         List<Domain.Aggregates.UserAggregate.User> followers = await _unitOfWork.UserFollowers
-            .FindByCondition(x => x.FollowedId.Equals(request.UserId))
+            .FindByCondition(x => x.FollowedId == request.UserId)
             .Join(users, userFollower => userFollower.FollowerId, user => user.Id, (_, user) => user)
             .ToListAsync(cancellationToken);
 

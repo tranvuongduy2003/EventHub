@@ -17,13 +17,10 @@ namespace EventHub.Domain.Events;
 /// <summary>
 /// Gets the unique identifier of the user restoring the events.
 /// </summary>
-/// <param name="UserId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
 /// <summary>
 /// Gets the list of unique identifiers for the events being restored.
 /// </summary>
 /// <param name="Events">
 /// A list of <see cref="Guid"/> representing the unique identifiers of the events.
 /// </param>
-public record RestoreEventDomainEvent(Guid Id, Guid UserId, List<Guid> Events) : DomainEvent(Id);
+public record RestoreEventDomainEvent(Guid Id, List<Guid> Events) : DomainEvent(Id);

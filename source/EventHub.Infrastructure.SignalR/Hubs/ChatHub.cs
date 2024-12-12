@@ -70,9 +70,9 @@ public class ChatHub : Hub
 
         Conversation conversation = await _unitOfWork.Conversations
             .FindByCondition(x =>
-                x.HostId.Equals(request.HostId)
-                && x.EventId.Equals(request.EventId)
-                && x.UserId.Equals(request.UserId))
+                x.HostId == request.HostId
+                && x.EventId == request.EventId
+                && x.UserId == request.UserId)
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)

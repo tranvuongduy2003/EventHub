@@ -5,7 +5,9 @@ using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
 
@@ -14,26 +16,30 @@ public class
         Pagination<EventDto>>
 {
     private readonly IMapper _mapper;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetFavouriteEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetFavouriteEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _signInManager = signInManager;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetFavouriteEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
+        
         List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId.Equals(request.userId))
+            .FindByCondition(x => x.AuthorId.ToString() == userId)
             .ToListAsync(cancellationToken);
         List<EventCategory> eventCategories = await _unitOfWork.EventCategories
             .FindAll()
             .Include(x => x.Category)
             .ToListAsync(cancellationToken);
         List<FavouriteEvent> favouriteEvents = await _unitOfWork.FavouriteEvents
-            .FindByCondition(x => x.UserId.Equals(request.userId))
+            .FindByCondition(x => x.UserId.ToString() == userId)
             .ToListAsync(cancellationToken);
 
         var events = (

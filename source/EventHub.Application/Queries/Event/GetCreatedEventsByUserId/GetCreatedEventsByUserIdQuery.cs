@@ -13,13 +13,10 @@ namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 /// <summary>
 /// Gets the unique identifier of the user who created the events.
 /// </summary>
-/// <param name="userId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
 /// <summary>
 /// Gets the pagination filter to apply to the list of events.
 /// </summary>
 /// <param name="Filter">
-/// A <see cref="PaginationFilter"/> object representing the pagination parameters, including page size and page number.
+/// A <see cref="PaginationFilter"/> object representing the pagination parameters, including pØage size and page number.
 /// </param>
-public record GetCreatedEventsByUserIdQuery(Guid userId, PaginationFilter Filter) : IQuery<Pagination<EventDto>>;
+public record GetCreatedEventsByUserIdQuery(PaginationFilter Filter) : IQuery<Pagination<EventDto>>;

@@ -102,7 +102,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
     private async Task UpdateEventSubImages(Guid eventId, IFormFileCollection? subImages, CancellationToken cancellationToken)
     {
         List<EventSubImage> eventSubImages = await _unitOfWork.EventSubImages
-            .FindByCondition(x => x.EventId.Equals(eventId))
+            .FindByCondition(x => x.EventId == eventId)
             .ToListAsync(cancellationToken);
 
         foreach (EventSubImage image in eventSubImages)
@@ -143,7 +143,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         emailContent.Content = emailContentCommand.Content;
 
         List<EmailAttachment> attachments = await _unitOfWork.EmailAttachments
-            .FindByCondition(x => x.EmailContentId.Equals(emailContent.Id))
+            .FindByCondition(x => x.EmailContentId == emailContent.Id)
             .ToListAsync(cancellationToken);
         foreach (EmailAttachment attachment in attachments)
         {
@@ -214,7 +214,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
     private async Task UpdateCategories(Guid eventId, IEnumerable<Guid> categories)
     {
         IQueryable<EventCategory> deletedEventCategories = _unitOfWork.EventCategories
-            .FindByCondition(x => x.EventId.Equals(eventId));
+            .FindByCondition(x => x.EventId == eventId);
         await _unitOfWork.EventCategories.DeleteList(deletedEventCategories);
 
         var eventCategories = new List<EventCategory>();
@@ -234,7 +234,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
     private async Task UpdateReasons(Guid eventId, IEnumerable<string> reasons)
     {
         IQueryable<Reason> deletedReasons = _unitOfWork.Reasons
-            .FindByCondition(x => x.EventId.Equals(eventId));
+            .FindByCondition(x => x.EventId == eventId);
         await _unitOfWork.Reasons.DeleteList(deletedReasons);
 
         var updatedReasons = reasons

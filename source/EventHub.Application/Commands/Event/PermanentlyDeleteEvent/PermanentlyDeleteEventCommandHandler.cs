@@ -45,7 +45,7 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
 
         // Delete event sub-images and their files
         List<EventSubImage> eventSubImages = await _unitOfWork.EventSubImages
-            .FindByCondition(x => x.EventId.Equals(@event.Id))
+            .FindByCondition(x => x.EventId == @event.Id)
             .ToListAsync(cancellationToken);
         foreach (EventSubImage image in eventSubImages)
         {
@@ -55,7 +55,7 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
 
         // Delete email content attachments and their files
         IQueryable<EmailContent> emailContents = _unitOfWork.EmailContents
-            .FindByCondition(x => x.EventId.Equals(@event.Id));
+            .FindByCondition(x => x.EventId == @event.Id);
         var attachments = _unitOfWork.EmailAttachments
             .FindAll()
             .AsEnumerable()
@@ -75,19 +75,19 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
 
         // Delete ticket types
         await _unitOfWork.TicketTypes
-            .FindByCondition(x => x.EventId.Equals(@event.Id))
+            .FindByCondition(x => x.EventId == @event.Id)
             .ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
 
         // Delete event categories
         await _unitOfWork.EventCategories
-           .FindByCondition(x => x.EventId.Equals(@event.Id))
+           .FindByCondition(x => x.EventId == @event.Id)
            .ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
 
         // Delete event reasons
         await _unitOfWork.Reasons
-            .FindByCondition(x => x.EventId.Equals(@event.Id))
+            .FindByCondition(x => x.EventId == @event.Id)
             .ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
 

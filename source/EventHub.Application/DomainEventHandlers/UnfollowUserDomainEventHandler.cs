@@ -35,8 +35,8 @@ public class UnfollowUserDomainEventHandler : IDomainEventHandler<UnfollowUserDo
 
         UserFollower userFollower = await _unitOfWork.UserFollowers
             .FindByCondition(x =>
-                x.FollowerId.Equals(notification.FollowerId) &&
-                x.FollowedId.Equals(notification.FollowedUserId))
+                x.FollowerId == notification.FollowerId &&
+                x.FollowedId == notification.FollowedUserId)
             .FirstOrDefaultAsync(cancellationToken);
         if (userFollower == null)
         {

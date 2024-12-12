@@ -34,8 +34,8 @@ public class FollowUserDomainEventHandler : IDomainEventHandler<FollowUserDomain
 
         bool isFollowed = await _unitOfWork.UserFollowers
             .ExistAsync(x =>
-                x.FollowerId.Equals(notification.FollowerId) &&
-                x.FollowedId.Equals(notification.FollowedUserId));
+                x.FollowerId == notification.FollowerId &&
+                x.FollowedId == notification.FollowedUserId);
         if (isFollowed)
         {
             throw new BadRequestException("User has been followed before");

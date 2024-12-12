@@ -26,7 +26,7 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
+        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id == request.EventId);
         if (!isEventExisted)
         {
             throw new NotFoundException("Event does not exist!");
@@ -37,7 +37,7 @@ public class
             .Include(x => x.Author);
 
         var conversations = _unitOfWork.Conversations
-            .FindByCondition(x => x.EventId.Equals(request.EventId))
+            .FindByCondition(x => x.EventId == request.EventId)
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)
@@ -60,7 +60,7 @@ public class
             .ToList();
 
         List<ConversationDto> conversationDtos = _mapper.Map<List<ConversationDto>>(conversationWithMessages);
-        
+
         return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
     }
 }

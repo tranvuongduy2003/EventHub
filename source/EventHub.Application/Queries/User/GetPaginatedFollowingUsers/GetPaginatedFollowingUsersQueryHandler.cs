@@ -38,7 +38,7 @@ public class
         {
             users = await _userManager.Users
                 .AsNoTracking()
-                .Where(x => x.IsDeleted.Equals(false))
+                .Where(x => !x.IsDeleted)
                 .ToListAsync(cancellationToken);
 
             await _cacheService.SetData<List<Domain.Aggregates.UserAggregate.User>>(key, users,
@@ -46,7 +46,7 @@ public class
         }
 
         List<Domain.Aggregates.UserAggregate.User> followingUsers = await _unitOfWork.UserFollowers
-            .FindByCondition(x => x.FollowerId.Equals(request.UserId))
+            .FindByCondition(x => x.FollowerId == request.UserId)
             .Join(users, userFollower => userFollower.FollowedId, user => user.Id, (_, user) => user)
             .ToListAsync(cancellationToken);
 

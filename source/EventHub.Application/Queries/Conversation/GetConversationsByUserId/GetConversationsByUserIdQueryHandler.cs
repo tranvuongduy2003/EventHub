@@ -29,7 +29,7 @@ public class
     public async Task<Pagination<ConversationDto>> Handle(GetConversationsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        bool isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId), cancellationToken);
+        bool isUserExisted = await _userManager.Users.AnyAsync(x => x.Id == request.UserId, cancellationToken);
         if (!isUserExisted)
         {
             throw new NotFoundException("User does not exist!");
@@ -41,7 +41,7 @@ public class
             .ToListAsync(cancellationToken);
 
         List<Domain.Aggregates.ConversationAggregate.Conversation> conversations = await _unitOfWork.Conversations
-            .FindByCondition(x => x.EventId.Equals(request.UserId))
+            .FindByCondition(x => x.EventId == request.UserId)
             .Include(x => x.Event)
             .Include(x => x.Host)
             .Include(x => x.User)

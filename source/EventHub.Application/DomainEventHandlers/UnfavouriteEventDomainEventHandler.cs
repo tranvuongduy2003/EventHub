@@ -23,7 +23,7 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
     public async Task Handle(UnfavouriteEventDomainEvent notification, CancellationToken cancellationToken)
     {
         bool isEventExisted = await _unitOfWork.Events
-            .ExistAsync(x => x.Id.Equals(notification.EventId));
+            .ExistAsync(x => x.Id == notification.EventId);
         if (!isEventExisted)
         {
             throw new NotFoundException("Event does not exist!");
@@ -31,8 +31,8 @@ public class UnfavouriteEventDomainEventHandler : IDomainEventHandler<Unfavourit
 
         FavouriteEvent favouriteEvent = await _unitOfWork.FavouriteEvents
             .FindByCondition(x =>
-                x.EventId.Equals(notification.EventId) &&
-                x.UserId.Equals(notification.UserId))
+                x.EventId == notification.EventId &&
+                x.UserId == notification.UserId)
             .FirstOrDefaultAsync(cancellationToken);
         if (favouriteEvent == null)
         {

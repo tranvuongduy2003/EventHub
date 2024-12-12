@@ -28,14 +28,14 @@ public class
     public async Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        bool isUserExisted = await _userManager.Users.AnyAsync(x => x.Id.Equals(request.UserId), cancellationToken);
+        bool isUserExisted = await _userManager.Users.AnyAsync(x => x.Id == request.UserId, cancellationToken);
         if (!isUserExisted)
         {
             throw new NotFoundException("User does not exist!");
         }
 
         List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
-            .FindByCondition(x => x.AuthorId.Equals(request.UserId))
+            .FindByCondition(x => x.AuthorId == request.UserId)
             .Include(x => x.Event)
             .Include(x => x.Author)
             .ToListAsync(cancellationToken);

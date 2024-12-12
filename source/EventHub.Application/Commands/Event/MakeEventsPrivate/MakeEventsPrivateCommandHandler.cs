@@ -12,7 +12,7 @@ public class MakeEventsPrivateCommandHandler : ICommandHandler<MakeEventsPrivate
     {
         await Task.Run(() =>
         {
-            Domain.Aggregates.EventAggregate.Event.MakeEventsPrivate(request.UserId, request.Events);
+            Domain.Aggregates.EventAggregate.Event.MakeEventsPrivate(request.Events);
         }, cancellationToken);
     }
 }

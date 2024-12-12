@@ -9,7 +9,9 @@ public sealed class EventMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<Event, EventDto>();
+        config.CreateMap<Event, EventDto>()
+        .ForMember(dest => dest.Categories, options =>
+                options.MapFrom(source => source.EventCategories.Select(category => category.Category)));
 
         config.CreateMap<Event, EventDetailDto>()
             .ForMember(dest => dest.EventSubImageUrls, options =>

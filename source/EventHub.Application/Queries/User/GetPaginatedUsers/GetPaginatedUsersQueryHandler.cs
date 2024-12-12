@@ -34,7 +34,7 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
         {
             users = await _userManager.Users
                 .AsNoTracking()
-                .Where(x => x.IsDeleted.Equals(false))
+                .Where(x => !x.IsDeleted)
                 .ToListAsync(cancellationToken);
 
             await _cacheService.SetData<List<Domain.Aggregates.UserAggregate.User>>(key, users,

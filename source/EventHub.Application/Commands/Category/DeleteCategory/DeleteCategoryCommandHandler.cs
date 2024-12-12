@@ -25,7 +25,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
             throw new NotFoundException("Category does not exist!");
         }
 
-        bool isEventCategoryExisted = await _unitOfWork.EventCategories.ExistAsync(x => x.CategoryId.Equals(request.Id));
+        bool isEventCategoryExisted = await _unitOfWork.EventCategories.ExistAsync(x => x.CategoryId == request.Id);
         if (isEventCategoryExisted)
         {
             throw new BadRequestException($"Existing more than 1 events in category {category.Name}");

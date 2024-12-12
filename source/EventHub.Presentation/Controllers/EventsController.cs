@@ -127,12 +127,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetCreatedEvents");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-        Pagination<EventDto> events = await _mediator.Send(new GetCreatedEventsByUserIdQuery(userId, filter));
+        Pagination<EventDto> events = await _mediator.Send(new GetCreatedEventsByUserIdQuery(filter));
 
         _logger.LogInformation("END: GetCreatedEvents");
 
@@ -243,12 +238,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchRestoreDeletedEvent");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-        await _mediator.Send(new RestoreEventCommand(userId, events));
+        await _mediator.Send(new RestoreEventCommand(events));
 
         _logger.LogInformation("END: PatchRestoreDeletedEvent");
 
@@ -362,12 +352,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetFavouriteEvents");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-        Pagination<EventDto> events = await _mediator.Send(new GetFavouriteEventsByUserIdQuery(userId, filter));
+        Pagination<EventDto> events = await _mediator.Send(new GetFavouriteEventsByUserIdQuery(filter));
 
         _logger.LogInformation("END: GetFavouriteEvents");
 
@@ -388,12 +373,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchMakeEventsPrivate");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-        await _mediator.Send(new MakeEventsPrivateCommand(userId, events));
+        await _mediator.Send(new MakeEventsPrivateCommand(events));
 
         _logger.LogInformation("END: PatchMakeEventsPrivate");
 
@@ -414,13 +394,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: PatchMakeEventsPublic");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-
-        await _mediator.Send(new MakeEventsPublicCommand(userId, events));
+        await _mediator.Send(new MakeEventsPublicCommand(events));
 
         _logger.LogInformation("END: PatchMakeEventsPublic");
 

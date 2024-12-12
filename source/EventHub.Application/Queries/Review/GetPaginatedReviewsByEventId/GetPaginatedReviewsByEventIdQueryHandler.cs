@@ -24,14 +24,14 @@ public class
     public async Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsByEventIdQuery request,
         CancellationToken cancellationToken)
     {
-        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id.Equals(request.EventId));
+        bool isEventExisted = await _unitOfWork.Events.ExistAsync(x => x.Id == request.EventId);
         if (!isEventExisted)
         {
             throw new NotFoundException("Event does not exist!");
         }
 
         List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
-            .FindByCondition(x => x.EventId.Equals(request.EventId))
+            .FindByCondition(x => x.EventId == request.EventId)
             .Include(x => x.Event)
             .Include(x => x.Author)
             .ToListAsync(cancellationToken);

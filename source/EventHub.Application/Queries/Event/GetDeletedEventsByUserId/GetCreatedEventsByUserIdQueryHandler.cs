@@ -24,7 +24,7 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
         CancellationToken cancellationToken)
     {
         List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId.Equals(request.userId) && x.IsDeleted)
+            .FindByCondition(x => x.AuthorId == request.userId && x.IsDeleted)
             .ToListAsync(cancellationToken);
         List<EventCategory> eventCategories = await _unitOfWork.EventCategories
             .FindAll()

@@ -84,22 +84,22 @@ public class Event : AggregateRoot, IAuditable
             new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
     }
 
-    public static void MakeEventsPrivate(Guid userId, List<Guid> events)
+    public static void MakeEventsPrivate(List<Guid> events)
     {
         new Event().RaiseDomainEvent(
-            new MakeEventsPrivateDomainEvent(Guid.NewGuid(), userId, events));
+            new MakeEventsPrivateDomainEvent(Guid.NewGuid(), events));
     }
 
-    public static void MakeEventsPublic(Guid userId, List<Guid> events)
+    public static void MakeEventsPublic(List<Guid> events)
     {
         new Event().RaiseDomainEvent(
-            new MakeEventsPublicDomainEvent(Guid.NewGuid(), userId, events));
+            new MakeEventsPublicDomainEvent(Guid.NewGuid(), events));
     }
 
-    public static void RestoreEvent(Guid userId, List<Guid> events)
+    public static void RestoreEvent(List<Guid> events)
     {
         new Event().RaiseDomainEvent(
-            new RestoreEventDomainEvent(Guid.NewGuid(), userId, events));
+            new RestoreEventDomainEvent(Guid.NewGuid(), events));
     }
 
     #region Relationships

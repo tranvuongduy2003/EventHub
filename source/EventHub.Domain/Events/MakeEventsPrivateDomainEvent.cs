@@ -15,15 +15,9 @@ namespace EventHub.Domain.Events;
 /// A <see cref="Guid"/> representing the unique identifier of the domain event.
 /// </param>
 /// <summary>
-/// Gets the unique identifier of the user who is marking the events as private.
-/// </summary>
-/// <param name="UserId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
-/// <summary>
 /// Gets the list of unique identifiers for the events that are being marked as private.
 /// </summary>
 /// <param name="Events">
 /// A list of <see cref="Guid"/> representing the unique identifiers of the events.
 /// </param>
-public record MakeEventsPrivateDomainEvent(Guid Id, Guid UserId, List<Guid> Events) : DomainEvent(Id);
+public record MakeEventsPrivateDomainEvent(Guid Id, List<Guid> Events) : DomainEvent(Id);

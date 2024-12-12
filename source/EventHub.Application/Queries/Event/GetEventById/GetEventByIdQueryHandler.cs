@@ -23,7 +23,7 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
     {
 
         Domain.Aggregates.EventAggregate.Event cachedEvent = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.Id.Equals(request.EventId))
+            .FindByCondition(x => x.Id == request.EventId)
             .Include(x => x.EmailContent)
                 .ThenInclude(x => x != null ? x.EmailAttachments : default)
             .Include(x => x.EventCategories)

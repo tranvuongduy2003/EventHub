@@ -36,8 +36,8 @@ public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFuncti
 
         bool isPermissionExisted = await _unitOfWork.Permissions
             .ExistAsync(x =>
-                x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal) &&
-                x.RoleId.Equals(notification.RoleId));
+                x.FunctionId == notification.FunctionId &&
+                x.RoleId == notification.RoleId);
 
         if (isPermissionExisted)
         {
@@ -45,7 +45,7 @@ public class AddFunctionToRoleDomainEventHandler : IDomainEventHandler<AddFuncti
         }
 
         List<Permission> permissions = await _unitOfWork.CommandInFunctions
-            .FindByCondition(x => x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal))
+            .FindByCondition(x => x.FunctionId == notification.FunctionId)
             .Select(x => new Permission
             {
                 FunctionId = x.FunctionId,

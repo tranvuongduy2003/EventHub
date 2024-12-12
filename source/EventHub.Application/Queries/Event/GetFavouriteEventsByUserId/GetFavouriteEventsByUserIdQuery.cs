@@ -13,13 +13,10 @@ namespace EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
 /// <summary>
 /// Gets the unique identifier of the user who marked the events as favorites.
 /// </summary>
-/// <param name="userId">
-/// A <see cref="Guid"/> representing the unique identifier of the user.
-/// </param>
 /// <summary>
 /// Gets the pagination filter to apply to the list of favorite events.
 /// </summary>
 /// <param name="Filter">
 /// A <see cref="PaginationFilter"/> object representing the pagination parameters, including page size and page number.
 /// </param>
-public record GetFavouriteEventsByUserIdQuery(Guid userId, PaginationFilter Filter) : IQuery<Pagination<EventDto>>;
+public record GetFavouriteEventsByUserIdQuery(PaginationFilter Filter) : IQuery<Pagination<EventDto>>;

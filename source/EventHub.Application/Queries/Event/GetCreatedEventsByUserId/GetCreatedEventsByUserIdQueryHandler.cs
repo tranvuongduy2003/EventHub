@@ -5,7 +5,9 @@ using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 
@@ -13,39 +15,25 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
-    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _signInManager = signInManager;
         _mapper = mapper;
     }
 
     public async Task<Pagination<EventDto>> Handle(GetCreatedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId.Equals(request.userId))
-            .ToListAsync(cancellationToken);
-        List<EventCategory> eventCategories = await _unitOfWork.EventCategories
-            .FindAll()
-            .Include(x => x.Category)
-            .ToListAsync(cancellationToken);
+        var userId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        var events = (
-                from _event in cachedEvents
-                join _eventCategory in eventCategories.DefaultIfEmpty()
-                    on _event.Id equals _eventCategory.EventId
-                select new { Event = _event, EventCategory = _eventCategory }
-            )
-            .GroupBy(x => x.Event)
-            .AsEnumerable()
-            .Select(group =>
-            {
-                Domain.Aggregates.EventAggregate.Event @event = group.Key;
-                @event.Categories = group.Select(g => g.EventCategory.Category).ToList();
-                return @event;
-            })
-            .ToList();
+        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.CachedEvents
+            .FindByCondition(x => x.AuthorId == userId)
+            .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category)
+            .ToListAsync(cancellationToken);
 
         List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 

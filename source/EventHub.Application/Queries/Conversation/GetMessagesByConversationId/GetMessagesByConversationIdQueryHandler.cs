@@ -17,7 +17,7 @@ public class
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetMessagesByConversationIdQueryHandler(IUnitOfWork unitOfWork,IMapper mapper)
+    public GetMessagesByConversationIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -28,14 +28,14 @@ public class
     {
 
         bool isConversationExisted =
-            await _unitOfWork.Conversations.ExistAsync(x => x.Id.Equals(request.ConversationId));
+            await _unitOfWork.Conversations.ExistAsync(x => x.Id == request.ConversationId);
         if (!isConversationExisted)
         {
             throw new NotFoundException("Conversation does not exist!");
         }
 
         IIncludableQueryable<Message, Domain.Aggregates.UserAggregate.User> messages = _unitOfWork.Messages
-            .FindByCondition(x => x.ConversationId.Equals(request.ConversationId))
+            .FindByCondition(x => x.ConversationId == request.ConversationId)
             .Include(x => x.Author);
 
         List<MessageDto> messageDtos = _mapper.Map<List<MessageDto>>(messages);
