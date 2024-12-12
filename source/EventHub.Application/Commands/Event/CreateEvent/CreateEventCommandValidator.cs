@@ -38,9 +38,9 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
 
         RuleFor(x => x.Categories)
             .NotNull().WithMessage("CategoryIds is required");
-        RuleForEach(x => x.Categories.Select(c => c.ToString()))
-            .NotNull().WithMessage("Category's id is required")
-            .MaximumLength(50).WithMessage("Category's id cannot over limit 50 characters");
+        RuleForEach(x => x.Categories)
+            .NotEmpty().WithMessage("Category id cannot be empty")
+            .Must(id => Guid.TryParse(id.ToString(), out _)).WithMessage("Invalid category id format");
 
         RuleFor(x => x.EventPaymentType)
             .NotNull().WithMessage("EEventPaymentType is required");

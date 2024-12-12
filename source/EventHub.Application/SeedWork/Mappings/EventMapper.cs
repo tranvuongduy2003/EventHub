@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.Aggregates.EventAggregate;
 
@@ -15,7 +16,9 @@ public sealed class EventMapper
                 options.MapFrom(source =>
                     source.EventSubImages.Select(image => image.ImageUrl)));
 
-        config.CreateMap<CreateEventDto, Event>()
+        config.CreateMap<CreateEventCommand, CreateEventDto>().ReverseMap();
+
+        config.CreateMap<CreateEventCommand, Event>()
             .ForMember(dest => dest.CoverImageUrl, options => options.Ignore())
             .ForMember(dest => dest.CoverImageFileName, options => options.Ignore())
             .ForMember(dest => dest.Status, options => options.Ignore())

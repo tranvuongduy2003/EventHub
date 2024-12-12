@@ -16,17 +16,16 @@ public class UserPaymentMethod : EntityBase, IAuditable
     [Required]
     public required Guid AuthorId { get; set; } = Guid.Empty;
 
-    [Required] 
+    [Required]
     public required Guid PaymentMethodId { get; set; } = Guid.Empty;
 
-    [Required] 
-    [MaxLength(50)] 
+    [Required]
+    [MaxLength(50)]
     public required string PaymentAccountNumber { get; set; } = string.Empty;
 
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string? PaymentAccountQrCodeUrl { get; set; }
-    
+
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? PaymentAccountQrCodeFileName { get; set; }

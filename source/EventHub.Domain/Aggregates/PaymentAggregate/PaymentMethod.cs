@@ -20,10 +20,9 @@ public class PaymentMethod : EntityBase
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public required string MethodLogoFileName { get; set; } = string.Empty;
-    
+
     [Required]
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public required string MethodLogoUrl { get; set; } = string.Empty;
 
     public virtual ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = new List<UserPaymentMethod>();

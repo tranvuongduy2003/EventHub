@@ -28,8 +28,7 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     [Column(TypeName = "nvarchar(1000)")]
     public string? Bio { get; set; }
 
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string? AvatarUrl { get; set; }
 
     [MaxLength(255)]

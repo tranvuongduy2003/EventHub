@@ -17,34 +17,31 @@ public class Message : EntityAuditBase
     [Column(TypeName = "nvarchar(255)")]
     public string? Content { get; set; }
 
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string? ImageUrl { get; set; }
 
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? ImageFileName { get; set; }
 
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string? VideoUrl { get; set; }
 
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? VideoFileName { get; set; }
 
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string? AudioUrl { get; set; }
 
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? AudioFileName { get; set; }
 
-    [Required] 
+    [Required]
     public required Guid EventId { get; set; } = Guid.Empty;
 
-    [Required] 
+    [Required]
     public required Guid ConversationId { get; set; } = Guid.Empty;
 
     [ForeignKey("EventId")]

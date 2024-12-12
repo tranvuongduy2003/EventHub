@@ -92,7 +92,7 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
         await _unitOfWork.CommitAsync();
 
         // Finally delete the event itself
-        await _unitOfWork.Events.Delete(@event);
+        await _unitOfWork.CachedEvents.Delete(@event);
         await _unitOfWork.CommitAsync();
     }
 }

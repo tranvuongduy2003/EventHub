@@ -32,8 +32,8 @@ public class DisableCommandInFunctionDomainEventHandler : IDomainEventHandler<Di
 
         CommandInFunction commandInFunction = await _unitOfWork.CommandInFunctions
             .FindByCondition(x =>
-                x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal) &&
-                x.CommandId.Equals(notification.CommandId, StringComparison.Ordinal))
+                x.FunctionId == notification.FunctionId &&
+                x.CommandId == notification.CommandId)
             .FirstOrDefaultAsync(cancellationToken);
         if (commandInFunction is null)
         {

@@ -12,17 +12,16 @@ public class EmailAttachment : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] 
+    [Required]
     public required Guid EmailContentId { get; set; } = Guid.Empty;
 
     [Required]
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public required string AttachmentFileName { get; set; } = string.Empty;
-    
+
     [Required]
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public required string AttachmentUrl { get; set; } = string.Empty;
 
     [ForeignKey("EmailContentId")]

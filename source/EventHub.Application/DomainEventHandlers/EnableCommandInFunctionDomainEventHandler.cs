@@ -30,8 +30,8 @@ public class EnableCommandInFunctionDomainEventHandler : IDomainEventHandler<Ena
         }
 
         bool isCommandInFunctionExisted = await _unitOfWork.CommandInFunctions.ExistAsync(x =>
-            x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal) &&
-            x.FunctionId.Equals(notification.CommandId, StringComparison.Ordinal));
+            x.FunctionId == notification.FunctionId &&
+            x.CommandId == notification.CommandId);
         if (!isCommandInFunctionExisted)
         {
             throw new BadRequestException("This command has been added to function.");

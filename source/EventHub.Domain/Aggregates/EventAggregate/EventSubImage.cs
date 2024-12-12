@@ -12,12 +12,11 @@ public class EventSubImage : EntityBase
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] 
+    [Required]
     public required Guid EventId { get; set; } = Guid.Empty;
 
     [Required]
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public required string ImageUrl { get; set; } = string.Empty;
 
     [Required]

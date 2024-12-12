@@ -35,7 +35,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 
         if (request.EmailContent != null)
         {
-            await UpdateEmailContent(@event.Id, request.EmailContent, cancellationToken);
+            await UpdateEmailContent(request.EmailContent, cancellationToken);
         }
 
         if (@event.EventPaymentType == EEventPaymentType.PAID && request.TicketTypes?.Any() == true)
@@ -64,7 +64,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             throw new NotFoundException("Event does not exist!");
         }
         bool isSameNameEventExisted = await _unitOfWork.CachedEvents
-            .ExistAsync(e => e.Name.Equals(@event.Name, StringComparison.OrdinalIgnoreCase));
+            .ExistAsync(e => e.Name == @event.Name);
         if (isSameNameEventExisted)
         {
             throw new BadRequestException($"Event '{@event.Name}' already existed!");
@@ -93,7 +93,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             @event.CoverImageFileName = coverImageResponse.Blob.Name ?? "";
         }
 
-        await _unitOfWork.Events.Update(@event);
+        await _unitOfWork.CachedEvents.Update(@event);
         await _unitOfWork.CommitAsync();
 
         return @event;
@@ -107,7 +107,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 
         foreach (EventSubImage image in eventSubImages)
         {
-            await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{eventId}", image.ImageFileName);
+            await _fileService.DeleteAsync(FileContainer.EVENTS, image.ImageFileName);
         }
 
         if (subImages?.Any() == true)
@@ -116,7 +116,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             foreach (IFormFile subImageFile in subImages)
             {
                 BlobResponseDto subImage =
-                    await _fileService.UploadAsync(subImageFile, $"{FileContainer.EVENTS}/{eventId}");
+                    await _fileService.UploadAsync(subImageFile, FileContainer.EVENTS);
                 updatedSubImages.Add(new EventSubImage
                 {
                     EventId = eventId,
@@ -132,7 +132,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         await _unitOfWork.CommitAsync();
     }
 
-    private async Task UpdateEmailContent(Guid eventId, UpdateEmailContentCommand emailContentCommand, CancellationToken cancellationToken)
+    private async Task UpdateEmailContent(UpdateEmailContentCommand emailContentCommand, CancellationToken cancellationToken)
     {
         EmailContent emailContent = await _unitOfWork.EmailContents.GetByIdAsync(emailContentCommand.Id);
         if (emailContent == null)
@@ -147,7 +147,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             .ToListAsync(cancellationToken);
         foreach (EmailAttachment attachment in attachments)
         {
-            await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{eventId}",
+            await _fileService.DeleteAsync(FileContainer.EVENTS,
                 attachment.AttachmentFileName);
         }
 
@@ -157,7 +157,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             foreach (IFormFile attachment in emailContentCommand.Attachments)
             {
                 BlobResponseDto attachmentFile =
-                    await _fileService.UploadAsync(attachment, $"{FileContainer.EVENTS}/{eventId}");
+                    await _fileService.UploadAsync(attachment, FileContainer.EVENTS);
                 var emailAttachment = new EmailAttachment()
                 {
                     AttachmentUrl = attachmentFile.Blob.Uri ?? "",

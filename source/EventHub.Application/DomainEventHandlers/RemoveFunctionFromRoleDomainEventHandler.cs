@@ -34,8 +34,8 @@ public class RemoveFunctionFromRoleDomainEventHandler : IDomainEventHandler<Remo
 
         var permissions = _unitOfWork.Permissions
             .FindByCondition(x =>
-                x.FunctionId.Equals(notification.FunctionId, StringComparison.Ordinal) &&
-                x.RoleId.Equals(notification.RoleId))
+                x.FunctionId == notification.FunctionId &&
+                x.RoleId == notification.RoleId)
             .ToList();
 
         if (!permissions.Any())

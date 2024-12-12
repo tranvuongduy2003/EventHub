@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using EventHub.Application.SeedWork.Exceptions;
+using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 
@@ -31,7 +32,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
 
             if (failures.Any())
             {
-                throw new ValidationException(failures);
+                throw new BadRequestException(failures.FirstOrDefault()!.ToString());
             }
         }
         return await next();

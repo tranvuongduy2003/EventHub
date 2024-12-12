@@ -11,7 +11,7 @@ namespace EventHub.Application.Commands.Event.CreateEvent;
 /// <remarks>
 /// This command is used to create a new event with the specified details and the author's information.
 /// </remarks>
-public class CreateEventCommand : ICommand<EventDto>
+public class CreateEventCommand : ICommand
 {
     public CreateEventCommand()
     {

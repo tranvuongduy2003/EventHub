@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Domain.Aggregates.EventAggregate;
 
-[Table("events")]
+[Table("Events")]
 public class Event : AggregateRoot, IAuditable
 {
     [Key]
@@ -29,8 +29,7 @@ public class Event : AggregateRoot, IAuditable
     public string CoverImageFileName { get; set; } = string.Empty;
 
     [Required]
-    [MaxLength(255)]
-    [Column(TypeName = "nvarchar(255)")]
+    [Column(TypeName = "nvarchar(max)")]
     public string CoverImageUrl { get; set; } = string.Empty;
 
     [Required]

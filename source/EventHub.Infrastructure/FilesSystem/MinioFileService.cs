@@ -34,7 +34,7 @@ public class MinioFileService : IFileService
     {
         BlobResponseDto response = new();
 
-        string objectName = blob.FileName;
+        string objectName = Ulid.NewUlid().ToString();
 
         bool isBucketExisted = await _minioClient.BucketExistsAsync(new BucketExistsArgs()
             .WithBucket(bucketName));
@@ -57,10 +57,10 @@ public class MinioFileService : IFileService
 
         Uri blobUri = await GetUriByFileNameAsync(bucketName, objectName);
 
-        response.Status = $"File {blob.FileName} Uploaded Successfully";
+        response.Status = $"Upload file successfully";
         response.Error = false;
         response.Blob.Uri = blobUri.ToString();
-        response.Blob.Name = blob.FileName;
+        response.Blob.Name = objectName;
         response.Blob.ContentType = blob.ContentType;
         response.Blob.Size = blob.Length;
 

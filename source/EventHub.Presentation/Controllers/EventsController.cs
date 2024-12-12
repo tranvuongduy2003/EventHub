@@ -89,7 +89,7 @@ public class EventsController : ControllerBase
         Summary = "Create a new event",
         Description = "Creates a new event with the provided details."
     )]
-    [SwaggerResponse(200, "Event created successfully", typeof(EventDto))]
+    [SwaggerResponse(200, "Event created successfully")]
     [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
@@ -101,11 +101,11 @@ public class EventsController : ControllerBase
         _logger.LogInformation("START: PostCreateEvent");
         try
         {
-            EventDto @event = await _mediator.Send(new CreateEventCommand(request));
+            await _mediator.Send(new CreateEventCommand(request));
 
             _logger.LogInformation("END: PostCreateEvent");
 
-            return Ok(new ApiOkResponse(@event));
+            return Ok(new ApiOkResponse());
         }
         catch (BadRequestException e)
         {

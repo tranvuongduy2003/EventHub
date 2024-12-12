@@ -21,7 +21,7 @@ namespace EventHub.Application.Commands.Event.CreateEvent;
 /// <summary>
 /// Handles the creation of new events
 /// </summary>
-public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, EventDto>
+public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
 {
     #region Private Fields
 
@@ -61,13 +61,13 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
     /// <param name="request">The create event command containing event details</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The created event DTO</returns>
-    public async Task<EventDto> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+    public async Task Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
         var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
         // Check if event with same name already exists
         bool isEventExisted = await _unitOfWork.CachedEvents
-            .ExistAsync(e => e.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase));
+            .ExistAsync(e => e.Name == request.Name);
         if (isEventExisted)
         {
             throw new BadRequestException($"Event '{request.Name}' already existed!");
@@ -82,7 +82,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
         @event.CoverImageUrl = coverImage.Blob.Uri ?? "";
         @event.CoverImageFileName = coverImage.Blob.Name ?? "";
 
-        await _unitOfWork.Events.CreateAsync(@event);
+        await _unitOfWork.CachedEvents.CreateAsync(@event);
         await _unitOfWork.CommitAsync();
 
         // Handle sub-images if any
@@ -92,7 +92,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
             foreach (IFormFile subImageFile in request.EventSubImages)
             {
                 BlobResponseDto subImage =
-                    await _fileService.UploadAsync(subImageFile, $"{FileContainer.EVENTS}/{@event.Id}");
+                    await _fileService.UploadAsync(subImageFile, FileContainer.EVENTS);
                 eventSubImages.Add(new EventSubImage
                 {
                     EventId = @event.Id,
@@ -123,7 +123,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
                 foreach (IFormFile attachment in request.EmailContent.Attachments)
                 {
                     BlobResponseDto attachmentFile =
-                        await _fileService.UploadAsync(attachment, $"{FileContainer.EVENTS}/{@event.Id}");
+                        await _fileService.UploadAsync(attachment, FileContainer.EVENTS);
                     var emailAttachment = new EmailAttachment()
                     {
                         AttachmentUrl = attachmentFile.Blob.Uri ?? "",
@@ -167,7 +167,7 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
                 .Select(categoryId => new EventCategory
                 {
                     CategoryId = categoryId,
-                    EventId = @event.Id
+                    EventId = @event.Id,
                 })
                 .ToList();
 
@@ -197,10 +197,6 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, Eve
             user.NumberOfCreatedEvents++;
             await _userManager.UpdateAsync(user);
         }
-
-        // Map and return the event DTO
-        EventDto eventDto = _mapper.Map<EventDto>(@event);
-        return eventDto;
     }
 
     #endregion

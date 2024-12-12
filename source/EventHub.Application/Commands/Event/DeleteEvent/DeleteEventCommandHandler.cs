@@ -28,7 +28,7 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
             throw new NotFoundException("Event does not exist!");
         }
 
-        await _unitOfWork.Events.SoftDelete(@event);
+        await _unitOfWork.CachedEvents.SoftDelete(@event);
 
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
