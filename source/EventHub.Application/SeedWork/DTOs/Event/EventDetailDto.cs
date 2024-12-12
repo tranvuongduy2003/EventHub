@@ -60,7 +60,7 @@ public class EventDetailDto
     public List<string> EventSubImageUrls { get; set; } = new();
 
     [SwaggerSchema("List of reasons associated with the event")]
-    public List<ReasonDto> Reasons { get; set; } = new();
+    public List<string> Reasons { get; set; } = new();
 
     [SwaggerSchema("Categories associated with the event")]
     public List<CategoryDto> Categories { get; set; } = new();

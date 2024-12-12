@@ -13,8 +13,11 @@ public sealed class EventMapper
 
         config.CreateMap<Event, EventDetailDto>()
             .ForMember(dest => dest.EventSubImageUrls, options =>
-                options.MapFrom(source =>
-                    source.EventSubImages.Select(image => image.ImageUrl)));
+                options.MapFrom(source => source.EventSubImages.Select(image => image.ImageUrl)))
+            .ForMember(dest => dest.Reasons, options =>
+                options.MapFrom(source => source.Reasons.Select(reason => reason.Name)))
+            .ForMember(dest => dest.Categories, options =>
+                options.MapFrom(source => source.EventCategories.Select(category => category.Category)));
 
         config.CreateMap<CreateEventCommand, CreateEventDto>().ReverseMap();
 

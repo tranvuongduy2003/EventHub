@@ -9,5 +9,7 @@ public sealed class UserMapper
     public static void CreateMap(IMapperConfigurationExpression config)
     {
         config.CreateMap<User, UserDto>();
+
+        config.CreateMap<User, AuthorDto>();
     }
 }

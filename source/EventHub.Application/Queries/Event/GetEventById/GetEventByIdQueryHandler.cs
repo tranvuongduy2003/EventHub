@@ -22,14 +22,17 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
         CancellationToken cancellationToken)
     {
 
-        List<Domain.Aggregates.EventAggregate.Event> cachedEvent = await _unitOfWork.CachedEvents
+        Domain.Aggregates.EventAggregate.Event cachedEvent = await _unitOfWork.CachedEvents
             .FindByCondition(x => x.Id.Equals(request.EventId))
-            .Include(x => x.Author)
             .Include(x => x.EmailContent)
+                .ThenInclude(x => x != null ? x.EmailAttachments : default)
+            .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category)
+            .Include(x => x.Author)
             .Include(x => x.Reasons)
             .Include(x => x.TicketTypes)
             .Include(x => x.EventSubImages)
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (cachedEvent == null)
         {

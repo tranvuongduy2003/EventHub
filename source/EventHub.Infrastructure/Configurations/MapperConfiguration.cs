@@ -10,6 +10,9 @@ public static class MapperConfiguration
         services
             .AddAutoMapper(config =>
             {
+                ReasonMapper.CreateMap(config);
+                TicketTypeMapper.CreateMap(config);
+                EmailContentMapper.CreateMap(config);
                 CategoryMapper.CreateMap(config);
                 CommandMapper.CreateMap(config);
                 EventMapper.CreateMap(config);
