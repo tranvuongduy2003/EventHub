@@ -83,7 +83,7 @@ public class EmailService : IEmailService
 
     public async Task SendRegistrationConfirmationEmailAsync(string email, string userName)
     {
-        string FullPath = Path.Combine("Templates/", "SignUpEmailTemplate.html");
+        string FullPath = Path.Combine(Environment.CurrentDirectory, "Templates/", "SignUpEmailTemplate.html");
 
         var str = new StreamReader(FullPath);
 

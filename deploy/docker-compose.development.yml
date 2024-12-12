@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   eventhub.cache:
@@ -8,7 +8,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - cache_redis_data:/data
+      - eventhub_redis_data:/data
 
   eventhub.db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -18,7 +18,7 @@ services:
       ACCEPT_EULA: "Y"
     restart: always
     volumes:
-      - sqlserver_data:/var/lib/sqlserver/data
+      - eventhub_sqlserver_data:/var/lib/sqlserver/data
     ports:
       - "1433:1433"
 
@@ -32,21 +32,20 @@ services:
       - "5341:5341"
       - "3038:80"
     volumes:
-      - seq_data:/data
-  
-  
+      - eventhub_seq_data:/data
+
   eventhub.hangfire:
     image: mongo
     container_name: eventhub.hangfire
     ports:
       - "27017:27017"
     volumes:
-      - hangfire_mongo_data:/data/db
+      - eventhub_mongo_data:/data/db
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
-  
+
   eventhub.minio:
     image: minio/minio:latest
     container_name: eventhub.minio
@@ -55,13 +54,12 @@ services:
       - "9001:9001" # MinIO Admin Console
     restart: always
     volumes:
-      - minio_data:/data 
-      - minio_config:/root/.minio
+      - eventhub_minio_data:/data
+      - eventhub_minio_config:/root/.minio
     environment:
-      MINIO_ROOT_USER: minioadmin 
+      MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
     command: server /data --console-address ":9001"
-
 
 # network section
 networks:
@@ -71,15 +69,15 @@ networks:
 
 # volumes section
 volumes:
-  cache_redis_data:
-    name: cache_redis_data
-  sqlserver_data:
-    name: sqlserver_data
-  seq_data:
-    name: seq_data
-  hangfire_mongo_data:
-    name: hangfire_mongo_data
-  minio_data:
-    name: minio_data
-  minio_config:
-    name: minio_config
+  eventhub_redis_data:
+    name: eventhub_redis_data
+  eventhub_sqlserver_data:
+    name: eventhub_sqlserver_data
+  eventhub_seq_data:
+    name: eventhub_seq_data
+  eventhub_mongo_data:
+    name: eventhub_mongo_data
+  eventhub_minio_data:
+    name: eventhub_minio_data
+  eventhub_minio_config:
+    name: eventhub_minio_config

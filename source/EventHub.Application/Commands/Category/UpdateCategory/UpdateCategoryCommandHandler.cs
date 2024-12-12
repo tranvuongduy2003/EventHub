@@ -26,6 +26,12 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
             throw new NotFoundException("Category does not exist!");
         }
 
+        bool isCategoryExisted = await _unitOfWork.CachedCategories.ExistAsync(x => x.Name == request.Name);
+        if (isCategoryExisted)
+        {
+            throw new BadRequestException("Category name already exists!");
+        }
+
         category.Color = request.Color;
         category.Name = request.Name;
 

@@ -26,7 +26,7 @@ public class MinioFileService : IFileService
             new PresignedGetObjectArgs()
                 .WithBucket(bucketName)
                 .WithObject(objectName)
-                .WithExpiry(DateTimeOffset.UtcNow.AddDays(1).Microsecond));
+                .WithExpiry(DateTimeOffset.UtcNow.AddYears(3).Microsecond));
         return new Uri(presignedUrl);
     }
 

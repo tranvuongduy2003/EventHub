@@ -2,6 +2,7 @@ using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.Category;
 using EventHub.Application.SeedWork.DTOs.File;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.Shared.Constants;
@@ -23,6 +24,12 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
+        bool isCategoryExisted = await _unitOfWork.CachedCategories.ExistAsync(x => x.Name == request.Name);
+        if (isCategoryExisted)
+        {
+            throw new BadRequestException("Category name already exists!");
+        }
+
         var category = new Domain.Aggregates.CategoryAggregate.Category
         {
             Color = request.Color,

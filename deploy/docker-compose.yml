@@ -1,7 +1,7 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # services  
+  # services
   eventhub.cache:
     image: redis:7.0.15-alpine
     container_name: eventhub.cache
@@ -9,7 +9,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - cache_redis_data:/data
+      - eventhub_redis_data:/data
 
   eventhub.db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -19,7 +19,7 @@ services:
       ACCEPT_EULA: "Y"
     restart: always
     volumes:
-      - sqlserver_data:/var/lib/sqlserver/data
+      - eventhub_sqlserver_data:/var/lib/sqlserver/data
     ports:
       - "1437:1433"
 
@@ -32,8 +32,7 @@ services:
       - "5341:5341"
       - "8081:80"
     volumes:
-      - seq_data:/data
-
+      - eventhub_seq_data:/data
 
   eventhub.hangfire:
     image: mongo
@@ -41,13 +40,13 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - hangfire_mongo_data:/data/db
+      - eventhub_mongo_data:/data/db
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
-  
-  # api server      
+
+  # api server
   eventhub.api:
     image: tranvuongduy2003/eventhub:latest
     container_name: eventhub.api
@@ -78,11 +77,11 @@ networks:
 
 # volumes section
 volumes:
-  cache_redis_data:
-    name: cache_redis_data
-  sqlserver_data:
-    name: sqlserver_data
-  seq_data:
-    name: seq_data
-  hangfire_mongo_data:
-    name: hangfire_mongo_data
+  eventhub_redis_data:
+    name: eventhub_redis_data
+  eventhub_sqlserver_data:
+    name: eventhub_sqlserver_data
+  eventhub_seq_data:
+    name: eventhub_seq_data
+  eventhub_mongo_data:
+    name: eventhub_mongo_data
