@@ -27,7 +27,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 
     public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.EventAggregate.Event @event = await ValidateEvent(request.EventId);
+        Domain.Aggregates.EventAggregate.Event @event = await ValidateEvent(request.EventId, request);
 
         @event = await UpdateEventProperties(@event, request);
 
@@ -56,7 +56,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         await _unitOfWork.CommitAsync();
     }
 
-    private async Task<Domain.Aggregates.EventAggregate.Event> ValidateEvent(Guid eventId)
+    private async Task<Domain.Aggregates.EventAggregate.Event> ValidateEvent(Guid eventId, UpdateEventCommand request)
     {
         Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.CachedEvents.GetByIdAsync(eventId);
         if (@event == null)
@@ -64,7 +64,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             throw new NotFoundException("Event does not exist!");
         }
         bool isSameNameEventExisted = await _unitOfWork.CachedEvents
-            .ExistAsync(e => e.Name == @event.Name);
+            .ExistAsync(e => e.Name == request.Name && e.Id != eventId);
         if (isSameNameEventExisted)
         {
             throw new BadRequestException($"Event '{@event.Name}' already existed!");
@@ -125,7 +125,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
                 });
             }
 
-            await _unitOfWork.EventSubImages.CreateListAsync(eventSubImages);
+            await _unitOfWork.EventSubImages.CreateListAsync(updatedSubImages);
             await _unitOfWork.CommitAsync();
         }
 
