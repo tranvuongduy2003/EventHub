@@ -259,12 +259,7 @@ public class EventsController : ControllerBase
     {
         _logger.LogInformation("START: GetDeletedEvents");
 
-        if (!Guid.TryParse(HttpContext.Items["AuthorId"]!.ToString(), out Guid userId))
-        {
-            userId = Guid.NewGuid();
-        }
-
-        Pagination<EventDto> events = await _mediator.Send(new GetDeletedEventsByUserIdQuery(userId, filter));
+        Pagination<EventDto> events = await _mediator.Send(new GetDeletedEventsByUserIdQuery(filter));
 
         _logger.LogInformation("END: GetDeletedEvents");
 

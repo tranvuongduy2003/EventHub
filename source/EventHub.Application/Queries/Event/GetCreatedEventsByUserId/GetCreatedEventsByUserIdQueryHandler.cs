@@ -17,26 +17,30 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
     private readonly IUnitOfWork _unitOfWork;
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
 
-    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IMapper mapper)
+    public GetCreatedEventsByUserIdQueryHandler(IUnitOfWork unitOfWork,
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _signInManager = signInManager;
         _mapper = mapper;
     }
 
-    public async Task<Pagination<EventDto>> Handle(GetCreatedEventsByUserIdQuery request,
+    public Task<Pagination<EventDto>> Handle(GetCreatedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
-        var userId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
+        var userId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()
+            ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId == userId)
-            .Include(x => x.EventCategories)
-                .ThenInclude(x => x.Category)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.EventAggregate.Event> paginatedEvents = _unitOfWork.CachedEvents
+            .PaginatedFindByCondition(
+                x => x.AuthorId == userId,
+                request.Filter,
+                query => query
+                    .Include(x => x.EventCategories)
+                    .ThenInclude(x => x.Category));
 
-        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
+        Pagination<EventDto> paginatedEventDtos = _mapper.Map<Pagination<EventDto>>(paginatedEvents);
 
-        return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
+        return Task.FromResult(paginatedEventDtos);
     }
 }

@@ -61,10 +61,9 @@ public interface IRepositoryBase<T> where T : EntityBase
         params Expression<Func<T, object>>[] includeProperties);
 
     /// <summary>
-    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities.
+    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities .
     /// </summary>
     /// <typeparam name="T">The type of the entity being queried.</typeparam>
-    /// <param name="query">The base query to filter and paginate.</param>
     /// <param name="filter">The pagination and filtering criteria.</param>
     /// <param name="includeProperties">Optional navigation properties to include in the query.</param>
     /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
@@ -77,9 +76,31 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <param name="filter">The pagination and filtering criteria.</param>
     /// <param name="includePaths"></param>
     /// <param name="trackChanges"></param>
-    /// <param name="query">The base query to filter and paginate.</param>
     /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
     Pagination<T> PaginatedFind(PaginationFilter filter,
+        Func<IQueryable<T>, IQueryable<T>> includePaths, bool trackChanges = false);
+
+    /// <summary>
+    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities that satisfy a specified condition with related properties included.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="expression">An expression defining the condition to be satisfied by the entities.</param>
+    /// <param name="filter">The pagination and filtering criteria.</param>
+    /// <param name="includeProperties">Optional navigation properties to include in the query.</param>
+    /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
+    Pagination<T> PaginatedFindByCondition(Expression<Func<T, bool>> expression, PaginationFilter filter,
+        bool trackChanges = false);
+
+    /// <summary>
+    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities that satisfy a specified condition with related properties included.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// /// <param name="expression">An expression defining the condition to be satisfied by the entities.</param>
+    /// <param name="filter">The pagination and filtering criteria.</param>
+    /// <param name="includePaths"></param>
+    /// <param name="trackChanges"></param>
+    /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
+    Pagination<T> PaginatedFindByCondition(Expression<Func<T, bool>> expression, PaginationFilter filter,
         Func<IQueryable<T>, IQueryable<T>> includePaths, bool trackChanges = false);
 
     #endregion
