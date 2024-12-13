@@ -31,34 +31,20 @@ public class
     {
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
         
-        List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents
-            .FindByCondition(x => x.AuthorId.ToString() == userId)
-            .ToListAsync(cancellationToken);
-        List<EventCategory> eventCategories = await _unitOfWork.EventCategories
+        IQueryable<FavouriteEvent> favouriteEvents = _unitOfWork.FavouriteEvents
+            .FindByCondition(x => x.UserId.ToString() == userId);
+        
+        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.CachedEvents
             .FindAll()
-            .Include(x => x.Category)
+            .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category)
+            .Join(
+                favouriteEvents, 
+                _event => _event.Id, 
+                _favouriteEvent => _favouriteEvent.EventId,
+                (_event, _) => _event)
             .ToListAsync(cancellationToken);
-        List<FavouriteEvent> favouriteEvents = await _unitOfWork.FavouriteEvents
-            .FindByCondition(x => x.UserId.ToString() == userId)
-            .ToListAsync(cancellationToken);
-
-        var events = (
-                from _event in cachedEvents
-                join _favouriteEvent in favouriteEvents
-                    on _event.Id equals _favouriteEvent.EventId
-                join _eventCategory in eventCategories.DefaultIfEmpty()
-                    on _event.Id equals _eventCategory.EventId
-                group _eventCategory.Category by _event
-                into g
-                select new { Event = g.Key, Categories = g.ToList() })
-            .AsEnumerable()
-            .Select(x =>
-            {
-                x.Event.Categories = x.Categories;
-                return x.Event;
-            })
-            .ToList();
-
+        
         List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 
         return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);

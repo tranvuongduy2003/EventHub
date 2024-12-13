@@ -66,7 +66,6 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
     public async Task<IActionResult> GetEventById(Guid eventId)
     {
         _logger.LogInformation("START: GetEventById");
@@ -316,6 +315,7 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
     public async Task<IActionResult> PatchUnfavouriteEvent(Guid eventId)
     {
         _logger.LogInformation("START: PatchUnfavouriteEvent");

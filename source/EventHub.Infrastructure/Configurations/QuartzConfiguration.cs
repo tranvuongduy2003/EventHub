@@ -2,6 +2,7 @@ using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Infrastructure.Outbox;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using Quartz.Simpl;
 
 namespace EventHub.Infrastructure.Configurations;
 
@@ -9,22 +10,20 @@ public static class QuartzConfiguration
 {
     public static IServiceCollection ConfigureQuartz(this IServiceCollection services)
     {
-        services.AddSingleton<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
-
         services.AddQuartz(configure =>
         {
-            const string jobName = nameof(ProcessOutboxMessagesJob);
+            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
 
             configure
-                .AddJob<ProcessOutboxMessagesJob>(jobConfigure => jobConfigure.WithIdentity(jobName))
+                .AddJob<ProcessOutboxMessagesJob>(jobKey)
                 .AddTrigger(triggerConfigure =>
                     triggerConfigure
-                        .ForJob(jobName)
+                        .ForJob(jobKey)
                         .WithSimpleSchedule(schedule =>
-                            schedule.WithIntervalInSeconds(10).RepeatForever()));
+                            schedule.WithIntervalInSeconds(5).RepeatForever()));
+            
+            configure.UseJobFactory<MicrosoftDependencyInjectionJobFactory>();
         });
-
-        services.AddQuartz();
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 

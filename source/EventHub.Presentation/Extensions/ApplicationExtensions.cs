@@ -37,7 +37,6 @@ internal static class ApplicationExtensions
         app.UseAuthorization();
 
         // 9, Custom
-        app.UseHangfireBackgroundJobs();
         app.UseHangfireDashboard(app.Configuration);
         app.MapGet("/", context => Task.Run(() =>
             context.Response.Redirect("/swagger/index.html")));

@@ -46,8 +46,6 @@ public static class DependencyInjection
     {
         services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
-        services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
-
         services
             .AddSingleton<IFileService, MinioFileService>();
 

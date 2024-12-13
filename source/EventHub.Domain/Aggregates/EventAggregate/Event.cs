@@ -72,34 +72,14 @@ public class Event : AggregateRoot, IAuditable
 
     [Required] public Guid AuthorId { get; set; } = Guid.Empty;
 
-    public static void FavouriteEvent(Guid userId, Guid eventId)
+    public void FavouriteEvent(Guid userId, Guid eventId)
     {
-        new Event().RaiseDomainEvent(
-            new FavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
+        RaiseDomainEvent(new FavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
     }
 
-    public static void UnfavouriteEvent(Guid userId, Guid eventId)
+    public void UnfavouriteEvent(Guid userId, Guid eventId)
     {
-        new Event().RaiseDomainEvent(
-            new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
-    }
-
-    public static void MakeEventsPrivate(List<Guid> events)
-    {
-        new Event().RaiseDomainEvent(
-            new MakeEventsPrivateDomainEvent(Guid.NewGuid(), events));
-    }
-
-    public static void MakeEventsPublic(List<Guid> events)
-    {
-        new Event().RaiseDomainEvent(
-            new MakeEventsPublicDomainEvent(Guid.NewGuid(), events));
-    }
-
-    public static void RestoreEvent(List<Guid> events)
-    {
-        new Event().RaiseDomainEvent(
-            new RestoreEventDomainEvent(Guid.NewGuid(), events));
+        RaiseDomainEvent(new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
     }
 
     #region Relationships

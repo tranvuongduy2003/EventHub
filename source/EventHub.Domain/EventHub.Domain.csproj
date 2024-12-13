@@ -6,7 +6,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="Quartz" Version="3.13.0" />
+        <PackageReference Include="Quartz.AspNetCore" Version="3.13.1" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\EventHub.Domain.Shared\EventHub.Domain.Shared.csproj" />

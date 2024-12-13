@@ -23,28 +23,11 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
     public async Task<Pagination<EventDto>> Handle(GetPaginatedEventsQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.Aggregates.EventAggregate.Event> cachedEvents = await _unitOfWork.CachedEvents.FindAll()
-            .ToListAsync(cancellationToken);
-        List<EventCategory> eventCategories = await _unitOfWork.EventCategories
+        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.CachedEvents
             .FindAll()
-            .Include(x => x.Category)
+            .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category)
             .ToListAsync(cancellationToken);
-
-        var events = (
-                from _event in cachedEvents
-                join _eventCategory in eventCategories.DefaultIfEmpty()
-                    on _event.Id equals _eventCategory.EventId
-                select new { Event = _event, EventCategory = _eventCategory }
-            )
-            .GroupBy(x => x.Event)
-            .AsEnumerable()
-            .Select(group =>
-            {
-                Domain.Aggregates.EventAggregate.Event @event = group.Key;
-                @event.Categories = group.Select(g => g.EventCategory.Category).ToList();
-                return @event;
-            })
-            .ToList();
 
         List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 

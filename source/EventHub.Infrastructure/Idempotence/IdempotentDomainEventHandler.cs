@@ -68,8 +68,8 @@ public sealed class IdempotentDomainEventHandler<TDomainEvent> : IDomainEventHan
         // Process the event
         await _decorated.Handle(notification, cancellationToken);
 
-        // Record the event as processed
         _dbContext.Set<OutboxMessageConsumer>()
+        // Record the event as processed
             .Add(new OutboxMessageConsumer
             {
                 Id = notification.Id,

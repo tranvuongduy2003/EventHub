@@ -37,7 +37,8 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
     public async Task Handle(PermanentlyDeleteEventCommand request, CancellationToken cancellationToken)
     {
         // Get event or throw if not found
-        Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        Domain.Aggregates.EventAggregate.Event @event =
+            await _unitOfWork.Events.GetDeletedEventByIdAsync(request.EventId, cancellationToken);
         if (@event == null)
         {
             throw new NotFoundException("Event does not exist!");
@@ -49,27 +50,23 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
             .ToListAsync(cancellationToken);
         foreach (EventSubImage image in eventSubImages)
         {
-            await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{@event.Id}", image.ImageFileName);
+            await _fileService.DeleteAsync(FileContainer.EVENTS, image.ImageFileName);
+            await _unitOfWork.EventSubImages.Delete(image);
         }
+
         await _unitOfWork.CommitAsync();
 
         // Delete email content attachments and their files
         IQueryable<EmailContent> emailContents = _unitOfWork.EmailContents
-            .FindByCondition(x => x.EventId == @event.Id);
-        var attachments = _unitOfWork.EmailAttachments
-            .FindAll()
-            .AsEnumerable()
-            .Join(
-                emailContents.AsEnumerable(),
-                _attachment => _attachment.EmailContentId,
-                _emailContent => _emailContent.Id,
-                (_attachment, _emailContent) => _attachment)
-            .ToList();
+            .FindByCondition(x => x.EventId == @event.Id)
+            .Include(x => x.EmailAttachments);
+        var attachments = emailContents.SelectMany(x => x.EmailAttachments).ToList();
         foreach (EmailAttachment attachment in attachments)
         {
-            await _fileService.DeleteAsync($"{FileContainer.EVENTS}/{@event.Id}", attachment.AttachmentFileName);
+            await _fileService.DeleteAsync(FileContainer.EVENTS, attachment.AttachmentFileName);
+            await _unitOfWork.EmailAttachments.Delete(attachment);
         }
-        await _unitOfWork.EmailAttachments.DeleteList(attachments);
+
         await emailContents.ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
 
@@ -81,12 +78,18 @@ public class PermanentlyDeleteEventCommandHandler : ICommandHandler<PermanentlyD
 
         // Delete event categories
         await _unitOfWork.EventCategories
-           .FindByCondition(x => x.EventId == @event.Id)
-           .ExecuteDeleteAsync(cancellationToken);
+            .FindByCondition(x => x.EventId == @event.Id)
+            .ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
 
         // Delete event reasons
         await _unitOfWork.Reasons
+            .FindByCondition(x => x.EventId == @event.Id)
+            .ExecuteDeleteAsync(cancellationToken);
+        await _unitOfWork.CommitAsync();
+        
+        // Delete event reviews
+        await _unitOfWork.Reviews
             .FindByCondition(x => x.EventId == @event.Id)
             .ExecuteDeleteAsync(cancellationToken);
         await _unitOfWork.CommitAsync();
