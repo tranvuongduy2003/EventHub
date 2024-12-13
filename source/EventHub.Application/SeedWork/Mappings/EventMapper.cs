@@ -2,6 +2,7 @@
 using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.SeedWork.Mappings;
 
@@ -10,8 +11,12 @@ public sealed class EventMapper
     public static void CreateMap(IMapperConfigurationExpression config)
     {
         config.CreateMap<Event, EventDto>()
-        .ForMember(dest => dest.Categories, options =>
+            .ForMember(dest => dest.Categories, options =>
                 options.MapFrom(source => source.EventCategories.Select(category => category.Category)));
+
+        config.CreateMap<Pagination<Event>, Pagination<EventDto>>()
+            .ForMember(dest => dest.Items, options =>
+                options.MapFrom(source => source.Items));
 
         config.CreateMap<Event, EventDetailDto>()
             .ForMember(dest => dest.EventSubImageUrls, options =>

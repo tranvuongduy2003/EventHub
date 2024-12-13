@@ -400,3 +400,5 @@ dotnet_style_prefer_conditional_expression_over_return = true:none
 
 # CA1515: Keep exception types public
 dotnet_diagnostic.CA1515.severity = none
+
+dotnet_diagnostic.S6602.severity = none

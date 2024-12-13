@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
 using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Shared.Constants;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
@@ -19,6 +21,7 @@ public class ClaimRequirementFilter : IAuthorizationFilter
     private readonly ECommandCode _eCommandCode;
     private readonly EFunctionCode _eFunctionCode;
     private readonly ITokenService _tokenService;
+    private readonly SignInManager<User> _signInManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClaimRequirementFilter"/> class.
@@ -32,11 +35,13 @@ public class ClaimRequirementFilter : IAuthorizationFilter
     /// <param name="tokenService">
     /// An instance of <see cref="ITokenService"/> used to handle token-based operations, such as validation and claims retrieval.
     /// </param>
-    public ClaimRequirementFilter(EFunctionCode eFunctionCode, ECommandCode eCommandCode, ITokenService tokenService)
+    public ClaimRequirementFilter(EFunctionCode eFunctionCode, ECommandCode eCommandCode, ITokenService tokenService,
+        SignInManager<User> signInManager)
     {
         _eFunctionCode = eFunctionCode;
         _eCommandCode = eCommandCode;
         _tokenService = tokenService;
+        _signInManager = signInManager;
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
@@ -61,6 +66,8 @@ public class ClaimRequirementFilter : IAuthorizationFilter
             context.Result = new UnauthorizedObjectResult(new ApiUnauthorizedResponse("invalid_token"));
             return;
         }
+
+        _signInManager.Context.User.AddIdentity(principal);
 
         Claim permissionsClaim = principal.Claims
             .SingleOrDefault(c => c.Type == SystemConstants.Claims.Permissions);

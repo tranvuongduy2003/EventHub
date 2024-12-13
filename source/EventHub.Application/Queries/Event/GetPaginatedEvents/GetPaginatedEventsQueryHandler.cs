@@ -20,17 +20,19 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
         _mapper = mapper;
     }
 
-    public async Task<Pagination<EventDto>> Handle(GetPaginatedEventsQuery request,
+    public Task<Pagination<EventDto>> Handle(GetPaginatedEventsQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.CachedEvents
-            .FindAll()
-            .Include(x => x.EventCategories)
-                .ThenInclude(x => x.Category)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.EventAggregate.Event> paginatedEvents = _unitOfWork.CachedEvents
+            .PaginatedFind(
+                request.Filter,
+                query => query
+                    .Include(x => x.EventCategories)
+                    .ThenInclude(x => x.Category)
+            );
 
-        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
+        Pagination<EventDto> paginatedEventDtos = _mapper.Map<Pagination<EventDto>>(paginatedEvents);
 
-        return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
+        return Task.FromResult(paginatedEventDtos);
     }
 }

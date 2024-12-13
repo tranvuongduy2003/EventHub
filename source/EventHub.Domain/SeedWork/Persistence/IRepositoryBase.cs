@@ -1,5 +1,7 @@
 ﻿using System.Linq.Expressions;
 using EventHub.Domain.SeedWork.Entities;
+using EventHub.Domain.Shared.SeedWork;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventHub.Domain.SeedWork.Persistence;
 
@@ -57,6 +59,28 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <returns>A task representing the asynchronous operation. The task result is an <see cref="IQueryable{T}"/> that can be used to query entities of type <typeparamref name="T"/> that satisfy the specified condition including specified related properties.</returns>
     IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false,
         params Expression<Func<T, object>>[] includeProperties);
+
+    /// <summary>
+    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="query">The base query to filter and paginate.</param>
+    /// <param name="filter">The pagination and filtering criteria.</param>
+    /// <param name="includeProperties">Optional navigation properties to include in the query.</param>
+    /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
+    Pagination<T> PaginatedFind(PaginationFilter filter, bool trackChanges = false);
+
+    /// <summary>
+    /// Performs a paginated and filtered query on the dataset with optional inclusion of related entities.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="filter">The pagination and filtering criteria.</param>
+    /// <param name="includePaths"></param>
+    /// <param name="trackChanges"></param>
+    /// <param name="query">The base query to filter and paginate.</param>
+    /// <returns>A <see cref="Pagination{T}"/> object containing the paginated items and metadata.</returns>
+    Pagination<T> PaginatedFind(PaginationFilter filter,
+        Func<IQueryable<T>, IQueryable<T>> includePaths, bool trackChanges = false);
 
     #endregion
 
