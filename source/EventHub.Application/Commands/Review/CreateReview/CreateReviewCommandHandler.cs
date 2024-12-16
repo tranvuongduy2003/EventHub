@@ -33,7 +33,7 @@ public class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, R
             Content = request.Content
         };
 
-        await _unitOfWork.Reviews.CreateAsync(review);
+        await _unitOfWork.CachedReviews.CreateAsync(review);
         await _unitOfWork.CommitAsync();
 
         return _mapper.Map<ReviewDto>(review);

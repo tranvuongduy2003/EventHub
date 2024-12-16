@@ -30,14 +30,14 @@ public class
             throw new NotFoundException("Event does not exist!");
         }
 
-        List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
-            .FindByCondition(x => x.EventId == request.EventId)
-            .Include(x => x.Event)
-            .Include(x => x.Author)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.ReviewAggregate.Review> paginatedReviews = _unitOfWork.CachedReviews
+            .PaginatedFindByCondition(x => x.EventId == request.EventId, request.Filter, query => query
+                .Include(x => x.Event)
+                .Include(x => x.Author)
+            );
 
-        List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
+        Pagination<ReviewDto> paginatedReviewDtos = _mapper.Map<Pagination<ReviewDto>>(paginatedReviews);
 
-        return PagingHelper.Paginate<ReviewDto>(reviewDtos, request.Filter);
+        return paginatedReviewDtos;
     }
 }

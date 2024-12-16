@@ -1,9 +1,7 @@
 using AutoMapper;
-using EventHub.Application.SeedWork.DTOs.Function;
 using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
-using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +12,11 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
 {
     private readonly IMapper _mapper;
     private readonly RoleManager<Role> _roleManager;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public GetPermissionsByUserQueryHandler(IUnitOfWork unitOfWork, RoleManager<Role> roleManager,
+    public GetPermissionsByUserQueryHandler(RoleManager<Role> roleManager,
         UserManager<Domain.Aggregates.UserAggregate.User> userManager, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
         _roleManager = roleManager;
         _userManager = userManager;
         _mapper = mapper;
@@ -35,34 +31,15 @@ public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUs
             throw new NotFoundException("User does not exist!");
         }
 
-        var permissions = _unitOfWork.Permissions
-            .FindAll(false, x => x.Function)
-            .ToList();
-
         IList<string> userRoleNames = await _userManager.GetRolesAsync(user);
         var userRoles = _roleManager.Roles
             .AsNoTracking()
-            .Join(userRoleNames, r => r.Name, n => n, (role, name) => role)
+            .Join(userRoleNames, _role => _role.Name, _name => _name, (_role, _name) => _role)
+            .Include(x => x.Permissions)
+            .ThenInclude(x => x.Function)
             .ToList();
 
-        var rolePermissions = (
-                from _role in userRoles
-                join _permission in permissions.DefaultIfEmpty()
-                    on _role.Id equals _permission.RoleId
-                select new { Role = _role, Permission = _permission }
-            )
-            .GroupBy(x => x.Role)
-            .Select(group => new RolePermissionDto
-            {
-                Id = group.Key.Id,
-                Name = group.Key.Name ?? "",
-                Functions = _mapper.Map<List<FunctionDto>>(
-                    group
-                        .Select(g => g.Permission.Function)
-                        .ToList())
-            })
-            .ToList();
-
+        List<RolePermissionDto> rolePermissions = _mapper.Map<List<RolePermissionDto>>(userRoles);
 
         return rolePermissions;
     }

@@ -19,16 +19,19 @@ public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCate
         _mapper = mapper;
     }
 
-    public async Task<Pagination<CategoryDto>> Handle(GetPaginatedCategoriesQuery request,
+    public Task<Pagination<CategoryDto>> Handle(GetPaginatedCategoriesQuery request,
         CancellationToken cancellationToken)
     {
+        Pagination<Domain.Aggregates.CategoryAggregate.Category> paginatedCategories =
+            _unitOfWork.CachedCategories.PaginatedFind(
+                request.Filter,
+                query => query
+                    .Include(x => x.EventCategories)
+                    .ThenInclude(x => x.Category)
+            );
 
-        List<Domain.Aggregates.CategoryAggregate.Category> cachedCategories = await _unitOfWork.CachedCategories
-            .FindAll()
-            .ToListAsync(cancellationToken);
+        Pagination<CategoryDto> paginatedCategoryDtos = _mapper.Map<Pagination<CategoryDto>>(paginatedCategories);
 
-        List<CategoryDto> categories = _mapper.Map<List<CategoryDto>>(cachedCategories);
-
-        return PagingHelper.Paginate<CategoryDto>(categories, request.Filter);
+        return Task.FromResult(paginatedCategoryDtos);
     }
 }

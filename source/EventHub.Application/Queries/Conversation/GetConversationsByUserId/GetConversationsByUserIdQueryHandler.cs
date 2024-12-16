@@ -40,15 +40,14 @@ public class
             .Include(x => x.Author)
             .ToListAsync(cancellationToken);
 
-        List<Domain.Aggregates.ConversationAggregate.Conversation> conversations = await _unitOfWork.Conversations
-            .FindByCondition(x => x.EventId == request.UserId)
-            .Include(x => x.Event)
-            .Include(x => x.Host)
-            .Include(x => x.User)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.ConversationAggregate.Conversation> conversations = _unitOfWork.Conversations
+            .PaginatedFindByCondition(x => x.EventId == request.UserId, request.Filter, query => query
+                .Include(x => x.Event)
+                .Include(x => x.Host)
+                .Include(x => x.User));
 
         var conversationsWithMessages = (
-                from _conversation in conversations
+                from _conversation in conversations.Items
                 join _message in messages.DefaultIfEmpty()
                     on _conversation.Id equals _message.ConversationId
                 select new { Conversation = _conversation, Message = _message }
@@ -63,8 +62,9 @@ public class
             })
             .ToList();
 
-        List<ConversationDto> conversationDtos = _mapper.Map<List<ConversationDto>>(conversationsWithMessages);
+        Pagination<ConversationDto> paginatedConversationDtos =
+            _mapper.Map<Pagination<ConversationDto>>(conversationsWithMessages);
 
-        return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
+        return paginatedConversationDtos;
     }
 }

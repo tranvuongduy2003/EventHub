@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.SeedWork.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.Review;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Shared.SeedWork;
 
@@ -17,6 +18,8 @@ public sealed class EventMapper
         config.CreateMap<Pagination<Event>, Pagination<EventDto>>()
             .ForMember(dest => dest.Items, options =>
                 options.MapFrom(source => source.Items));
+        
+        config.CreateMap<Event, ReviewedEventDto>();
 
         config.CreateMap<Event, EventDetailDto>()
             .ForMember(dest => dest.EventSubImageUrls, options =>

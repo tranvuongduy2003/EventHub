@@ -28,21 +28,23 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
     {
         string key = "user";
 
-        List<Domain.Aggregates.UserAggregate.User> users = await _cacheService.GetData<List<Domain.Aggregates.UserAggregate.User>>(key);
+        IQueryable<Domain.Aggregates.UserAggregate.User> queryableUsers =
+            await _cacheService.GetData<IQueryable<Domain.Aggregates.UserAggregate.User>>(key);
 
-        if (users == null || !users.Any())
+        if (queryableUsers == null || !queryableUsers.Any())
         {
-            users = await _userManager.Users
+            queryableUsers = _userManager.Users
                 .AsNoTracking()
-                .Where(x => !x.IsDeleted)
-                .ToListAsync(cancellationToken);
+                .Where(x => !x.IsDeleted);
 
-            await _cacheService.SetData<List<Domain.Aggregates.UserAggregate.User>>(key, users,
-                TimeSpan.FromMinutes(2));
+            await _cacheService.SetData(key, queryableUsers, TimeSpan.FromMinutes(2));
         }
 
-        List<UserDto> userDtos = _mapper.Map<List<UserDto>>(users);
+        Pagination<Domain.Aggregates.UserAggregate.User> paginatedUsers =
+            PagingHelper.QueryPaginate(request.Filter, queryableUsers);
 
-        return PagingHelper.Paginate<UserDto>(userDtos, request.Filter);
+        Pagination<UserDto> paginatedUserDtos = _mapper.Map<Pagination<UserDto>>(paginatedUsers);
+
+        return paginatedUserDtos;
     }
 }

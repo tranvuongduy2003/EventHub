@@ -21,7 +21,7 @@ public class DeleteReviewCommandHandler : ICommandHandler<DeleteReviewCommand>
             throw new NotFoundException("Review does not exist!");
         }
 
-        await _unitOfWork.Reviews.SoftDelete(review);
+        await _unitOfWork.CachedReviews.SoftDelete(review);
         await _unitOfWork.CommitAsync();
     }
 }

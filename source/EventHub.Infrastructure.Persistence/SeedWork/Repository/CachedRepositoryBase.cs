@@ -1,13 +1,11 @@
-using System.ComponentModel;
 using System.Linq.Expressions;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.SeedWork.Persistence;
-using EventHub.Domain.Shared.Enums.Common;
+using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
 using EventHub.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventHub.Infrastructure.Persistence.SeedWork.Repository;
 
@@ -100,7 +98,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     {
         IQueryable<T> query = FindAll(trackChanges);
 
-        return PaginateItems(filter, query);
+        return PagingHelper.QueryPaginate(filter, query);
     }
 
     public Pagination<T> PaginatedFind(PaginationFilter filter, Func<IQueryable<T>, IQueryable<T>> includePaths,
@@ -111,7 +109,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         // Apply includes if specified
         query = includePaths(query);
 
-        return PaginateItems(filter, query);
+        return PagingHelper.QueryPaginate(filter, query);
     }
 
     public Pagination<T> PaginatedFindByCondition(Expression<Func<T, bool>> expression, PaginationFilter filter,
@@ -119,7 +117,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     {
         IQueryable<T> query = FindByCondition(expression, trackChanges);
 
-        return PaginateItems(filter, query);
+        return PagingHelper.QueryPaginate(filter, query);
     }
 
     public Pagination<T> PaginatedFindByCondition(Expression<Func<T, bool>> expression, PaginationFilter filter,
@@ -131,7 +129,7 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
         // Apply includes if specified
         query = includePaths(query);
 
-        return PaginateItems(filter, query);
+        return PagingHelper.QueryPaginate(filter, query);
     }
 
     public Task<bool> ExistAsync(Guid id)
@@ -230,84 +228,5 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
 
         string listKey = $"{typeof(T).Name}";
         await _cacheService.RemoveData(listKey);
-    }
-
-    private static Pagination<T> PaginateItems(PaginationFilter filter, IQueryable<T> query)
-    {
-        // Get total records before filtering
-        int totalCount = query.Count();
-
-        // Apply text searches
-        if (filter.Searches != null && filter.Searches.Any())
-        {
-            query = filter.Searches?
-                .Aggregate(query, (current, search) =>
-                {
-                    if (search.SearchValue != null && search.SearchBy != null)
-                    {
-                        PropertyDescriptor property = TypeDescriptor
-                            .GetProperties(typeof(T))
-                            .Find(search.SearchBy, true);
-
-                        if (property != null)
-                        {
-                            return current.Where(x =>
-                                ((string)(property.GetValue(x) ?? ""))
-                                .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase)
-                            );
-                        }
-                    }
-
-                    return current;
-                });
-        }
-
-        // Apply ordering
-        if (filter.Orders != null && filter.Orders.Any())
-        {
-            query = filter.Orders?.Aggregate(query, (current, order) =>
-            {
-                PropertyDescriptor property = TypeDescriptor
-                    .GetProperties(typeof(T))
-                    .Find(order.OrderBy, true);
-
-                if (property != null)
-                {
-                    return order.OrderDirection switch
-                    {
-                        EPageOrder.ASC => current?.OrderBy(x => property.GetValue(x)),
-                        EPageOrder.DESC => current?.OrderByDescending(x => property.GetValue(x)),
-                        _ => current
-                    };
-                }
-
-                return current;
-            });
-        }
-
-        // Apply pagination
-        var items = new List<T>();
-        if (query != null && !filter.TakeAll)
-        {
-            items = query
-                .Skip((filter.Page - 1) * filter.Size)
-                .Take(filter.Size)
-                .ToList();
-        }
-
-        // Create metadata
-        var metadata = new Metadata(
-            totalCount,
-            filter.Page,
-            filter.Size,
-            filter.TakeAll
-        );
-
-        // Return paginated result
-        return new Pagination<T>
-        {
-            Items = items,
-            Metadata = metadata
-        };
     }
 }

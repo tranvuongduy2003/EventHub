@@ -19,17 +19,17 @@ public class GetPaginatedReviewsQueryHandler : IQueryHandler<GetPaginatedReviews
         _mapper = mapper;
     }
 
-    public async Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsQuery request,
+    public Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsQuery request,
         CancellationToken cancellationToken)
     {
-        List<Domain.Aggregates.ReviewAggregate.Review> reviews = await _unitOfWork.CachedReviews
-            .FindAll()
-            .Include(x => x.Event)
-            .Include(x => x.Author)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.ReviewAggregate.Review> paginatedReviews = _unitOfWork.CachedReviews
+            .PaginatedFind(request.Filter, query => query
+                .Include(x => x.Event)
+                .Include(x => x.Author)
+            );
 
-        List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
+        Pagination<ReviewDto> paginatedReviewDtos = _mapper.Map<Pagination<ReviewDto>>(paginatedReviews);
 
-        return PagingHelper.Paginate<ReviewDto>(reviewDtos, request.Filter);
+        return Task.FromResult(paginatedReviewDtos);
     }
 }

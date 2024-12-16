@@ -24,7 +24,7 @@ public class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
         review.Content = request.Content;
         review.Rate = request.Rate;
 
-        await _unitOfWork.Reviews.Update(review);
+        await _unitOfWork.CachedReviews.Update(review);
         await _unitOfWork.CommitAsync();
     }
 }

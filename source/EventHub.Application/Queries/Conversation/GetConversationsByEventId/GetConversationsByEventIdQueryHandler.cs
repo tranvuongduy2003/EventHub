@@ -36,15 +36,19 @@ public class
             .FindAll()
             .Include(x => x.Author);
 
-        var conversations = _unitOfWork.Conversations
-            .FindByCondition(x => x.EventId == request.EventId)
-            .Include(x => x.Event)
-            .Include(x => x.Host)
-            .Include(x => x.User)
-            .ToList();
+        Pagination<Domain.Aggregates.ConversationAggregate.Conversation> paginatedConversations = _unitOfWork
+            .Conversations
+            .PaginatedFindByCondition(
+                x => x.EventId == request.EventId,
+                request.Filter,
+                query => query
+                    .Include(x => x.Event)
+                    .Include(x => x.Host)
+                    .Include(x => x.User)
+            );
 
         var conversationWithMessages = (
-                from _conversation in conversations
+                from _conversation in paginatedConversations.Items
                 join _message in messages.DefaultIfEmpty()
                     on _conversation.Id equals _message.ConversationId
                 select new { Conversation = _conversation, Message = _message }
@@ -59,8 +63,9 @@ public class
             })
             .ToList();
 
-        List<ConversationDto> conversationDtos = _mapper.Map<List<ConversationDto>>(conversationWithMessages);
+        Pagination<ConversationDto> paginatedConversationDtos =
+            _mapper.Map<Pagination<ConversationDto>>(conversationWithMessages);
 
-        return PagingHelper.Paginate<ConversationDto>(conversationDtos, request.Filter);
+        return paginatedConversationDtos;
     }
 }

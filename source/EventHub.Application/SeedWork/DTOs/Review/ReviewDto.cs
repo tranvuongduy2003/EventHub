@@ -16,7 +16,7 @@ public class ReviewDto
     public double Rate { get; set; }
 
     [SwaggerSchema("Event details associated with the review")]
-    public EventDto? Event { get; set; } = null;
+    public ReviewedEventDto? Event { get; set; } = null;
 
     [SwaggerSchema("Author details associated with the review")]
     public AuthorDto? Author { get; set; } = null;

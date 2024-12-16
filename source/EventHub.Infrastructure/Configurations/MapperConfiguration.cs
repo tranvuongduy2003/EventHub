@@ -19,6 +19,7 @@ public static class MapperConfiguration
                 FunctionMapper.CreateMap(config);
                 ReviewMapper.CreateMap(config);
                 UserMapper.CreateMap(config);
+                PermissionMapper.CreateMap(config);
             });
         return services;
     }

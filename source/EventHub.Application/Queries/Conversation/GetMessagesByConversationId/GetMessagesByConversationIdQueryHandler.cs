@@ -26,7 +26,6 @@ public class
     public async Task<Pagination<MessageDto>> Handle(GetMessagesByConversationIdQuery request,
         CancellationToken cancellationToken)
     {
-
         bool isConversationExisted =
             await _unitOfWork.Conversations.ExistAsync(x => x.Id == request.ConversationId);
         if (!isConversationExisted)
@@ -34,12 +33,13 @@ public class
             throw new NotFoundException("Conversation does not exist!");
         }
 
-        IIncludableQueryable<Message, Domain.Aggregates.UserAggregate.User> messages = _unitOfWork.Messages
-            .FindByCondition(x => x.ConversationId == request.ConversationId)
-            .Include(x => x.Author);
+        Pagination<Message> paginatedMessages = _unitOfWork.Messages
+            .PaginatedFindByCondition(x => x.ConversationId == request.ConversationId, request.Filter, query => query
+                .Include(x => x.Author)
+            );
 
-        List<MessageDto> messageDtos = _mapper.Map<List<MessageDto>>(messages);
+        Pagination<MessageDto> paginatedMessageDtos = _mapper.Map<Pagination<MessageDto>>(paginatedMessages);
 
-        return PagingHelper.Paginate<MessageDto>(messageDtos, request.Filter);
+        return paginatedMessageDtos;
     }
 }
