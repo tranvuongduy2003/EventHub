@@ -1,6 +1,7 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
@@ -42,6 +43,15 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
 
         Pagination<Domain.Aggregates.UserAggregate.User> paginatedUsers =
             PagingHelper.QueryPaginate(request.Filter, queryableUsers);
+        paginatedUsers.Items.ForEach(x =>
+        {
+            x.Roles = _userManager
+                .GetRolesAsync(x)
+                .GetAwaiter()
+                .GetResult()
+                .Select(role => new Role(role))
+                .ToList();
+        });
 
         Pagination<UserDto> paginatedUserDtos = _mapper.Map<Pagination<UserDto>>(paginatedUsers);
 

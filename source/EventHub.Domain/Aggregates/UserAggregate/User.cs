@@ -7,14 +7,19 @@ using EventHub.Domain.Aggregates.LabelAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.ReviewAggregate;
 using EventHub.Domain.Aggregates.TicketAggregate;
+using EventHub.Domain.Events;
+using EventHub.Domain.SeedWork.AggregateRoot;
+using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 
 namespace EventHub.Domain.Aggregates.UserAggregate;
 
-public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
+public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDeletable
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? FullName { get; set; }
@@ -28,8 +33,7 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     [Column(TypeName = "nvarchar(1000)")]
     public string? Bio { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")]
-    public string? AvatarUrl { get; set; }
+    [Column(TypeName = "nvarchar(max)")] public string? AvatarUrl { get; set; }
 
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
@@ -39,17 +43,13 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EUserStatus Status { get; set; } = EUserStatus.ACTIVE;
 
-    [Range(0, double.PositiveInfinity)]
-    public int? NumberOfFollowers { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfFollowers { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)]
-    public int? NumberOfFolloweds { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfFolloweds { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)]
-    public int? NumberOfFavourites { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfFavourites { get; set; } = 0;
 
-    [Range(0, double.PositiveInfinity)]
-    public int? NumberOfCreatedEvents { get; set; } = 0;
+    [Range(0, double.PositiveInfinity)] public int? NumberOfCreatedEvents { get; set; } = 0;
 
     public bool IsDeleted { get; set; }
 
@@ -85,4 +85,28 @@ public class User : IdentityUser<Guid>, IDateTracking, ISoftDeletable
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = new List<UserPaymentMethod>();
+
+    public virtual ICollection<Role>? Roles { get; set; } = null!;
+
+    public void ChangeUserPassword(Guid userId, string oldPassword, string newPassword)
+    {
+        RaiseDomainEvent(new ChangeUserPasswordDomainEvent(Guid.NewGuid(), userId, oldPassword, newPassword));
+    }
+
+    public void FollowUser(Guid followerId, Guid followedUserId)
+    {
+        RaiseDomainEvent(new FollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
+    }
+
+    public void UnfollowUser(Guid followerId, Guid followedUserId)
+    {
+        RaiseDomainEvent(new UnfollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
+    }
+
+    public IReadOnlyCollection<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
+
+    public void RaiseDomainEvent(IDomainEvent domainEvent) =>
+        _domainEvents.Add(domainEvent);
 }

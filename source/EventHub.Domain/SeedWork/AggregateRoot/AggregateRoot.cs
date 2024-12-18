@@ -3,7 +3,7 @@ using EventHub.Domain.SeedWork.Entities;
 
 namespace EventHub.Domain.SeedWork.AggregateRoot;
 
-public abstract class AggregateRoot : EntityBase
+public abstract class AggregateRoot : EntityBase, IAggregateRoot
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
@@ -15,6 +15,6 @@ public abstract class AggregateRoot : EntityBase
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 
-    protected void RaiseDomainEvent(IDomainEvent domainEvent) =>
+    public void RaiseDomainEvent(IDomainEvent domainEvent) =>
         _domainEvents.Add(domainEvent);
 }

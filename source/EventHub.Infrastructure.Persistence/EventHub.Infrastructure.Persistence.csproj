@@ -9,4 +9,7 @@
 	  <ProjectReference Include="..\EventHub.Application\EventHub.Application.csproj" />
 	  <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 </Project>

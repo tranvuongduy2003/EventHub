@@ -9,7 +9,9 @@ public sealed class UserMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<User, UserDto>();
+        config.CreateMap<User, UserDto>()
+            .ForMember(dest => dest.Roles, options =>
+                options.MapFrom(source => (source.Roles ?? new List<Role>()).Select(x => x.Name)));
 
         config.CreateMap<User, AuthorDto>();
 

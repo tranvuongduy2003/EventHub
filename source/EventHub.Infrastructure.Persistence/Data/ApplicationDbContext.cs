@@ -91,7 +91,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<Invitation> Invitations { set; get; }
     public override DbSet<Role> Roles { set; get; }
     public override DbSet<User> Users { set; get; }
-    public DbSet<UserAggregateRoot> UserAggregates { set; get; }
     public DbSet<UserFollower> UserFollowers { set; get; }
     public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
 

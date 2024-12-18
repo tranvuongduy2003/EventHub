@@ -2,6 +2,7 @@ using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Application.SeedWork.Exceptions;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 
@@ -26,7 +27,8 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
     {
         string key = $"user:{request.UserId}";
 
-        Domain.Aggregates.UserAggregate.User user = await _cacheService.GetData<Domain.Aggregates.UserAggregate.User>(key);
+        Domain.Aggregates.UserAggregate.User user =
+            await _cacheService.GetData<Domain.Aggregates.UserAggregate.User>(key);
 
         if (user == null)
         {
@@ -35,7 +37,11 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
             {
                 throw new NotFoundException("User does not exist!");
             }
-            await _cacheService.SetData<Domain.Aggregates.UserAggregate.User>(key, user, TimeSpan.FromMinutes(2));
+
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            user.Roles = roles.Select(role => new Role(role)).ToList();
+
+            await _cacheService.SetData(key, user, TimeSpan.FromMinutes(2));
         }
 
         UserDto userDto = _mapper.Map<UserDto>(user);
