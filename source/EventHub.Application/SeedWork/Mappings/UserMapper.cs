@@ -11,9 +11,13 @@ public sealed class UserMapper
     {
         config.CreateMap<User, UserDto>()
             .ForMember(dest => dest.Roles, options =>
-                options.MapFrom(source => (source.Roles ?? new List<Role>()).Select(x => x.Name)));
+                options.MapFrom(source => (source.Roles ?? new List<Role>()).Select(x => x.Name)))
+            .ForMember(dest => dest.Avatar, options =>
+                options.MapFrom(source => source.AvatarUrl));
 
-        config.CreateMap<User, AuthorDto>();
+        config.CreateMap<User, AuthorDto>()
+            .ForMember(dest => dest.Avatar, options =>
+                options.MapFrom(source => source.AvatarUrl));
 
         config.CreateMap<Pagination<User>, Pagination<UserDto>>()
             .ForMember(dest => dest.Items, options =>

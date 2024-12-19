@@ -87,12 +87,7 @@ public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDele
     public virtual ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = new List<UserPaymentMethod>();
 
     public virtual ICollection<Role>? Roles { get; set; } = null!;
-
-    public void ChangeUserPassword(Guid userId, string oldPassword, string newPassword)
-    {
-        RaiseDomainEvent(new ChangeUserPasswordDomainEvent(Guid.NewGuid(), userId, oldPassword, newPassword));
-    }
-
+    
     public void FollowUser(Guid followerId, Guid followedUserId)
     {
         RaiseDomainEvent(new FollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
