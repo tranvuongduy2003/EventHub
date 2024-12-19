@@ -1,47 +1,158 @@
 # EventHub
 
-### Give me 1 star if it is useful for you.
+EventHub is an advanced event management platform built using modern software design principles and patterns. This README serves as a guide for understanding the architecture, folder structure, patterns, and deployment details of the application.
 
-===========================================================
+---
 
-# APPLIED ARCHITECTURE & DESIGN PATTERN:
-  - Clean Architecture
-    - Clean Architecture is a software architecture that emphasizes the separation of concerns, the independence of components, and the use of well-defined boundaries.
-    - EventHub.Domain represents for Domain layer, EventHub.Application for Application (Usecases) layer, EventHub.Infrastructure for Infrastructure layer, EventHub.Presentation for Presentation layer.
-    - EventHub.Persistence is actually Infrastructure layer, but it is seperated from the layer in order to easily communicate with the database.
-    - Instead of defining common class in (normally) Domain, I put all of them in Shared to easily reference to, it actually does not break the Clean Architecture principles.
-    - EventHub.SignalR is the same as EventHub.Persistence, it belongs to Infrastructure layer but is seperated from the layer. It handles all of realtime work with using SignalR for Websocket.
-  - Repository Pattern:
-    - The repository design pattern allows you to create an accessible data layer. I also have cached repositories in case of caching data. The cache database I used is Redis.
-  - Unit of Work Pattern:
-    - A unit of work encapsulates one or more code repositories and a list of actions to be performed which are necessary for the successful implementation of self-contained and consistent data change. In this solution, I put all of repositories (also cached repositories) into just only 1 UnitOfWork class.
-  - Domain-Driven Design (DDD):
-    - Domain-Driven Design (DDD) is a software development philosophy that emphasizes the importance of understanding and modeling the business domain. It is a strategy aimed at improving the quality of software by aligning it more closely with the business needs it serves.
-  - CQRS Pattern:
-    - CQRS stands for Command and Query Responsibility Segregation, a pattern that separates read and update operations for a data store. It is a perfect pattern to collaborate with DDD. In this solution, I just use 1 database for both commands and queries.
-  - Transactional Outbox Pattern & Idempotency:
-    - The transactional outbox pattern resolves the dual write operations issue that occurs in distributed systems when a single operation involves both a database write operation and a message or event notification. Idempotency is a crucial property of certain operations or API requests that guarantees consistent outcomes, regardless of the number of times an operation is performed. I use the couple of these patterns to ensure Event Sourcing of DDD work well. The event will be recalled if there are any errors, and if an event was called, it will not be called again (duplicate message). It is also used for message broker, in this solution I just apply for sending email using Hangfire, the result must be similar with the Event Sourcing.
-  - Some another Design Patterns: Decorator Pattern, Factory Pattern, Singleton Pattern (just is C# Dependency Injection), ...
+## ⭐ Give Us a Star
 
-# CI/CD
-  - The project has been set up CI/CD to deploy on Azure App Service. If anyone wants to deploy on Azure, you can use it for reference.
+If this project is helpful to you, please consider giving it a star on GitHub. Your support means a lot!
 
-# HOW TO RUN THE APPLICATION (Development Environment)
-  - **Step 1:** Run docker compose (pay attention to the **path** of the docker-compose file, if you are in **/src**, you don't need to add **src/** to the command)
-  ```
-  docker-compose -f src/docker-compose.development.yml -p eventhub up -d --remove-orphans 
-  ```
-  - **Step 2:** Run migrations (for the first time)
-    - Last section
-  - **Step 3:** Run app with **http** options
-    - **http** will run with the environment **Development** while **https** will run with the environment **Production**
+---
 
-# RUN MIGRATIONS (ensure you are in **/src**):
-  - If you want to add a new migration, use this command, replace <your-migration-name> with your migration name:
-  ```
-  dotnet ef migrations add <your-migration-name> --startup-project EventHub.Presentation --project EventHub.Persistence --output-dir ../EventHub.Persistence/Migrations 
-  ```
-  - Run this command in step 2 of **# HOW TO RUN THE APPLICATION** section, or after adding a new migration to update your database:
-  ```
-  dotnet ef database update --startup-project EventHub.Presentation --project EventHub.Persistence
-  ```
+## Solution Structure
+
+The project is structured as follows:
+
+```
+EventHub
+├── deploy
+│   ├── .dockerignore
+│   ├── docker-compose.yml
+│   ├── docker-compose.development.yml
+│   └── docker-compose.production.yml
+├── Solution Items
+│   ├── .editorconfig
+│   ├── .gitignore
+│   ├── .gitlab-ci.yml
+│   ├── Directory.Build.props
+│   ├── LICENSE.txt
+│   └── README.md
+└── source
+    ├── EventHub.Application
+    ├── EventHub.Domain
+    ├── EventHub.Domain.Shared
+    ├── EventHub.Infrastructure
+    ├── EventHub.Infrastructure.Persistence
+    ├── EventHub.Infrastructure.SignalR
+    └── EventHub.Presentation
+```
+
+### Explanation of Folders
+
+- **deploy/**: Contains Docker-related configuration files, including Docker Compose files for development and production environments.
+- **Solution Items/**: Stores solution-level configuration files, CI/CD configuration (`.gitlab-ci.yml`), and other supporting documents such as the README and license.
+- **source/**: Contains the main source code, organized by Clean Architecture principles:
+    - **EventHub.Application**: Application layer with use cases and business rules.
+    - **EventHub.Domain**: Domain layer with core business logic and entities.
+    - **EventHub.Domain.Shared**: Shared utilities and functionality, enhancing reusability.
+    - **EventHub.Infrastructure**: Infrastructure layer for external services.
+    - **EventHub.Infrastructure.Persistence**: Handles database communications.
+    - **EventHub.Infrastructure.SignalR**: Manages real-time communication using SignalR.
+    - **EventHub.Presentation**: Presentation layer for API endpoints and UI components.
+
+---
+
+## Applied Architecture and Design Patterns
+
+### Clean Architecture
+
+Clean Architecture ensures a clear separation of concerns, fostering maintainable and scalable code:
+
+- **Domain Layer** (`EventHub.Domain`): Encapsulates core business logic and entities.
+- **Application Layer** (`EventHub.Application`): Contains use cases and application-specific business rules.
+- **Infrastructure Layer** (`EventHub.Infrastructure`): Manages external services, including database interactions and third-party integrations.
+- **Presentation Layer** (`EventHub.Presentation`): Handles user interface and API endpoints.
+- **Persistence Module** (`EventHub.Infrastructure.Persistence`): A specialized component within Infrastructure to manage database communications.
+- **Shared Module** (`EventHub.Domain.Shared`): Contains common utilities and shared functionality, improving reusability across layers without violating Clean Architecture principles.
+- **SignalR Module** (`EventHub.Infrastructure.SignalR`): Manages real-time communication using SignalR for WebSocket-based interactions.
+
+### Repository Pattern
+
+Facilitates an abstraction layer for data access:
+
+- Includes both standard and cached repositories, utilizing Redis for enhanced performance.
+
+### Unit of Work Pattern
+
+Ensures consistent and atomic database operations:
+
+- Combines multiple repositories within a single `UnitOfWork` class for transaction management.
+
+### Domain-Driven Design (DDD)
+
+Focuses on modeling the core business domain:
+
+- Aligns software design with business requirements to improve quality and maintainability.
+
+### CQRS Pattern
+
+Separates command (write) and query (read) responsibilities:
+
+- A single database is used for both operations in this implementation.
+
+### Transactional Outbox Pattern & Idempotency
+
+Ensures reliable and consistent event sourcing:
+
+- Prevents duplicate events and ensures successful message delivery using Hangfire for email notifications.
+
+### Additional Design Patterns
+
+- **Decorator Pattern**: Enhances object functionality dynamically.
+- **Factory Pattern**: Centralizes object creation logic.
+- **Singleton Pattern**: Managed through .NET Dependency Injection.
+
+---
+
+## Continuous Integration and Deployment (CI/CD)
+
+The project includes a CI/CD pipeline configured for deployment on Azure App Service. Use it as a reference for deploying your applications to Azure.
+
+---
+
+## How to Run the Application (Development Environment)
+
+### Step 1: Run Docker Compose
+
+Run the following command to start the required services. Ensure the correct path for the Docker Compose file based on your current working directory:
+
+```sh
+docker-compose -f deploy/docker-compose.development.yml -p eventhub up -d --remove-orphans
+```
+
+### Step 2: Run Migrations (First-Time Setup)
+
+Run migrations to set up the database schema. See the "Run Migrations" section for details.
+
+### Step 3: Start the Application
+
+- **HTTP (Development Environment):** Starts the application with the Development configuration.
+- **HTTPS (Production Environment):** Starts the application with the Production configuration.
+
+---
+
+## Run Migrations
+
+Ensure you are in the `/source` directory before running these commands.
+
+### Add a New Migration
+
+Replace `<your-migration-name>` with your desired migration name:
+
+```sh
+dotnet ef migrations add <your-migration-name> --startup-project EventHub.Presentation --project EventHub.Infrastructure.Persistence --output-dir ../EventHub.Infrastructure.Persistence/Migrations
+```
+
+### Apply Migrations
+
+Run the following command to update the database schema after adding a new migration:
+
+```sh
+dotnet ef database update --startup-project EventHub.Presentation --project EventHub.Infrastructure.Persistence
+```
+
+---
+
+By adhering to robust design principles and patterns, EventHub delivers a reliable and scalable solution for event management. Explore, contribute, and make the most of this project!
+
