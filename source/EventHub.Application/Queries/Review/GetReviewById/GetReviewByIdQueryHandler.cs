@@ -21,7 +21,7 @@ public class GetReviewByIdQueryHandler : IQueryHandler<GetReviewByIdQuery, Revie
     public async Task<ReviewDto> Handle(GetReviewByIdQuery request,
         CancellationToken cancellationToken)
     {
-        Domain.Aggregates.ReviewAggregate.Review cachedReview = await _unitOfWork.CachedReviews.GetByIdAsync(request.ReviewId);
+        Domain.Aggregates.EventAggregate.Entities.Review cachedReview = await _unitOfWork.CachedReviews.GetByIdAsync(request.ReviewId);
 
         if (cachedReview == null)
         {

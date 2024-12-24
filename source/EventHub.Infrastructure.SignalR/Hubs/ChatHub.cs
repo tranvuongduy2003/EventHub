@@ -3,6 +3,7 @@ using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Application.SeedWork.DTOs.Message;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.ConversationAggregate;
+using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Persistence;

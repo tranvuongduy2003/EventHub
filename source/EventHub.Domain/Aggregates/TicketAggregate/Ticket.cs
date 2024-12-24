@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;

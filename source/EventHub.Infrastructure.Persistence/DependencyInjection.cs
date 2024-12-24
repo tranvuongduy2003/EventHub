@@ -52,12 +52,8 @@ public static class DependencyInjection
             .AddScoped<IFavouriteEventsRepository, FavouriteEventsRepository>()
             .AddScoped<IFunctionsRepository, FunctionsRepository>()
             .AddScoped<IInvitationsRepository, InvitationsRepository>()
-            .AddScoped<ILabelInEventsRepository, LabelInEventsRepository>()
-            .AddScoped<ILabelInUsersRepository, LabelInUsersRepository>()
-            .AddScoped<ILabelsRepository, LabelsRepository>()
             .AddScoped<IMessagesRepository, MessagesRepository>()
             .AddScoped<IPaymentItemsRepository, PaymentItemsRepository>()
-            .AddScoped<IPaymentMethodsRepository, PaymentMethodsRepository>()
             .AddScoped<IPaymentsRepository, PaymentsRepository>()
             .AddScoped<IPermissionsRepository, PermissionsRepository>()
             .AddScoped<IReasonsRepository, ReasonsRepository>()
@@ -65,15 +61,12 @@ public static class DependencyInjection
             .AddScoped<ITicketsRepository, TicketsRepository>()
             .AddScoped<ITicketTypesRepository, TicketTypesRepository>()
             .AddScoped<IUserFollowersRepository, UserFollowersRepository>()
-            .AddScoped<IUserPaymentMethodsRepository, UserPaymentMethodsRepository>();
+            .AddScoped<ICouponsRepository, CouponsRepository>();
 
         services
             .AddScoped<ICachedCategoriesRepository, CachedCategoriesRepository>()
             .AddScoped<ICachedEventsRepository, CachedEventsRepository>()
-            .AddScoped<ICachedEventSubImagesRepository, CachedEventSubImagesRepository>()
-            .AddScoped<ICachedReasonsRepository, CachedReasonsRepository>()
-            .AddScoped<ICachedReviewsRepository, CachedReviewsRepository>()
-            .AddScoped<ICachedTicketTypesRepository, CachedTicketTypesRepository>();
+            .AddScoped<ICachedReviewsRepository, CachedReviewsRepository>();
 
         return services;
     }

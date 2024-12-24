@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using EventHub.Application.SeedWork.DTOs.Category;
+using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Shared.Enums.Event;
 using Swashbuckle.AspNetCore.Annotations;
@@ -67,9 +68,15 @@ public class EventDetailDto
 
     [SwaggerSchema("List of ticket types available for the event")]
     public List<TicketTypeDto> TicketTypes { get; set; } = new();
+    
+    [SwaggerSchema("List of coupons available for the event")]
+    public List<EventCouponDto> Coupons { get; set; } = new();
 
     [SwaggerSchema("Email content related to the event")]
     public EmailContentDto EmailContent { get; set; }
+
+    [SwaggerSchema("Current user favourite event or not")]
+    public bool IsFavourited { get; set; } = false;
 
     [SwaggerSchema("Author of the event")] public AuthorDto Author { get; set; }
 

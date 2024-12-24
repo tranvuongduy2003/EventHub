@@ -13,7 +13,9 @@ public sealed class EventMapper
     {
         config.CreateMap<Event, EventDto>()
             .ForMember(dest => dest.Categories, options =>
-                options.MapFrom(source => source.EventCategories.Select(category => category.Category)));
+                options.MapFrom(source => source.EventCategories.Select(x => x.Category)))
+            .ForMember(dest => dest.Coupons, options =>
+                options.MapFrom(source => source.EventCoupons.Select(x => x.Coupon)));
 
         config.CreateMap<Pagination<Event>, Pagination<EventDto>>()
             .ForMember(dest => dest.Items, options =>
@@ -27,7 +29,9 @@ public sealed class EventMapper
             .ForMember(dest => dest.Reasons, options =>
                 options.MapFrom(source => source.Reasons.Select(reason => reason.Name)))
             .ForMember(dest => dest.Categories, options =>
-                options.MapFrom(source => source.EventCategories.Select(category => category.Category)));
+                options.MapFrom(source => source.EventCategories.Select(category => category.Category)))
+            .ForMember(dest => dest.Coupons, options =>
+                options.MapFrom(source => source.EventCoupons.Select(x => x.Coupon)));
 
         config.CreateMap<CreateEventCommand, CreateEventDto>().ReverseMap();
 

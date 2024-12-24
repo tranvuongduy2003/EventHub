@@ -2,6 +2,7 @@ using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;

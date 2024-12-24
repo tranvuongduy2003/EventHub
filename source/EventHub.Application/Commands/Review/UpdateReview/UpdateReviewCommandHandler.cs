@@ -15,7 +15,7 @@ public class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
 
     public async Task Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.ReviewAggregate.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
+        Domain.Aggregates.EventAggregate.Entities.Review review = await _unitOfWork.Reviews.GetByIdAsync(request.Id);
         if (review is null)
         {
             throw new NotFoundException("Review does not exist!");

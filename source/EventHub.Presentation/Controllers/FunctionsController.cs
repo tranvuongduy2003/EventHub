@@ -4,7 +4,7 @@ using EventHub.Application.Commands.Function.UpdateFunction;
 using EventHub.Application.Commands.Permission.DisableCommandInFunction;
 using EventHub.Application.Commands.Permission.EnableCommandInFunction;
 using EventHub.Application.Queries.Function.GetFunctionById;
-using EventHub.Application.Queries.Function.GetFuntions;
+using EventHub.Application.Queries.Function.GetFunctions;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Function;
 using EventHub.Application.SeedWork.Exceptions;

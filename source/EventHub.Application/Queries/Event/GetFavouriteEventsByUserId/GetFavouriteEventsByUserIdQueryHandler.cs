@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
@@ -41,7 +42,9 @@ public class
                 request.Filter,
                 query => query
                     .Include(x => x.EventCategories)
-                    .ThenInclude(x => x.Category)
+                        .ThenInclude(x => x.Category)
+                    .Include(x => x.EventCoupons)
+                        .ThenInclude(x => x.Coupon)
                     .Join(
                         favouriteEvents,
                         _event => _event.Id,

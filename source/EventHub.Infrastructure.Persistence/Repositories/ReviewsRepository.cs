@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Aggregates.ReviewAggregate;
+﻿using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Repositories;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Infrastructure.Persistence.SeedWork.Repository;

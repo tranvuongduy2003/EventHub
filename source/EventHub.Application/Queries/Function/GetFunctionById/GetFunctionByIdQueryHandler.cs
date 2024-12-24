@@ -20,7 +20,7 @@ public class GetFunctionByIdQueryHandler : IQueryHandler<GetFunctionByIdQuery, F
         CancellationToken cancellationToken)
     {
 
-        Domain.Aggregates.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
+        Domain.Aggregates.UserAggregate.Entities.Function function = await _unitOfWork.Functions.GetByIdAsync(request.Id);
         
         return _mapper.Map<FunctionDto>(function);
     }

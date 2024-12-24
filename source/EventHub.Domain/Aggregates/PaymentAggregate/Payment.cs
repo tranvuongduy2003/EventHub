@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
@@ -48,9 +49,6 @@ public class Payment : AggregateRoot, IAuditable
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required EPaymentStatus Status { get; set; } = EPaymentStatus.PENDING;
 
-    [Required] 
-    public required Guid UserPaymentMethodId { get; set; } = Guid.Empty;
-
     public Guid? PaymentSessionId { get; set; } = Guid.Empty;
     
     [Required] 
@@ -66,10 +64,6 @@ public class Payment : AggregateRoot, IAuditable
     [ForeignKey("EventId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual Event Event { get; set; } = null!;
-
-    [ForeignKey("UserPaymentMethodId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual UserPaymentMethod UserPaymentMethod { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 

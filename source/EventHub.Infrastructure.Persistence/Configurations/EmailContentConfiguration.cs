@@ -1,4 +1,5 @@
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,11 +11,6 @@ public class EmailContentConfiguration: IEntityTypeConfiguration<EmailContent>
     {
         builder
             .HasMany(x => x.EmailAttachments)
-            .WithOne(x => x.EmailContent)
-            .HasForeignKey(x => x.EmailContentId);
-        
-        builder
-            .HasMany(x => x.EmailLoggers)
             .WithOne(x => x.EmailContent)
             .HasForeignKey(x => x.EmailContentId);
     }

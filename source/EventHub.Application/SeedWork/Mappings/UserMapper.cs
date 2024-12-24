@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.SeedWork.Mappings;

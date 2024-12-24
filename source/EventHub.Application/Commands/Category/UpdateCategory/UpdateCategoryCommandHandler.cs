@@ -20,7 +20,7 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
 
     public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.CategoryAggregate.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
+        Domain.Aggregates.EventAggregate.Entities.Category category = await _unitOfWork.Categories.GetByIdAsync(request.Id);
         if (category is null)
         {
             throw new NotFoundException("Category does not exist!");

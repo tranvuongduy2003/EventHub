@@ -2,6 +2,7 @@ using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

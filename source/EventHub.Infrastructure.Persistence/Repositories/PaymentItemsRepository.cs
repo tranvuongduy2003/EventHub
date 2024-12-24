@@ -1,4 +1,5 @@
 ﻿using EventHub.Domain.Aggregates.PaymentAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Repositories;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Infrastructure.Persistence.SeedWork.Repository;

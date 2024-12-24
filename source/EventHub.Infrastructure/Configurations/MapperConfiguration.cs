@@ -20,6 +20,7 @@ public static class MapperConfiguration
                 ReviewMapper.CreateMap(config);
                 UserMapper.CreateMap(config);
                 PermissionMapper.CreateMap(config);
+                CouponMapper.CreateMap(config);
             });
         return services;
     }

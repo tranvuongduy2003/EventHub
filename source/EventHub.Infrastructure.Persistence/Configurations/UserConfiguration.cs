@@ -24,11 +24,6 @@ public sealed class UserConfiguration: IEntityTypeConfiguration<User>
             .HasForeignKey(x => x.AuthorId);
         
         builder
-            .HasMany(x => x.UserPaymentMethods)
-            .WithOne(x => x.Author)
-            .HasForeignKey(x => x.AuthorId);
-        
-        builder
             .HasMany(x => x.UserConversations)
             .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId);

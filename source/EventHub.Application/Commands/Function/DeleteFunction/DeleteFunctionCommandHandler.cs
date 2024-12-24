@@ -15,7 +15,7 @@ public class DeleteFunctionCommandHandler : ICommandHandler<DeleteFunctionComman
 
     public async Task Handle(DeleteFunctionCommand request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.PermissionAggregate.Function function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
+        Domain.Aggregates.UserAggregate.Entities.Function function = await _unitOfWork.Functions.GetByIdAsync(request.FunctionId);
         if (function is null)
         {
             throw new NotFoundException("Function does not exist!");

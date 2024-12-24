@@ -1,4 +1,5 @@
 ﻿using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;

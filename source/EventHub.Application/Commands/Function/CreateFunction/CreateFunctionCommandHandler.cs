@@ -26,7 +26,7 @@ public class CreateFunctionCommandHandler : ICommandHandler<CreateFunctionComman
             throw new NotFoundException("ParentId does not exist!");
         }
 
-        var function = new Domain.Aggregates.PermissionAggregate.Function()
+        var function = new Domain.Aggregates.UserAggregate.Entities.Function()
         {
             Name = request.Name,
             Url = request.Url,

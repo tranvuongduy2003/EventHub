@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using EventHub.Application.SeedWork.DTOs.Category;
+using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Shared.Enums.Event;
 using Swashbuckle.AspNetCore.Annotations;
@@ -61,6 +62,8 @@ public class EventDto
 
     [SwaggerSchema("Categories associated with the event")]
     public List<CategoryDto> Categories { get; set; }
+    
+    public List<EventCouponDto> Coupons { get; set; }
 
     [SwaggerSchema("The date and time when the event was created (UTC)")]
     public DateTime CreatedAt { get; set; }

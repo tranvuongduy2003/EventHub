@@ -37,7 +37,9 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
                 request.Filter,
                 query => query
                     .Include(x => x.EventCategories)
-                    .ThenInclude(x => x.Category));
+                        .ThenInclude(x => x.Category)
+                    .Include(x => x.EventCoupons)
+                        .ThenInclude(x => x.Coupon));
 
         Pagination<EventDto> paginatedEventDtos = _mapper.Map<Pagination<EventDto>>(paginatedEvents);
 

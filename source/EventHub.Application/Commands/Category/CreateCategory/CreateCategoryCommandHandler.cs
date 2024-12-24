@@ -30,7 +30,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
             throw new BadRequestException("Category name already exists!");
         }
 
-        var category = new Domain.Aggregates.CategoryAggregate.Category
+        var category = new Domain.Aggregates.EventAggregate.Entities.Category
         {
             Color = request.Color,
             Name = request.Name,

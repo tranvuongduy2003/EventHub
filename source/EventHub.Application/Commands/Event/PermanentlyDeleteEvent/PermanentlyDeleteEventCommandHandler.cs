@@ -1,6 +1,8 @@
 ﻿using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.Shared.Constants;

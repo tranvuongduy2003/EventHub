@@ -1,6 +1,6 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Command;
-using EventHub.Domain.Aggregates.PermissionAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.EntityFrameworkCore;

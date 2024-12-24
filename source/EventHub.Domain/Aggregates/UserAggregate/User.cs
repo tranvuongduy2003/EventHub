@@ -2,11 +2,15 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using EventHub.Domain.Aggregates.ConversationAggregate;
+using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate;
-using EventHub.Domain.Aggregates.LabelAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.PaymentAggregate;
-using EventHub.Domain.Aggregates.ReviewAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.DomainEvent;
@@ -59,8 +63,6 @@ public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDele
 
     public DateTime? DeletedAt { get; set; }
 
-    public virtual ICollection<LabelInUser> LabelInUsers { get; set; } = new List<LabelInUser>();
-
     public virtual ICollection<UserFollower> Followers { get; set; } = new List<UserFollower>();
     public virtual ICollection<UserFollower> Followeds { get; set; } = new List<UserFollower>();
 
@@ -83,9 +85,7 @@ public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDele
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
-
-    public virtual ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = new List<UserPaymentMethod>();
-
+    
     public virtual ICollection<Role>? Roles { get; set; } = null!;
     
     public void FollowUser(Guid followerId, Guid followedUserId)

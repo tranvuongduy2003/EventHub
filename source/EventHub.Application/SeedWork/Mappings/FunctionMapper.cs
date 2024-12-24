@@ -1,6 +1,6 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Function;
-using EventHub.Domain.Aggregates.PermissionAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 
 namespace EventHub.Application.SeedWork.Mappings;
 

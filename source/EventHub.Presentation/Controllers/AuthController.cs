@@ -7,7 +7,7 @@ using EventHub.Application.Commands.Auth.SignIn;
 using EventHub.Application.Commands.Auth.SignOut;
 using EventHub.Application.Commands.Auth.SignUp;
 using EventHub.Application.Commands.Auth.ValidateUser;
-using EventHub.Application.Queries.Auth.GetUserProfile;
+using EventHub.Application.Queries.User.GetUserProfile;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Auth;
 using EventHub.Application.SeedWork.DTOs.User;
@@ -293,33 +293,6 @@ public class AuthController : ControllerBase
         catch (BadRequestException e)
         {
             return BadRequest(new BadRequestException(e.Message));
-        }
-    }
-
-    [HttpGet("profile")]
-    [SwaggerOperation(
-        Summary = "Retrieve user profile",
-        Description = "Fetches the details of the currently authenticated user."
-    )]
-    [SwaggerResponse(200, "User profile retrieved successfully", typeof(UserDto))]
-    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
-    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
-    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetUserProfile()
-    {
-        _logger.LogInformation("START: GetUserProfile");
-        try
-        {
-            UserDto user = await _mediator.Send(new GetUserProfileQuery());
-
-            _logger.LogInformation("END: GetUserProfile");
-
-            return Ok(new ApiOkResponse(user));
-        }
-        catch (UnauthorizedException e)
-        {
-            return Unauthorized(new ApiUnauthorizedResponse(e.Message));
         }
     }
 }

@@ -22,53 +22,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.CategoryAggregate.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("IconImageFileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("IconImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Conversation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,7 +68,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("Conversations");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Message", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Entities.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,10 +131,13 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EmailLoggerAggregate.EmailLogger", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.CouponAggregate.Coupon", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -190,70 +146,114 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmailContentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReceiverEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<long>("MinPrice")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("SentEmail")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("PercentValue")
+                        .HasColumnType("real");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailContentId");
+                    b.HasIndex("AuthorId");
 
-                    b.ToTable("EmailLoggers");
+                    b.ToTable("Coupons");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EmailAttachment", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.CouponAggregate.ValueObjects.EventCoupon", b =>
+                {
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CouponId", "EventId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventCoupons");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AttachmentFileName")
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IconImageFileName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("AttachmentUrl")
+                    b.Property<string>("IconImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EmailContentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmailContentId");
+                    b.HasIndex("EventId");
 
-                    b.ToTable("EmailAttachments");
+                    b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EmailContent", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.EmailContent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -285,6 +285,158 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("EmailContents");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.EventSubImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventSubImages");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Reason", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Reasons");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Rate")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.TicketType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("NumberOfSoldTickets")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("TicketTypes");
                 });
 
             modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Event", b =>
@@ -369,7 +521,44 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EventCategory", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.EmailAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttachmentFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("AttachmentUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EmailContentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmailContentId");
+
+                    b.ToTable("EmailAttachments");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.EventCategory", b =>
                 {
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
@@ -396,44 +585,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("EventCategories");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EventSubImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImageFileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("EventSubImages");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.FavouriteEvent", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.FavouriteEvent", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -460,235 +612,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("FavouriteEvents");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Reason", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Reasons");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.TicketType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("NumberOfSoldTickets")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("TicketTypes");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.Label", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Labels");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.LabelInEvent", b =>
-                {
-                    b.Property<Guid>("LabelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("LabelId", "EventId");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("LabelInEvents");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.LabelInUser", b =>
-                {
-                    b.Property<Guid>("LabelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LabelId", "AuthorId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("LabelInUsers");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("CustomerPhone")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("PaymentSessionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TicketQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<long>("TotalPrice")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserPaymentMethodId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("UserPaymentMethodId");
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.PaymentItem", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Entities.PaymentItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -745,196 +669,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("PaymentItems");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.PaymentMethod", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MethodLogoFileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("MethodLogoUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MethodName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PaymentMethods");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Command", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Commands");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.CommandInFunction", b =>
-                {
-                    b.Property<string>("CommandId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("FunctionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("CommandId", "FunctionId");
-
-                    b.HasIndex("FunctionId");
-
-                    b.ToTable("CommandInFunctions");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Function", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ParentId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Functions");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Permission", b =>
-                {
-                    b.Property<string>("FunctionId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CommandId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("FunctionId", "RoleId", "CommandId");
-
-                    b.HasIndex("CommandId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.PermissionAggregateRoot", b =>
-                {
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.ToTable("PermissionAggregates");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.ReviewAggregate.Review", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -943,15 +678,29 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CustomerPhone")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
@@ -959,8 +708,17 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Rate")
-                        .HasColumnType("float");
+                    b.Property<Guid?>("PaymentSessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<long>("TotalPrice")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -971,7 +729,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("EventHub.Domain.Aggregates.TicketAggregate.Ticket", b =>
@@ -1043,16 +801,12 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Invitation", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Command", b =>
                 {
-                    b.Property<Guid>("InviterId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvitedId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1063,19 +817,63 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("InviterId", "InvitedId", "EventId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("InvitedId");
-
-                    b.ToTable("Invitations");
+                    b.ToTable("Commands");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Role", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ParentId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Functions");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1234,7 +1032,102 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.UserFollower", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.CommandInFunction", b =>
+                {
+                    b.Property<string>("CommandId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("FunctionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CommandId", "FunctionId");
+
+                    b.HasIndex("FunctionId");
+
+                    b.ToTable("CommandInFunctions");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.Invitation", b =>
+                {
+                    b.Property<Guid>("InviterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InvitedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("InviterId", "InvitedId", "EventId");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("InvitedId");
+
+                    b.ToTable("Invitations");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.Permission", b =>
+                {
+                    b.Property<string>("FunctionId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CommandId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FunctionId", "RoleId", "CommandId");
+
+                    b.HasIndex("CommandId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.UserFollower", b =>
                 {
                     b.Property<Guid>("FollowerId")
                         .HasColumnType("uniqueidentifier");
@@ -1259,55 +1152,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.HasIndex("FollowedId");
 
                     b.ToTable("UserFollowers");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.UserPaymentMethod", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CheckoutContent")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PaymentAccountNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PaymentAccountQrCodeFileName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("PaymentAccountQrCodeUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PaymentMethodId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.ToTable("UserPaymentMethods");
                 });
 
             modelBuilder.Entity("EventHub.Infrastructure.Persistence.Outbox.OutboxMessage", b =>
@@ -1456,13 +1300,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.CategoryAggregate.Category", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("EventId");
-                });
-
             modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Conversation", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
@@ -1475,7 +1312,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .HasForeignKey("HostId")
                         .IsRequired();
 
-                    b.HasOne("EventHub.Domain.Aggregates.ConversationAggregate.Message", "LastMessage")
+                    b.HasOne("EventHub.Domain.Aggregates.ConversationAggregate.Entities.Message", "LastMessage")
                         .WithMany()
                         .HasForeignKey("LastMessageId");
 
@@ -1493,7 +1330,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Message", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Entities.Message", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
                         .WithMany("Messages")
@@ -1518,32 +1355,97 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EmailLoggerAggregate.EmailLogger", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.CouponAggregate.Coupon", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.EmailContent", "EmailContent")
-                        .WithMany("EmailLoggers")
-                        .HasForeignKey("EmailContentId")
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
                         .IsRequired();
 
-                    b.Navigation("EmailContent");
+                    b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EmailAttachment", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.CouponAggregate.ValueObjects.EventCoupon", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.EmailContent", "EmailContent")
-                        .WithMany("EmailAttachments")
-                        .HasForeignKey("EmailContentId")
+                    b.HasOne("EventHub.Domain.Aggregates.CouponAggregate.Coupon", "Coupon")
+                        .WithMany("EventCoupons")
+                        .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EmailContent");
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
+                        .WithMany("EventCoupons")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coupon");
+
+                    b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EmailContent", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Category", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("EventId");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.EmailContent", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
                         .WithOne("EmailContent")
-                        .HasForeignKey("EventHub.Domain.Aggregates.EventAggregate.EmailContent", "EventId")
+                        .HasForeignKey("EventHub.Domain.Aggregates.EventAggregate.Entities.EmailContent", "EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.EventSubImage", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
+                        .WithMany("EventSubImages")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Reason", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
+                        .WithMany("Reasons")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Review", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
+                        .WithMany("Reviews")
+                        .HasForeignKey("AuthorId")
+                        .IsRequired();
+
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
+                        .WithMany("Reviews")
+                        .HasForeignKey("EventId")
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.TicketType", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
+                        .WithMany("TicketTypes")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1560,9 +1462,20 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EventCategory", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.EmailAttachment", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.CategoryAggregate.Category", "Category")
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Entities.EmailContent", "EmailContent")
+                        .WithMany("EmailAttachments")
+                        .HasForeignKey("EmailContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EmailContent");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.EventCategory", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Entities.Category", "Category")
                         .WithMany("EventCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1579,18 +1492,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EventSubImage", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("EventSubImages")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.FavouriteEvent", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.ValueObjects.FavouriteEvent", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
                         .WithMany("FavouriteEvents")
@@ -1609,87 +1511,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Reason", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("Reasons")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.TicketType", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("TicketTypes")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.LabelInEvent", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("LabelInEvents")
-                        .HasForeignKey("EventId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.LabelAggregate.Label", "Label")
-                        .WithMany("LabelInEvents")
-                        .HasForeignKey("LabelId")
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Label");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.LabelInUser", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.LabelAggregate.Label", "Label")
-                        .WithMany("LabelInUsers")
-                        .HasForeignKey("LabelId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "User")
-                        .WithMany("LabelInUsers")
-                        .HasForeignKey("UserId")
-                        .IsRequired();
-
-                    b.Navigation("Label");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Payment", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
-                        .WithMany("Payments")
-                        .HasForeignKey("AuthorId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("Payments")
-                        .HasForeignKey("EventId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.UserPaymentMethod", "UserPaymentMethod")
-                        .WithMany("Payments")
-                        .HasForeignKey("UserPaymentMethodId")
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Event");
-
-                    b.Navigation("UserPaymentMethod");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.PaymentItem", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Entities.PaymentItem", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", null)
                         .WithMany("PaymentItems")
@@ -1700,7 +1522,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .HasForeignKey("PaymentId")
                         .IsRequired();
 
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.TicketType", "TicketType")
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Entities.TicketType", "TicketType")
                         .WithMany("PaymentItems")
                         .HasForeignKey("TicketTypeId")
                         .IsRequired();
@@ -1714,65 +1536,15 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("TicketType");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.CommandInFunction", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.PermissionAggregate.Command", "Command")
-                        .WithMany("CommandInFunctions")
-                        .HasForeignKey("CommandId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.PermissionAggregate.Function", "Function")
-                        .WithMany("CommandInFunctions")
-                        .HasForeignKey("FunctionId")
-                        .IsRequired();
-
-                    b.Navigation("Command");
-
-                    b.Navigation("Function");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Function", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.PermissionAggregate.Function", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Permission", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.PermissionAggregate.Command", "Command")
-                        .WithMany("Permissions")
-                        .HasForeignKey("CommandId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.PermissionAggregate.Function", "Function")
-                        .WithMany("Permissions")
-                        .HasForeignKey("FunctionId")
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Role", "Role")
-                        .WithMany("Permissions")
-                        .HasForeignKey("RoleId")
-                        .IsRequired();
-
-                    b.Navigation("Command");
-
-                    b.Navigation("Function");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.ReviewAggregate.Review", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Payment", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
-                        .WithMany("Reviews")
+                        .WithMany("Payments")
                         .HasForeignKey("AuthorId")
                         .IsRequired();
 
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
-                        .WithMany("Reviews")
+                        .WithMany("Payments")
                         .HasForeignKey("EventId")
                         .IsRequired();
 
@@ -1793,7 +1565,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .HasForeignKey("PaymentId")
                         .IsRequired();
 
-                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.TicketType", "TicketType")
+                    b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Entities.TicketType", "TicketType")
                         .WithMany("Tickets")
                         .HasForeignKey("TicketTypeId")
                         .IsRequired();
@@ -1812,7 +1584,40 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Invitation", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.CommandInFunction", b =>
+                {
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Command", "Command")
+                        .WithMany("CommandInFunctions")
+                        .HasForeignKey("CommandId")
+                        .IsRequired();
+
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", "Function")
+                        .WithMany("CommandInFunctions")
+                        .HasForeignKey("FunctionId")
+                        .IsRequired();
+
+                    b.Navigation("Command");
+
+                    b.Navigation("Function");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.Invitation", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
                         .WithMany("Invitations")
@@ -1836,14 +1641,31 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Inviter");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Role", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.Permission", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId");
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Command", "Command")
+                        .WithMany("Permissions")
+                        .HasForeignKey("CommandId")
+                        .IsRequired();
+
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", "Function")
+                        .WithMany("Permissions")
+                        .HasForeignKey("FunctionId")
+                        .IsRequired();
+
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", "Role")
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId")
+                        .IsRequired();
+
+                    b.Navigation("Command");
+
+                    b.Navigation("Function");
+
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.UserFollower", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.ValueObjects.UserFollower", b =>
                 {
                     b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Followed")
                         .WithMany("Followeds")
@@ -1860,28 +1682,9 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Follower");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.UserPaymentMethod", b =>
-                {
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.User", "Author")
-                        .WithMany("UserPaymentMethods")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EventHub.Domain.Aggregates.PaymentAggregate.PaymentMethod", "PaymentMethod")
-                        .WithMany("UserPaymentMethods")
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("PaymentMethod");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Role", null)
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1908,7 +1711,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Role", null)
+                    b.HasOne("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1930,21 +1733,31 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.CategoryAggregate.Category", b =>
-                {
-                    b.Navigation("EventCategories");
-                });
-
             modelBuilder.Entity("EventHub.Domain.Aggregates.ConversationAggregate.Conversation", b =>
                 {
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.EmailContent", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.CouponAggregate.Coupon", b =>
+                {
+                    b.Navigation("EventCoupons");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.Category", b =>
+                {
+                    b.Navigation("EventCategories");
+                });
+
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.EmailContent", b =>
                 {
                     b.Navigation("EmailAttachments");
+                });
 
-                    b.Navigation("EmailLoggers");
+            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Entities.TicketType", b =>
+                {
+                    b.Navigation("PaymentItems");
+
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.Event", b =>
@@ -1957,13 +1770,13 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
                     b.Navigation("EventCategories");
 
+                    b.Navigation("EventCoupons");
+
                     b.Navigation("EventSubImages");
 
                     b.Navigation("FavouriteEvents");
 
                     b.Navigation("Invitations");
-
-                    b.Navigation("LabelInEvents");
 
                     b.Navigation("Messages");
 
@@ -1980,20 +1793,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.EventAggregate.TicketType", b =>
-                {
-                    b.Navigation("PaymentItems");
-
-                    b.Navigation("Tickets");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.LabelAggregate.Label", b =>
-                {
-                    b.Navigation("LabelInEvents");
-
-                    b.Navigation("LabelInUsers");
-                });
-
             modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.Payment", b =>
                 {
                     b.Navigation("PaymentItems");
@@ -2001,26 +1800,21 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PaymentAggregate.PaymentMethod", b =>
-                {
-                    b.Navigation("UserPaymentMethods");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Command", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Command", b =>
                 {
                     b.Navigation("CommandInFunctions");
 
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.PermissionAggregate.Function", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Function", b =>
                 {
                     b.Navigation("CommandInFunctions");
 
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Role", b =>
+            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.Entities.Role", b =>
                 {
                     b.Navigation("Permissions");
                 });
@@ -2041,8 +1835,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
                     b.Navigation("Inviters");
 
-                    b.Navigation("LabelInUsers");
-
                     b.Navigation("Messages");
 
                     b.Navigation("PaymentItems");
@@ -2056,13 +1848,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Navigation("Tickets");
 
                     b.Navigation("UserConversations");
-
-                    b.Navigation("UserPaymentMethods");
-                });
-
-            modelBuilder.Entity("EventHub.Domain.Aggregates.UserAggregate.UserPaymentMethod", b =>
-                {
-                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

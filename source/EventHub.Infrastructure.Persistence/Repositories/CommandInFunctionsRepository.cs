@@ -1,4 +1,4 @@
-﻿using EventHub.Domain.Aggregates.PermissionAggregate;
+﻿using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.Repositories;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Infrastructure.Persistence.SeedWork.Repository;

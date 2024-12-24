@@ -3,6 +3,7 @@ using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 

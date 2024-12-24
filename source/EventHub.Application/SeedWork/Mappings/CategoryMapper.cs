@@ -1,6 +1,6 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Category;
-using EventHub.Domain.Aggregates.CategoryAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.SeedWork.Mappings;

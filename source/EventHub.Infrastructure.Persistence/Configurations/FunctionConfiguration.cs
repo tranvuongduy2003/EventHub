@@ -1,4 +1,4 @@
-using EventHub.Domain.Aggregates.PermissionAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

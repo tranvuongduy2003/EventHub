@@ -101,21 +101,6 @@ public interface IUnitOfWork : IDisposable
     IInvitationsRepository Invitations { get; }
 
     /// <summary>
-    /// Gets the repository for managing labels in events.
-    /// </summary>
-    ILabelInEventsRepository LabelInEvents { get; }
-
-    /// <summary>
-    /// Gets the repository for managing labels in users.
-    /// </summary>
-    ILabelInUsersRepository LabelInUsers { get; }
-
-    /// <summary>
-    /// Gets the repository for managing labels.
-    /// </summary>
-    ILabelsRepository Labels { get; }
-
-    /// <summary>
     /// Gets the repository for managing messages.
     /// </summary>
     IMessagesRepository Messages { get; }
@@ -124,11 +109,6 @@ public interface IUnitOfWork : IDisposable
     /// Gets the repository for managing payment items.
     /// </summary>
     IPaymentItemsRepository PaymentItems { get; }
-
-    /// <summary>
-    /// Gets the repository for managing payment methods.
-    /// </summary>
-    IPaymentMethodsRepository PaymentMethods { get; }
 
     /// <summary>
     /// Gets the repository for managing payments.
@@ -164,11 +144,16 @@ public interface IUnitOfWork : IDisposable
     /// Gets the repository for managing user followers.
     /// </summary>
     IUserFollowersRepository UserFollowers { get; }
-
+    
     /// <summary>
-    /// Gets the repository for managing user payment methods.
+    /// Gets the repository for managing coupons.
     /// </summary>
-    IUserPaymentMethodsRepository UserPaymentMethods { get; }
+    ICouponsRepository Coupons { get; }
+    
+    /// <summary>
+    /// Gets the repository for managing coupons.
+    /// </summary>
+    IEventCouponsRepository EventCoupons { get; }
 
     #region Caching Repository Properties
 
@@ -183,24 +168,9 @@ public interface IUnitOfWork : IDisposable
     ICachedEventsRepository CachedEvents { get; }
 
     /// <summary>
-    /// Gets the repository for managing cached event sub-images.
-    /// </summary>
-    ICachedEventSubImagesRepository CachedEventSubImages { get; }
-
-    /// <summary>
-    /// Gets the repository for managing cached reasons.
-    /// </summary>
-    ICachedReasonsRepository CachedReasons { get; }
-
-    /// <summary>
     /// Gets the repository for managing cached reviews.
     /// </summary>
     ICachedReviewsRepository CachedReviews { get; }
-
-    /// <summary>
-    /// Gets the repository for managing cached ticket types.
-    /// </summary>
-    ICachedTicketTypesRepository CachedTicketTypes { get; }
 
     #endregion
 

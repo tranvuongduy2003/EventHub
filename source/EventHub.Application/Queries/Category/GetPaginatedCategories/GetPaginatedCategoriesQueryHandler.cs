@@ -22,7 +22,7 @@ public class GetPaginatedCategoriesQueryHandler : IQueryHandler<GetPaginatedCate
     public Task<Pagination<CategoryDto>> Handle(GetPaginatedCategoriesQuery request,
         CancellationToken cancellationToken)
     {
-        Pagination<Domain.Aggregates.CategoryAggregate.Category> paginatedCategories =
+        Pagination<Domain.Aggregates.EventAggregate.Entities.Category> paginatedCategories =
             _unitOfWork.CachedCategories.PaginatedFind(
                 request.Filter,
                 query => query

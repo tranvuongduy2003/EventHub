@@ -25,7 +25,7 @@ public class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, R
     {
         var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        var review = new Domain.Aggregates.ReviewAggregate.Review
+        var review = new Domain.Aggregates.EventAggregate.Entities.Review
         {
             Rate = request.Rate,
             AuthorId = authorId,

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Serilog;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
 
 namespace EventHub.Infrastructure.Services;
 

@@ -11,6 +11,7 @@ public enum EFunctionCode
     GENERAL_TICKET,
     GENERAL_PAYMENT,
     GENERAL_CHAT,
+    GENERAL_COUPON,
 
     STATISTIC,
 

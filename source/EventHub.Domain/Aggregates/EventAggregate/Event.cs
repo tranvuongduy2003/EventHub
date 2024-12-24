@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using EventHub.Domain.Aggregates.CategoryAggregate;
 using EventHub.Domain.Aggregates.ConversationAggregate;
-using EventHub.Domain.Aggregates.LabelAggregate;
+using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
+using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.PaymentAggregate;
-using EventHub.Domain.Aggregates.ReviewAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
@@ -94,8 +97,6 @@ public class Event : AggregateRoot, IAuditable
 
     public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-    public virtual ICollection<LabelInEvent> LabelInEvents { get; set; } = new List<LabelInEvent>();
-
     public virtual ICollection<FavouriteEvent> FavouriteEvents { get; set; } = new List<FavouriteEvent>();
 
     public virtual ICollection<EventSubImage> EventSubImages { get; set; } = new List<EventSubImage>();
@@ -117,6 +118,8 @@ public class Event : AggregateRoot, IAuditable
     public virtual ICollection<PaymentItem> PaymentItems { get; set; } = new List<PaymentItem>();
 
     public virtual ICollection<Reason> Reasons { get; set; } = new List<Reason>();
+    
+    public virtual ICollection<EventCoupon> EventCoupons { get; set; } = new List<EventCoupon>();
 
     #endregion
 }

@@ -22,7 +22,7 @@ public class GetPaginatedReviewsQueryHandler : IQueryHandler<GetPaginatedReviews
     public Task<Pagination<ReviewDto>> Handle(GetPaginatedReviewsQuery request,
         CancellationToken cancellationToken)
     {
-        Pagination<Domain.Aggregates.ReviewAggregate.Review> paginatedReviews = _unitOfWork.CachedReviews
+        Pagination<Domain.Aggregates.EventAggregate.Entities.Review> paginatedReviews = _unitOfWork.CachedReviews
             .PaginatedFind(request.Filter, query => query
                 .Include(x => x.Event)
                 .Include(x => x.Author)

@@ -1,4 +1,4 @@
-using EventHub.Domain.Aggregates.CategoryAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 
 namespace EventHub.Domain.CachedRepositories;

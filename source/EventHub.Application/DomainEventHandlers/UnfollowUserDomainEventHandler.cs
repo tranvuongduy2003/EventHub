@@ -1,5 +1,6 @@
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Persistence;

@@ -34,7 +34,7 @@ public class
             throw new NotFoundException("User does not exist!");
         }
 
-        Pagination<Domain.Aggregates.ReviewAggregate.Review> paginatedReviews = _unitOfWork.CachedReviews
+        Pagination<Domain.Aggregates.EventAggregate.Entities.Review> paginatedReviews = _unitOfWork.CachedReviews
             .PaginatedFindByCondition(x => x.AuthorId == request.UserId, request.Filter, query => query
                 .Include(x => x.Event)
                 .Include(x => x.Author)

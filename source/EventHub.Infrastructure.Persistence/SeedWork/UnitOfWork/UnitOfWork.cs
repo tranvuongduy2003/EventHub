@@ -24,10 +24,7 @@ public class UnitOfWork : IUnitOfWork
 
     private CachedCategoriesRepository _cachedCategories;
     private CachedEventsRepository _cachedEvents;
-    private CachedEventSubImagesRepository _cachedEventSubImages;
-    private CachedReasonsRepository _cachedReasons;
     private CachedReviewsRepository _cachedReviews;
-    private CachedTicketTypesRepository _cachedTicketTypes;
 
     private CategoriesRepository _categories;
     private CommandInFunctionsRepository _commandInFunctions;
@@ -42,12 +39,8 @@ public class UnitOfWork : IUnitOfWork
     private FavouriteEventsRepository _favouriteEvents;
     private FunctionsRepository _functions;
     private InvitationsRepository _invitations;
-    private LabelInEventsRepository _labelInEvents;
-    private LabelInUsersRepository _labelInUsers;
-    private LabelsRepository _labels;
     private MessagesRepository _messages;
     private PaymentItemsRepository _paymentItems;
-    private PaymentMethodsRepository _paymentMethods;
     private PaymentsRepository _payments;
     private PermissionsRepository _permissions;
     private ReasonsRepository _reasons;
@@ -55,7 +48,8 @@ public class UnitOfWork : IUnitOfWork
     private TicketsRepository _tickets;
     private TicketTypesRepository _ticketTypes;
     private UserFollowersRepository _userFollowers;
-    private UserPaymentMethodsRepository _userPaymentMethods;
+    private CouponsRepository _coupons;
+    private EventCouponsRepository _eventCoupons;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -176,33 +170,6 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public ILabelInEventsRepository LabelInEvents
-    {
-        get
-        {
-            _labelInEvents ??= new LabelInEventsRepository(_context);
-            return _labelInEvents;
-        }
-    }
-
-    public ILabelInUsersRepository LabelInUsers
-    {
-        get
-        {
-            _labelInUsers ??= new LabelInUsersRepository(_context);
-            return _labelInUsers;
-        }
-    }
-
-    public ILabelsRepository Labels
-    {
-        get
-        {
-            _labels ??= new LabelsRepository(_context);
-            return _labels;
-        }
-    }
-
     public IMessagesRepository Messages
     {
         get
@@ -218,15 +185,6 @@ public class UnitOfWork : IUnitOfWork
         {
             _paymentItems ??= new PaymentItemsRepository(_context);
             return _paymentItems;
-        }
-    }
-
-    public IPaymentMethodsRepository PaymentMethods
-    {
-        get
-        {
-            _paymentMethods ??= new PaymentMethodsRepository(_context);
-            return _paymentMethods;
         }
     }
 
@@ -292,13 +250,22 @@ public class UnitOfWork : IUnitOfWork
             return _userFollowers;
         }
     }
-
-    public IUserPaymentMethodsRepository UserPaymentMethods
+    
+    public ICouponsRepository Coupons
     {
         get
         {
-            _userPaymentMethods ??= new UserPaymentMethodsRepository(_context);
-            return _userPaymentMethods;
+            _coupons ??= new CouponsRepository(_context);
+            return _coupons;
+        }
+    }
+    
+    public IEventCouponsRepository EventCoupons
+    {
+        get
+        {
+            _eventCoupons ??= new EventCouponsRepository(_context);
+            return _eventCoupons;
         }
     }
 
@@ -323,27 +290,6 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public ICachedEventSubImagesRepository CachedEventSubImages
-    {
-        get
-        {
-            _eventSubImages ??= new EventSubImagesRepository(_context);
-            _cachedEventSubImages ??=
-                new CachedEventSubImagesRepository(_context, _eventSubImages, _cacheService);
-            return _cachedEventSubImages;
-        }
-    }
-
-    public ICachedReasonsRepository CachedReasons
-    {
-        get
-        {
-            _reasons ??= new ReasonsRepository(_context);
-            _cachedReasons ??= new CachedReasonsRepository(_context, _reasons, _cacheService);
-            return _cachedReasons;
-        }
-    }
-
     public ICachedReviewsRepository CachedReviews
     {
         get
@@ -351,17 +297,6 @@ public class UnitOfWork : IUnitOfWork
             _reviews ??= new ReviewsRepository(_context);
             _cachedReviews ??= new CachedReviewsRepository(_context, _reviews, _cacheService);
             return _cachedReviews;
-        }
-    }
-
-    public ICachedTicketTypesRepository CachedTicketTypes
-    {
-        get
-        {
-            _ticketTypes ??= new TicketTypesRepository(_context);
-            _cachedTicketTypes ??=
-                new CachedTicketTypesRepository(_context, _ticketTypes, _cacheService);
-            return _cachedTicketTypes;
         }
     }
 

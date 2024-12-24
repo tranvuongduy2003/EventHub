@@ -1,13 +1,16 @@
-﻿using EventHub.Domain.Aggregates.CategoryAggregate;
-using EventHub.Domain.Aggregates.ConversationAggregate;
-using EventHub.Domain.Aggregates.EmailLoggerAggregate;
+﻿using EventHub.Domain.Aggregates.ConversationAggregate;
+using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
+using EventHub.Domain.Aggregates.CouponAggregate;
+using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.EventAggregate;
-using EventHub.Domain.Aggregates.LabelAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.PaymentAggregate;
-using EventHub.Domain.Aggregates.PermissionAggregate;
-using EventHub.Domain.Aggregates.ReviewAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Infrastructure.Persistence.Outbox;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +32,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 
     #endregion
 
-    #region EmailLoggerAggregate
-
-    public DbSet<EmailLogger> EmailLoggers { set; get; }
-
-    #endregion
-
     #region EventAggregate
 
     public DbSet<EmailAttachment> EmailAttachments { set; get; }
@@ -48,19 +45,10 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 
     #endregion
 
-    #region LabelAggregate
-
-    public DbSet<Label> Labels { set; get; }
-    public DbSet<LabelInEvent> LabelInEvents { set; get; }
-    public DbSet<LabelInUser> LabelInUsers { set; get; }
-
-    #endregion
-
     #region PaymentAggregate
 
     public DbSet<Payment> Payments { set; get; }
     public DbSet<PaymentItem> PaymentItems { get; set; }
-    public DbSet<PaymentMethod> PaymentMethods { get; set; }
 
     #endregion
 
@@ -70,7 +58,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<CommandInFunction> CommandInFunctions { set; get; }
     public DbSet<Function> Functions { set; get; }
     public DbSet<Permission> Permissions { set; get; }
-    public DbSet<PermissionAggregateRoot> PermissionAggregates { set; get; }
 
     #endregion
 
@@ -92,8 +79,6 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public override DbSet<Role> Roles { set; get; }
     public override DbSet<User> Users { set; get; }
     public DbSet<UserFollower> UserFollowers { set; get; }
-    public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
-
     #endregion
 
     #region Outbox
@@ -101,6 +86,12 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
     public DbSet<OutboxMessageConsumer> OutboxMessageConsumers { get; set; }
 
+    #endregion
+    
+    #region CouponAggregate
+
+    public DbSet<Coupon> Coupons { set; get; }
+    public DbSet<EventCoupon> EventCoupons { set; get; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder builder)

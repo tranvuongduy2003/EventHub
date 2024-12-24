@@ -1,5 +1,5 @@
 using EventHub.Application.SeedWork.Abstractions;
-using EventHub.Domain.Aggregates.ReviewAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.CachedRepositories;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Infrastructure.Persistence.Data;

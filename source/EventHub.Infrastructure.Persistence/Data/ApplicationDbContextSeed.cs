@@ -1,10 +1,13 @@
-﻿using Bogus;
-using EventHub.Domain.Aggregates.CategoryAggregate;
+﻿using System.Globalization;
+using Bogus;
+using EventHub.Domain.Aggregates.CouponAggregate;
+using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.EventAggregate;
-using EventHub.Domain.Aggregates.PaymentAggregate;
-using EventHub.Domain.Aggregates.PermissionAggregate;
-using EventHub.Domain.Aggregates.ReviewAggregate;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
+using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.Entities;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.Shared.Enums.Event;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.Enums.User;
@@ -41,7 +44,7 @@ public class ApplicationDbContextSeed
         await SeedCommands();
         await SeedPermission();
         await SeedCategories();
-        await SeedPaymentMethods();
+        await SeedCoupons();
         await SeedEvents();
         await SeedReviews();
     }
@@ -102,6 +105,7 @@ public class ApplicationDbContextSeed
                 {
                     continue;
                 }
+
                 User user = await _userManager.FindByEmailAsync(customer.Email);
                 if (user != null)
                 {
@@ -161,6 +165,11 @@ public class ApplicationDbContextSeed
                 {
                     Id = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), Name = "Payments",
                     ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/payment"
+                },
+                new()
+                {
+                    Id = EFunctionCode.GENERAL_COUPON.GetDisplayName(), Name = "Coupons",
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/coupon"
                 },
 
                 new()
@@ -272,14 +281,15 @@ public class ApplicationDbContextSeed
                 {
                     continue;
                 }
+
                 _context.Permissions.Add(new Permission
-                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "CREATE" });
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "CREATE" });
                 _context.Permissions.Add(new Permission
-                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "UPDATE" });
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "UPDATE" });
                 _context.Permissions.Add(new Permission
-                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "DELETE" });
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "DELETE" });
                 _context.Permissions.Add(new Permission
-                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "VIEW" });
+                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "VIEW" });
             }
 
             Role customerRole = await _roleManager.FindByNameAsync(EUserRole.CUSTOMER.GetDisplayName());
@@ -398,6 +408,30 @@ public class ApplicationDbContextSeed
                     FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "VIEW"
                 });
                 _context.Permissions.Add(new Permission
                 {
@@ -568,6 +602,30 @@ public class ApplicationDbContextSeed
                 });
                 _context.Permissions.Add(new Permission
                 {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_COUPON.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
                     FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(),
                     RoleId = organizerRole.Id,
                     CommandId = "VIEW"
@@ -644,56 +702,27 @@ public class ApplicationDbContextSeed
         }
     }
 
-    private async Task SeedPaymentMethods()
+    private async Task SeedCoupons()
     {
-        if (!_context.PaymentMethods.Any())
+        if (!_context.Coupons.Any())
         {
-            #region Categories Data
+            var users = _userManager.Users.AsNoTracking().ToList();
 
-            // WARNING: Must not change the items' order, just add more!
-            var bankNames = new List<string>
-            {
-                "ACB", "Agribank", "BIDV", "HDBank", "MBBank", "Momo", "MSB", "OceanBank", "Sacombank", "SCB",
-                "SeABank", "SHB", "Techcombank", "TPBank", "Vietcombank", "Vietinbank", "VPBank", "ZaloPay"
-            };
+            Faker<Coupon> couponFaker = new Faker<Coupon>()
+                .RuleFor(x => x.Name, f => f.Commerce.ProductAdjective())
+                .RuleFor(x => x.Description, f => f.Commerce.ProductDescription())
+                .RuleFor(x => x.AuthorId, f => f.PickRandom<User>(users).Id)
+                .RuleFor(x => x.MinPrice, f =>
+                    long.Parse(f.Commerce.Price(100000, 1000000, 0, ""), CultureInfo.InvariantCulture))
+                .RuleFor(x => x.Quantity, f => f.Random.Int(1, 10000))
+                .RuleFor(x => x.PercentValue, f => f.Random.Int(20, 100))
+                .RuleFor(x => x.ExpiredDate, f => DateTime.Now.AddDays(f.Random.Int(1, 1000)));
 
-            var icons = new List<string>
-            {
-                "acb.png",
-                "agribank.png",
-                "bidv.png",
-                "hdbank.png",
-                "mbb.png",
-                "momo.png",
-                "msb.png",
-                "oceanbank.png",
-                "sacombank.png",
-                "scb.png",
-                "seabank.png",
-                "shb.png",
-                "tcb.png",
-                "tpbank.png",
-                "vietcombank.png",
-                "vietinbank.png",
-                "vpbank.png",
-                "zalopay.png"
-            };
-
-            #endregion
-
-            for (int i = 0; i < bankNames.Count; i++)
-            {
-                var method = new PaymentMethod
-                {
-                    MethodLogoFileName = icons[i],
-                    MethodName = bankNames[i],
-                    MethodLogoUrl = string.Empty,
-                };
-                _context.PaymentMethods.Add(method);
-            }
-
+            List<Coupon> coupons = couponFaker.Generate(1000);
+            await _context.AddRangeAsync(coupons); 
             await _context.SaveChangesAsync();
         }
+
     }
 
     private async Task SeedEvents()
@@ -702,6 +731,7 @@ public class ApplicationDbContextSeed
         {
             List<User> users = await _userManager.Users.ToListAsync();
             List<Category> categories = await _context.Categories.ToListAsync();
+            List<Coupon> coupons = await _context.Coupons.ToListAsync();
 
             Faker<Event> fakerEvent = new Faker<Event>()
                 .RuleFor(e => e.AuthorId, f => f.PickRandom<User>(users).Id)
@@ -771,7 +801,8 @@ public class ApplicationDbContextSeed
                 #region EventCategories
 
                 fakerEventCategory.RuleFor(ec => ec.EventId, _ => eventItem.Id);
-                IEnumerable<EventCategory> eventCategories = fakerEventCategory.GenerateBetween(1, 3).DistinctBy(ec => ec.CategoryId);
+                IEnumerable<EventCategory> eventCategories =
+                    fakerEventCategory.GenerateBetween(1, 3).DistinctBy(ec => ec.CategoryId);
                 _context.EventCategories.AddRange(eventCategories.ToList());
 
                 #endregion
@@ -805,6 +836,16 @@ public class ApplicationDbContextSeed
                 fakerReason.RuleFor(t => t.EventId, _ => eventItem.Id);
                 List<Reason> reasons = fakerReason.Generate(3);
                 _context.Reasons.AddRange(reasons);
+
+                #endregion
+                
+                #region Coupons
+
+                Faker<EventCoupon> eventCouponFaker = new Faker<EventCoupon>()
+                    .RuleFor(x => x.EventId, _ => eventItem.Id)
+                    .RuleFor(x => x.CouponId, f => f.PickRandom<Coupon>(coupons).Id);
+                var eventCoupons = eventCouponFaker.Generate(3).DistinctBy(x => x.EventId).ToList();
+                _context.EventCoupons.AddRange(eventCoupons);
 
                 #endregion
             }

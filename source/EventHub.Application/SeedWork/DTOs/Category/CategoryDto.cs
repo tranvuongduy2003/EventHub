@@ -15,10 +15,4 @@ public class CategoryDto
 
     [SwaggerSchema("Background color of the category")]
     public string Color { get; set; }
-
-    [SwaggerSchema("The datetime that the category was created")]
-    public DateTime CreatedAt { get; set; }
-
-    [SwaggerSchema("The last datetime that the category was updated")]
-    public DateTime? UpdatedAt { get; set; }
 }
