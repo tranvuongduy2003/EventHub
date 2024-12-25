@@ -47,6 +47,9 @@ public class CreateEventDto
 
     [SwaggerSchema("Optional reasons associated with the event")]
     public IEnumerable<string>? Reasons { get; set; } = new List<string>();
+    
+    [SwaggerSchema("Optional expenses associated with the event")]
+    public IEnumerable<string>? Expenses { get; set; } = new List<string>();
 
     [SwaggerSchema("Additional images for the event")]
     public IFormFileCollection? EventSubImages { get; set; } = null;

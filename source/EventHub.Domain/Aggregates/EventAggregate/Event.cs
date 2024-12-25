@@ -120,6 +120,8 @@ public class Event : AggregateRoot, IAuditable
     public virtual ICollection<Reason> Reasons { get; set; } = new List<Reason>();
     
     public virtual ICollection<EventCoupon> EventCoupons { get; set; } = new List<EventCoupon>();
+    
+    public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
     #endregion
 }

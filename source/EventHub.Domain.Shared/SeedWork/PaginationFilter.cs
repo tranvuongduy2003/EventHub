@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿ using System.ComponentModel;
 using EventHub.Domain.Shared.Enums.Common;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

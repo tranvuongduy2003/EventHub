@@ -2,10 +2,8 @@
 
 using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
-using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Application.SeedWork.DTOs.File;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
@@ -29,7 +27,6 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
 
     private readonly IFileService _fileService;
     private readonly IMapper _mapper;
-    private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
@@ -41,14 +38,16 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
     /// <summary>
     /// Initializes a new instance of the CreateEventCommandHandler
     /// </summary>
-    public CreateEventCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService,
-        ISerializeService serializeService, UserManager<Domain.Aggregates.UserAggregate.User> userManager,
+    public CreateEventCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IFileService fileService,
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager,
         SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _fileService = fileService;
-        _serializeService = serializeService;
         _userManager = userManager;
         _signInManager = signInManager;
     }
@@ -65,7 +64,8 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
     /// <returns>The created event DTO</returns>
     public async Task Handle(CreateEventCommand request, CancellationToken cancellationToken)
     {
-        var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
+        var authorId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()
+            ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
         // Check if event with same name already exists
         bool isEventExisted = await _unitOfWork.CachedEvents
@@ -145,16 +145,12 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
             request.TicketTypes.Any())
         {
             var ticketTypes = request.TicketTypes
-                .Select(x =>
+                .Select(x => new TicketType
                 {
-                    CreateTicketTypeCommand ticketType = _serializeService.Deserialize<CreateTicketTypeCommand>(x);
-                    return new TicketType()
-                    {
-                        EventId = @event.Id,
-                        Name = ticketType.Name,
-                        Price = ticketType.Price,
-                        Quantity = ticketType.Quantity
-                    };
+                    EventId = @event.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    Quantity = x.Quantity
                 })
                 .ToList();
 
@@ -189,6 +185,38 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
                 .ToList();
 
             await _unitOfWork.Reasons.CreateListAsync(reasons);
+            await _unitOfWork.CommitAsync();
+        }
+
+        // Handle event expenses if any
+        if (request.Expenses != null && request.Expenses.Any())
+        {
+            var expenses = request.Expenses
+                .Select(x => new Expense
+                {
+                    EventId = @event.Id,
+                    Title = x.Title,
+                    Total = x.SubExpenses.Sum(x => x.Price),
+                    SubExpenses = x.SubExpenses
+                        .Select(sub => new SubExpense
+                        {
+                            Name = sub.Name,
+                            Price = sub.Price
+                        })
+                        .ToList()
+                })
+                .ToList();
+            await _unitOfWork.Expenses.CreateListAsync(expenses);
+
+            var subExpenses = expenses
+                .SelectMany(x => x.SubExpenses.Select(sub =>
+                {
+                    sub.ExpenseId = x.Id;
+                    return sub;
+                }))
+                .ToList();
+            await _unitOfWork.SubExpenses.CreateListAsync(subExpenses);
+
             await _unitOfWork.CommitAsync();
         }
 

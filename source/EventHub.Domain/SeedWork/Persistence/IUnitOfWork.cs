@@ -154,6 +154,16 @@ public interface IUnitOfWork : IDisposable
     /// Gets the repository for managing coupons.
     /// </summary>
     IEventCouponsRepository EventCoupons { get; }
+    
+    /// <summary>
+    /// Gets the repository for managing coupons.
+    /// </summary>
+    IExpensesRepository Expenses { get; }
+    
+    /// <summary>
+    /// Gets the repository for managing coupons.
+    /// </summary>
+    ISubExpensesRepository SubExpenses { get; }
 
     #region Caching Repository Properties
 

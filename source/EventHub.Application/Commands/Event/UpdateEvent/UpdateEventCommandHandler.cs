@@ -1,7 +1,6 @@
 ﻿using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.File;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
@@ -16,15 +15,12 @@ namespace EventHub.Application.Commands.Event.UpdateEvent;
 public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
 {
     private readonly IFileService _fileService;
-    private readonly ISerializeService _serializeService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateEventCommandHandler(IUnitOfWork unitOfWork, IFileService fileService,
-        ISerializeService serializeService)
+    public UpdateEventCommandHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _fileService = fileService;
-        _serializeService = serializeService;
     }
 
     public async Task Handle(UpdateEventCommand request, CancellationToken cancellationToken)
@@ -55,6 +51,11 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             await UpdateReasons(@event.Id, request.Reasons);
         }
 
+        if (request.Expenses?.Any() == true)
+        {
+            await UpdateExpenses(@event.Id, request.Expenses);
+        }
+
         await _unitOfWork.CommitAsync();
     }
 
@@ -65,6 +66,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         {
             throw new NotFoundException("Event does not exist!");
         }
+
         bool isSameNameEventExisted = await _unitOfWork.CachedEvents
             .ExistAsync(e => e.Name == request.Name && e.Id != eventId);
         if (isSameNameEventExisted)
@@ -75,7 +77,8 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         return @event;
     }
 
-    private async Task<Domain.Aggregates.EventAggregate.Event> UpdateEventProperties(Domain.Aggregates.EventAggregate.Event @event, UpdateEventCommand request)
+    private async Task<Domain.Aggregates.EventAggregate.Event> UpdateEventProperties(
+        Domain.Aggregates.EventAggregate.Event @event, UpdateEventCommand request)
     {
         @event.Name = request.Name;
         @event.Description = request.Description;
@@ -90,7 +93,8 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         await _fileService.DeleteAsync(FileContainer.EVENTS, @event.CoverImageFileName);
         if (request.CoverImage != null)
         {
-            BlobResponseDto coverImageResponse = await _fileService.UploadAsync(request.CoverImage, FileContainer.EVENTS);
+            BlobResponseDto coverImageResponse =
+                await _fileService.UploadAsync(request.CoverImage, FileContainer.EVENTS);
             @event.CoverImageUrl = coverImageResponse.Blob.Uri ?? "";
             @event.CoverImageFileName = coverImageResponse.Blob.Name ?? "";
         }
@@ -101,7 +105,8 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         return @event;
     }
 
-    private async Task UpdateEventSubImages(Guid eventId, IFormFileCollection? subImages, CancellationToken cancellationToken)
+    private async Task UpdateEventSubImages(Guid eventId, IFormFileCollection? subImages,
+        CancellationToken cancellationToken)
     {
         List<EventSubImage> eventSubImages = await _unitOfWork.EventSubImages
             .FindByCondition(x => x.EventId == eventId)
@@ -134,7 +139,8 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         await _unitOfWork.CommitAsync();
     }
 
-    private async Task UpdateEmailContent(UpdateEmailContentCommand emailContentCommand, CancellationToken cancellationToken)
+    private async Task UpdateEmailContent(UpdateEmailContentCommand emailContentCommand,
+        CancellationToken cancellationToken)
     {
         EmailContent emailContent = await _unitOfWork.EmailContents.GetByIdAsync(emailContentCommand.Id);
         if (emailContent == null)
@@ -176,14 +182,10 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         await _unitOfWork.CommitAsync();
     }
 
-    private async Task UpdateTicketTypes(Guid eventId, IEnumerable<string> ticketTypes)
+    private async Task UpdateTicketTypes(Guid eventId, List<UpdateTicketTypeCommand> ticketTypes)
     {
-        var deserializedTicketTypes = ticketTypes
-            .Select(x => _serializeService.Deserialize<UpdateTicketTypeCommand>(x))
-            .ToList();
-
         var createdTicketTypes = new List<TicketType>();
-        foreach (UpdateTicketTypeCommand ticketType in deserializedTicketTypes)
+        foreach (UpdateTicketTypeCommand ticketType in ticketTypes)
         {
             if (ticketType.Id != null)
             {
@@ -248,6 +250,65 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             .ToList();
 
         await _unitOfWork.Reasons.CreateListAsync(updatedReasons);
+        await _unitOfWork.CommitAsync();
+    }
+
+    private async Task UpdateExpenses(Guid eventId, List<UpdateExpenseCommand> expenses)
+    {
+        var createdExpenses = new List<Expense>();
+        foreach (UpdateExpenseCommand expense in expenses)
+        {
+            if (expense.Id != null)
+            {
+                Expense existingExpense = await _unitOfWork.Expenses.GetByIdAsync((Guid)expense.Id);
+                existingExpense.Title = expense.Title;
+                existingExpense.Total = expense.SubExpenses.Sum(x => x.Price);
+                await _unitOfWork.Expenses.Update(existingExpense);
+                var subExpenses = _unitOfWork.SubExpenses
+                    .FindByCondition(x => x.ExpenseId == existingExpense.Id)
+                    .ToList();
+                await _unitOfWork.SubExpenses.DeleteList(subExpenses);
+                var createdSubExpenses = expense.SubExpenses
+                    .Select(x => new SubExpense
+                    {
+                        ExpenseId = existingExpense.Id,
+                        Price = x.Price,
+                        Name = x.Name,
+                    })
+                    .ToList();
+                await _unitOfWork.SubExpenses.CreateListAsync(createdSubExpenses);
+            }
+            else
+            {
+                createdExpenses.Add(new Expense
+                {
+                    EventId = eventId,
+                    Title = expense.Title,
+                    Total = expense.SubExpenses.Sum(x => x.Price),
+                    SubExpenses = expense.SubExpenses
+                        .Select(sub => new SubExpense
+                        {
+                            Name = sub.Name,
+                            Price = sub.Price
+                        })
+                        .ToList()
+                });
+            }
+        }
+
+        if (createdExpenses.Any())
+        {
+            await _unitOfWork.Expenses.CreateListAsync(createdExpenses);
+            var subExpenses = createdExpenses
+                .SelectMany(x => x.SubExpenses.Select(sub =>
+                {
+                    sub.ExpenseId = x.Id;
+                    return sub;
+                }))
+                .ToList();
+            await _unitOfWork.SubExpenses.CreateListAsync(subExpenses);
+        }
+
         await _unitOfWork.CommitAsync();
     }
 }

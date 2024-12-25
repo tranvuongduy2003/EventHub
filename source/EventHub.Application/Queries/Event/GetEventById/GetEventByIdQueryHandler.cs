@@ -34,6 +34,8 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
                 .ThenInclude(x => x.Category)
             .Include(x => x.EventCoupons)
                 .ThenInclude(x => x.Coupon)
+            .Include(x => x.Expenses)
+                .ThenInclude(x => x.SubExpenses)
             .Include(x => x.Author)
             .Include(x => x.Reasons)
             .Include(x => x.TicketTypes)

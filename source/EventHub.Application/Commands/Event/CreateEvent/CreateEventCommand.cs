@@ -2,6 +2,7 @@ using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace EventHub.Application.Commands.Event.CreateEvent;
 
@@ -36,8 +37,13 @@ public class CreateEventCommand : ICommand
         EventPaymentType = request.EventPaymentType;
         IsPrivate = request.IsPrivate;
         Categories = request.Categories;
-        TicketTypes = request.TicketTypes;
-        Reasons = request.Reasons;
+        TicketTypes = request.TicketTypes?
+            .Select(x => JsonConvert.DeserializeObject<CreateTicketTypeCommand>(x)!)
+            .ToList();
+        Reasons = request.Reasons?.ToList();
+        Expenses = request.Expenses?
+            .Select(x => JsonConvert.DeserializeObject<CreateExpenseCommand>(x)!)
+            .ToList();
         EventSubImages = request.EventSubImages;
         EmailContent = request.EmailContent != null ? new CreateEmailContentCommand(request.EmailContent) : null;
     }
@@ -64,9 +70,11 @@ public class CreateEventCommand : ICommand
 
     public List<Guid> Categories { get; set; }
 
-    public IEnumerable<string>? TicketTypes { get; set; }
+    public List<CreateTicketTypeCommand>? TicketTypes { get; set; }
 
-    public IEnumerable<string>? Reasons { get; set; }
+    public List<string>? Reasons { get; set; }
+
+    public List<CreateExpenseCommand>? Expenses { get; set; }
 
     public IFormFileCollection? EventSubImages { get; set; }
 

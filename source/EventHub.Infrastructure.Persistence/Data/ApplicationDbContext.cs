@@ -42,6 +42,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<FavouriteEvent> FavouriteEvents { set; get; }
     public DbSet<Reason> Reasons { set; get; }
     public DbSet<TicketType> TicketTypes { set; get; }
+    public DbSet<Expense> Expenses { set; get; }
+    public DbSet<SubExpense> SubExpenses { set; get; }
 
     #endregion
 

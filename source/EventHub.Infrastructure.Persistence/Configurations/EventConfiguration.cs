@@ -52,5 +52,10 @@ public class EventConfiguration: IEntityTypeConfiguration<Event>
             .HasMany(x => x.Reasons)
             .WithOne(x => x.Event)
             .HasForeignKey(x => x.EventId);
+        
+        builder
+            .HasMany(x => x.Expenses)
+            .WithOne(x => x.Event)
+            .HasForeignKey(x => x.EventId);
     }
 }

@@ -61,7 +61,9 @@ public static class DependencyInjection
             .AddScoped<ITicketsRepository, TicketsRepository>()
             .AddScoped<ITicketTypesRepository, TicketTypesRepository>()
             .AddScoped<IUserFollowersRepository, UserFollowersRepository>()
-            .AddScoped<ICouponsRepository, CouponsRepository>();
+            .AddScoped<ICouponsRepository, CouponsRepository>()
+            .AddScoped<IExpensesRepository, ExpensesRepository>()
+            .AddScoped<ISubExpensesRepository, SubExpensesRepository>();
 
         services
             .AddScoped<ICachedCategoriesRepository, CachedCategoriesRepository>()

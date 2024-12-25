@@ -71,6 +71,9 @@ public class EventDetailDto
     
     [SwaggerSchema("List of coupons available for the event")]
     public List<EventCouponDto> Coupons { get; set; } = new();
+    
+    [SwaggerSchema("List of expenses for the event")]
+    public List<ExpenseDto> Expenses { get; set; } = new();
 
     [SwaggerSchema("Email content related to the event")]
     public EmailContentDto EmailContent { get; set; }
