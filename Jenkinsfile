@@ -12,7 +12,21 @@ pipeline {
         DOCKER_NETWORK = 'eventhub'
     }
     
-    stages {       
+    stages {   
+        stage('Clone') {
+            steps {
+                // Clean workspace
+                deleteDir()
+                
+                // Clone repository
+                git branch: 'master',
+                    credentialsId: 'gitlab-credentials', 
+                    url: 'http://143.198.81.29:8081/root/eventhub-api.git',
+                    changelog: false,
+                    poll: false
+            }
+        }
+
         stage('Test') {
             steps {
                 sh 'echo "Testing stage"'
