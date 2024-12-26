@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_TAG = 'latest'
         IMAGE_NAME = 'eventhub-api'
-        REGISTRY_URL = 'tranvuongduy8423'  // Replace with your registry URL
+        REGISTRY_URL = 'tranvuongduy2003'  // Replace with your registry URL
         DOCKER_NETWORK = 'eventhub'
     }
     
