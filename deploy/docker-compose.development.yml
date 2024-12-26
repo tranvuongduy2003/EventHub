@@ -1,83 +1,27 @@
 version: "3.8"
 
 services:
-  eventhub.cache:
-    image: redis:7.0.15-alpine
-    container_name: eventhub.cache
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - eventhub_redis_data:/data
-
-  eventhub.db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: eventhub.db
+  eventhub.api:
+    image: eventhub.api
+    container_name: eventhub.api
     environment:
-      MSSQL_SA_PASSWORD: "@Admin123"
-      ACCEPT_EULA: "Y"
-    restart: always
-    volumes:
-      - eventhub_sqlserver_data:/var/lib/sqlserver/data
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - eventhub.db
+      - eventhub.cache
+      - eventhub.seq
+      - eventhub.hangfire
+      - eventhub.minio
     ports:
-      - "1433:1433"
-
-  eventhub.seq:
-    image: datalust/seq:latest
-    container_name: eventhub.seq
-    restart: always
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - "5341:5341"
-      - "3038:80"
-    volumes:
-      - eventhub_seq_data:/data
-
-  eventhub.hangfire:
-    image: mongo
-    container_name: eventhub.hangfire
-    ports:
-      - "27017:27017"
-    volumes:
-      - eventhub_mongo_data:/data/db
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "admin"
-      MONGO_INITDB_ROOT_PASSWORD: "admin"
-
-  eventhub.minio:
-    image: minio/minio:latest
-    container_name: eventhub.minio
-    ports:
-      - "9000:9000" # MinIO Console
-      - "9001:9001" # MinIO Admin Console
-    restart: always
-    volumes:
-      - eventhub_minio_data:/data
-      - eventhub_minio_config:/root/.minio
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin123
-    command: server /data --console-address ":9001"
+      - "8002:80"
+    build:
+      context: ../source/EventHub.Presentation
+      dockerfile: Dockerfile
+    restart: on-failure
 
 # network section
 networks:
   default:
     name: eventhub
     driver: bridge
-
-# volumes section
-volumes:
-  eventhub_redis_data:
-    name: eventhub_redis_data
-  eventhub_sqlserver_data:
-    name: eventhub_sqlserver_data
-  eventhub_seq_data:
-    name: eventhub_seq_data
-  eventhub_mongo_data:
-    name: eventhub_mongo_data
-  eventhub_minio_data:
-    name: eventhub_minio_data
-  eventhub_minio_config:
-    name: eventhub_minio_config

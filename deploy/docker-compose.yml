@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-  # services
   eventhub.cache:
     image: redis:7.0.15-alpine
     container_name: eventhub.cache
@@ -21,16 +20,17 @@ services:
     volumes:
       - eventhub_sqlserver_data:/var/lib/sqlserver/data
     ports:
-      - "1437:1433"
+      - "1433:1433"
 
   eventhub.seq:
     image: datalust/seq:latest
     container_name: eventhub.seq
+    restart: always
     environment:
       - ACCEPT_EULA=Y
     ports:
       - "5341:5341"
-      - "8081:80"
+      - "3038:80"
     volumes:
       - eventhub_seq_data:/data
 
@@ -38,7 +38,7 @@ services:
     image: mongo
     container_name: eventhub.hangfire
     ports:
-      - "27018:27017"
+      - "27017:27017"
     volumes:
       - eventhub_mongo_data:/data/db
     restart: always
@@ -46,28 +46,20 @@ services:
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
 
-  # api server
-  eventhub.api:
-    image: tranvuongduy2003/eventhub:latest
-    container_name: eventhub.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - "ConnectionStrings:DefaultConnectionString=Server=eventhub.db,1433;Database=EventHubDB;User Id=sa;Password=@Admin123;TrustServerCertificate=True;Multipleactiveresultsets=true"
-      - "ConnectionStrings:CacheConnectionString=eventhub.cache:6379"
-      - "SeqConfiguration:ServerUrl=http://eventhub.seq:5341"
-      - "HangfireSettings:Storage:ConnectionString=mongodb://admin:admin@eventhub.hangfire:27017/hangfire-webapi?authSource=admin"
-    depends_on:
-      - eventhub.db
-      - eventhub.cache
-      - eventhub.seq
-      - eventhub.hangfire
+  eventhub.minio:
+    image: minio/minio:latest
+    container_name: eventhub.minio
     ports:
-      - "8002:80"
-    build:
-      context: ../source/EventHub.Presentation
-      dockerfile: Dockerfile
-    restart: on-failure
+      - "9000:9000" # MinIO Console
+      - "9001:9001" # MinIO Admin Console
+    restart: always
+    volumes:
+      - eventhub_minio_data:/data
+      - eventhub_minio_config:/root/.minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
 
 # network section
 networks:
@@ -85,3 +77,7 @@ volumes:
     name: eventhub_seq_data
   eventhub_mongo_data:
     name: eventhub_mongo_data
+  eventhub_minio_data:
+    name: eventhub_minio_data
+  eventhub_minio_config:
+    name: eventhub_minio_config
