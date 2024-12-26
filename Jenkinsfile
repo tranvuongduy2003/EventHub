@@ -14,14 +14,9 @@ pipeline {
                 sh 'echo "Testing stage"'
             }
         }
+      
         
         stage('Build') {
-            steps {
-                sh 'dotnet build ./source/EventHub.Presentation/EventHub.Presentation.csproj'
-            }
-        }
-        
-        stage('Package') {
             steps {
                 script {
                     // Build Docker image
