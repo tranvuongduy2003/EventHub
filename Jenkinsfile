@@ -13,6 +13,38 @@ pipeline {
     }
     
     stages {   
+        stage('Prepare') {
+            steps {               
+                script {
+                    def envVars = [
+                        'ConnectionStrings__DefaultConnectionString',
+                        'ConnectionStrings__CacheConnectionString', 
+                        'ConnectionStrings__AzureSignalRConnectionString',
+                        'JwtOptions__Secret',
+                        'JwtOptions__Issuer',
+                        'JwtOptions__Audience',
+                        'SeqConfiguration__ServerUrl',
+                        'MinioStorage__Endpoint',
+                        'MinioStorage__AccessKey',
+                        'MinioStorage__SecretKey',
+                        'Authentication__Google__ClientSecret',
+                        'Authentication__Google__ClientId',
+                        'Authentication__Facebook__ClientSecret',
+                        'Authentication__Facebook__ClientId',
+                        'EmailSettings__Email',
+                        'EmailSettings__Password',
+                        'HangfireSettings__Storage__ConnectionString'
+                    ]
+                    
+                    def envContent = envVars.collect { varName ->
+                        "${varName}=${env[varName]}"
+                    }.join('\n')
+                    
+                    writeFile file: '.env', text: envContent
+                }
+            }
+        }
+
         stage('Test') {
             steps {
                 sh 'echo "Testing stage"'
@@ -25,7 +57,7 @@ pipeline {
                 script {
                      // Clean up
                     sh 'docker image prune -a -f'
-                    
+
                      // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin"
@@ -58,7 +90,10 @@ pipeline {
                         docker run -d \
                         --name ${IMAGE_NAME} \
                         --network ${DOCKER_NETWORK} \
+                        --env-file .env \
                         -p 8001:80 \
+                        -e "ASPNETCORE_ENVIRONMENT=Development" \
+                        -e "ASPNETCORE_URLS=http://+:80" \
                         ${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
