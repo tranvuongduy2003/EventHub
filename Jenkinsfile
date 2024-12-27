@@ -10,6 +10,7 @@ pipeline {
         IMAGE_NAME = 'eventhub-api'
         REGISTRY_URL = 'tranvuongduy2003'  // Replace with your registry URL
         DOCKER_NETWORK = 'eventhub'
+        SONAR_TOKEN = credentials('token-eventhub-api-portal')
     }
     
     stages {   
@@ -17,7 +18,14 @@ pipeline {
             steps {
                 sh "cp /home/eventhub/eventhub-api/appsettings.Development.json ./source/EventHub.Presentation/appsettings.json"
 
-                sh 'echo "Testing stage"'
+                withSonarQubeEnv("SonarQube server connection") {
+                    sh "docker run --rm \
+                    -e SONAR_HOST_URL=${env.SONAR_HOST_URL} \
+                    -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=${env.SONAR_PROJECT_KEY}' \
+                    -e SONAR_TOKEN=$SONAR_TOKEN \
+                    -v '.:/usr/src' \
+                    sonarsource/sonar-scanner-cli"
+                }
             }
         }
       
