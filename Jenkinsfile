@@ -23,6 +23,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                     // Clean up
+                    sh 'docker image prune -a -f'
+                    
                      // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin"
