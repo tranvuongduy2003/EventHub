@@ -82,7 +82,9 @@ pipeline {
         always {
             slackSend (
                 channel: '#jenkins',
-                message: "${currentBuild.currentResult} Job ${env.JOB_NAME}\nbuild ${env.BUILD_NUMBER}\nFor more information: ${env.BUILD_URL}" 
+                message: "${currentBuild.currentResult} Job ${env.JOB_NAME}\nbuild ${env.BUILD_NUMBER}\nFor more information: ${env.BUILD_URL}",
+                color: 'good',
+                tokenCredentialId: 'slack-secret' 
             ) 
         }
     }
