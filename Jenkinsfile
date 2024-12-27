@@ -80,8 +80,13 @@ pipeline {
 
     post {
         always {
-            slackSend channel: 'jenkins',
-            message: "Find Status of Pipeline:- ${currentBuild.currentResult} ${env.JOB_NAME} ${env.BUILD_NUMBER} ${BUILD_URL}"
+            def color = COLOR_MAP[currentBuild.currentResult] ?: 'warning'
+
+            slackSend ( 
+                color: color, 
+                channel: '#jenkins',
+                message: "${currentBuild.currentResult} Job ${env.JOB_NAME}\nbuild ${env.BUILD_NUMBER}\nFor more information: ${env.BUILD_URL}" 
+            ) 
         }
     }
 }
