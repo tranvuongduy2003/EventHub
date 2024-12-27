@@ -16,31 +16,28 @@ pipeline {
         stage('Prepare') {
             steps {               
                 script {
-                    def envVars = [
-                        'ConnectionStrings__DefaultConnectionString',
-                        'ConnectionStrings__CacheConnectionString', 
-                        'ConnectionStrings__AzureSignalRConnectionString',
-                        'JwtOptions__Secret',
-                        'JwtOptions__Issuer',
-                        'JwtOptions__Audience',
-                        'SeqConfiguration__ServerUrl',
-                        'MinioStorage__Endpoint',
-                        'MinioStorage__AccessKey',
-                        'MinioStorage__SecretKey',
-                        'Authentication__Google__ClientSecret',
-                        'Authentication__Google__ClientId',
-                        'Authentication__Facebook__ClientSecret',
-                        'Authentication__Facebook__ClientId',
-                        'EmailSettings__Email',
-                        'EmailSettings__Password',
-                        'HangfireSettings__Storage__ConnectionString'
-                    ]
-                    
-                    def envContent = envVars.collect { varName ->
-                        "${varName}=${env[varName]}"
-                    }.join('\n')
-                    
-                    writeFile file: '.env', text: envContent
+                    // Create .env file
+                    sh """
+                    cat > .env << 'EOF'
+    ConnectionStrings__DefaultConnectionString=${env.ConnectionStrings__DefaultConnectionString}
+    ConnectionStrings__CacheConnectionString=${env.ConnectionStrings__CacheConnectionString}
+    ConnectionStrings__AzureSignalRConnectionString=${env.ConnectionStrings__AzureSignalRConnectionString}
+    JwtOptions__Secret=${env.JwtOptions__Secret}
+    JwtOptions__Issuer=${env.JwtOptions__Issuer}
+    JwtOptions__Audience=${env.JwtOptions__Audience}
+    SeqConfiguration__ServerUrl=${env.SeqConfiguration__ServerUrl}
+    MinioStorage__Endpoint=${env.MinioStorage__Endpoint}
+    MinioStorage__AccessKey=${env.MinioStorage__AccessKey}
+    MinioStorage__SecretKey=${env.MinioStorage__SecretKey}
+    Authentication__Google__ClientSecret=${env.Authentication__Google__ClientSecret}
+    Authentication__Google__ClientId=${env.Authentication__Google__ClientId}
+    Authentication__Facebook__ClientSecret=${env.Authentication__Facebook__ClientSecret}
+    Authentication__Facebook__ClientId=${env.Authentication__Facebook__ClientId}
+    EmailSettings__Email=${env.EmailSettings__Email}
+    EmailSettings__Password=${env.EmailSettings__Password}
+    HangfireSettings__Storage__ConnectionString=${env.HangfireSettings__Storage__ConnectionString}
+    EOF
+                    """
                 }
             }
         }
