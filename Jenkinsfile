@@ -7,7 +7,7 @@ pipeline {
     
     environment {
         IMAGE_TAG = 'latest'
-        IMAGE_NAME = 'eventhub-api'
+        IMAGE_NAME = 'eventhub.api'
         REGISTRY_URL = 'tranvuongduy2003'  // Replace with your registry URL
         DOCKER_NETWORK = 'eventhub'
         // SONAR_TOKEN = credentials('token-eventhub-api-portal')
