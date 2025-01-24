@@ -112,6 +112,16 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         return await _context.Set<T>().Where(x => !x.IsDeleted).AnyAsync(expression);
     }
 
+    public int Count()
+    {
+        return _context.Set<T>().Count();
+    }
+    
+    public Task<int> CountAsync()
+    {
+        return _context.Set<T>().CountAsync();
+    }
+
     public async Task<T> GetByIdAsync(Guid id)
     {
         T entity = await _context.Set<T>().FindAsync(id);

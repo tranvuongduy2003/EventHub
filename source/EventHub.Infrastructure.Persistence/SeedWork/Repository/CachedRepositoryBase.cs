@@ -138,6 +138,12 @@ public class CachedRepositoryBase<T> : ICachedRepositoryBase<T> where T : Entity
     public Task<bool> ExistAsync(Expression<Func<T, bool>> expression)
         => _decorated.ExistAsync(expression);
 
+    public int Count()
+        => _decorated.Count();
+
+    public Task<int> CountAsync()
+        => _decorated.CountAsync();
+
     public async Task<T> GetByIdAsync(Guid id)
     {
         string key = $"{typeof(T).Name}-{id}";

@@ -122,6 +122,22 @@ public interface IRepositoryBase<T> where T : EntityBase
     Task<bool> ExistAsync(Expression<Func<T, bool>> expression);
 
     #endregion
+    
+    #region Counting Methods
+    
+    /// <summary>
+    /// Counts the number of entities in the repository.
+    /// </summary>
+    /// <returns>The task result is the total count of entities.</returns>
+    int Count();
+
+    /// <summary>
+    /// Asynchronously counts the number of entities in the repository.
+    /// </summary>
+    /// <returns>A task representing the operation. The task result is the total count of entities.</returns>
+    Task<int> CountAsync();
+
+    #endregion
 
     #region Retrieval Methods
 

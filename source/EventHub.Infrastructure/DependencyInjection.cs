@@ -5,7 +5,6 @@ using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.FilesSystem;
 using EventHub.Infrastructure.Idempotence;
 using EventHub.Infrastructure.Mailler;
-using EventHub.Infrastructure.Outbox;
 using EventHub.Infrastructure.Persistence;
 using EventHub.Infrastructure.Services;
 using EventHub.Infrastructure.SignalR;
