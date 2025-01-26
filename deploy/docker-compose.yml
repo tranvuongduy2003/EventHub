@@ -14,6 +14,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: eventhub.db
     environment:
+      MSSQL_DATABASE: EventHubDB
       MSSQL_SA_PASSWORD: "@Admin123"
       ACCEPT_EULA: "Y"
     restart: always
@@ -43,6 +44,7 @@ services:
       - eventhub_mongo_data:/data/db
     restart: always
     environment:
+      MONGO_INITDB_DATABASE: hangfire-webapi
       MONGO_INITDB_ROOT_USERNAME: "admin"
       MONGO_INITDB_ROOT_PASSWORD: "admin"
 
