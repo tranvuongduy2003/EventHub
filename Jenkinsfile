@@ -80,10 +80,26 @@ pipeline {
 
     post {
         success {
-            sh 'curl -X POST -H "Content-Type: application/json" -d \'{"chat_id": "1934277483", "text": "[🔥SUCCESS] Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} success🔥🔥🔥! For more information: ${env.BUILD_URL}", "disable_notification": false}\' "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"'
+            sh '''
+                curl -X POST -H "Content-Type: application/json" \
+                -d '{
+                    "chat_id": "1934277483",
+                    "text": "[🔥SUCCESS] Job '"${env.JOB_NAME}"' build '"${env.BUILD_NUMBER}"' success🔥🔥🔥! For more info: '"${env.BUILD_URL}"'",
+                    "disable_notification": false
+                }' \
+                "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"
+            '''
         }
         failure {
-            sh 'curl -X POST -H "Content-Type: application/json" -d \'{"chat_id": "1934277483", "text": "[💀FAILED] Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} failed😭😭😭! For more information: ${env.BUILD_URL}", "disable_notification": false}\' "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"'
+            sh '''
+                curl -X POST -H "Content-Type: application/json" \
+                -d '{
+                    "chat_id": "1934277483",
+                    "text": "[💀FAILED] Job '"${env.JOB_NAME}"' build '"${env.BUILD_NUMBER}"' failed😭😭😭! For more info: '"${env.BUILD_URL}"'",
+                    "disable_notification": false
+                }' \
+                "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"
+            '''
         }
     }
 }
