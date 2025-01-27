@@ -80,26 +80,28 @@ pipeline {
 
     post {
         success {
-            sh '''
-                curl -X POST -H "Content-Type: application/json" \
-                -d '{
-                    "chat_id": "1934277483",
-                    "text": "[🔥SUCCESS] Job '"${env.JOB_NAME}"' build '"${env.BUILD_NUMBER}"' success🔥🔥🔥! For more info: '"${env.BUILD_URL}"'",
-                    "disable_notification": false
-                }' \
-                "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"
-            '''
+            script {
+                // Safely escape variables and construct JSON
+                def jsonText = "[🔥SUCCESS] Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} success🔥🔥🔥! For more info: ${env.BUILD_URL}"
+                def payload = groovy.json.JsonOutput.toJson([
+                    chat_id: "1934277483",
+                    text: jsonText,
+                    disable_notification: false
+                ])
+                // Use double quotes for sh and escape the payload
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
+            }
         }
         failure {
-            sh '''
-                curl -X POST -H "Content-Type: application/json" \
-                -d '{
-                    "chat_id": "1934277483",
-                    "text": "[💀FAILED] Job '"${env.JOB_NAME}"' build '"${env.BUILD_NUMBER}"' failed😭😭😭! For more info: '"${env.BUILD_URL}"'",
-                    "disable_notification": false
-                }' \
-                "https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage"
-            '''
+            script {
+                def jsonText = "[💀FAILED] Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} failed😭😭😭! For more info: ${env.BUILD_URL}"
+                def payload = groovy.json.JsonOutput.toJson([
+                    chat_id: "1934277483",
+                    text: jsonText,
+                    disable_notification: false
+                ])
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
+            }
         }
     }
 }
