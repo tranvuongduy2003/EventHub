@@ -10,6 +10,6 @@ public class ValidateUserDto
     [SwaggerSchema("PhoneNumber will be registered for the account")]
     public string PhoneNumber { get; set; }
 
-    [SwaggerSchema("Full name will be registered for the account")]
-    public string FullName { get; set; }
+    [SwaggerSchema("User name will be registered for the account")]
+    public string UserName { get; set; }
 }
