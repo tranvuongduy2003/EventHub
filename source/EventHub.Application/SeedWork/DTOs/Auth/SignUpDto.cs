@@ -10,9 +10,6 @@ public class SignUpDto
     [SwaggerSchema("PhoneNumber will be registered for the account")]
     public string PhoneNumber { get; set; }
 
-    [SwaggerSchema("Full name will be registered for the account")]
-    public string FullName { get; set; }
-
     [SwaggerSchema("Password will be registered for the account")]
     public string Password { get; set; }
 

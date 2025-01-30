@@ -18,8 +18,8 @@ public class SignUpCommand : ICommand<SignInResponseDto>
     /// The data transfer object containing the details required to create a new user account.
     /// </param>
     public SignUpCommand(SignUpDto dto)
-        => (Email, PhoneNumber, FullName, Password, UserName)
-            = (dto.Email, dto.PhoneNumber, dto.FullName, dto.Password, dto.UserName);
+        => (Email, PhoneNumber, Password, UserName)
+            = (dto.Email, dto.PhoneNumber, dto.Password, dto.UserName);
 
     /// <summary>
     /// Gets or sets the email address for the new user account.
@@ -36,14 +36,6 @@ public class SignUpCommand : ICommand<SignInResponseDto>
     /// A string representing the phone number of the user.
     /// </value>
     public string PhoneNumber { get; set; }
-
-    /// <summary>
-    /// Gets or sets the full name of the new user.
-    /// </summary>
-    /// <value>
-    /// A string representing the full name of the user.
-    /// </value>
-    public string FullName { get; set; }
 
     /// <summary>
     /// Gets or sets the password for the new user account.

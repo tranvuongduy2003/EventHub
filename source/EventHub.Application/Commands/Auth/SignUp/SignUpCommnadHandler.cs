@@ -50,7 +50,6 @@ public class SignUpCommnadHandler : ICommandHandler<SignUpCommand, SignInRespons
         {
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
-            FullName = request.FullName,
             UserName = request.UserName
         };
 
