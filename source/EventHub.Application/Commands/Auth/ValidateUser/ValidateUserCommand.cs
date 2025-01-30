@@ -18,7 +18,7 @@ public class ValidateUserCommand : ICommand<bool>
     /// The data transfer object containing the user details to be validated.
     /// </param>
     public ValidateUserCommand(ValidateUserDto dto)
-        => (Email, PhoneNumber, FullName) = (dto.Email, dto.PhoneNumber, dto.FullName);
+        => (Email, PhoneNumber, UserName) = (dto.Email, dto.PhoneNumber, dto.UserName);
 
     /// <summary>
     /// Gets or sets the email address of the user to be validated.
@@ -42,5 +42,5 @@ public class ValidateUserCommand : ICommand<bool>
     /// <value>
     /// A string representing the user's full name.
     /// </value>
-    public string FullName { get; set; }
+    public string UserName { get; set; }
 }

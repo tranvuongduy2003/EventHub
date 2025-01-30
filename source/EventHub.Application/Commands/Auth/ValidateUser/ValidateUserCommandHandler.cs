@@ -29,6 +29,13 @@ public class ValidateUserCommandHandler : ICommandHandler<ValidateUserCommand, b
             throw new BadRequestException("Phone number already exists");
         }
 
+        Domain.Aggregates.UserAggregate.User useByUserName = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.UserName == request.UserName, cancellationToken);
+        if (useByUserName != null)
+        {
+            throw new BadRequestException("Username already exists");
+        }
+
         return true;
     }
 }
