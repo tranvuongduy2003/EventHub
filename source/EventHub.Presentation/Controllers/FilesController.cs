@@ -18,12 +18,12 @@ public class FilesController : ControllerBase
         _fileService = fileService;
     }
 
-    [HttpPost("upload/{bucketName}")]
-    public async Task<IActionResult> PostUploadFile(string bucketName, [FromForm] IFormFile file)
+    [HttpPost("upload")]
+    public async Task<IActionResult> PostUploadFile([FromForm] UploadFileDto request)
     {
         _logger.LogInformation("START: PostUploadFile");
 
-        BlobResponseDto uploadedFile = await _fileService.UploadAsync(file, bucketName);
+        BlobResponseDto uploadedFile = await _fileService.UploadAsync(request.File, request.BucketName);
 
         _logger.LogInformation("END: PostUploadFile");
         return Ok(new ApiOkResponse(uploadedFile));
