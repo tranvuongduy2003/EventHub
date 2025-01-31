@@ -53,7 +53,7 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
         if (!string.IsNullOrEmpty(userId))
         {
-            eventDto.IsFavourited =
+            eventDto.IsFavourite =
                 await _unitOfWork.FavouriteEvents.ExistAsync(x =>
                     x.EventId == request.EventId && x.UserId == Guid.Parse(userId));
         }
