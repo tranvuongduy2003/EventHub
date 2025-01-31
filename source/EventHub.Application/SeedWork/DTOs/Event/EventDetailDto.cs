@@ -68,10 +68,10 @@ public class EventDetailDto
 
     [SwaggerSchema("List of ticket types available for the event")]
     public List<TicketTypeDto> TicketTypes { get; set; } = new();
-    
+
     [SwaggerSchema("List of coupons available for the event")]
     public List<EventCouponDto> Coupons { get; set; } = new();
-    
+
     [SwaggerSchema("List of expenses for the event")]
     public List<ExpenseDto> Expenses { get; set; } = new();
 
@@ -79,7 +79,7 @@ public class EventDetailDto
     public EmailContentDto EmailContent { get; set; }
 
     [SwaggerSchema("Current user favourite event or not")]
-    public bool IsFavourited { get; set; } = false;
+    public bool IsFavourite { get; set; } = false;
 
     [SwaggerSchema("Author of the event")] public AuthorDto Author { get; set; }
 
