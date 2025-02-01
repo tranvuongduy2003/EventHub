@@ -1,5 +1,6 @@
-﻿ using System.ComponentModel;
+﻿using System.ComponentModel;
 using EventHub.Domain.Shared.Enums.Common;
+using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -142,4 +143,16 @@ public class Search
     /// </value>
     [DefaultValue(null)]
     public string? SearchValue { get; set; }
+}
+
+public class EventPaginationFilter : PaginationFilter
+{
+    [FromQuery(Name = "status")]
+    public EEventStatus? Status { get; set; } = null!;
+
+    [FromQuery(Name = "rate")]
+    public int? Rate { get; set; } = null!;
+
+    [FromQuery(Name = "categories")]
+    public List<Guid>? Categories { get; set; } = null!;
 }

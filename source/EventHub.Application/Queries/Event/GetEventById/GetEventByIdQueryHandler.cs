@@ -40,6 +40,7 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
             .Include(x => x.Reasons)
             .Include(x => x.TicketTypes)
             .Include(x => x.EventSubImages)
+            .Include(x => x.Reviews)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (cachedEvent == null)
@@ -48,6 +49,8 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
         }
 
         EventDetailDto eventDto = _mapper.Map<EventDetailDto>(cachedEvent);
+
+        eventDto.AverageRate = cachedEvent.Reviews.Average(x => x.Rate);
 
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Event;
-using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,14 +24,49 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
         Pagination<Domain.Aggregates.EventAggregate.Event> paginatedEvents = _unitOfWork.CachedEvents
             .PaginatedFind(
                 request.Filter,
-                query => query
-                    .Include(x => x.EventCategories)
-                        .ThenInclude(x => x.Category)
-                    .Include(x => x.EventCoupons)
-                        .ThenInclude(x => x.Coupon)
+                query =>
+                {
+                    if (request.Filter.Status != null)
+                    {
+                        query = request.Filter.Status switch
+                        {
+                            Domain.Shared.Enums.Event.EEventStatus.OPENING =>
+                                query.Where(x => DateTime.UtcNow >= x.StartTime && DateTime.UtcNow <= x.EndTime),
+
+                            Domain.Shared.Enums.Event.EEventStatus.UPCOMING =>
+                                query.Where(x => DateTime.UtcNow < x.StartTime),
+
+                            Domain.Shared.Enums.Event.EEventStatus.CLOSED =>
+                                query.Where(x => DateTime.UtcNow > x.EndTime),
+
+                            _ => query
+                        };
+                    }
+
+                    if (request.Filter.Rate is int rate && rate is >= 1 and <= 5)
+                    {
+                        query = query.Where(x => x.Reviews.Average(r => r.Rate) >= rate);
+                    }
+
+                    if (request.Filter.Categories?.Any() == true)
+                    {
+                        var categorySet = new HashSet<Guid>(request.Filter.Categories);
+                        query = query.Where(x => x.EventCategories.Any(ec => categorySet.Contains(ec.CategoryId)));
+                    }
+
+                    return query
+                        .Include(x => x.EventCategories).ThenInclude(x => x.Category)
+                        .Include(x => x.EventCoupons).ThenInclude(x => x.Coupon)
+                        .Include(x => x.Reviews);
+                }
             );
 
         Pagination<EventDto> paginatedEventDtos = _mapper.Map<Pagination<EventDto>>(paginatedEvents);
+
+        for (int i = 0; i < paginatedEventDtos.Items.Count; i++)
+        {
+            paginatedEventDtos.Items[i].AverageRate = paginatedEvents.Items[i].Reviews.Average(x => x.Rate);
+        }
 
         return Task.FromResult(paginatedEventDtos);
     }

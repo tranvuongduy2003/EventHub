@@ -45,7 +45,7 @@ public class EventsController : ControllerBase
     )]
     [SwaggerResponse(200, "Successfully retrieved the list of events", typeof(Pagination<EventDto>))]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    public async Task<IActionResult> GetPaginatedEvents([FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> GetPaginatedEvents([FromQuery] EventPaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedEvents");
 
@@ -122,7 +122,7 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetCreatedEvents([FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> GetCreatedEvents([FromQuery] EventPaginationFilter filter)
     {
         _logger.LogInformation("START: GetCreatedEvents");
 
@@ -343,7 +343,7 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetFavouriteEvents([FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> GetFavouriteEvents([FromQuery] EventPaginationFilter filter)
     {
         _logger.LogInformation("START: GetFavouriteEvents");
 

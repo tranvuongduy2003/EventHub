@@ -42,6 +42,9 @@ public class EventDto
     [SwaggerSchema("The total number of tickets sold for this event")]
     public int? NumberOfSoldTickets { get; set; } = 0;
 
+    [SwaggerSchema("The avarage rating for this event")]
+    public double AverageRate { get; set; } = 0;
+
     [SwaggerSchema("Current status of the event")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventStatus? Status { get; set; }
@@ -62,7 +65,7 @@ public class EventDto
 
     [SwaggerSchema("Categories associated with the event")]
     public List<CategoryDto> Categories { get; set; }
-    
+
     public List<EventCouponDto> Coupons { get; set; }
 
     [SwaggerSchema("The date and time when the event was created (UTC)")]

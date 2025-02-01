@@ -17,6 +17,6 @@ namespace EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
 /// Gets the pagination filter to apply to the list of events.
 /// </summary>
 /// <param name="Filter">
-/// A <see cref="PaginationFilter"/> object representing the pagination parameters, including pØage size and page number.
+/// A <see cref="EventPaginationFilter"/> object representing the pagination parameters, including pØage size and page number.
 /// </param>
-public record GetCreatedEventsByUserIdQuery(PaginationFilter Filter) : IQuery<Pagination<EventDto>>;
+public record GetCreatedEventsByUserIdQuery(EventPaginationFilter Filter) : IQuery<Pagination<EventDto>>;
