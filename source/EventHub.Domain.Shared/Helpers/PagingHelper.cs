@@ -89,7 +89,7 @@ public static class PagingHelper
                     bool condition = false;
                     foreach (Search search in filter.Searches)
                     {
-                        if (search.SearchValue != null && search.SearchBy != null)
+                        if (search.SearchBy != null)
                         {
                             PropertyDescriptor property = TypeDescriptor
                                 .GetProperties(typeof(T))
@@ -97,7 +97,7 @@ public static class PagingHelper
 
                             if (property != null)
                             {
-                                condition = condition || ((string)(property.GetValue(x) ?? "")).Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase);
+                                condition = condition || ((string)(property.GetValue(x) ?? "")).Contains(search.SearchValue ?? "", StringComparison.CurrentCultureIgnoreCase);
                             }
                         }
                     }
