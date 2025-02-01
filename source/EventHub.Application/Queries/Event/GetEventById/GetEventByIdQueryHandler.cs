@@ -50,7 +50,9 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
 
         EventDetailDto eventDto = _mapper.Map<EventDetailDto>(cachedEvent);
 
-        eventDto.AverageRate = cachedEvent.Reviews.Average(x => x.Rate);
+        eventDto.AverageRate = cachedEvent.Reviews != null && cachedEvent.Reviews.Any()
+            ? Math.Round(cachedEvent.Reviews.Average(x => x.Rate), 2)
+            : 0.00;
 
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";

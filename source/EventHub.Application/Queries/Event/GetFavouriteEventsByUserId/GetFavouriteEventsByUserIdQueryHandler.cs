@@ -79,7 +79,7 @@ public class GetFavouriteEventsByUserIdQueryHandler : IQueryHandler<GetFavourite
 
         for (int i = 0; i < paginatedEventDtos.Items.Count; i++)
         {
-            paginatedEventDtos.Items[i].AverageRate = paginatedEvents.Items[i].Reviews.Average(x => x.Rate);
+            paginatedEventDtos.Items[i].AverageRate = paginatedEvents.Items[i].Reviews != null && paginatedEvents.Items[i].Reviews.Any() ? Math.Round(paginatedEvents.Items[i].Reviews.Average(x => x.Rate), 2) : 0.00;
         }
 
         return Task.FromResult(paginatedEventDtos);
