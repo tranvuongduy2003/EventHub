@@ -3,12 +3,10 @@ using EventHub.Infrastructure.Caching;
 using EventHub.Infrastructure.Clock;
 using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.FilesSystem;
-using EventHub.Infrastructure.Idempotence;
 using EventHub.Infrastructure.Mailler;
 using EventHub.Infrastructure.Persistence;
 using EventHub.Infrastructure.Services;
 using EventHub.Infrastructure.SignalR;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,8 +41,6 @@ public static class DependencyInjection
 
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
-        services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
-
         services
             .AddSingleton<IFileService, MinioFileService>();
 
