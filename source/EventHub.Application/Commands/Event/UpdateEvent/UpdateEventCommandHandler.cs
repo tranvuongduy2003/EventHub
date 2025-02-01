@@ -110,6 +110,7 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         {
             await _fileService.DeleteAsync(FileContainer.EVENTS, image.ImageFileName);
         }
+        await _unitOfWork.EventSubImages.DeleteList(eventSubImages);
 
         if (subImages?.Any() == true)
         {
