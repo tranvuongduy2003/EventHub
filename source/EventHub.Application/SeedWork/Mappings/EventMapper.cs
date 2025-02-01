@@ -20,7 +20,7 @@ public sealed class EventMapper
         config.CreateMap<Pagination<Event>, Pagination<EventDto>>()
             .ForMember(dest => dest.Items, options =>
                 options.MapFrom(source => source.Items));
-        
+
         config.CreateMap<Event, ReviewedEventDto>();
 
         config.CreateMap<Event, EventDetailDto>()

@@ -283,13 +283,13 @@ public class ApplicationDbContextSeed
                 }
 
                 _context.Permissions.Add(new Permission
-                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "CREATE" });
+                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "CREATE" });
                 _context.Permissions.Add(new Permission
-                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "UPDATE" });
+                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "UPDATE" });
                 _context.Permissions.Add(new Permission
-                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "DELETE" });
+                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "DELETE" });
                 _context.Permissions.Add(new Permission
-                    { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "VIEW" });
+                { FunctionId = function.Id, RoleId = adminRole.Id, CommandId = "VIEW" });
             }
 
             Role customerRole = await _roleManager.FindByNameAsync(EUserRole.CUSTOMER.GetDisplayName());
@@ -719,7 +719,7 @@ public class ApplicationDbContextSeed
                 .RuleFor(x => x.ExpiredDate, f => DateTime.Now.AddDays(f.Random.Int(1, 1000)));
 
             List<Coupon> coupons = couponFaker.Generate(1000);
-            await _context.AddRangeAsync(coupons); 
+            await _context.AddRangeAsync(coupons);
             await _context.SaveChangesAsync();
         }
 
@@ -737,7 +737,6 @@ public class ApplicationDbContextSeed
                 .RuleFor(e => e.AuthorId, f => f.PickRandom<User>(users).Id)
                 .RuleFor(e => e.Name, f => f.Commerce.ProductName())
                 .RuleFor(e => e.Description, f => f.Commerce.ProductDescription())
-                .RuleFor(e => e.Promotion, f => f.Random.Double())
                 .RuleFor(e => e.Location, f => f.Address.FullAddress())
                 .RuleFor(e => e.EventPaymentType, f => f.Random.Enum<EEventPaymentType>())
                 .RuleFor(e => e.EventCycleType, f => f.Random.Enum<EEventCycleType>());
@@ -838,7 +837,7 @@ public class ApplicationDbContextSeed
                 _context.Reasons.AddRange(reasons);
 
                 #endregion
-                
+
                 #region Coupons
 
                 Faker<EventCoupon> eventCouponFaker = new Faker<EventCoupon>()

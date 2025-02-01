@@ -57,6 +57,7 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
                     return query
                         .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                         .Include(x => x.EventCoupons).ThenInclude(x => x.Coupon)
+                        .Include(x => x.TicketTypes)
                         .Include(x => x.Reviews);
                 }
             );

@@ -30,14 +30,8 @@ public class EventDto
     [SwaggerSchema("End time of the event (UTC)")]
     public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    [SwaggerSchema("Optional promotion discount for the event (in percentage)")]
-    public double? Promotion { get; set; } = 0;
-
     [SwaggerSchema("The number of times this event has been marked as a favorite")]
     public int? NumberOfFavourites { get; set; } = 0;
-
-    [SwaggerSchema("The number of times this event has been shared")]
-    public int? NumberOfShares { get; set; } = 0;
 
     [SwaggerSchema("The total number of tickets sold for this event")]
     public int? NumberOfSoldTickets { get; set; } = 0;
@@ -67,6 +61,8 @@ public class EventDto
     public List<CategoryDto> Categories { get; set; }
 
     public List<EventCouponDto> Coupons { get; set; }
+
+    public List<TicketTypeDto> TicketTypes { get; set; }
 
     [SwaggerSchema("The date and time when the event was created (UTC)")]
     public DateTime CreatedAt { get; set; }

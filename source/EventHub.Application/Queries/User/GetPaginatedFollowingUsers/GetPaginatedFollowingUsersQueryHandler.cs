@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
 
-public class
-    GetPaginatedFollowingUsersQueryHandler : IQueryHandler<GetPaginatedFollowingUsersQuery, Pagination<UserDto>>
+public class GetPaginatedFollowingUsersQueryHandler : IQueryHandler<GetPaginatedFollowingUsersQuery, Pagination<UserDto>>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;

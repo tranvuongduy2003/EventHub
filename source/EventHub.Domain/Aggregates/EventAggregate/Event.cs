@@ -53,11 +53,7 @@ public class Event : AggregateRoot, IAuditable
 
     [Required] public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    [Range(0.0, 1.0)] public double? Promotion { get; set; } = 0;
-
     [Range(0, double.PositiveInfinity)] public int? NumberOfFavourites { get; set; } = 0;
-
-    [Range(0, double.PositiveInfinity)] public int? NumberOfShares { get; set; } = 0;
 
     [Range(0, double.PositiveInfinity)] public int? NumberOfSoldTickets { get; set; } = 0;
 

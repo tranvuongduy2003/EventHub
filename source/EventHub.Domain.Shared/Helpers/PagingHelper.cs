@@ -82,49 +82,48 @@ public static class PagingHelper
         // Apply text searches
         if (filter.Searches != null && filter.Searches.Any())
         {
-            query = filter.Searches?
-                .Aggregate(query, (current, search) =>
+            foreach (Search search in filter.Searches)
+            {
+                if (search.SearchValue != null && search.SearchBy != null)
                 {
-                    if (search.SearchValue != null && search.SearchBy != null)
+                    PropertyDescriptor property = TypeDescriptor
+                        .GetProperties(typeof(T))
+                        .Find(search.SearchBy, true);
+
+                    if (property != null)
                     {
-                        PropertyDescriptor property = TypeDescriptor
-                            .GetProperties(typeof(T))
-                            .Find(search.SearchBy, true);
-
-                        if (property != null)
-                        {
-                            return current.Where(x =>
-                                ((string)(property.GetValue(x) ?? ""))
-                                .Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase)
-                            );
-                        }
+                        query = query
+                            .AsEnumerable()
+                            .Where(x => ((string)(property.GetValue(x) ?? "")).Contains(search.SearchValue))
+                            .AsQueryable();
                     }
-
-                    return current;
-                });
+                }
+            }
         }
 
         // Apply ordering
         if (filter.Orders != null && filter.Orders.Any())
         {
-            query = filter.Orders?.Aggregate(query, (current, order) =>
+            foreach (Order order in filter.Orders)
             {
-                PropertyDescriptor property = TypeDescriptor
-                    .GetProperties(typeof(T))
-                    .Find(order.OrderBy, true);
-
-                if (property != null)
+                if (order.OrderBy != null)
                 {
-                    return order.OrderDirection switch
-                    {
-                        EPageOrder.ASC => current?.OrderBy(x => property.GetValue(x)),
-                        EPageOrder.DESC => current?.OrderByDescending(x => property.GetValue(x)),
-                        _ => current
-                    };
-                }
+                    PropertyDescriptor property = TypeDescriptor
+                        .GetProperties(typeof(T))
+                        .Find(order.OrderBy, true);
 
-                return current;
-            });
+                    if (property != null)
+                    {
+
+                        query = order.OrderDirection switch
+                        {
+                            EPageOrder.ASC => query?.OrderBy(x => property.GetValue(x)),
+                            EPageOrder.DESC => query?.OrderByDescending(x => property.GetValue(x)),
+                            _ => query
+                        };
+                    }
+                }
+            }
         }
 
         // Apply pagination
