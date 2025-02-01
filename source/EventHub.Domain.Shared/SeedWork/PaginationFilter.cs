@@ -154,5 +154,5 @@ public class EventPaginationFilter : PaginationFilter
     public int? Rate { get; set; } = null!;
 
     [FromQuery(Name = "categories")]
-    public List<Guid>? Categories { get; set; } = null!;
+    public List<Guid>? CategoryIds { get; set; } = null!;
 }

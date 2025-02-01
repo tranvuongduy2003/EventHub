@@ -58,9 +58,9 @@ public class GetFavouriteEventsByUserIdQueryHandler : IQueryHandler<GetFavourite
                     query = query.Where(x => x.Reviews.Average(r => r.Rate) >= rate);
                 }
 
-                if (request.Filter.Categories?.Any() == true)
+                if (request.Filter.CategoryIds?.Any() == true)
                 {
-                    var categorySet = new HashSet<Guid>(request.Filter.Categories);
+                    var categorySet = new HashSet<Guid>(request.Filter.CategoryIds);
                     query = query.Where(x => x.EventCategories.Any(ec => categorySet.Contains(ec.CategoryId)));
                 }
 
