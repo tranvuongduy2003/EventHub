@@ -1,8 +1,5 @@
 using System.Data;
-using Dapper;
-using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Domain.SeedWork.DomainEvent;
-using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Infrastructure.Persistence.Outbox;
 using MediatR;
@@ -26,7 +23,7 @@ namespace EventHub.Infrastructure.Outbox;
 public sealed class ProcessOutboxMessagesJob : IJob
 {
     private const int BatchSize = 10;
-    
+
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
     private readonly ApplicationDbContext _dbContext;
     private readonly IPublisher _publisher;

@@ -11,7 +11,6 @@ using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
-using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.Shared.Enums.Event;
@@ -75,16 +74,6 @@ public class Event : AggregateRoot, IAuditable
 
     [Required] public Guid AuthorId { get; set; } = Guid.Empty;
 
-    public void FavouriteEvent(Guid userId, Guid eventId)
-    {
-        RaiseDomainEvent(new FavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
-    }
-
-    public void UnfavouriteEvent(Guid userId, Guid eventId)
-    {
-        RaiseDomainEvent(new UnfavouriteEventDomainEvent(Guid.NewGuid(), userId, eventId));
-    }
-
     #region Relationships
 
     [ForeignKey("AuthorId")]
@@ -118,9 +107,9 @@ public class Event : AggregateRoot, IAuditable
     public virtual ICollection<PaymentItem> PaymentItems { get; set; } = new List<PaymentItem>();
 
     public virtual ICollection<Reason> Reasons { get; set; } = new List<Reason>();
-    
+
     public virtual ICollection<EventCoupon> EventCoupons { get; set; } = new List<EventCoupon>();
-    
+
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
     #endregion

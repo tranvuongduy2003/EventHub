@@ -2,6 +2,7 @@
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Commands.Event.UnfavouriteEvent;
@@ -27,21 +28,35 @@ public class UnfavouriteEventCommandHandler : ICommandHandler<UnfavouriteEventCo
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
+        Domain.Aggregates.UserAggregate.User user = (await _userManager.FindByIdAsync(userId))!;
+
         Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event is null)
         {
             throw new NotFoundException("Event does not exist!");
         }
 
-        @event.UnfavouriteEvent(Guid.Parse(userId), request.EventId);
-
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
-        if (user != null)
+        Domain.Aggregates.EventAggregate.ValueObjects.FavouriteEvent favouriteEvent = await _unitOfWork.FavouriteEvents
+            .FindByCondition(x =>
+                x.EventId == request.EventId &&
+                x.UserId == Guid.Parse(userId))
+            .FirstOrDefaultAsync(cancellationToken);
+        if (favouriteEvent == null)
         {
-            user.NumberOfFavourites--;
-            await _userManager.UpdateAsync(user);
+            return;
         }
 
+        await _unitOfWork.FavouriteEvents.Delete(favouriteEvent);
+
+        @event.NumberOfFavourites = (@event.NumberOfFavourites ?? 0) + 1;
+        await _unitOfWork.CachedEvents.Update(@event);
+
+        user.NumberOfFavourites = (user.NumberOfFavourites ?? 0) + 1;
+        await _userManager.UpdateAsync(user);
+
         await _unitOfWork.CommitAsync();
+
+        user.NumberOfFavourites--;
+        await _userManager.UpdateAsync(user);
     }
 }

@@ -27,20 +27,39 @@ public class FavouriteEventCommandHandler : ICommandHandler<FavouriteEventComman
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
+        Domain.Aggregates.UserAggregate.User user = (await _userManager.FindByIdAsync(userId))!;
+
         Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
         if (@event is null)
         {
             throw new NotFoundException("Event does not exist!");
         }
 
-        @event.FavouriteEvent(Guid.Parse(userId), request.EventId);
+        bool isFavouriteEventExisted = await _unitOfWork.FavouriteEvents
+            .ExistAsync(x =>
+                x.EventId == request.EventId &&
+                x.UserId == Guid.Parse(userId));
 
-        Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(userId);
-
-        if (user != null)
+        if (isFavouriteEventExisted)
         {
-            user.NumberOfFavourites++;
-            await _userManager.UpdateAsync(user);
+            return;
         }
+
+        await _unitOfWork.FavouriteEvents.CreateAsync(new Domain.Aggregates.EventAggregate.ValueObjects.FavouriteEvent
+        {
+            UserId = Guid.Parse(userId),
+            EventId = request.EventId,
+        });
+
+        @event.NumberOfFavourites = (@event.NumberOfFavourites ?? 0) + 1;
+        await _unitOfWork.CachedEvents.Update(@event);
+
+        user.NumberOfFavourites = (user.NumberOfFavourites ?? 0) + 1;
+        await _userManager.UpdateAsync(user);
+
+        await _unitOfWork.CommitAsync();
+
+        user.NumberOfFavourites++;
+        await _userManager.UpdateAsync(user);
     }
 }
