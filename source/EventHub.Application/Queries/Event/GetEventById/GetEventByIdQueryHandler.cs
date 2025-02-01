@@ -56,6 +56,10 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
             eventDto.IsFavourite =
                 await _unitOfWork.FavouriteEvents.ExistAsync(x =>
                     x.EventId == request.EventId && x.UserId == Guid.Parse(userId));
+
+            eventDto.Author.IsFollower =
+                await _unitOfWork.UserFollowers.ExistAsync(x =>
+                    x.FollowerId == Guid.Parse(userId) && x.FollowedId == Guid.Parse(eventDto.Author.Id));
         }
 
         return eventDto;
