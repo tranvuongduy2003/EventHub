@@ -40,7 +40,7 @@ public class UpdateEventDto
     public bool IsPrivate { get; set; } = false;
 
     [SwaggerSchema("List of categories associated with the event")]
-    public List<Guid> Categories { get; set; } = new();
+    public List<Guid> CategoryIds { get; set; } = new();
 
     [SwaggerSchema("Types of tickets available for the event")]
     public IEnumerable<string>? TicketTypes { get; set; } = new List<string>();

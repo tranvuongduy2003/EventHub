@@ -159,9 +159,9 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
         }
 
         // Handle event categories
-        if (request.Categories.Any())
+        if (request.CategoryIds.Any())
         {
-            var eventCategories = request.Categories
+            var eventCategories = request.CategoryIds
                 .Select(categoryId => new EventCategory
                 {
                     CategoryId = categoryId,

@@ -41,9 +41,9 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             await UpdateTicketTypes(@event.Id, request.TicketTypes);
         }
 
-        if (request.Categories.Any())
+        if (request.CategoryIds.Any())
         {
-            await UpdateCategories(@event.Id, request.Categories);
+            await UpdateCategories(@event.Id, request.CategoryIds);
         }
 
         if (request.Reasons?.Any() == true)

@@ -35,7 +35,7 @@ public class CreateEventCommand : ICommand
         EventCycleType = request.EventCycleType;
         EventPaymentType = request.EventPaymentType;
         IsPrivate = request.IsPrivate;
-        Categories = request.Categories;
+        CategoryIds = request.CategoryIds;
         TicketTypes = request.TicketTypes?
             .Select(x => JsonConvert.DeserializeObject<CreateTicketTypeCommand>(x)!)
             .ToList();
@@ -62,7 +62,7 @@ public class CreateEventCommand : ICommand
 
     public bool IsPrivate { get; set; }
 
-    public List<Guid> Categories { get; set; }
+    public List<Guid> CategoryIds { get; set; }
 
     public List<CreateTicketTypeCommand>? TicketTypes { get; set; }
 

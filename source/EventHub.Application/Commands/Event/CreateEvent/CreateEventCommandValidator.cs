@@ -31,9 +31,9 @@ public class CreateEventCommandValidator : AbstractValidator<CreateEventCommand>
             .GreaterThan(x => x.StartTime)
             .WithMessage("End time must be greater than start time");
 
-        RuleFor(x => x.Categories)
+        RuleFor(x => x.CategoryIds)
             .NotNull().WithMessage("CategoryIds is required");
-        RuleForEach(x => x.Categories)
+        RuleForEach(x => x.CategoryIds)
             .NotEmpty().WithMessage("Category id cannot be empty")
             .Must(id => Guid.TryParse(id.ToString(), out _)).WithMessage("Invalid category id format");
 
