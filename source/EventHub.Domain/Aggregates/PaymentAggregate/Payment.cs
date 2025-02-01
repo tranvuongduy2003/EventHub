@@ -28,9 +28,9 @@ public class Payment : AggregateRoot, IAuditable
     [Column(TypeName = "nvarchar(100)")]
     public required string CustomerName { get; set; } = string.Empty;
 
-    [Required] 
-    [MaxLength(100)] 
-    [Phone] 
+    [Required]
+    [MaxLength(100)]
+    [Phone]
     public required string CustomerPhone { get; set; } = string.Empty;
 
     [Required]
@@ -42,21 +42,25 @@ public class Payment : AggregateRoot, IAuditable
     [Range(0, double.PositiveInfinity)]
     public required long TotalPrice { get; set; } = 0;
 
-    [Required] 
-    [Range(0.00, 1.00)] 
+    [Required]
+    [Range(0.00, 1.00)]
     public required double Discount { get; set; } = 0;
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required EPaymentStatus Status { get; set; } = EPaymentStatus.PENDING;
 
-    public Guid? PaymentSessionId { get; set; } = Guid.Empty;
-    
-    [Required] 
+    public string? PaymentMethod { get; set; }
+
+    public string? PaymentIntentId { get; set; }
+
+    public string? SessionId { get; set; }
+
+    [Required]
     public required Guid EventId { get; set; } = Guid.Empty;
-    
+
     [Required]
     public required Guid AuthorId { get; set; } = Guid.Empty;
-    
+
     [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User Author { get; set; } = null!;

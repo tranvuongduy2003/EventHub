@@ -2,17 +2,19 @@
 
 public class CheckoutDto
 {
-    public string FullName { get; set; }
+    public string CustomerName { get; set; }
 
-    public string PhoneNumber { get; set; }
+    public string CustomerEmail { get; set; }
 
-    public string Email { get; set; }
+    public string CustomerPhone { get; set; }
 
-    public string EventId { get; set; }
+    public Guid EventId { get; set; }
 
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 
-    public string UserPaymentMethodId { get; set; }
+    public double Discount { get; set; }
 
-    public List<CreateCheckoutItemDto> Items { get; set; } = new();
+    public long TotalPrice { get; set; }
+
+    public List<CheckoutItemDto> CheckoutItems { get; set; } = new();
 }

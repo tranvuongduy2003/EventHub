@@ -9,15 +9,15 @@ public class PaymentDto
 {
     public Guid Id { get; set; }
 
+    public string CustomerName { get; set; }
+
+    public string CustomerPhone { get; set; }
+
+    public string CustomerEmail { get; set; }
+
+    public decimal TotalPrice { get; set; }
+
     public int TicketQuantity { get; set; }
-
-    public string CustomerName { get; set; } = string.Empty;
-
-    public string CustomerPhone { get; set; } = string.Empty;
-
-    public string CustomerEmail { get; set; } = string.Empty;
-
-    public decimal TotalPrice { get; set; } = 0;
 
     public double Discount { get; set; }
 
@@ -26,11 +26,15 @@ public class PaymentDto
 
     public EventDto? Event { get; set; }
 
-    public UserDto? Author { get; set; }
+    public AuthorDto? Author { get; set; }
 
-    public UserPaymentMethodDto? UserPaymentMethod { get; set; }
+    public string? PaymentMethod { get; set; }
+
+    public string? PaymentIntentId { get; set; }
+
+    public string? SessionId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public List<PaymentItemDto> PaymentItems { get; set; }
 }

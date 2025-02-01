@@ -12,7 +12,7 @@ public class PaymentItemDto
 
     public long TotalPrice { get; set; }
 
-    public double Discount { get; set; }
+    public EventDto Event { get; set; } = null!;
 
     public TicketTypeDto TicketType { get; set; } = null!;
 }

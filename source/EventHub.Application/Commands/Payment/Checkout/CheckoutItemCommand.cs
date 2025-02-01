@@ -1,6 +1,6 @@
-﻿namespace EventHub.Application.SeedWork.DTOs.Payment;
+﻿namespace EventHub.Application.Commands.Payment.Checkout;
 
-public class CheckoutItemDto
+public class CheckoutItemCommand
 {
     public Guid EventId { get; set; }
 
