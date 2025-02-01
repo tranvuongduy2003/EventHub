@@ -1,5 +1,4 @@
-﻿using EventHub.Application.SeedWork.DTOs.Event;
-using EventHub.Application.SeedWork.DTOs.User;
+﻿using EventHub.Application.SeedWork.DTOs.User;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Application.SeedWork.DTOs.Review;
@@ -14,6 +13,9 @@ public class ReviewDto
 
     [SwaggerSchema("Rating provided by the reviewer, from 0 to 5")]
     public double Rate { get; set; }
+
+    [SwaggerSchema("Positive level analysed by the sentiment, true or false")]
+    public bool IsPositive { get; set; }
 
     [SwaggerSchema("Event details associated with the review")]
     public ReviewedEventDto? Event { get; set; } = null;
