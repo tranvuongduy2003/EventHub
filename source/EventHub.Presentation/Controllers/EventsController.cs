@@ -1,5 +1,6 @@
 ﻿using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.Commands.Event.DeleteEvent;
+using EventHub.Application.Commands.Event.DeleteEvents;
 using EventHub.Application.Commands.Event.FavouriteEvent;
 using EventHub.Application.Commands.Event.MakeEventsPrivate;
 using EventHub.Application.Commands.Event.MakeEventsPublic;
@@ -186,6 +187,34 @@ public class EventsController : ControllerBase
             await _mediator.Send(new DeleteEventCommand(eventId));
 
             _logger.LogInformation("END: DeleteEvent");
+
+            return Ok(new ApiOkResponse());
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+    }
+
+    [HttpPatch("delete-events")]
+    [SwaggerOperation(
+        Summary = "Delete an existing event",
+        Description = "Deletes an existing event based on the provided event ID."
+    )]
+    [SwaggerResponse(200, "Event deleted successfully")]
+    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.DELETE)]
+    public async Task<IActionResult> DeleteEvents([FromBody] MultipleEventIdsDto request)
+    {
+        _logger.LogInformation("START: DeleteEvents");
+        try
+        {
+            await _mediator.Send(new DeleteEventsCommand(request.EventIds));
+
+            _logger.LogInformation("END: DeleteEvents");
 
             return Ok(new ApiOkResponse());
         }
