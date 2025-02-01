@@ -69,4 +69,7 @@ public class EventDto
 
     [SwaggerSchema("The date and time when the event was last updated (optional)")]
     public DateTime? UpdatedAt { get; set; }
+
+    [SwaggerSchema("The date and time when the event was last updated (optional)")]
+    public DateTime? DeletedAt { get; set; }
 }
