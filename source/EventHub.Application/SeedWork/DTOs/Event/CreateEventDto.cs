@@ -25,9 +25,6 @@ public class CreateEventDto
     [SwaggerSchema("End time of the event (UTC)")]
     public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    [SwaggerSchema("Optional promotion percentage for the event")]
-    public double? Promotion { get; set; } = 0;
-
     [SwaggerSchema("Type of event cycle (e.g., ONETIME, RECURRING)")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
@@ -47,9 +44,6 @@ public class CreateEventDto
 
     [SwaggerSchema("Optional reasons associated with the event")]
     public IEnumerable<string>? Reasons { get; set; } = new List<string>();
-    
-    [SwaggerSchema("Optional expenses associated with the event")]
-    public IEnumerable<string>? Expenses { get; set; } = new List<string>();
 
     [SwaggerSchema("Additional images for the event")]
     public IFormFileCollection? EventSubImages { get; set; } = null;

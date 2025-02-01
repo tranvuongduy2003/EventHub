@@ -1,5 +1,4 @@
-﻿using EventHub.Application.Commands.Event.CreateEvent;
-using EventHub.Application.SeedWork.DTOs.Event;
+﻿using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.Shared.Enums.Event;
 using Microsoft.AspNetCore.Http;
@@ -42,7 +41,6 @@ public class UpdateEventCommand : ICommand
         Location = request.Location;
         StartTime = request.StartTime;
         EndTime = request.EndTime;
-        Promotion = request.Promotion;
         EventCycleType = request.EventCycleType;
         EventPaymentType = request.EventPaymentType;
         IsPrivate = request.IsPrivate;
@@ -51,9 +49,6 @@ public class UpdateEventCommand : ICommand
             .Select(x => JsonConvert.DeserializeObject<UpdateTicketTypeCommand>(x)!)
             .ToList();
         Reasons = request.Reasons?.ToList();
-        Expenses = request.Expenses?
-            .Select(x => JsonConvert.DeserializeObject<UpdateExpenseCommand>(x)!)
-            .ToList();
         EventSubImages = request.EventSubImages;
         EmailContent = request.EmailContent != null
             ? new UpdateEmailContentCommand(request.EmailContent)
@@ -82,8 +77,6 @@ public class UpdateEventCommand : ICommand
 
     public DateTime EndTime { get; set; } = DateTime.UtcNow;
 
-    public double? Promotion { get; set; } = 0;
-
     public EEventCycleType EventCycleType { get; set; } = EEventCycleType.ONETIME;
 
     public EEventPaymentType EventPaymentType { get; set; } = EEventPaymentType.FREE;
@@ -95,8 +88,6 @@ public class UpdateEventCommand : ICommand
     public List<UpdateTicketTypeCommand>? TicketTypes { get; set; }
 
     public List<string>? Reasons { get; set; }
-
-    public List<UpdateExpenseCommand>? Expenses { get; set; }
 
     public IFormFileCollection? EventSubImages { get; set; }
 

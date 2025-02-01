@@ -35,11 +35,6 @@ public class UpdateEventCommandValidator : AbstractValidator<UpdateEventCommand>
             .GreaterThan(x => x.StartTime)
             .WithMessage("End time must be greater than start time");
 
-        RuleFor(x => x.Promotion)
-            .InclusiveBetween(0.0, 1.0)
-            .When(x => x.EmailContent != null)
-            .WithMessage("Promotion must be in range from 0.0 to 1.0");
-
         RuleFor(x => x.Categories)
             .NotNull().WithMessage("CategoryIds is required");
         RuleForEach(x => x.Categories)

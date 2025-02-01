@@ -188,38 +188,6 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
             await _unitOfWork.CommitAsync();
         }
 
-        // Handle event expenses if any
-        if (request.Expenses != null && request.Expenses.Any())
-        {
-            var expenses = request.Expenses
-                .Select(x => new Expense
-                {
-                    EventId = @event.Id,
-                    Title = x.Title,
-                    Total = x.SubExpenses.Sum(x => x.Price),
-                    SubExpenses = x.SubExpenses
-                        .Select(sub => new SubExpense
-                        {
-                            Name = sub.Name,
-                            Price = sub.Price
-                        })
-                        .ToList()
-                })
-                .ToList();
-            await _unitOfWork.Expenses.CreateListAsync(expenses);
-
-            var subExpenses = expenses
-                .SelectMany(x => x.SubExpenses.Select(sub =>
-                {
-                    sub.ExpenseId = x.Id;
-                    return sub;
-                }))
-                .ToList();
-            await _unitOfWork.SubExpenses.CreateListAsync(subExpenses);
-
-            await _unitOfWork.CommitAsync();
-        }
-
         // Update user's created events count
         Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(authorId.ToString());
         if (user != null)

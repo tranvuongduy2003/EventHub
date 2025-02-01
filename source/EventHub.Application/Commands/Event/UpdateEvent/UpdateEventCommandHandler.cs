@@ -51,11 +51,6 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             await UpdateReasons(@event.Id, request.Reasons);
         }
 
-        if (request.Expenses?.Any() == true)
-        {
-            await UpdateExpenses(@event.Id, request.Expenses);
-        }
-
         await _unitOfWork.CommitAsync();
     }
 
@@ -85,7 +80,6 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
         @event.Location = request.Location;
         @event.StartTime = request.StartTime;
         @event.EndTime = request.EndTime;
-        @event.Promotion = request.Promotion;
         @event.EventCycleType = request.EventCycleType;
         @event.EventPaymentType = request.EventPaymentType;
         @event.IsPrivate = request.IsPrivate;
@@ -250,65 +244,6 @@ public class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
             .ToList();
 
         await _unitOfWork.Reasons.CreateListAsync(updatedReasons);
-        await _unitOfWork.CommitAsync();
-    }
-
-    private async Task UpdateExpenses(Guid eventId, List<UpdateExpenseCommand> expenses)
-    {
-        var createdExpenses = new List<Expense>();
-        foreach (UpdateExpenseCommand expense in expenses)
-        {
-            if (expense.Id != null)
-            {
-                Expense existingExpense = await _unitOfWork.Expenses.GetByIdAsync((Guid)expense.Id);
-                existingExpense.Title = expense.Title;
-                existingExpense.Total = expense.SubExpenses.Sum(x => x.Price);
-                await _unitOfWork.Expenses.Update(existingExpense);
-                var subExpenses = _unitOfWork.SubExpenses
-                    .FindByCondition(x => x.ExpenseId == existingExpense.Id)
-                    .ToList();
-                await _unitOfWork.SubExpenses.DeleteList(subExpenses);
-                var createdSubExpenses = expense.SubExpenses
-                    .Select(x => new SubExpense
-                    {
-                        ExpenseId = existingExpense.Id,
-                        Price = x.Price,
-                        Name = x.Name,
-                    })
-                    .ToList();
-                await _unitOfWork.SubExpenses.CreateListAsync(createdSubExpenses);
-            }
-            else
-            {
-                createdExpenses.Add(new Expense
-                {
-                    EventId = eventId,
-                    Title = expense.Title,
-                    Total = expense.SubExpenses.Sum(x => x.Price),
-                    SubExpenses = expense.SubExpenses
-                        .Select(sub => new SubExpense
-                        {
-                            Name = sub.Name,
-                            Price = sub.Price
-                        })
-                        .ToList()
-                });
-            }
-        }
-
-        if (createdExpenses.Any())
-        {
-            await _unitOfWork.Expenses.CreateListAsync(createdExpenses);
-            var subExpenses = createdExpenses
-                .SelectMany(x => x.SubExpenses.Select(sub =>
-                {
-                    sub.ExpenseId = x.Id;
-                    return sub;
-                }))
-                .ToList();
-            await _unitOfWork.SubExpenses.CreateListAsync(subExpenses);
-        }
-
         await _unitOfWork.CommitAsync();
     }
 }

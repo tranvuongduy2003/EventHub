@@ -32,7 +32,6 @@ public class CreateEventCommand : ICommand
         Location = request.Location;
         StartTime = request.StartTime;
         EndTime = request.EndTime;
-        Promotion = request.Promotion;
         EventCycleType = request.EventCycleType;
         EventPaymentType = request.EventPaymentType;
         IsPrivate = request.IsPrivate;
@@ -41,9 +40,6 @@ public class CreateEventCommand : ICommand
             .Select(x => JsonConvert.DeserializeObject<CreateTicketTypeCommand>(x)!)
             .ToList();
         Reasons = request.Reasons?.ToList();
-        Expenses = request.Expenses?
-            .Select(x => JsonConvert.DeserializeObject<CreateExpenseCommand>(x)!)
-            .ToList();
         EventSubImages = request.EventSubImages;
         EmailContent = request.EmailContent != null ? new CreateEmailContentCommand(request.EmailContent) : null;
     }
@@ -60,8 +56,6 @@ public class CreateEventCommand : ICommand
 
     public DateTime EndTime { get; set; }
 
-    public double? Promotion { get; set; }
-
     public EEventCycleType EventCycleType { get; set; }
 
     public EEventPaymentType EventPaymentType { get; set; }
@@ -73,8 +67,6 @@ public class CreateEventCommand : ICommand
     public List<CreateTicketTypeCommand>? TicketTypes { get; set; }
 
     public List<string>? Reasons { get; set; }
-
-    public List<CreateExpenseCommand>? Expenses { get; set; }
 
     public IFormFileCollection? EventSubImages { get; set; }
 
