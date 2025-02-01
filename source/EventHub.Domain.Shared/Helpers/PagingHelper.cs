@@ -76,9 +76,6 @@ public static class PagingHelper
 
     public static Pagination<T> QueryPaginate<T>(PaginationFilter filter, IQueryable<T> query)
     {
-        // Get total records before filtering
-        int totalCount = query.Count();
-
         // Apply text searches
         if (filter.Searches != null && filter.Searches.Any())
         {
@@ -105,6 +102,9 @@ public static class PagingHelper
                 })
                 .AsQueryable();
         }
+
+        // Get total records before filtering
+        int totalCount = query.Count();
 
         // Apply ordering
         if (filter.Orders != null && filter.Orders.Any())
