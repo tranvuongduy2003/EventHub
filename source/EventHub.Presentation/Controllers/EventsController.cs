@@ -233,11 +233,11 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
-    public async Task<IActionResult> PatchRestoreDeletedEvent([FromBody] List<Guid> events)
+    public async Task<IActionResult> PatchRestoreDeletedEvent([FromBody] MultipleEventIdsDto request)
     {
         _logger.LogInformation("START: PatchRestoreDeletedEvent");
 
-        await _mediator.Send(new RestoreEventCommand(events));
+        await _mediator.Send(new RestoreEventCommand(request.EventIds));
 
         _logger.LogInformation("END: PatchRestoreDeletedEvent");
 
@@ -364,11 +364,11 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
-    public async Task<IActionResult> PatchMakeEventsPrivate([FromBody] List<Guid> events)
+    public async Task<IActionResult> PatchMakeEventsPrivate([FromBody] MultipleEventIdsDto request)
     {
         _logger.LogInformation("START: PatchMakeEventsPrivate");
 
-        await _mediator.Send(new MakeEventsPrivateCommand(events));
+        await _mediator.Send(new MakeEventsPrivateCommand(request.EventIds));
 
         _logger.LogInformation("END: PatchMakeEventsPrivate");
 
@@ -385,11 +385,11 @@ public class EventsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
-    public async Task<IActionResult> PatchMakeEventsPublic([FromBody] List<Guid> events)
+    public async Task<IActionResult> PatchMakeEventsPublic([FromBody] MultipleEventIdsDto request)
     {
         _logger.LogInformation("START: PatchMakeEventsPublic");
 
-        await _mediator.Send(new MakeEventsPublicCommand(events));
+        await _mediator.Send(new MakeEventsPublicCommand(request.EventIds));
 
         _logger.LogInformation("END: PatchMakeEventsPublic");
 
