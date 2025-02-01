@@ -98,10 +98,6 @@ public class MinioFileService : IFileService
     {
         try
         {
-            await _minioClient.GetObjectAsync(new GetObjectArgs()
-                .WithBucket(bucketName)
-                .WithObject(objectName));
-
             await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
                 .WithBucket(bucketName)
                 .WithObject(objectName));
