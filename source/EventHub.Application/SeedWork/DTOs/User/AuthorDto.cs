@@ -15,4 +15,6 @@ public class AuthorDto
 
     [SwaggerSchema("The avatar URL or path for the author.")]
     public string? Avatar { get; set; }
+
+    public bool IsFollowed { get; set; }
 }

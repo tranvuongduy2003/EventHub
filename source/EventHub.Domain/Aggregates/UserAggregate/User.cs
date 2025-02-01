@@ -11,7 +11,6 @@ using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
-using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Entities;
@@ -85,18 +84,8 @@ public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDele
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
-    
-    public virtual ICollection<Role>? Roles { get; set; } = null!;
-    
-    public void FollowUser(Guid followerId, Guid followedUserId)
-    {
-        RaiseDomainEvent(new FollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
-    }
 
-    public void UnfollowUser(Guid followerId, Guid followedUserId)
-    {
-        RaiseDomainEvent(new UnfollowUserDomainEvent(Guid.NewGuid(), followerId, followedUserId));
-    }
+    public virtual ICollection<Role>? Roles { get; set; } = null!;
 
     public IReadOnlyCollection<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
 

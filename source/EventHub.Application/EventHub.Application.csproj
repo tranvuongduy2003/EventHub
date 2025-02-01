@@ -11,4 +11,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\EventHub.Domain\EventHub.Domain.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="DomainEventHandlers\" />
+	</ItemGroup>
 </Project>
