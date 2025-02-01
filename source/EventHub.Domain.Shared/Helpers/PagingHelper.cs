@@ -82,23 +82,28 @@ public static class PagingHelper
         // Apply text searches
         if (filter.Searches != null && filter.Searches.Any())
         {
-            foreach (Search search in filter.Searches)
-            {
-                if (search.SearchValue != null && search.SearchBy != null)
+            query = query
+                .AsEnumerable()
+                .Where(x =>
                 {
-                    PropertyDescriptor property = TypeDescriptor
-                        .GetProperties(typeof(T))
-                        .Find(search.SearchBy, true);
-
-                    if (property != null)
+                    bool condition = false;
+                    foreach (Search search in filter.Searches)
                     {
-                        query = query
-                            .AsEnumerable()
-                            .Where(x => ((string)(property.GetValue(x) ?? "")).Contains(search.SearchValue))
-                            .AsQueryable();
+                        if (search.SearchValue != null && search.SearchBy != null)
+                        {
+                            PropertyDescriptor property = TypeDescriptor
+                                .GetProperties(typeof(T))
+                                .Find(search.SearchBy, true);
+
+                            if (property != null)
+                            {
+                                condition = condition || ((string)(property.GetValue(x) ?? "")).Contains(search.SearchValue, StringComparison.CurrentCultureIgnoreCase);
+                            }
+                        }
                     }
-                }
-            }
+                    return condition;
+                })
+                .AsQueryable();
         }
 
         // Apply ordering
