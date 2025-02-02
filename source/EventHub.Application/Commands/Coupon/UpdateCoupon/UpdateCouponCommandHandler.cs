@@ -1,4 +1,3 @@
-using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.File;
 using EventHub.Application.SeedWork.Exceptions;
@@ -10,14 +9,12 @@ namespace EventHub.Application.Commands.Coupon.UpdateCoupon;
 
 public class UpdateCouponCommandHandler : ICommandHandler<UpdateCouponCommand>
 {
-    private readonly IMapper _mapper;
     private readonly IFileService _fileService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateCouponCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService)
+    public UpdateCouponCommandHandler(IUnitOfWork unitOfWork, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _fileService = fileService;
     }
 
