@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.User.UpdateUser;
 
-public class UpdateUserCommand : ICommand
+public class UpdateUserCommand : ICommand<UserDto>
 {
     public UpdateUserCommand(Guid userId, UpdateUserDto request)
         => (UserId, Email, PhoneNumber, Dob, FullName, UserName, Gender, Bio, Avatar) = (userId, request.Email,

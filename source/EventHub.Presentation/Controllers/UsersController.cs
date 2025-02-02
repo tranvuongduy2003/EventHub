@@ -143,7 +143,7 @@ public class UsersController : ControllerBase
         }
         catch (BadRequestException e)
         {
-            return NotFound(new ApiBadRequestResponse(e.Message));
+            return BadRequest(new ApiBadRequestResponse(e.Message));
 
         }
     }
@@ -297,7 +297,7 @@ public class UsersController : ControllerBase
 
         }
     }
-    
+
     [HttpGet("profile")]
     [SwaggerOperation(
         Summary = "Retrieve user profile",
