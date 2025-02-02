@@ -5,6 +5,10 @@ namespace EventHub.Application.Commands.Payment.Checkout;
 
 public class CheckoutCommand : ICommand<CheckoutResponseDto>
 {
+    public CheckoutCommand()
+    {
+    }
+
     public CheckoutCommand(CheckoutDto request)
     {
         CustomerName = request.CustomerName;
