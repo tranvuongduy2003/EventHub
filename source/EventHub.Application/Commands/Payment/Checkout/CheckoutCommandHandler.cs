@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
+using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 
@@ -32,10 +33,16 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, PaymentDt
             TotalPrice = request.CheckoutItems.Sum(x => x.TotalPrice),
         };
 
-        List<PaymentItem> paymentItems = _mapper.Map<List<PaymentItem>>(request.CheckoutItems);
-
         await _unitOfWork.Payments.CreateAsync(payment);
+        await _unitOfWork.CommitAsync();
+
+        List<PaymentItem> paymentItems = _mapper.Map<List<PaymentItem>>(request.CheckoutItems);
         await _unitOfWork.PaymentItems.CreateListAsync(paymentItems);
+
+        var paymentCoupons = request.CouponIds
+            .Select(x => new PaymentCoupon { CouponId = x, PaymentId = payment.Id })
+            .ToList();
+        await _unitOfWork.PaymentCoupons.CreateListAsync(paymentCoupons);
 
         await _unitOfWork.CommitAsync();
 

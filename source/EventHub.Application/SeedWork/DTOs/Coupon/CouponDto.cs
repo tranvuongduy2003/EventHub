@@ -17,6 +17,8 @@ public class CouponDto
 
     public float PercentValue { get; set; }
 
+    public string Code { get; set; }
+
     public DateTime ExpiredDate { get; set; }
 
     public string CoverImage { get; set; }

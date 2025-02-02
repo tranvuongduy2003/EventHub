@@ -26,6 +26,8 @@ public class Coupon : AggregateRoot, IAuditable
 
     public float PercentValue { get; set; }
 
+    public string Code { get; set; }
+
     [Required]
     [Column(TypeName = "nvarchar(max)")]
     public string CoverImageUrl { get; set; } = string.Empty;

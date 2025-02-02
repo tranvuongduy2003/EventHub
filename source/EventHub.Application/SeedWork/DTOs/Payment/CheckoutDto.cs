@@ -17,4 +17,6 @@ public class CheckoutDto
     public long TotalPrice { get; set; }
 
     public List<CheckoutItemDto> CheckoutItems { get; set; } = new();
+
+    public List<Guid> CouponIds { get; set; }
 }

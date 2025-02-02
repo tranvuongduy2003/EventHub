@@ -29,6 +29,10 @@ public static class SettingsConfiguration
             .Get<HangfireSettings>();
         services.AddSingleton<HangfireSettings>(hangfireSettings!);
 
+        StripeSettings stripeSettings = configuration.GetSection(nameof(StripeSettings))
+            .Get<StripeSettings>();
+        services.AddSingleton<StripeSettings>(stripeSettings!);
+
         return services;
     }
 }

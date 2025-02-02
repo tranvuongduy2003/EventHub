@@ -17,12 +17,14 @@ public class CheckoutCommand : ICommand<PaymentDto>
         CheckoutItems = request.CheckoutItems
             .Select(x => new CheckoutItemCommand
             {
+                Name = x.Name,
                 EventId = x.EventId,
                 TotalPrice = x.TotalPrice,
                 Quantity = x.Quantity,
                 TicketTypeId = x.TicketTypeId,
             })
             .ToList();
+        CouponIds = request.CouponIds;
     }
 
     public string CustomerName { get; set; }
@@ -40,4 +42,6 @@ public class CheckoutCommand : ICommand<PaymentDto>
     public long TotalPrice { get; set; }
 
     public List<CheckoutItemCommand> CheckoutItems { get; set; }
+
+    public List<Guid> CouponIds { get; set; }
 }

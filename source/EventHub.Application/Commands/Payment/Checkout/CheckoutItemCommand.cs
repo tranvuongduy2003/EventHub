@@ -2,6 +2,8 @@
 
 public class CheckoutItemCommand
 {
+    public string Name { get; set; }
+
     public Guid EventId { get; set; }
 
     public Guid TicketTypeId { get; set; }

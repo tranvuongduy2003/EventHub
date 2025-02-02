@@ -1,3 +1,4 @@
+using EventHub.Domain.Shared.Settings;
 using EventHub.Infrastructure;
 using EventHub.Infrastructure.Configurations;
 using EventHub.Presentation.Extensions;
@@ -13,6 +14,8 @@ builder.Host.UseSerilog(LoggingConfiguration.Configure);
 builder.AddAppConfigurations();
 
 builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
+
+Stripe.StripeConfiguration.ApiKey = builder.Services.GetOptions<StripeSettings>("StripeSettings").SecretKey;
 
 WebApplication app = builder.Build();
 
