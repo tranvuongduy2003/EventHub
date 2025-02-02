@@ -131,11 +131,11 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PutUpdateUser");
         try
         {
-            await _mediator.Send(new UpdateUserCommand(userId, request));
+            UserDto user = await _mediator.Send(new UpdateUserCommand(userId, request));
 
             _logger.LogInformation("END: PutUpdateUser");
 
-            return Ok(new ApiOkResponse(true));
+            return Ok(new ApiOkResponse(user));
         }
         catch (NotFoundException e)
         {
