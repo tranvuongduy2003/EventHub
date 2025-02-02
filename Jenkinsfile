@@ -91,13 +91,13 @@ pipeline {
                 // Use double quotes for sh and escape the payload
                 sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
                 
-                def payload = groovy.json.JsonOutput.toJson([
+                def payload1 = groovy.json.JsonOutput.toJson([
                     chat_id: "6595915114",
                     text: jsonText,
                     disable_notification: false
                 ])
                 // Use double quotes for sh and escape the payload
-                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload1}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
             }
         }
         failure {
@@ -110,13 +110,13 @@ pipeline {
                 ])
                 sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
 
-                def payload = groovy.json.JsonOutput.toJson([
+                def payload1 = groovy.json.JsonOutput.toJson([
                     chat_id: "6595915114",
                     text: jsonText,
                     disable_notification: false
                 ])
                 // Use double quotes for sh and escape the payload
-                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload1}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
             }
         }
     }
