@@ -9,6 +9,7 @@ using EventHub.Application.Commands.Event.RestoreEvent;
 using EventHub.Application.Commands.Event.UnfavouriteEvent;
 using EventHub.Application.Commands.Event.UpdateEvent;
 using EventHub.Application.Queries.Event.GetCreatedEventsByUserId;
+using EventHub.Application.Queries.Event.GetCreatedEventsStatistics;
 using EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
 using EventHub.Application.Queries.Event.GetEventById;
 using EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
@@ -132,6 +133,19 @@ public class EventsController : ControllerBase
         _logger.LogInformation("END: GetCreatedEvents");
 
         return Ok(new ApiOkResponse(events));
+    }
+
+    [HttpGet("get-created-events-statistics")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetCreatedEventsStatistics()
+    {
+        _logger.LogInformation("START: GetCreatedEventsStatistics");
+
+        CreatedEventsStatisticsDto statistics = await _mediator.Send(new GetCreatedEventsStatisticsQuery());
+
+        _logger.LogInformation("END: GetCreatedEventsStatistics");
+
+        return Ok(new ApiOkResponse(statistics));
     }
 
     [HttpPut("{eventId:guid}")]
