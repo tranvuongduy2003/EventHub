@@ -28,7 +28,28 @@ public class PaymentsController : ControllerBase
     {
         _logger.LogInformation("START: PostCheckout");
 
-        CheckoutResponseDto response = await _mediator.Send(new CheckoutCommand(request));
+        CheckoutResponseDto response = await _mediator.Send(new CheckoutCommand
+        {
+            CustomerName = request.CustomerName,
+            CustomerEmail = request.CustomerEmail,
+            CustomerPhone = request.CustomerPhone,
+            EventId = request.EventId,
+            UserId = request.UserId,
+            TotalPrice = request.TotalPrice,
+            CheckoutItems = request.CheckoutItems
+                .Select(x => new CheckoutItemCommand
+                {
+                    Name = x.Name,
+                    EventId = request.EventId,
+                    Price = x.Price,
+                    Quantity = x.Quantity,
+                    TicketTypeId = x.TicketTypeId,
+                })
+                .ToList(),
+            CouponId = request.CouponId,
+            SuccessUrl = request.SuccessUrl,
+            CancelUrl = request.CancelUrl,
+        });
 
         _logger.LogInformation("END: PostCheckout");
 
