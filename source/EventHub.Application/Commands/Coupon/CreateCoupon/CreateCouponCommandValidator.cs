@@ -17,7 +17,7 @@ public class CreateCouponCommandValidator : AbstractValidator<CreateCouponComman
             .WithMessage("Description cannot exceed 500 characters")
             .When(x => !string.IsNullOrEmpty(x.Description));
 
-        RuleFor(x => x.MinQuantity)
+        RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0)
             .WithMessage("Minimum quantity must be greater than or equal to 0");
 

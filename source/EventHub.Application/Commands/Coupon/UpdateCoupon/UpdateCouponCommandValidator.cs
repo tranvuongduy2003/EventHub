@@ -11,7 +11,7 @@ public class UpdateCouponCommandValidator : AbstractValidator<UpdateCouponComman
             .WithMessage("Coupon ID is required")
             .MaximumLength(50)
             .WithMessage("Coupon ID cannot exceed 50 characters");
-        
+
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Coupon name is required")
@@ -23,7 +23,7 @@ public class UpdateCouponCommandValidator : AbstractValidator<UpdateCouponComman
             .WithMessage("Description cannot exceed 500 characters")
             .When(x => !string.IsNullOrEmpty(x.Description));
 
-        RuleFor(x => x.MinQuantity)
+        RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0)
             .WithMessage("Minimum quantity must be greater than or equal to 0");
 
