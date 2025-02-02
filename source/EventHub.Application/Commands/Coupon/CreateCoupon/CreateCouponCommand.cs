@@ -26,7 +26,7 @@ public class CreateCouponCommand : ICommand<CouponDto>
     /// The data transfer object containing the details for the new coupon.
     /// </param>
     public CreateCouponCommand(CreateCouponDto request)
-        => (Name, Description, MinQuantity, MinPrice, PercentValue, ExpiredDate, CoverImage) =
+        => (Name, Description, Quantity, MinPrice, PercentValue, ExpiredDate, CoverImage) =
             (request.Name, request.Description, request.Quantity, request.MinPrice, request.PercentValue,
                 request.ExpiredDate, request.CoverImage);
 
@@ -34,7 +34,7 @@ public class CreateCouponCommand : ICommand<CouponDto>
 
     public string Description { get; set; }
 
-    public int MinQuantity { get; set; }
+    public int Quantity { get; set; }
 
     public long MinPrice { get; set; }
 

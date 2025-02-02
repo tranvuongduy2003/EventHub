@@ -25,9 +25,8 @@ public class UpdateCouponCommand : ICommand
     {
         Id = id;
         Name = request.Name;
-        Name = request.Name;
         Description = request.Name;
-        MinQuantity = request.Quantity;
+        Quantity = request.Quantity;
         MinPrice = request.MinPrice;
         PercentValue = request.PercentValue;
         ExpiredDate = request.ExpiredDate;
@@ -46,7 +45,7 @@ public class UpdateCouponCommand : ICommand
 
     public string Description { get; set; }
 
-    public int MinQuantity { get; set; }
+    public int Quantity { get; set; }
 
     public long MinPrice { get; set; }
 

@@ -36,7 +36,7 @@ public class CreateCouponCommandHandler : ICommandHandler<CreateCouponCommand, C
         {
             Name = request.Name,
             Description = request.Description,
-            Quantity = request.MinQuantity,
+            Quantity = request.Quantity,
             MinPrice = request.MinPrice,
             PercentValue = request.PercentValue,
             ExpiredDate = request.ExpiredDate,

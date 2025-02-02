@@ -29,7 +29,12 @@ public class UpdateCouponCommandHandler : ICommandHandler<UpdateCouponCommand>
             throw new NotFoundException("Coupon does not exist!");
         }
 
-        coupon = _mapper.Map<Domain.Aggregates.CouponAggregate.Coupon>(request);
+        coupon.Name = request.Name;
+        coupon.Description = request.Name;
+        coupon.Quantity = request.Quantity;
+        coupon.MinPrice = request.MinPrice;
+        coupon.PercentValue = request.PercentValue;
+        coupon.ExpiredDate = request.ExpiredDate;
 
         if (request.CoverImage != null)
         {
