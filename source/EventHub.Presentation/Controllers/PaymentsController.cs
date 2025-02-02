@@ -1,5 +1,4 @@
 ﻿using EventHub.Application.Commands.Payment.Checkout;
-using EventHub.Application.Commands.Payment.CreateSession;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Domain.Shared.Enums.Command;
@@ -29,23 +28,10 @@ public class PaymentsController : ControllerBase
     {
         _logger.LogInformation("START: PostCheckout");
 
-        await _mediator.Send(new CheckoutCommand(request));
+        CheckoutResponseDto response = await _mediator.Send(new CheckoutCommand(request));
 
         _logger.LogInformation("END: PostCheckout");
 
-        return Ok(new ApiOkResponse());
-    }
-
-    [HttpPost("create-session")]
-    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.CREATE)]
-    public async Task<IActionResult> PostCreateSession(CreateSessionDto request)
-    {
-        _logger.LogInformation("START: PostCreateSession");
-
-        await _mediator.Send(new CreateSessionCommand(request));
-
-        _logger.LogInformation("END: PostCreateSession");
-
-        return Ok(new ApiOkResponse());
+        return Ok(new ApiOkResponse(response));
     }
 }

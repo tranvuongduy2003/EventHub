@@ -12,11 +12,13 @@ public class CheckoutDto
 
     public Guid UserId { get; set; }
 
-    public double Discount { get; set; }
-
     public long TotalPrice { get; set; }
 
     public List<CheckoutItemDto> CheckoutItems { get; set; } = new();
 
-    public List<Guid> CouponIds { get; set; }
+    public Guid CouponId { get; set; }
+
+    public string SuccessUrl { get; set; }
+
+    public string CancelUrl { get; set; }
 }

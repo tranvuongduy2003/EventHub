@@ -12,7 +12,7 @@ public class CreateCouponDto
 
     public long MinPrice { get; set; }
 
-    public float PercentValue { get; set; }
+    public int PercentValue { get; set; }
 
     public DateTime ExpiredDate { get; set; }
 

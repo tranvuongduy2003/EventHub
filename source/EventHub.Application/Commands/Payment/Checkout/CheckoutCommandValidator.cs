@@ -24,9 +24,6 @@ public class CheckoutCommandValidator : AbstractValidator<CheckoutCommand>
         RuleFor(cmd => cmd.UserId)
             .NotEmpty().WithMessage("User ID is required.");
 
-        RuleFor(cmd => cmd.Discount)
-            .GreaterThanOrEqualTo(0).WithMessage("Discount cannot be negative.");
-
         RuleFor(cmd => cmd.TotalPrice)
             .GreaterThanOrEqualTo(0).WithMessage("Total price cannot be negative.");
 
@@ -51,7 +48,7 @@ public class CheckoutItemCommandValidator : AbstractValidator<CheckoutItemComman
         RuleFor(item => item.Quantity)
             .GreaterThan(0).WithMessage("Quantity must be at least 1 in checkout item.");
 
-        RuleFor(item => item.TotalPrice)
+        RuleFor(item => item.Price)
             .GreaterThanOrEqualTo(0).WithMessage("Total price cannot be negative in checkout item.");
     }
 }

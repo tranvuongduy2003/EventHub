@@ -3,7 +3,7 @@ using EventHub.Domain.SeedWork.Command;
 
 namespace EventHub.Application.Commands.Payment.Checkout;
 
-public class CheckoutCommand : ICommand<PaymentDto>
+public class CheckoutCommand : ICommand<CheckoutResponseDto>
 {
     public CheckoutCommand(CheckoutDto request)
     {
@@ -12,19 +12,20 @@ public class CheckoutCommand : ICommand<PaymentDto>
         CustomerPhone = request.CustomerPhone;
         EventId = request.EventId;
         UserId = request.UserId;
-        Discount = request.Discount;
         TotalPrice = request.TotalPrice;
         CheckoutItems = request.CheckoutItems
             .Select(x => new CheckoutItemCommand
             {
                 Name = x.Name,
-                EventId = x.EventId,
-                TotalPrice = x.TotalPrice,
+                EventId = request.EventId,
+                Price = x.Price,
                 Quantity = x.Quantity,
                 TicketTypeId = x.TicketTypeId,
             })
             .ToList();
-        CouponIds = request.CouponIds;
+        CouponId = request.CouponId;
+        SuccessUrl = request.SuccessUrl;
+        CancelUrl = request.CancelUrl;
     }
 
     public string CustomerName { get; set; }
@@ -37,11 +38,13 @@ public class CheckoutCommand : ICommand<PaymentDto>
 
     public Guid UserId { get; set; }
 
-    public double Discount { get; set; }
-
     public long TotalPrice { get; set; }
 
     public List<CheckoutItemCommand> CheckoutItems { get; set; }
 
-    public List<Guid> CouponIds { get; set; }
+    public Guid CouponId { get; set; }
+
+    public string SuccessUrl { get; set; }
+
+    public string CancelUrl { get; set; }
 }

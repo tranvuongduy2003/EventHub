@@ -44,8 +44,7 @@ public class Payment : AggregateRoot, IAuditable
     public required long TotalPrice { get; set; } = 0;
 
     [Required]
-    [Range(0.00, 1.00)]
-    public required double Discount { get; set; } = 0;
+    public long Discount { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required EPaymentStatus Status { get; set; } = EPaymentStatus.PENDING;

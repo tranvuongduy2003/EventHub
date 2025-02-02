@@ -24,7 +24,8 @@ public class Coupon : AggregateRoot, IAuditable
 
     public long MinPrice { get; set; }
 
-    public float PercentValue { get; set; }
+    [Range(0, 100)]
+    public int PercentValue { get; set; }
 
     public string Code { get; set; }
 
