@@ -24,7 +24,7 @@ public class PaymentsController : ControllerBase
 
     [HttpPost("checkout")]
     [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.CREATE)]
-    public async Task<IActionResult> PostCheckout(CheckoutDto request)
+    public async Task<IActionResult> PostCheckout([FromBody] CheckoutDto request)
     {
         _logger.LogInformation("START: PostCheckout");
 
