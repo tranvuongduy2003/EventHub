@@ -1,6 +1,4 @@
-﻿using EventHub.Application.SeedWork.DTOs.Event;
-using EventHub.Application.SeedWork.DTOs.User;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Application.SeedWork.DTOs.Coupon;
 
@@ -20,13 +18,9 @@ public class CouponDto
     public float PercentValue { get; set; }
 
     public DateTime ExpiredDate { get; set; }
-    
-    public Guid AuthorId { get; set; }
-    
-    public AuthorDto Author { get; set; } = null!;
-    
-    public List<EventDto> Events { get; set; } = new List<EventDto>();
-    
+
+    public string CoverImage { get; set; }
+
     [SwaggerSchema("Creation timestamp of the coupon")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

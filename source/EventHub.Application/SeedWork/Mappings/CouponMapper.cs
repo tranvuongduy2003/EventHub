@@ -11,11 +11,11 @@ public sealed class CouponMapper
     {
         config
             .CreateMap<Coupon, CouponDto>()
-            .ForMember(dest => dest.Events, options =>
-                options.MapFrom(source => source.EventCoupons.Select(x => x.Event)));
-        
+            .ForMember(dest => dest.CoverImage, options =>
+                options.MapFrom(source => source.CoverImageUrl));
+
         config.CreateMap<Coupon, EventCouponDto>();
-        
+
         config.CreateMap<Pagination<Coupon>, Pagination<CouponDto>>()
             .ForMember(dest => dest.Items, options =>
                 options.MapFrom(source => source.Items));
