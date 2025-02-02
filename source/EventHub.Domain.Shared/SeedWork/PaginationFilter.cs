@@ -155,4 +155,7 @@ public class EventPaginationFilter : PaginationFilter
 
     [FromQuery(Name = "categoryIds")]
     public List<Guid>? CategoryIds { get; set; } = null!;
+
+    [FromQuery(Name = "visibility")]
+    public EVisibility? Visibility { get; set; } = EVisibility.ALL;
 }

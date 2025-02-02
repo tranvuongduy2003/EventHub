@@ -63,6 +63,20 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
                         query = query.Where(x => x.EventCategories.Any(ec => categorySet.Contains(ec.CategoryId)));
                     }
 
+                    if (request.Filter.Visibility != null || request.Filter.Visibility != Domain.Shared.Enums.Event.EVisibility.ALL)
+                    {
+                        query = request.Filter.Visibility switch
+                        {
+                            Domain.Shared.Enums.Event.EVisibility.PRIVATE =>
+                                query.Where(x => x.IsPrivate),
+
+                            Domain.Shared.Enums.Event.EVisibility.PUBLIC =>
+                                query.Where(x => !x.IsPrivate),
+
+                            _ => query
+                        };
+                    }
+
                     return query
                         .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                         .Include(x => x.EventCoupons).ThenInclude(x => x.Coupon)
