@@ -25,7 +25,7 @@ public class UpdateCouponCommand : ICommand
     {
         Id = id;
         Name = request.Name;
-        Description = request.Name;
+        Description = request.Description;
         Quantity = request.Quantity;
         MinPrice = request.MinPrice;
         PercentValue = request.PercentValue;
