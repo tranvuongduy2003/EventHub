@@ -27,7 +27,7 @@ public class UpdateCouponCommandHandler : ICommandHandler<UpdateCouponCommand>
         }
 
         coupon.Name = request.Name;
-        coupon.Description = request.Name;
+        coupon.Description = request.Description;
         coupon.Quantity = request.Quantity;
         coupon.MinPrice = request.MinPrice;
         coupon.PercentValue = request.PercentValue;
