@@ -42,7 +42,7 @@ public class CheckoutCommand : ICommand<CheckoutResponseDto>
 
     public List<CheckoutItemCommand> CheckoutItems { get; set; }
 
-    public Guid CouponId { get; set; }
+    public Guid? CouponId { get; set; }
 
     public string SuccessUrl { get; set; }
 

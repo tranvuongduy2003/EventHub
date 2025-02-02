@@ -16,7 +16,7 @@ public class CheckoutDto
 
     public List<CheckoutItemDto> CheckoutItems { get; set; } = new();
 
-    public Guid CouponId { get; set; }
+    public Guid? CouponId { get; set; }
 
     public string SuccessUrl { get; set; }
 
