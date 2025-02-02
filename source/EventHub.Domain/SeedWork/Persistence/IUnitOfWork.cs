@@ -144,26 +144,31 @@ public interface IUnitOfWork : IDisposable
     /// Gets the repository for managing user followers.
     /// </summary>
     IUserFollowersRepository UserFollowers { get; }
-    
+
     /// <summary>
     /// Gets the repository for managing coupons.
     /// </summary>
     ICouponsRepository Coupons { get; }
-    
+
     /// <summary>
     /// Gets the repository for managing coupons.
     /// </summary>
     IEventCouponsRepository EventCoupons { get; }
-    
+
     /// <summary>
     /// Gets the repository for managing coupons.
     /// </summary>
     IExpensesRepository Expenses { get; }
-    
+
     /// <summary>
     /// Gets the repository for managing coupons.
     /// </summary>
     ISubExpensesRepository SubExpenses { get; }
+
+    /// <summary>
+    /// Gets the repository for managing coupons.
+    /// </summary>
+    IPaymentCouponsRepository PaymentCoupons { get; }
 
     #region Caching Repository Properties
 

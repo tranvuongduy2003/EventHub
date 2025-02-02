@@ -7,6 +7,7 @@ using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
+using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.Entities;
@@ -51,6 +52,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 
     public DbSet<Payment> Payments { set; get; }
     public DbSet<PaymentItem> PaymentItems { get; set; }
+    public DbSet<PaymentCoupon> PaymentCoupons { get; set; }
 
     #endregion
 
@@ -89,7 +91,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<OutboxMessageConsumer> OutboxMessageConsumers { get; set; }
 
     #endregion
-    
+
     #region CouponAggregate
 
     public DbSet<Coupon> Coupons { set; get; }
@@ -99,7 +101,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
-        
+
         base.OnModelCreating(builder);
     }
 }

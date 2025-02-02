@@ -13,4 +13,6 @@ public static class FileContainer
     public const string PAYMENTS = "payments";
 
     public const string MESSAGES = "messages";
+
+    public const string COUPONS = "coupons";
 }

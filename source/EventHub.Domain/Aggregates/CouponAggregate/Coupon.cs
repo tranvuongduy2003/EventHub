@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
+using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
@@ -25,13 +26,24 @@ public class Coupon : AggregateRoot, IAuditable
 
     public float PercentValue { get; set; }
 
+    [Required]
+    [Column(TypeName = "nvarchar(max)")]
+    public string CoverImageUrl { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(255)]
+    [Column(TypeName = "nvarchar(255)")]
+    public string CoverImageFileName { get; set; } = string.Empty;
+
     public DateTime ExpiredDate { get; set; }
-    
+
     public Guid AuthorId { get; set; }
-    
+
     [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User Author { get; set; } = null!;
-    
+
     public virtual ICollection<EventCoupon> EventCoupons { get; set; } = new List<EventCoupon>();
+
+    public virtual ICollection<PaymentCoupon> PaymentCoupons { get; set; } = new List<PaymentCoupon>();
 }

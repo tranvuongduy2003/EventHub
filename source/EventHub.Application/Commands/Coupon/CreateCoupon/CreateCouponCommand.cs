@@ -1,5 +1,6 @@
 using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Domain.SeedWork.Command;
+using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Coupon.CreateCoupon;
 
@@ -25,9 +26,9 @@ public class CreateCouponCommand : ICommand<CouponDto>
     /// The data transfer object containing the details for the new coupon.
     /// </param>
     public CreateCouponCommand(CreateCouponDto request)
-        => (Name, Description, MinQuantity, MinPrice, PercentValue, ExpiredDate) =
+        => (Name, Description, MinQuantity, MinPrice, PercentValue, ExpiredDate, CoverImage) =
             (request.Name, request.Description, request.Quantity, request.MinPrice, request.PercentValue,
-                request.ExpiredDate);
+                request.ExpiredDate, request.CoverImage);
 
     public string Name { get; set; }
 
@@ -40,4 +41,6 @@ public class CreateCouponCommand : ICommand<CouponDto>
     public float PercentValue { get; set; }
 
     public DateTime ExpiredDate { get; set; }
+
+    public IFormFile CoverImage { get; set; }
 }

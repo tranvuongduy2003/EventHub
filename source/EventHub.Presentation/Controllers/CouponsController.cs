@@ -40,7 +40,7 @@ public class CouponsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_COUPON, ECommandCode.CREATE)]
-    public async Task<IActionResult> PostCreateCoupon([FromBody] CreateCouponDto request)
+    public async Task<IActionResult> PostCreateCoupon([FromForm] CreateCouponDto request)
     {
         try
         {
@@ -77,7 +77,7 @@ public class CouponsController : ControllerBase
 
         return Ok(new ApiOkResponse(coupons));
     }
-    
+
     [HttpGet("get-created-coupons")]
     [SwaggerOperation(
         Summary = "Retrieve a list of created coupons",
@@ -138,7 +138,7 @@ public class CouponsController : ControllerBase
     [SwaggerResponse(404, "Not Found - Coupon with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_COUPON, ECommandCode.UPDATE)]
-    public async Task<IActionResult> PutUpdateCoupon(Guid couponId, [FromBody] UpdateCouponDto request)
+    public async Task<IActionResult> PutUpdateCoupon(Guid couponId, [FromForm] UpdateCouponDto request)
     {
         _logger.LogInformation("START: PutUpdateCoupon");
         try

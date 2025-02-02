@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
+using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
@@ -72,4 +73,6 @@ public class Payment : AggregateRoot, IAuditable
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<PaymentItem> PaymentItems { get; set; } = new List<PaymentItem>();
+
+    public virtual ICollection<PaymentCoupon> PaymentCoupons { get; set; } = new List<PaymentCoupon>();
 }

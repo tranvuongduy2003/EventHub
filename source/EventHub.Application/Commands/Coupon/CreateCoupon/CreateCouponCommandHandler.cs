@@ -1,7 +1,10 @@
 using AutoMapper;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.Coupon;
+using EventHub.Application.SeedWork.DTOs.File;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -11,14 +14,16 @@ public class CreateCouponCommandHandler : ICommandHandler<CreateCouponCommand, C
 {
     private readonly IMapper _mapper;
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
+    private readonly IFileService _fileService;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateCouponCommandHandler(IUnitOfWork unitOfWork, IMapper mapper,
-        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
+        SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IFileService fileService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _signInManager = signInManager;
+        _fileService = fileService;
     }
 
     public async Task<CouponDto> Handle(CreateCouponCommand request, CancellationToken cancellationToken)
@@ -37,6 +42,13 @@ public class CreateCouponCommandHandler : ICommandHandler<CreateCouponCommand, C
             ExpiredDate = request.ExpiredDate,
             AuthorId = authorId
         };
+
+        if (request.CoverImage != null)
+        {
+            BlobResponseDto coverImage = await _fileService.UploadAsync(request.CoverImage, FileContainer.COUPONS);
+            coupon.CoverImageUrl = coverImage.Blob.Uri!;
+            coupon.CoverImageFileName = coverImage.Blob.Name!;
+        }
 
         await _unitOfWork.Coupons.CreateAsync(coupon);
         await _unitOfWork.CommitAsync();

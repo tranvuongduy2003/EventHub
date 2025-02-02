@@ -1,5 +1,6 @@
 using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Domain.SeedWork.Command;
+using Microsoft.AspNetCore.Http;
 
 namespace EventHub.Application.Commands.Coupon.UpdateCoupon;
 
@@ -30,6 +31,7 @@ public class UpdateCouponCommand : ICommand
         MinPrice = request.MinPrice;
         PercentValue = request.PercentValue;
         ExpiredDate = request.ExpiredDate;
+        CoverImage = request.CoverImage;
     }
 
     /// <summary>
@@ -51,4 +53,6 @@ public class UpdateCouponCommand : ICommand
     public float PercentValue { get; set; }
 
     public DateTime ExpiredDate { get; set; }
+
+    public IFormFile CoverImage { get; set; }
 }

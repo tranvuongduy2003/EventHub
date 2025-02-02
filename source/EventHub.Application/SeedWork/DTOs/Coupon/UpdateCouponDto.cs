@@ -1,9 +1,11 @@
-﻿namespace EventHub.Application.SeedWork.DTOs.Coupon;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace EventHub.Application.SeedWork.DTOs.Coupon;
 
 public class UpdateCouponDto
 {
     public Guid Id { get; set; }
-    
+
     public string Name { get; set; }
 
     public string Description { get; set; }
@@ -15,4 +17,6 @@ public class UpdateCouponDto
     public float PercentValue { get; set; }
 
     public DateTime ExpiredDate { get; set; }
+
+    public IFormFile CoverImage { get; set; }
 }
