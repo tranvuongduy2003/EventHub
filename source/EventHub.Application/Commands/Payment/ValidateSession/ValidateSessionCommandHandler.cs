@@ -70,8 +70,16 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
                     });
                 }
             }
-
             await _unitOfWork.Tickets.CreateListAsync(tickets);
+
+            if (payment.CouponId != null)
+            {
+                Domain.Aggregates.CouponAggregate.Coupon coupon = await _unitOfWork.Coupons.GetByIdAsync((Guid)payment.CouponId);
+
+                coupon.Quantity--;
+
+                await _unitOfWork.Coupons.Update(coupon);
+            }
 
             await _unitOfWork.CommitAsync();
 

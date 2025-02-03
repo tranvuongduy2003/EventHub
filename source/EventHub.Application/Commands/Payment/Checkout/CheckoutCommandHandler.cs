@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Payment;
+using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
@@ -39,6 +40,7 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
             EventId = request.EventId,
             Status = Domain.Shared.Enums.Payment.EPaymentStatus.PENDING,
             TicketQuantity = request.CheckoutItems!.Sum(x => x.Quantity),
+            CouponId = request.CouponId,
             TotalPrice = totalPrice,
         };
 
@@ -64,13 +66,17 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
             .ToList();
 
         SessionDiscountOptions sessionDiscountOption = null;
-        if (coupon != null)
+        if (coupon != null && coupon.Quantity > 0)
         {
             await _unitOfWork.PaymentCoupons.CreateAsync(new PaymentCoupon { CouponId = coupon.Id, PaymentId = payment.Id });
             sessionDiscountOption = new SessionDiscountOptions
             {
                 Coupon = coupon.Code
             };
+        }
+        else
+        {
+            throw new BadRequestException("Coupon is out of stock or invalid");
         }
 
         await _unitOfWork.CommitAsync();
@@ -83,11 +89,8 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
             CancelUrl = request.CancelUrl,
             LineItems = lineItems,
             Mode = "payment",
+            Discounts = new List<SessionDiscountOptions> { sessionDiscountOption }
         };
-        if (sessionDiscountOption != null)
-        {
-            options.Discounts = new List<SessionDiscountOptions> { sessionDiscountOption };
-        }
 
         var service = new SessionService();
         Session session = await service.CreateAsync(options, cancellationToken: cancellationToken);

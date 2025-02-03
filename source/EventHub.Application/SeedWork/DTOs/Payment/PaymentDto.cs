@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Shared.Enums.Payment;
@@ -27,6 +28,8 @@ public class PaymentDto
     public EventDto? Event { get; set; }
 
     public AuthorDto? Author { get; set; }
+
+    public CouponDto? Coupon { get; set; }
 
     public string? PaymentMethod { get; set; }
 
