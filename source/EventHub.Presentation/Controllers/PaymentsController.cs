@@ -1,4 +1,5 @@
 ﻿using EventHub.Application.Commands.Payment.Checkout;
+using EventHub.Application.Commands.Payment.ValidateSession;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Domain.Shared.HttpResponses;
 using MediatR;
@@ -27,6 +28,18 @@ public class PaymentsController : ControllerBase
         CheckoutResponseDto response = await _mediator.Send(new CheckoutCommand(request));
 
         _logger.LogInformation("END: PostCheckout");
+
+        return Ok(new ApiOkResponse(response));
+    }
+
+    [HttpPost("{paymentId}/validate-session")]
+    public async Task<IActionResult> PostValidateSession(Guid paymentId)
+    {
+        _logger.LogInformation("START: PostValidateSession");
+
+        ValidateSessionResponseDto response = await _mediator.Send(new ValidateSessionCommand(paymentId));
+
+        _logger.LogInformation("END: PostValidateSession");
 
         return Ok(new ApiOkResponse(response));
     }

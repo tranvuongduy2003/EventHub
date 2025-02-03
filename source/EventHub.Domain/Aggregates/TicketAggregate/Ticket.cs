@@ -18,14 +18,17 @@ public class Ticket : AggregateRoot
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Required] [MaxLength(50)] public required string TicketNo { get; set; } = string.Empty;
+    [Required] public required string TicketNo { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
     [Column(TypeName = "nvarchar(100)")]
     public required string CustomerName { get; set; } = string.Empty;
 
-    [Required] [MaxLength(100)] [Phone] public required string CustomerPhone { get; set; } = string.Empty;
+    [Required]
+    [MaxLength(100)]
+    [Phone]
+    public required string CustomerPhone { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
@@ -36,7 +39,7 @@ public class Ticket : AggregateRoot
 
     [Required] public required Guid EventId { get; set; } = Guid.Empty;
 
-    [Required] public required Guid UserId { get; set; } = Guid.Empty;
+    [Required] public required Guid AuthorId { get; set; } = Guid.Empty;
 
     [Required] public required Guid PaymentId { get; set; } = Guid.Empty;
 

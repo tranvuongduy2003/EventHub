@@ -18,6 +18,8 @@ public sealed class PaymentMapper
 
         config.CreateMap<CheckoutDto, CheckoutCommand>();
 
+        config.CreateMap<Payment, ValidateSessionResponseDto>();
+
         config.CreateMap<Payment, PaymentDto>()
             .ReverseMap();
 
