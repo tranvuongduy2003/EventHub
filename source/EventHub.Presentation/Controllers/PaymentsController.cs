@@ -4,6 +4,7 @@ using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Domain.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventHub.Presentation.Controllers;
 
@@ -21,6 +22,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("checkout")]
+    [SwaggerResponse(200, "Successfully checkout", typeof(CheckoutResponseDto))]
     public async Task<IActionResult> PostCheckout([FromBody] CheckoutDto request)
     {
         _logger.LogInformation("START: PostCheckout");
@@ -33,6 +35,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("{paymentId}/validate-session")]
+    [SwaggerResponse(200, "Successfully validate session", typeof(ValidateSessionResponseDto))]
     public async Task<IActionResult> PostValidateSession(Guid paymentId)
     {
         _logger.LogInformation("START: PostValidateSession");
