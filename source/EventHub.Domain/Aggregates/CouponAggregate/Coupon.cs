@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
+using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
@@ -49,4 +50,6 @@ public class Coupon : AggregateRoot, IAuditable
     public virtual ICollection<EventCoupon> EventCoupons { get; set; } = new List<EventCoupon>();
 
     public virtual ICollection<PaymentCoupon> PaymentCoupons { get; set; } = new List<PaymentCoupon>();
+
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

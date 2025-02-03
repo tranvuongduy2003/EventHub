@@ -63,7 +63,7 @@ public class Payment : AggregateRoot, IAuditable
     public required Guid AuthorId { get; set; } = Guid.Empty;
 
     [Required]
-    public Guid? CouponId { get; set; } = Guid.Empty;
+    public Guid? CouponId { get; set; } = null!;
 
     [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
