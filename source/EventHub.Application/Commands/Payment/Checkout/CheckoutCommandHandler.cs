@@ -2,7 +2,6 @@
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
-using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using Stripe.Checkout;
@@ -68,7 +67,6 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
         SessionDiscountOptions sessionDiscountOption = null;
         if (coupon != null && coupon.Quantity > 0)
         {
-            await _unitOfWork.PaymentCoupons.CreateAsync(new PaymentCoupon { CouponId = coupon.Id, PaymentId = payment.Id });
             sessionDiscountOption = new SessionDiscountOptions
             {
                 Coupon = coupon.Code

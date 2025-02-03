@@ -52,7 +52,6 @@ public class UnitOfWork : IUnitOfWork
     private EventCouponsRepository _eventCoupons;
     private ExpensesRepository _expenses;
     private SubExpensesRepository _subExpenses;
-    private PaymentCouponsRepository _paymentCoupons;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -287,15 +286,6 @@ public class UnitOfWork : IUnitOfWork
         {
             _subExpenses ??= new SubExpensesRepository(_context);
             return _subExpenses;
-        }
-    }
-
-    public IPaymentCouponsRepository PaymentCoupons
-    {
-        get
-        {
-            _paymentCoupons ??= new PaymentCouponsRepository(_context);
-            return _paymentCoupons;
         }
     }
 
