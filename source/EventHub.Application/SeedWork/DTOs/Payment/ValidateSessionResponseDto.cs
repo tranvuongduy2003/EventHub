@@ -1,12 +1,10 @@
 ﻿using System.Text.Json.Serialization;
-using EventHub.Application.SeedWork.DTOs.Coupon;
-using EventHub.Application.SeedWork.DTOs.Event;
-using EventHub.Application.SeedWork.DTOs.User;
+using EventHub.Application.SeedWork.DTOs.Ticket;
 using EventHub.Domain.Shared.Enums.Payment;
 
 namespace EventHub.Application.SeedWork.DTOs.Payment;
 
-public class PaymentDto
+public class ValidateSessionResponseDto
 {
     public Guid Id { get; set; }
 
@@ -25,19 +23,7 @@ public class PaymentDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
-    public EventDto? Event { get; set; }
-
-    public AuthorDto? Author { get; set; }
-
-    public CouponDto? Coupon { get; set; }
-
-    public string? PaymentMethod { get; set; }
-
-    public string? PaymentIntentId { get; set; }
-
-    public string? SessionId { get; set; }
-
     public DateTime CreatedAt { get; set; }
 
-    public List<PaymentItemDto> PaymentItems { get; set; }
+    public List<TicketDto> Tickets { get; set; }
 }

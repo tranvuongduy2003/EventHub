@@ -33,11 +33,10 @@ public class ApplyCouponsCommandHandler : ICommandHandler<ApplyCouponsCommand>
                     EventId = request.EventId,
                 };
                 await _unitOfWork.EventCoupons.CreateAsync(eventCoupon);
-                coupon.Quantity--;
                 await _unitOfWork.Coupons.Update(coupon);
             }
         }
-        
+
         await _unitOfWork.CommitAsync();
     }
 }

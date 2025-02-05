@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using EventHub.Domain.Aggregates.CouponAggregate;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
-using EventHub.Domain.Aggregates.PaymentAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.AggregateRoot;
@@ -61,6 +61,8 @@ public class Payment : AggregateRoot, IAuditable
     [Required]
     public required Guid AuthorId { get; set; } = Guid.Empty;
 
+    public Guid? CouponId { get; set; } = null!;
+
     [ForeignKey("AuthorId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User Author { get; set; } = null!;
@@ -69,9 +71,11 @@ public class Payment : AggregateRoot, IAuditable
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual Event Event { get; set; } = null!;
 
+    [ForeignKey("CouponId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual Coupon Coupon { get; set; } = null!;
+
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<PaymentItem> PaymentItems { get; set; } = new List<PaymentItem>();
-
-    public virtual ICollection<PaymentCoupon> PaymentCoupons { get; set; } = new List<PaymentCoupon>();
 }

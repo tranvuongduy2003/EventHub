@@ -34,6 +34,10 @@ public class PaymentItem : EntityBase
 
     [Required]
     [Range(0, 1000000000)]
+    public required long UnitPrice { get; set; } = 0;
+
+    [Required]
+    [Range(0, 1000000000)]
     public required long TotalPrice { get; set; } = 0;
 
     [ForeignKey("PaymentId")]

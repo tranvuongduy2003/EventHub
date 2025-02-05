@@ -4,6 +4,7 @@ using EventHub.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventHub.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250204154503_RemovePaymentCouponTable")]
+    partial class RemovePaymentCouponTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -727,9 +730,6 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                     b.Property<long>("TotalPrice")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UnitPrice")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -759,6 +759,7 @@ namespace EventHub.Infrastructure.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CouponId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1657,7 +1658,8 @@ namespace EventHub.Infrastructure.Persistence.Migrations
 
                     b.HasOne("EventHub.Domain.Aggregates.CouponAggregate.Coupon", "Coupon")
                         .WithMany("Payments")
-                        .HasForeignKey("CouponId");
+                        .HasForeignKey("CouponId")
+                        .IsRequired();
 
                     b.HasOne("EventHub.Domain.Aggregates.EventAggregate.Event", "Event")
                         .WithMany("Payments")

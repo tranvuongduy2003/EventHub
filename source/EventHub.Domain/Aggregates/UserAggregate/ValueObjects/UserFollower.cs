@@ -11,7 +11,7 @@ public class UserFollower : EntityBase
 {
     [Required]
     public required Guid FollowerId { get; set; } = Guid.Empty;
-    
+
     [Required]
     public required Guid FollowedId { get; set; } = Guid.Empty;
 

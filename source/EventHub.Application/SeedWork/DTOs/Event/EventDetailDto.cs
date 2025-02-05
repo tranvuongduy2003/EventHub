@@ -67,7 +67,7 @@ public class EventDetailDto
     public List<TicketTypeDto> TicketTypes { get; set; } = new();
 
     [SwaggerSchema("List of coupons available for the event")]
-    public List<EventCouponDto> Coupons { get; set; } = new();
+    public List<CouponDto> Coupons { get; set; } = new();
 
     [SwaggerSchema("Email content related to the event")]
     public EmailContentDto EmailContent { get; set; }

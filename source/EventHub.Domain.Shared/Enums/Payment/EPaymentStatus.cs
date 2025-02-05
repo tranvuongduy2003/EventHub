@@ -2,9 +2,7 @@
 
 public enum EPaymentStatus
 {
-    PAID,
+    SUCCESS,
     PENDING,
     FAILED,
-    REJECTED,
-    ALL
 }

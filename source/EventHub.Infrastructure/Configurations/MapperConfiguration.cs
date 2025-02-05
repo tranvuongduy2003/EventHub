@@ -10,17 +10,21 @@ public static class MapperConfiguration
         services
             .AddAutoMapper(config =>
             {
-                ReasonMapper.CreateMap(config);
-                TicketTypeMapper.CreateMap(config);
-                EmailContentMapper.CreateMap(config);
                 CategoryMapper.CreateMap(config);
                 CommandMapper.CreateMap(config);
-                EventMapper.CreateMap(config);
-                FunctionMapper.CreateMap(config);
-                ReviewMapper.CreateMap(config);
-                UserMapper.CreateMap(config);
-                PermissionMapper.CreateMap(config);
                 CouponMapper.CreateMap(config);
+                ReasonMapper.CreateMap(config);
+                EmailContentMapper.CreateMap(config);
+                EventMapper.CreateMap(config);
+                ExpenseMapper.CreateMap(config);
+                FunctionMapper.CreateMap(config);
+                PaymentMapper.CreateMap(config);
+                PermissionMapper.CreateMap(config);
+                ReasonMapper.CreateMap(config);
+                ReviewMapper.CreateMap(config);
+                TicketMapper.CreateMap(config);
+                TicketTypeMapper.CreateMap(config);
+                UserMapper.CreateMap(config);
             });
         return services;
     }

@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using Bogus;
-using EventHub.Domain.Aggregates.CouponAggregate;
 using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
-using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.UserAggregate;
@@ -14,6 +12,7 @@ using EventHub.Domain.Shared.Enums.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
+using Stripe;
 
 namespace EventHub.Infrastructure.Persistence.Data;
 
@@ -47,6 +46,8 @@ public class ApplicationDbContextSeed
         await SeedCoupons();
         await SeedEvents();
         await SeedReviews();
+        await SeedFavouriteEvents();
+        await SeedFollowers();
     }
 
     private async Task SeedRoles()
@@ -225,7 +226,6 @@ public class ApplicationDbContextSeed
                 new() { Id = "CREATE", Name = "Create" },
                 new() { Id = "UPDATE", Name = "Update" },
                 new() { Id = "DELETE", Name = "Delete" },
-                new() { Id = "APPROVE", Name = "Approve" }
             });
 
             await _context.SaveChangesAsync();
@@ -708,17 +708,36 @@ public class ApplicationDbContextSeed
         {
             var users = _userManager.Users.AsNoTracking().ToList();
 
-            Faker<Coupon> couponFaker = new Faker<Coupon>()
+            Faker<Domain.Aggregates.CouponAggregate.Coupon> couponFaker = new Faker<Domain.Aggregates.CouponAggregate.Coupon>()
                 .RuleFor(x => x.Name, f => f.Commerce.ProductAdjective())
                 .RuleFor(x => x.Description, f => f.Commerce.ProductDescription())
                 .RuleFor(x => x.AuthorId, f => f.PickRandom<User>(users).Id)
                 .RuleFor(x => x.MinPrice, f =>
                     long.Parse(f.Commerce.Price(100000, 1000000, 0, ""), CultureInfo.InvariantCulture))
+                .RuleFor(x => x.CoverImageUrl, f => f.Image.Random.ToString())
                 .RuleFor(x => x.Quantity, f => f.Random.Int(1, 10000))
                 .RuleFor(x => x.PercentValue, f => f.Random.Int(20, 100))
                 .RuleFor(x => x.ExpiredDate, f => DateTime.Now.AddDays(f.Random.Int(1, 1000)));
 
-            List<Coupon> coupons = couponFaker.Generate(1000);
+            List<Domain.Aggregates.CouponAggregate.Coupon> coupons = couponFaker.Generate(1000);
+
+            foreach (Domain.Aggregates.CouponAggregate.Coupon coupon in coupons)
+            {
+                var couponOptions = new CouponCreateOptions
+                {
+                    Duration = "once",
+                    PercentOff = (decimal)coupon.PercentValue,
+                    Currency = "vnd",
+                    Name = coupon.Name,
+                    RedeemBy = coupon.ExpiredDate
+                };
+
+                var service = new CouponService();
+                Stripe.Coupon stripeCoupone = await service.CreateAsync(couponOptions);
+
+                coupon.Code = stripeCoupone.Id;
+            }
+
             await _context.AddRangeAsync(coupons);
             await _context.SaveChangesAsync();
         }
@@ -731,9 +750,9 @@ public class ApplicationDbContextSeed
         {
             List<User> users = await _userManager.Users.ToListAsync();
             List<Category> categories = await _context.Categories.ToListAsync();
-            List<Coupon> coupons = await _context.Coupons.ToListAsync();
+            List<Domain.Aggregates.CouponAggregate.Coupon> coupons = await _context.Coupons.ToListAsync();
 
-            Faker<Event> fakerEvent = new Faker<Event>()
+            Faker<Domain.Aggregates.EventAggregate.Event> fakerEvent = new Faker<Domain.Aggregates.EventAggregate.Event>()
                 .RuleFor(e => e.AuthorId, f => f.PickRandom<User>(users).Id)
                 .RuleFor(e => e.Name, f => f.Commerce.ProductName())
                 .RuleFor(e => e.Description, f => f.Commerce.ProductDescription())
@@ -763,7 +782,7 @@ public class ApplicationDbContextSeed
 
                 DateTime eventStartTime = DateTime.UtcNow.Subtract(TimeSpan.FromDays(new Faker().Random.Number(0, 60)));
                 DateTime eventEndTime = DateTime.UtcNow.Add(TimeSpan.FromDays(new Faker().Random.Number(1, 60)));
-                Event eventItem = fakerEvent.Generate();
+                Domain.Aggregates.EventAggregate.Event eventItem = fakerEvent.Generate();
                 eventItem.StartTime = eventStartTime;
                 eventItem.EndTime = eventEndTime;
                 if (eventItem.StartTime <= DateTime.UtcNow && DateTime.UtcNow <= eventItem.EndTime)
@@ -842,11 +861,88 @@ public class ApplicationDbContextSeed
 
                 Faker<EventCoupon> eventCouponFaker = new Faker<EventCoupon>()
                     .RuleFor(x => x.EventId, _ => eventItem.Id)
-                    .RuleFor(x => x.CouponId, f => f.PickRandom<Coupon>(coupons).Id);
-                var eventCoupons = eventCouponFaker.Generate(3).DistinctBy(x => x.EventId).ToList();
+                    .RuleFor(x => x.CouponId, f => f.PickRandom<Domain.Aggregates.CouponAggregate.Coupon>(coupons).Id);
+                var eventCoupons = eventCouponFaker.Generate(1).DistinctBy(x => x.EventId).ToList();
                 _context.EventCoupons.AddRange(eventCoupons);
 
                 #endregion
+
+                #region Author
+                User author = users.Find(x => x.Id == eventItem.AuthorId);
+                author!.NumberOfCreatedEvents++;
+                await _userManager.UpdateAsync(author);
+                #endregion
+            }
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    private async Task SeedFollowers()
+    {
+        if (!_context.UserFollowers.Any())
+        {
+            List<User> users = await _userManager.Users.AsNoTracking().ToListAsync();
+
+            foreach (User user in users)
+            {
+                Faker<UserFollower> userFollowerFaker = new Faker<UserFollower>()
+                  .RuleFor(x => x.FollowerId, _ => user.Id)
+                  .RuleFor(x => x.Followed, f => f.PickRandom<User>(users.Where(u => u.Id != user.Id)));
+
+                var userFollowers = userFollowerFaker.Generate(5)
+                    .DistinctBy(x => x.Followed.Id)
+                    .ToList();
+
+                user.NumberOfFolloweds += userFollowers.Count;
+                await _userManager.UpdateAsync(user);
+
+                foreach (UserFollower userFollower in userFollowers)
+                {
+                    User followed = userFollower.Followed;
+                    followed.NumberOfFollowers++;
+                    await _userManager.UpdateAsync(followed);
+
+                    userFollower.FollowedId = followed.Id;
+                    await _context.UserFollowers.AddAsync(userFollower);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    private async Task SeedFavouriteEvents()
+    {
+        if (!_context.FavouriteEvents.Any())
+        {
+            List<User> users = await _userManager.Users.AsNoTracking().ToListAsync();
+            List<Domain.Aggregates.EventAggregate.Event> events = await _context.Events.AsNoTracking().ToListAsync();
+
+            foreach (User user in users)
+            {
+                Faker<FavouriteEvent> favouriteEventFaker = new Faker<FavouriteEvent>()
+                    .RuleFor(x => x.UserId, _ => user.Id)
+                    .RuleFor(x => x.Event, f => f.PickRandom<Domain.Aggregates.EventAggregate.Event>(events));
+
+                var favouriteEvents = favouriteEventFaker.Generate(5)
+                    .DistinctBy(x => x.Event.Id)
+                    .ToList();
+
+                user.NumberOfFavourites += favouriteEvents.Count;
+                await _userManager.UpdateAsync(user);
+
+                foreach (FavouriteEvent favouriteEvent in favouriteEvents)
+                {
+                    Domain.Aggregates.EventAggregate.Event @event = favouriteEvent.Event;
+                    @event.NumberOfFavourites++;
+                    await _context.Events.AddAsync(@event);
+
+                    favouriteEvent.EventId = @event.Id;
+                    await _context.FavouriteEvents.AddAsync(favouriteEvent);
+                }
+
+                await _context.FavouriteEvents.AddRangeAsync(favouriteEvents);
             }
 
             await _context.SaveChangesAsync();
@@ -858,15 +954,16 @@ public class ApplicationDbContextSeed
         if (!_context.Reviews.Any())
         {
             List<User> users = await _userManager.Users.ToListAsync();
-            List<Event> events = await _context.Events.ToListAsync();
+            List<Domain.Aggregates.EventAggregate.Event> events = await _context.Events.ToListAsync();
 
-            Faker<Review> fakerReview = new Faker<Review>()
+            Faker<Domain.Aggregates.EventAggregate.Entities.Review> fakerReview = new Faker<Domain.Aggregates.EventAggregate.Entities.Review>()
                 .RuleFor(e => e.Content, f => f.Lorem.Text())
                 .RuleFor(e => e.Rate, f => f.Random.Double(0.0, 5.0))
-                .RuleFor(e => e.EventId, f => f.PickRandom<Event>(events).Id)
+                .RuleFor(e => e.EventId, f => f.PickRandom<Domain.Aggregates.EventAggregate.Event>(events).Id)
+                .RuleFor(e => e.IsPositive, f => f.Random.Bool())
                 .RuleFor(e => e.AuthorId, f => f.PickRandom<User>(users).Id);
 
-            List<Review> reviews = fakerReview.Generate(1000);
+            List<Domain.Aggregates.EventAggregate.Entities.Review> reviews = fakerReview.Generate(1000);
             _context.Reviews.AddRange(reviews);
 
             await _context.SaveChangesAsync();

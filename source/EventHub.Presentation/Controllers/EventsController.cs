@@ -1,4 +1,5 @@
-﻿using EventHub.Application.Commands.Event.CreateEvent;
+﻿using EventHub.Application.Commands.Event.ApplyCoupons;
+using EventHub.Application.Commands.Event.CreateEvent;
 using EventHub.Application.Commands.Event.DeleteEvent;
 using EventHub.Application.Commands.Event.DeleteEvents;
 using EventHub.Application.Commands.Event.FavouriteEvent;
@@ -15,6 +16,7 @@ using EventHub.Application.Queries.Event.GetEventById;
 using EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
 using EventHub.Application.Queries.Event.GetPaginatedEvents;
 using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Application.SeedWork.DTOs.Event;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
@@ -435,6 +437,19 @@ public class EventsController : ControllerBase
         await _mediator.Send(new MakeEventsPublicCommand(request.EventIds));
 
         _logger.LogInformation("END: PatchMakeEventsPublic");
+
+        return Ok(new ApiOkResponse());
+    }
+
+    [HttpPatch("{eventId}/apply-coupons")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
+    public async Task<IActionResult> PostApplyCoupons(Guid eventId, [FromBody] MultipleCouponIdsDto request)
+    {
+        _logger.LogInformation("START: PostApplyCoupons");
+
+        await _mediator.Send(new ApplyCouponsCommand(eventId, request.CouponIds));
+
+        _logger.LogInformation("END: PostApplyCoupons");
 
         return Ok(new ApiOkResponse());
     }
