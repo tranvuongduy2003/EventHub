@@ -36,7 +36,7 @@ public class RolesController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Role or function with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> PostAddFunctionToRole(Guid roleId, string functionId)
     {
         _logger.LogInformation("START: PostAddFunctionToRole");
@@ -69,7 +69,7 @@ public class RolesController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Role or function with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> PostRemoveFunctionFromRole(Guid roleId, string functionId)
     {
         _logger.LogInformation("START: PostRemoveFunctionFromRole");

@@ -34,7 +34,7 @@ public class PermissionsController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetFullPermissions()
     {
         _logger.LogInformation("START: GetFullPermissions");
@@ -56,7 +56,7 @@ public class PermissionsController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPermissionsCategorizedByRoles()
     {
         _logger.LogInformation("START: GetPermissionsCategorizedByRoles");
@@ -78,7 +78,7 @@ public class PermissionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "NotFound - User does not exist")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_PERMISSION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_PERMISSION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPermissionsByUser(Guid userId)
     {
         _logger.LogInformation("START: GetPermissionsByUser");

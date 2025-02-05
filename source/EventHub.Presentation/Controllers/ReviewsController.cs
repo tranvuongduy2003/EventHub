@@ -2,6 +2,7 @@
 using EventHub.Application.Commands.Review.DeleteReview;
 using EventHub.Application.Commands.Review.UpdateReview;
 using EventHub.Application.Queries.Review.GetPaginatedReviews;
+using EventHub.Application.Queries.Review.GetPaginatedReviewsByCreatedEvents;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
 using EventHub.Application.Queries.Review.GetReviewById;
@@ -68,6 +69,33 @@ public class ReviewsController : ControllerBase
         _logger.LogInformation("END: GetPaginatedReviews");
 
         return Ok(new ApiOkResponse(reviews));
+    }
+
+    [HttpGet("get-by-created-events")]
+    [SwaggerOperation(
+        Summary = "Retrieve a list of reviews by the created events",
+        Description =
+            "Fetches a paginated list of reviews created by the created events, based on the provided pagination filter."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of reviews", typeof(Pagination<ReviewDto>))]
+    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetPaginatedReviewsByCreatedEvents([FromQuery] PaginationFilter filter)
+    {
+        _logger.LogInformation("START: GetPaginatedReviewsByCreatedEvents");
+        try
+        {
+            Pagination<ReviewDto> reviews = await _mediator.Send(new GetPaginatedReviewsByCreatedEventsQuery(filter));
+
+            _logger.LogInformation("END: GetPaginatedReviewsByCreatedEvents");
+
+            return Ok(new ApiOkResponse(reviews));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
     }
 
     [HttpGet("get-by-event/{eventId:guid}")]

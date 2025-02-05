@@ -1,8 +1,8 @@
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace EventHub.Application.SeedWork.DTOs.Review;
+namespace EventHub.Application.SeedWork.DTOs.Event;
 
-public class ReviewedEventDto
+public class LeanEventDto
 {
     [SwaggerSchema("Unique identifier of the event")]
     public Guid Id { get; set; }
@@ -10,6 +10,6 @@ public class ReviewedEventDto
     [SwaggerSchema("URL of the cover image for the event")]
     public string CoverImageUrl { get; set; } = string.Empty;
 
-    [SwaggerSchema("Name of the event")] 
+    [SwaggerSchema("Name of the event")]
     public string Name { get; set; } = string.Empty;
 }

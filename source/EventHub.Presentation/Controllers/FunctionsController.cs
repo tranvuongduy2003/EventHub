@@ -39,7 +39,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.CREATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.CREATE)]
     public async Task<IActionResult> PostCreateFunction([FromBody] CreateFunctionDto request)
     {
         try
@@ -69,7 +69,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
 
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetFunctions()
     {
         _logger.LogInformation("START: GetFunctions");
@@ -91,7 +91,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Function with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.VIEW)]
     public async Task<IActionResult> GetFunctionById(string functionId)
     {
         _logger.LogInformation("START: GetFunctionById");
@@ -119,7 +119,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Function with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.UPDATE)]
     public async Task<IActionResult> PutUpdateFunction(string functionId, [FromBody] UpdateFunctionDto request)
     {
         _logger.LogInformation("START: PutUpdateFunction");
@@ -147,7 +147,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Function with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.DELETE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.DELETE)]
     public async Task<IActionResult> DeleteFunction(string functionId)
     {
         _logger.LogInformation("START: DeleteFunction");
@@ -176,7 +176,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Function or command with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.UPDATE)]
     public async Task<IActionResult> PostEnableCommandInFunction(string functionId, string commandId)
     {
         _logger.LogInformation("START: PostEnableCommandInFunction");
@@ -208,7 +208,7 @@ public class FunctionsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Function or command with the specified IDs not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.UPDATE)]
     public async Task<IActionResult> PostDisableCommandInFunction(string functionId, string commandId)
     {
         _logger.LogInformation("START: PostDisableCommandInFunction");

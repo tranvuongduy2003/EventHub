@@ -45,7 +45,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.CREATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.CREATE)]
     public async Task<IActionResult> PostCreateUser([FromForm] CreateUserDto request)
     {
         _logger.LogInformation("START: PostCreateUser");
@@ -72,7 +72,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedUsers([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedUsers");
@@ -94,7 +94,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetUserById(Guid userId)
     {
         _logger.LogInformation("START: GetUserById");
@@ -125,7 +125,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [Consumes("multipart/form-data")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
     public async Task<IActionResult> PutUpdateUser(Guid userId, [FromForm] UpdateUserDto request)
     {
         _logger.LogInformation("START: PutUpdateUser");
@@ -160,7 +160,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
     public async Task<IActionResult> PatchChangeUserPassword(Guid userId, [FromBody] UpdateUserPasswordDto request)
     {
         _logger.LogInformation("START: PatchChangeUserPassword");
@@ -193,7 +193,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedFollowers(Guid userId, [FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedFollowers");
@@ -217,7 +217,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedFollowingUsers(Guid userId, [FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedFollowingUsers");
@@ -241,7 +241,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
     public async Task<IActionResult> PatchFollowUser(Guid followedUserId)
     {
         _logger.LogInformation("START: PatchFollowUser");
@@ -275,7 +275,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
     public async Task<IActionResult> PatchUnfollowUser(Guid followedUserId)
     {
         _logger.LogInformation("START: PatchUnfollowUser");
@@ -307,7 +307,7 @@ public class UsersController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_USER, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
     public async Task<IActionResult> GetUserProfile()
     {
         _logger.LogInformation("START: GetUserProfile");

@@ -34,8 +34,8 @@ public class CommandsController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
-    [ClaimRequirement(EFunctionCode.SYSTEM_COMMAND, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_COMMAND, ECommandCode.VIEW)]
     public async Task<IActionResult> GetCommandsInFunction(string functionId)
     {
         _logger.LogInformation("START: GetCommandsInFunction");
@@ -57,8 +57,8 @@ public class CommandsController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.SYSTEM_FUNCTION, ECommandCode.VIEW)]
-    [ClaimRequirement(EFunctionCode.SYSTEM_COMMAND, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_COMMAND, ECommandCode.VIEW)]
     public async Task<IActionResult> GetCommandsNotInFunction(string functionId)
     {
         _logger.LogInformation("START: GetCommandsNotInFunction");

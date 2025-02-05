@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EventHub.Application.SeedWork.DTOs.Event;
+using EventHub.Application.SeedWork.DTOs.Expense;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
 
@@ -10,7 +10,7 @@ public sealed class ExpenseMapper
     public static void CreateMap(IMapperConfigurationExpression config)
     {
         config.CreateMap<SubExpense, SubExpenseDto>();
-        
+
         config.CreateMap<Expense, ExpenseDto>();
     }
 }

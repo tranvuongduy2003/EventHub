@@ -134,43 +134,48 @@ public class ApplicationDbContextSeed
                 new()
                 {
                     Id = EFunctionCode.GENERAL.GetDisplayName(), Name = "General", ParentId = null, SortOrder = 0,
-                    Url = "/general"
+                    Url = "/"
                 },
 
                 new()
                 {
                     Id = EFunctionCode.GENERAL_CATEGORY.GetDisplayName(), Name = "Categories",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/general/category"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/categories"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_EVENT.GetDisplayName(), Name = "Events",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/general/event"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/events"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_REVIEW.GetDisplayName(), Name = "Reviews",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/review"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/reviews"
+                },
+                new()
+                {
+                    Id = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(), Name = "Expenses",
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/expenses"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_TICKET.GetDisplayName(), Name = "Tickets",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/ticket"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/tickets"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_CHAT.GetDisplayName(), Name = "Chats",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/chat"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/chats"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_PAYMENT.GetDisplayName(), Name = "Payments",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/payment"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/payments"
                 },
                 new()
                 {
                     Id = EFunctionCode.GENERAL_COUPON.GetDisplayName(), Name = "Coupons",
-                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 2, Url = "/general/coupon"
+                    ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/coupons"
                 },
 
                 new()
@@ -181,34 +186,34 @@ public class ApplicationDbContextSeed
 
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM.GetDisplayName(), Name = "System", ParentId = null, SortOrder = 0,
-                    Url = "/system"
+                    Id = EFunctionCode.ADMINISTRATION.GetDisplayName(), Name = "System", ParentId = null, SortOrder = 0,
+                    Url = "/administration"
                 },
 
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM_USER.GetDisplayName(), Name = "Users",
-                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/user"
+                    Id = EFunctionCode.ADMINISTRATION_USER.GetDisplayName(), Name = "Users",
+                    ParentId = EFunctionCode.ADMINISTRATION.GetDisplayName(), SortOrder = 1, Url = "/administration/users"
                 },
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM_ROLE.GetDisplayName(), Name = "Roles",
-                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/role"
+                    Id = EFunctionCode.ADMINISTRATION_ROLE.GetDisplayName(), Name = "Roles",
+                    ParentId = EFunctionCode.ADMINISTRATION.GetDisplayName(), SortOrder = 1, Url = "/administration/roles"
                 },
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM_FUNCTION.GetDisplayName(), Name = "Functions",
-                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/function"
+                    Id = EFunctionCode.ADMINISTRATION_FUNCTION.GetDisplayName(), Name = "Functions",
+                    ParentId = EFunctionCode.ADMINISTRATION.GetDisplayName(), SortOrder = 1, Url = "/administration/functions"
                 },
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM_PERMISSION.GetDisplayName(), Name = "Permissions",
-                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/permission"
+                    Id = EFunctionCode.ADMINISTRATION_PERMISSION.GetDisplayName(), Name = "Permissions",
+                    ParentId = EFunctionCode.ADMINISTRATION.GetDisplayName(), SortOrder = 1, Url = "/administration/permissions"
                 },
                 new()
                 {
-                    Id = EFunctionCode.SYSTEM_COMMAND.GetDisplayName(), Name = "Commands",
-                    ParentId = EFunctionCode.SYSTEM.GetDisplayName(), SortOrder = 1, Url = "/system/command"
+                    Id = EFunctionCode.ADMINISTRATION_COMMAND.GetDisplayName(), Name = "Commands",
+                    ParentId = EFunctionCode.ADMINISTRATION.GetDisplayName(), SortOrder = 1, Url = "/administration/commands"
                 },
             });
 
@@ -387,6 +392,30 @@ public class ApplicationDbContextSeed
                 });
                 _context.Permissions.Add(new Permission
                 {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = customerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
                     FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "VIEW"
@@ -435,25 +464,25 @@ public class ApplicationDbContextSeed
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "VIEW"
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "UPDATE"
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION_USER.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "VIEW"
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION_USER.GetDisplayName(),
                     RoleId = customerRole.Id,
                     CommandId = "UPDATE"
                 });
@@ -578,6 +607,30 @@ public class ApplicationDbContextSeed
                 });
                 _context.Permissions.Add(new Permission
                 {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "CREATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "UPDATE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "DELETE"
+                });
+                _context.Permissions.Add(new Permission
+                {
+                    FunctionId = EFunctionCode.GENERAL_EXPENSE.GetDisplayName(),
+                    RoleId = organizerRole.Id,
+                    CommandId = "VIEW"
+                });
+                _context.Permissions.Add(new Permission
+                {
                     FunctionId = EFunctionCode.GENERAL_CHAT.GetDisplayName(),
                     RoleId = organizerRole.Id,
                     CommandId = "VIEW"
@@ -626,13 +679,13 @@ public class ApplicationDbContextSeed
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION_USER.GetDisplayName(),
                     RoleId = organizerRole.Id,
                     CommandId = "VIEW"
                 });
                 _context.Permissions.Add(new Permission
                 {
-                    FunctionId = EFunctionCode.SYSTEM_USER.GetDisplayName(),
+                    FunctionId = EFunctionCode.ADMINISTRATION_USER.GetDisplayName(),
                     RoleId = organizerRole.Id,
                     CommandId = "UPDATE"
                 });
@@ -882,7 +935,7 @@ public class ApplicationDbContextSeed
     {
         if (!_context.UserFollowers.Any())
         {
-            List<User> users = await _userManager.Users.AsNoTracking().ToListAsync();
+            List<User> users = await _userManager.Users.ToListAsync();
 
             foreach (User user in users)
             {
@@ -916,17 +969,14 @@ public class ApplicationDbContextSeed
     {
         if (!_context.FavouriteEvents.Any())
         {
-            List<User> users = await _userManager.Users.AsNoTracking().ToListAsync();
+            List<User> users = await _userManager.Users.ToListAsync();
             List<Domain.Aggregates.EventAggregate.Event> events = await _context.Events.AsNoTracking().ToListAsync();
 
             foreach (User user in users)
             {
-                Faker<FavouriteEvent> favouriteEventFaker = new Faker<FavouriteEvent>()
-                    .RuleFor(x => x.UserId, _ => user.Id)
-                    .RuleFor(x => x.Event, f => f.PickRandom<Domain.Aggregates.EventAggregate.Event>(events));
-
-                var favouriteEvents = favouriteEventFaker.Generate(5)
-                    .DistinctBy(x => x.Event.Id)
+                var favouriteEvents = new Faker().PickRandom<Domain.Aggregates.EventAggregate.Event>(events, 5)
+                    .Select(x => new FavouriteEvent { EventId = x.Id, UserId = user.Id, Event = x })
+                    .Distinct()
                     .ToList();
 
                 user.NumberOfFavourites += favouriteEvents.Count;
@@ -936,7 +986,7 @@ public class ApplicationDbContextSeed
                 {
                     Domain.Aggregates.EventAggregate.Event @event = favouriteEvent.Event;
                     @event.NumberOfFavourites++;
-                    await _context.Events.AddAsync(@event);
+                    _context.Events.Update(@event);
 
                     favouriteEvent.EventId = @event.Id;
                     await _context.FavouriteEvents.AddAsync(favouriteEvent);
