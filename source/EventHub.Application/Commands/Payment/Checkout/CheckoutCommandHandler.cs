@@ -25,7 +25,7 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
         if (request.CouponId != null)
         {
             coupon = await _unitOfWork.Coupons.GetByIdAsync((Guid)request.CouponId);
-            if (request.CheckoutItems.Any(x => x.Price < coupon.MinPrice))
+            if (request.TotalPrice < coupon.MinPrice)
             {
                 throw new BadRequestException("Cannot apply coupon for these tickets!");
             }
