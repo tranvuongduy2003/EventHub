@@ -3,6 +3,7 @@ using EventHub.Application.Commands.Payment.Checkout;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
+using EventHub.Domain.Shared.SeedWork;
 
 namespace EventHub.Application.SeedWork.Mappings;
 
@@ -25,5 +26,8 @@ public sealed class PaymentMapper
         config.CreateMap<Payment, PaymentDto>()
             .ReverseMap();
 
+        config.CreateMap<Pagination<Payment>, Pagination<PaymentDto>>()
+            .ForMember(dest => dest.Items, options =>
+                options.MapFrom(source => source.Items));
     }
 }
