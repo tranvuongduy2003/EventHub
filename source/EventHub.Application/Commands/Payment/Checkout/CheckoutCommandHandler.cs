@@ -39,7 +39,7 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
             CustomerEmail = request.CustomerEmail,
             CustomerName = request.CustomerName,
             CustomerPhone = request.CustomerPhone,
-            Discount = totalPrice * (coupon?.PercentValue ?? 100) / 100,
+            Discount = totalPrice * (coupon?.PercentValue ?? 0) / 100,
             EventId = request.EventId,
             Status = Domain.Shared.Enums.Payment.EPaymentStatus.PENDING,
             TicketQuantity = request.CheckoutItems!.Sum(x => x.Quantity),
