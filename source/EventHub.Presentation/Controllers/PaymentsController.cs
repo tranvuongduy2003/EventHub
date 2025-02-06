@@ -4,6 +4,7 @@ using EventHub.Application.Queries.Payment.GetPaginatedPayments;
 using EventHub.Application.Queries.Payment.GetPaginatedPaymentsByEventId;
 using EventHub.Application.Queries.Payment.GetPaginatedPaymentsByUserId;
 using EventHub.Application.Queries.Payment.GetPaymentById;
+using EventHub.Application.Queries.Payment.GetPaymentStatistics;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.Exceptions;
@@ -129,6 +130,21 @@ public class PaymentsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
+    }
+
+    [HttpGet("statistics")]
+    [SwaggerResponse(200, "Successfully retrieved the statistics of payments", typeof(PaymentStatisticsDto))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetPaymentStatistics()
+    {
+        _logger.LogInformation("START: GetPaymentStatistics");
+
+        PaymentStatisticsDto statistics = await _mediator.Send(new GetPaymentStatisticsQuery());
+
+        _logger.LogInformation("END: GetPaymentStatistics");
+
+        return Ok(new ApiOkResponse(statistics));
     }
 
     [HttpPost("checkout")]
