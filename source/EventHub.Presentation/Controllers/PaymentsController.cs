@@ -1,10 +1,13 @@
 ﻿using EventHub.Application.Commands.Payment.Checkout;
 using EventHub.Application.Commands.Payment.ValidateSession;
+using EventHub.Application.Queries.Payment.GetCreatedEventsPaymentStatistics;
+using EventHub.Application.Queries.Payment.GetEventPaymentStatistics;
 using EventHub.Application.Queries.Payment.GetPaginatedPayments;
+using EventHub.Application.Queries.Payment.GetPaginatedPaymentsByCreatedEvents;
 using EventHub.Application.Queries.Payment.GetPaginatedPaymentsByEventId;
 using EventHub.Application.Queries.Payment.GetPaginatedPaymentsByUserId;
 using EventHub.Application.Queries.Payment.GetPaymentById;
-using EventHub.Application.Queries.Payment.GetPaymentStatistics;
+using EventHub.Application.Queries.Payment.GetUserPaymentStatistics;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.Exceptions;
@@ -77,6 +80,33 @@ public class PaymentsController : ControllerBase
         }
     }
 
+    [HttpGet("get-by-created-events/{userId:guid}")]
+    [SwaggerOperation(
+        Summary = "Retrieve a list of payments by the created events",
+        Description =
+            "Fetches a paginated list of payments created by the created events, based on the provided pagination filter."
+    )]
+    [SwaggerResponse(200, "Successfully retrieved the list of payments", typeof(Pagination<PaymentDto>))]
+    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetPaginatedPaymentsByCreatedEvents(Guid userId, [FromQuery] PaginationFilter filter)
+    {
+        _logger.LogInformation("START: GetPaginatedPaymentsByCreatedEvents");
+        try
+        {
+            Pagination<PaymentDto> payments = await _mediator.Send(new GetPaginatedPaymentsByCreatedEventsQuery(userId, filter));
+
+            _logger.LogInformation("END: GetPaginatedPaymentsByCreatedEvents");
+
+            return Ok(new ApiOkResponse(payments));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+    }
+
     [HttpGet("get-by-user/{userId:guid}")]
     [SwaggerOperation(
         Summary = "Retrieve a list of payments by the user",
@@ -102,6 +132,51 @@ public class PaymentsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
+    }
+
+    [HttpGet("get-by-event/{eventId:guid}/statistics")]
+    [SwaggerResponse(200, "Successfully retrieved the statistics of payments", typeof(PaymentStatisticsDto))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetEventPaymentStatistics(Guid eventId)
+    {
+        _logger.LogInformation("START: GetEventPaymentStatistics");
+
+        PaymentStatisticsDto statistics = await _mediator.Send(new GetEventPaymentStatisticsQuery(eventId));
+
+        _logger.LogInformation("END: GetEventPaymentStatistics");
+
+        return Ok(new ApiOkResponse(statistics));
+    }
+
+    [HttpGet("get-by-created-events/{userId:guid}/statistics")]
+    [SwaggerResponse(200, "Successfully retrieved the statistics of payments", typeof(PaymentStatisticsDto))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetCreatedEventsPaymentStatistics(Guid userId)
+    {
+        _logger.LogInformation("START: GetCreatedEventsPaymentStatistics");
+
+        PaymentStatisticsDto statistics = await _mediator.Send(new GetCreatedEventsPaymentStatisticsQuery(userId));
+
+        _logger.LogInformation("END: GetCreatedEventsPaymentStatistics");
+
+        return Ok(new ApiOkResponse(statistics));
+    }
+
+    [HttpGet("get-by-user/{userId:guid}/statistics")]
+    [SwaggerResponse(200, "Successfully retrieved the statistics of payments", typeof(PaymentStatisticsDto))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetUserPaymentStatistics(Guid userId)
+    {
+        _logger.LogInformation("START: GetUserPaymentStatistics");
+
+        PaymentStatisticsDto statistics = await _mediator.Send(new GetUserPaymentStatisticsQuery(userId));
+
+        _logger.LogInformation("END: GetUserPaymentStatistics");
+
+        return Ok(new ApiOkResponse(statistics));
     }
 
     [HttpGet("{paymentId:guid}")]
@@ -130,21 +205,6 @@ public class PaymentsController : ControllerBase
         {
             return NotFound(new ApiNotFoundResponse(e.Message));
         }
-    }
-
-    [HttpGet("statistics")]
-    [SwaggerResponse(200, "Successfully retrieved the statistics of payments", typeof(PaymentStatisticsDto))]
-    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetPaymentStatistics()
-    {
-        _logger.LogInformation("START: GetPaymentStatistics");
-
-        PaymentStatisticsDto statistics = await _mediator.Send(new GetPaymentStatisticsQuery());
-
-        _logger.LogInformation("END: GetPaymentStatistics");
-
-        return Ok(new ApiOkResponse(statistics));
     }
 
     [HttpPost("checkout")]
