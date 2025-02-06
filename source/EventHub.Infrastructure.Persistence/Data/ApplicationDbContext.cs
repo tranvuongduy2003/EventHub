@@ -5,6 +5,7 @@ using EventHub.Domain.Aggregates.CouponAggregate.ValueObjects;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
+using EventHub.Domain.Aggregates.NotificationAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
@@ -94,6 +95,11 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 
     public DbSet<Coupon> Coupons { set; get; }
     public DbSet<EventCoupon> EventCoupons { set; get; }
+    #endregion
+
+    #region NotificationAggregate
+
+    public DbSet<Notification> Notifications { set; get; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder builder)

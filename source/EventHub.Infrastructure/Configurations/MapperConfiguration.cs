@@ -18,6 +18,7 @@ public static class MapperConfiguration
                 EventMapper.CreateMap(config);
                 ExpenseMapper.CreateMap(config);
                 FunctionMapper.CreateMap(config);
+                NotificationMapper.CreateMap(config);
                 PaymentMapper.CreateMap(config);
                 PermissionMapper.CreateMap(config);
                 ReasonMapper.CreateMap(config);

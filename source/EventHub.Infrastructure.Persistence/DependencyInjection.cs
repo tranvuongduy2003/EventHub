@@ -63,7 +63,8 @@ public static class DependencyInjection
             .AddScoped<IUserFollowersRepository, UserFollowersRepository>()
             .AddScoped<ICouponsRepository, CouponsRepository>()
             .AddScoped<IExpensesRepository, ExpensesRepository>()
-            .AddScoped<ISubExpensesRepository, SubExpensesRepository>();
+            .AddScoped<ISubExpensesRepository, SubExpensesRepository>()
+            .AddScoped<INotificationsRepository, NotificationsRepository>();
 
         services
             .AddScoped<ICachedCategoriesRepository, CachedCategoriesRepository>()

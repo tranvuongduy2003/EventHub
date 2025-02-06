@@ -165,6 +165,11 @@ public interface IUnitOfWork : IDisposable
     /// </summary>
     ISubExpensesRepository SubExpenses { get; }
 
+    /// <summary>
+    /// Gets the repository for managing notifications.
+    /// </summary>
+    INotificationsRepository Notifications { get; }
+
     #region Caching Repository Properties
 
     /// <summary>

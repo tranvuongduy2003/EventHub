@@ -6,6 +6,7 @@ using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.EventAggregate.ValueObjects;
+using EventHub.Domain.Aggregates.NotificationAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
@@ -84,6 +85,8 @@ public class User : IdentityUser<Guid>, IAggregateRoot, IDateTracking, ISoftDele
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<Role>? Roles { get; set; } = null!;
 
