@@ -87,8 +87,8 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
 
         var options = new SessionCreateOptions
         {
-            SuccessUrl = request.SuccessUrl,
-            CancelUrl = request.CancelUrl,
+            SuccessUrl = $"{request.SuccessUrl}?paymentId={payment.Id}",
+            CancelUrl = $"{request.CancelUrl}?paymentId={payment.Id}",
             LineItems = lineItems,
             Mode = "payment",
             PaymentMethodTypes = new List<string> { "card" },
