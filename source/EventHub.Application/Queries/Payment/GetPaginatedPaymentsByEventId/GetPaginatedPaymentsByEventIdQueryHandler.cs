@@ -31,6 +31,7 @@ public class GetPaginatedPaymentsByEventIdQueryHandler : IQueryHandler<GetPagina
         Pagination<Domain.Aggregates.PaymentAggregate.Payment> paginatedPayments = _unitOfWork.Payments
             .PaginatedFindByCondition(x => x.EventId == request.EventId, request.Filter, query => query
                 .Include(x => x.Event)
+                    .ThenInclude(x => x.Author)
                 .Include(x => x.Coupon)
                 .Include(x => x.PaymentItems)
                 .Include(x => x.Author)

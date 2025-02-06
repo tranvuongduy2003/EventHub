@@ -25,6 +25,7 @@ public class GetPaymentByIdQueryHandler : IQueryHandler<GetPaymentByIdQuery, Pay
         Domain.Aggregates.PaymentAggregate.Payment ticket = await _unitOfWork.Payments
             .FindByCondition(x => x.Id == request.PaymentId)
             .Include(x => x.Event)
+                .ThenInclude(x => x.Author)
             .Include(x => x.Coupon)
             .Include(x => x.PaymentItems)
             .Include(x => x.Author)
