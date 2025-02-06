@@ -91,7 +91,8 @@ public class CheckoutCommandHandler : ICommandHandler<CheckoutCommand, CheckoutR
             CancelUrl = request.CancelUrl,
             LineItems = lineItems,
             Mode = "payment",
-            PaymentMethodTypes = new List<string> { "card" }
+            PaymentMethodTypes = new List<string> { "card" },
+            CustomerEmail = request.CustomerEmail,
         };
         if (sessionDiscountOption != null)
         {
