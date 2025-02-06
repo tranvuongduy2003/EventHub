@@ -2,8 +2,8 @@
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.DTOs.Ticket;
 using EventHub.Application.SeedWork.Exceptions;
+using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
-using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.Shared.Enums.Payment;
@@ -50,13 +50,14 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
                 .FindByCondition(x => x.PaymentId == payment.Id)
                 .ToListAsync(cancellationToken);
 
-            var tickets = new List<Ticket>();
+            var tickets = new List<Domain.Aggregates.TicketAggregate.Ticket>();
+            var ticketTypes = new List<TicketType>();
 
             foreach (PaymentItem item in paymentItems)
             {
                 for (int i = 0; i < item.Quantity; i++)
                 {
-                    tickets.Add(new Ticket
+                    tickets.Add(new Domain.Aggregates.TicketAggregate.Ticket
                     {
                         CustomerEmail = payment.CustomerEmail,
                         CustomerName = payment.CustomerName,
@@ -69,6 +70,9 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
                         TicketNo = TicketCodeGenerator.GenerateTicketCode()
                     });
                 }
+                TicketType ticketType = await _unitOfWork.TicketTypes.GetByIdAsync(item.TicketTypeId);
+                ticketType.NumberOfSoldTickets += item.Quantity;
+                ticketTypes.Add(ticketType);
             }
             await _unitOfWork.Tickets.CreateListAsync(tickets);
 
@@ -79,6 +83,15 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
                 coupon.Quantity--;
 
                 await _unitOfWork.Coupons.Update(coupon);
+            }
+
+            Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(payment.EventId);
+            @event.NumberOfSoldTickets += tickets.Count;
+            await _unitOfWork.Events.Update(@event);
+
+            foreach (TicketType ticketType in ticketTypes)
+            {
+                await _unitOfWork.TicketTypes.Update(ticketType);
             }
 
             await _unitOfWork.CommitAsync();

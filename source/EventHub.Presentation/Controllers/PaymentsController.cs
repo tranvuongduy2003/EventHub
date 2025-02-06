@@ -1,7 +1,10 @@
 ﻿using EventHub.Application.Commands.Payment.Checkout;
 using EventHub.Application.Commands.Payment.ValidateSession;
+using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.Exceptions;
+using EventHub.Domain.Shared.Enums.Command;
+using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +27,7 @@ public class PaymentsController : ControllerBase
 
     [HttpPost("checkout")]
     [SwaggerResponse(200, "Successfully checkout", typeof(CheckoutResponseDto))]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.CREATE)]
     public async Task<IActionResult> PostCheckout([FromBody] CheckoutDto request)
     {
         try
@@ -38,12 +42,13 @@ public class PaymentsController : ControllerBase
         }
         catch (BadRequestException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new ApiBadRequestResponse(ex.Message));
         }
     }
 
     [HttpPost("{paymentId}/validate-session")]
     [SwaggerResponse(200, "Successfully validate session", typeof(ValidateSessionResponseDto))]
+    [ClaimRequirement(EFunctionCode.GENERAL_PAYMENT, ECommandCode.UPDATE)]
     public async Task<IActionResult> PostValidateSession(Guid paymentId)
     {
         try
@@ -58,11 +63,11 @@ public class PaymentsController : ControllerBase
         }
         catch (BadRequestException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new ApiBadRequestResponse(ex.Message));
         }
         catch (NotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound(new ApiNotFoundResponse(ex.Message));
         }
     }
 }

@@ -18,7 +18,7 @@ public class TicketDto
 
     public TicketTypeDto TicketType { get; set; }
 
-    public EventDto Event { get; set; }
+    public LeanEventDto Event { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ETicketStatus Status { get; set; }

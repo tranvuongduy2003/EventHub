@@ -62,6 +62,7 @@ public class ExpensesController : ControllerBase
     )]
     [SwaggerResponse(200, "Successfully retrieved the list of expenses", typeof(Pagination<ExpenseDto>))]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EXPENSE, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedExpenses([FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedExpenses");
@@ -82,6 +83,7 @@ public class ExpensesController : ControllerBase
     [SwaggerResponse(200, "Successfully retrieved the list of expenses", typeof(Pagination<ExpenseDto>))]
     [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EXPENSE, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedExpensesByEvent(Guid eventId, [FromQuery] PaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedExpensesByEvent");
@@ -109,7 +111,7 @@ public class ExpensesController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Expense with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.GENERAL_CATEGORY, ECommandCode.VIEW)]
+    [ClaimRequirement(EFunctionCode.GENERAL_EXPENSE, ECommandCode.VIEW)]
     public async Task<IActionResult> GetExpenseById(Guid expenseId)
     {
         _logger.LogInformation("START: GetExpenseById");
@@ -214,6 +216,7 @@ public class ExpensesController : ControllerBase
     [SwaggerResponse(200, "Successfully retrieved the list of sub expenses", typeof(List<SubExpenseDto>))]
     [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EXPENSE, ECommandCode.VIEW)]
     public async Task<IActionResult> GetSubExpensesByExpense(Guid expenseId)
     {
         _logger.LogInformation("START: GetSubExpensesByExpense");
