@@ -1,6 +1,8 @@
 ﻿using System.Linq.Expressions;
 using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.Repositories;
+using EventHub.Domain.Shared.Helpers;
+using EventHub.Domain.Shared.SeedWork;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Infrastructure.Persistence.SeedWork.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -45,5 +47,43 @@ public class EventsRepository : RepositoryBase<Event>, IEventsRepository
         return !trackChanges
             ? Queryable.Where<Event>(_context.Set<Event>(), e => e.IsDeleted).Where(expression).AsNoTracking()
             : Queryable.Where<Event>(_context.Set<Event>(), e => e.IsDeleted).Where(expression);
+    }
+
+    public Pagination<Event> GetPaginatedDeletedEvents(PaginationFilter filter, bool trackChanges = false)
+    {
+        IQueryable<Event> query = GetDeletedEvents(trackChanges);
+
+        return PagingHelper.QueryPaginate(filter, query);
+    }
+
+    public Pagination<Event> GetPaginatedDeletedEvents(PaginationFilter filter, Func<IQueryable<Event>, IQueryable<Event>> includePaths,
+        bool trackChanges = false)
+    {
+        IQueryable<Event> query = FindAll(trackChanges);
+
+        // Apply includes if specified
+        query = includePaths(query);
+
+        return PagingHelper.QueryPaginate(filter, query);
+    }
+
+    public Pagination<Event> GetPaginatedDeletedEvents(Expression<Func<Event, bool>> expression, PaginationFilter filter,
+        bool trackChanges = false)
+    {
+        IQueryable<Event> query = FindByCondition(expression, trackChanges);
+
+        return PagingHelper.QueryPaginate(filter, query);
+    }
+
+    public Pagination<Event> GetPaginatedDeletedEvents(Expression<Func<Event, bool>> expression, PaginationFilter filter,
+        Func<IQueryable<Event>, IQueryable<Event>> includePaths,
+        bool trackChanges = false)
+    {
+        IQueryable<Event> query = FindByCondition(expression, trackChanges);
+
+        // Apply includes if specified
+        query = includePaths(query);
+
+        return PagingHelper.QueryPaginate(filter, query);
     }
 }

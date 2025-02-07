@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Event;
-using EventHub.Domain.Aggregates.EventAggregate;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,20 +23,20 @@ public class GetDeletedEventsByUserIdQueryHandler : IQueryHandler<GetDeletedEven
         _signInManager = signInManager;
     }
 
-    public async Task<Pagination<EventDto>> Handle(GetDeletedEventsByUserIdQuery request,
+    public Task<Pagination<EventDto>> Handle(GetDeletedEventsByUserIdQuery request,
         CancellationToken cancellationToken)
     {
         var userId = Guid.Parse(_signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "");
 
-        List<Domain.Aggregates.EventAggregate.Event> events = await _unitOfWork.Events
-            .GetDeletedEvents(x => x.AuthorId == userId)
-            .Include(x => x.EventCategories)
-            .ThenInclude(x => x.Category)
-            .ToListAsync(cancellationToken);
+        Pagination<Domain.Aggregates.EventAggregate.Event> paginatedEvents = _unitOfWork.Events
+            .GetPaginatedDeletedEvents(request.Filter, query => query
+                .Where(x => x.AuthorId == userId)
+                .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category));
 
-        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
+        Pagination<EventDto> paginatedEventDtos = _mapper.Map<Pagination<EventDto>>(paginatedEvents);
 
-        return PagingHelper.Paginate<EventDto>(eventDtos, request.Filter);
+        return Task.FromResult(paginatedEventDtos);
     }
 }

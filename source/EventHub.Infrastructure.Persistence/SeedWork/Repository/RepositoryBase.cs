@@ -116,7 +116,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     {
         return _context.Set<T>().Count();
     }
-    
+
     public Task<int> CountAsync()
     {
         return _context.Set<T>().CountAsync();
