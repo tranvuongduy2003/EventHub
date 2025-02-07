@@ -6,6 +6,7 @@ using EventHub.Application.Queries.Review.GetPaginatedReviewsByCreatedEvents;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByEventId;
 using EventHub.Application.Queries.Review.GetPaginatedReviewsByUserId;
 using EventHub.Application.Queries.Review.GetReviewById;
+using EventHub.Application.Queries.Review.GetReviewStatisticsByCreatedEvents;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Review;
 using EventHub.Application.SeedWork.Exceptions;
@@ -91,6 +92,28 @@ public class ReviewsController : ControllerBase
             _logger.LogInformation("END: GetPaginatedReviewsByCreatedEvents");
 
             return Ok(new ApiOkResponse(reviews));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+    }
+
+    [HttpGet("get-by-created-events/{userId:guid}/statistics")]
+    [SwaggerResponse(200, "Successfully retrieved the list of reviews", typeof(Pagination<ReviewDto>))]
+    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetReviewStatisticsByCreatedEvents(Guid userId)
+    {
+        _logger.LogInformation("START: GetReviewStatisticsByCreatedEvents");
+        try
+        {
+            ReviewStatisticsDto statistics = await _mediator.Send(new GetReviewStatisticsByCreatedEventsQuery(userId));
+
+            _logger.LogInformation("END: GetReviewStatisticsByCreatedEvents");
+
+            return Ok(new ApiOkResponse(statistics));
         }
         catch (NotFoundException e)
         {
