@@ -59,7 +59,7 @@ public class EventsRepository : RepositoryBase<Event>, IEventsRepository
     public Pagination<Event> GetPaginatedDeletedEvents(PaginationFilter filter, Func<IQueryable<Event>, IQueryable<Event>> includePaths,
         bool trackChanges = false)
     {
-        IQueryable<Event> query = FindAll(trackChanges);
+        IQueryable<Event> query = GetDeletedEvents(trackChanges);
 
         // Apply includes if specified
         query = includePaths(query);
@@ -70,7 +70,7 @@ public class EventsRepository : RepositoryBase<Event>, IEventsRepository
     public Pagination<Event> GetPaginatedDeletedEvents(Expression<Func<Event, bool>> expression, PaginationFilter filter,
         bool trackChanges = false)
     {
-        IQueryable<Event> query = FindByCondition(expression, trackChanges);
+        IQueryable<Event> query = GetDeletedEvents(expression, trackChanges);
 
         return PagingHelper.QueryPaginate(filter, query);
     }
@@ -79,7 +79,7 @@ public class EventsRepository : RepositoryBase<Event>, IEventsRepository
         Func<IQueryable<Event>, IQueryable<Event>> includePaths,
         bool trackChanges = false)
     {
-        IQueryable<Event> query = FindByCondition(expression, trackChanges);
+        IQueryable<Event> query = GetDeletedEvents(expression, trackChanges);
 
         // Apply includes if specified
         query = includePaths(query);
