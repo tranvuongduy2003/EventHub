@@ -24,8 +24,12 @@ public class CreateSubExpenseCommandHandler : ICommandHandler<CreateSubExpenseCo
             Name = request.Name,
             Price = request.Price,
         };
-
         await _unitOfWork.SubExpenses.CreateAsync(subExpense);
+
+        Domain.Aggregates.EventAggregate.Entities.Expense expense = await _unitOfWork.Expenses.GetByIdAsync(subExpense.ExpenseId);
+        expense.Total += subExpense.Price;
+        await _unitOfWork.Expenses.Update(expense);
+
         await _unitOfWork.CommitAsync();
 
         return _mapper.Map<SubExpenseDto>(subExpense);
