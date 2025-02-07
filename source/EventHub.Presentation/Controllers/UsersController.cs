@@ -6,10 +6,12 @@ using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
 using EventHub.Application.Queries.User.GetPaginatedFollowers;
 using EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
+using EventHub.Application.Queries.User.GetPaginatedUserInvitations;
 using EventHub.Application.Queries.User.GetPaginatedUsers;
 using EventHub.Application.Queries.User.GetUserById;
 using EventHub.Application.Queries.User.GetUserProfile;
 using EventHub.Application.SeedWork.Attributes;
+using EventHub.Application.SeedWork.DTOs.Invitation;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
@@ -331,7 +333,6 @@ public class UsersController : ControllerBase
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [Consumes("multipart/form-data")]
     [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
     public async Task<IActionResult> PostInviteUsers([FromBody] InviteDto request)
     {
@@ -342,5 +343,22 @@ public class UsersController : ControllerBase
         _logger.LogInformation("END: PostInviteUsers");
 
         return Ok(new ApiOkResponse());
+    }
+
+    [HttpGet("invitations")]
+    [SwaggerResponse(200, "Users invited successfully")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetUserInvitations([FromQuery] PaginationFilter filter)
+    {
+        _logger.LogInformation("START: GetUserInvitations");
+
+        Pagination<InvitationDto> invitations = await _mediator.Send(new GetPaginatedUserInvitationsQuery(filter));
+
+        _logger.LogInformation("END: GetUserInvitations");
+
+        return Ok(new ApiOkResponse(invitations));
     }
 }
