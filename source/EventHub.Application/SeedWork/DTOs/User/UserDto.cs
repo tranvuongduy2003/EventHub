@@ -52,6 +52,8 @@ public class UserDto
     [SwaggerSchema("Roles of the user")]
     public IEnumerable<string> Roles { get; set; } = null!;
 
+    public bool IsInvited { get; set; }
+
     [SwaggerSchema("The datetime that the user was created")]
     public DateTime CreatedAt { get; set; }
 
