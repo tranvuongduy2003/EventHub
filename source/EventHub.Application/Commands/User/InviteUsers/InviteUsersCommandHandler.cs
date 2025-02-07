@@ -9,14 +9,11 @@ namespace EventHub.Application.Commands.User.InviteUsers;
 public class InviteUsersCommandHandler : ICommandHandler<InviteUsersCommand>
 {
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
-    private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
     private readonly IUnitOfWork _unitOfWork;
 
-    public InviteUsersCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
-        UserManager<Domain.Aggregates.UserAggregate.User> userManager, IUnitOfWork unitOfWork)
+    public InviteUsersCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IUnitOfWork unitOfWork)
     {
         _signInManager = signInManager;
-        _userManager = userManager;
         _unitOfWork = unitOfWork;
     }
 
