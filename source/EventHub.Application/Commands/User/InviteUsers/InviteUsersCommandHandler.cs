@@ -37,6 +37,7 @@ public class InviteUsersCommandHandler : ICommandHandler<InviteUsersCommand>
                 EventId = request.EventId,
             };
             await _unitOfWork.Invitations.CreateAsync(invitation);
+            await _unitOfWork.CommitAsync();
         }
     }
 }
