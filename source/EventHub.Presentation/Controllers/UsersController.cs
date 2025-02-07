@@ -5,6 +5,7 @@ using EventHub.Application.Commands.User.InviteUsers;
 using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
 using EventHub.Application.Queries.User.GetPaginatedFollowers;
+using EventHub.Application.Queries.User.GetPaginatedFollowersToInvite;
 using EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
 using EventHub.Application.Queries.User.GetPaginatedUserInvitations;
 using EventHub.Application.Queries.User.GetPaginatedUsers;
@@ -209,6 +210,23 @@ public class UsersController : ControllerBase
 
     }
 
+    [HttpGet("{userId:guid}/followers-invite/{eventId:guid}")]
+    [SwaggerResponse(200, "Successfully retrieved the list of followers", typeof(Pagination<UserDto>))]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetPaginatedFollowersToInvite(Guid userId, Guid eventId, [FromQuery] PaginationFilter filter)
+    {
+        _logger.LogInformation("START: GetPaginatedFollowersToInvite");
+
+        Pagination<UserDto> users = await _mediator.Send(new GetPaginatedFollowersToInviteQuery(userId, eventId, filter));
+
+        _logger.LogInformation("END: GetPaginatedFollowersToInvite");
+
+        return Ok(new ApiOkResponse(users));
+    }
 
     [HttpGet("{userId:guid}/following-users")]
     [SwaggerOperation(
