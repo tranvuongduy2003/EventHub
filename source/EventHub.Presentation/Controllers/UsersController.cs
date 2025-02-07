@@ -1,6 +1,7 @@
 using EventHub.Application.Commands.User.ChangePassword;
 using EventHub.Application.Commands.User.CreateUser;
 using EventHub.Application.Commands.User.Follow;
+using EventHub.Application.Commands.User.InviteUsers;
 using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
 using EventHub.Application.Queries.User.GetPaginatedFollowers;
@@ -323,5 +324,23 @@ public class UsersController : ControllerBase
         {
             return Unauthorized(new ApiUnauthorizedResponse(e.Message));
         }
+    }
+
+    [HttpPost("invitations")]
+    [SwaggerResponse(200, "Users invited successfully")]
+    [SwaggerResponse(401, "Unauthorized - User not authenticated")]
+    [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [Consumes("multipart/form-data")]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_USER, ECommandCode.UPDATE)]
+    public async Task<IActionResult> PostInviteUsers([FromBody] InviteDto request)
+    {
+        _logger.LogInformation("START: PostInviteUsers");
+
+        await _mediator.Send(new InviteUsersCommand(request.EventId, request.UserIds));
+
+        _logger.LogInformation("END: PostInviteUsers");
+
+        return Ok(new ApiOkResponse());
     }
 }
