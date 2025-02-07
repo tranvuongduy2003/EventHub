@@ -41,12 +41,14 @@ public static class PagingHelper
             items = filter.Orders.Aggregate(items, (current, order) =>
                 order.OrderDirection switch
                 {
-                    EPageOrder.ASC => current.OrderBy(x => TypeDescriptor
+                    EPageOrder.ASC => current
+                        .OrderBy(x => TypeDescriptor
                             .GetProperties(typeof(T))
                             .Find(order.OrderBy, true)?
                             .GetValue(x))
                         .ToList(),
-                    EPageOrder.DESC => current.OrderByDescending(x => TypeDescriptor
+                    EPageOrder.DESC => current
+                        .OrderByDescending(x => TypeDescriptor
                             .GetProperties(typeof(T))
                             .Find(order.OrderBy, true)?
                             .GetValue(x))
@@ -119,11 +121,10 @@ public static class PagingHelper
 
                     if (property != null)
                     {
-
                         query = order.OrderDirection switch
                         {
-                            EPageOrder.ASC => query?.OrderBy(x => property.GetValue(x)),
-                            EPageOrder.DESC => query?.OrderByDescending(x => property.GetValue(x)),
+                            EPageOrder.ASC => query?.AsEnumerable().OrderBy(x => property.GetValue(x)).AsQueryable(),
+                            EPageOrder.DESC => query?.AsEnumerable().OrderByDescending(x => property.GetValue(x)).AsQueryable(),
                             _ => query
                         };
                     }
