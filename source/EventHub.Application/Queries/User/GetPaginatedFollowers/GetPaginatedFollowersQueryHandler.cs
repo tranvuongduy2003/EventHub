@@ -27,14 +27,14 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
             _unitOfWork.UserFollowers
                 .FindByCondition(x => x.FollowedId == request.UserId)
                 .Include(x => x.Follower)
-                    .ThenInclude(x => x.Inviters)
+                    .ThenInclude(x => x.Inviteds)
                 .Select(x => x.Follower));
 
         Pagination<UserDto> paginatedFollowerDtos = _mapper.Map<Pagination<UserDto>>(paginatedFollowers);
 
         for (int i = 0; i < paginatedFollowerDtos.Items.Count; i++)
         {
-            paginatedFollowerDtos.Items[i].IsInvited = paginatedFollowers.Items[i].Inviters.Any(x => x.InvitedId == request.UserId);
+            paginatedFollowerDtos.Items[i].IsInvited = paginatedFollowers.Items[i].Inviteds.Any(x => x.InviterId == request.UserId);
         }
 
         return Task.FromResult(paginatedFollowerDtos);
