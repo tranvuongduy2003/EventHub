@@ -48,6 +48,7 @@ public class ApplicationDbContextSeed
         await SeedReviews();
         await SeedFavouriteEvents();
         await SeedFollowers();
+        await SeedExpenses();
     }
 
     private async Task SeedRoles()
@@ -1017,6 +1018,41 @@ public class ApplicationDbContextSeed
             _context.Reviews.AddRange(reviews);
 
             await _context.SaveChangesAsync();
+        }
+    }
+
+    private async Task SeedExpenses()
+    {
+        if (!_context.Expenses.Any())
+        {
+            var events = _context.Events.ToList();
+
+            foreach (Domain.Aggregates.EventAggregate.Event @event in events)
+            {
+                Faker<Expense> expenseFaker = new Faker<Expense>()
+                    .RuleFor(x => x.EventId, _ => @event.Id)
+                    .RuleFor(x => x.Title, f => f.Commerce.Department());
+
+                List<Expense> expenses = expenseFaker.Generate(3);
+                await _context.Expenses.AddRangeAsync(expenses);
+                await _context.SaveChangesAsync();
+
+                foreach (Expense expense in expenses)
+                {
+                    Faker<SubExpense> subExpenseFaker = new Faker<SubExpense>()
+                        .RuleFor(x => x.ExpenseId, _ => expense.Id)
+                        .RuleFor(x => x.Name, f => f.Commerce.ProductMaterial())
+                        .RuleFor(x => x.Price, f => f.Random.Long(100000, 10000000));
+
+                    List<SubExpense> subExpenses = subExpenseFaker.Generate(3);
+                    await _context.SubExpenses.AddRangeAsync(subExpenses);
+                    await _context.SaveChangesAsync();
+
+                    expense.Total = subExpenses.Sum(x => x.Price);
+                    _context.Expenses.Update(expense);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

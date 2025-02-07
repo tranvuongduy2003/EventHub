@@ -14,7 +14,9 @@ public sealed class EventMapper
             .ForMember(dest => dest.Categories, options =>
                 options.MapFrom(source => source.EventCategories.Select(x => x.Category)))
             .ForMember(dest => dest.Coupons, options =>
-                options.MapFrom(source => source.EventCoupons.Select(x => x.Coupon)));
+                options.MapFrom(source => source.EventCoupons.Select(x => x.Coupon)))
+            .ForMember(dest => dest.TotalExpense, options =>
+                options.MapFrom(source => source.Expenses.Sum(x => x.Total)));
 
         config.CreateMap<Pagination<Event>, Pagination<EventDto>>()
             .ForMember(dest => dest.Items, options =>

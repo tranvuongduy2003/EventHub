@@ -68,6 +68,7 @@ public class GetFavouriteEventsByUserIdQueryHandler : IQueryHandler<GetFavourite
                     .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                     .Include(x => x.EventCoupons).ThenInclude(x => x.Coupon)
                     .Include(x => x.Reviews)
+                    .Include(x => x.Expenses)
                     .Join(
                         favouriteEvents,
                         _event => _event.Id,

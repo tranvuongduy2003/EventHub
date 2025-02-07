@@ -64,6 +64,8 @@ public class EventDto
 
     public List<TicketTypeDto> TicketTypes { get; set; }
 
+    public long TotalExpense { get; set; }
+
     [SwaggerSchema("The date and time when the event was created (UTC)")]
     public DateTime CreatedAt { get; set; }
 
