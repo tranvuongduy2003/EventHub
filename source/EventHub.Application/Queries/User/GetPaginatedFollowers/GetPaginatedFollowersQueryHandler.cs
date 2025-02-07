@@ -34,7 +34,7 @@ public class GetPaginatedFollowersQueryHandler : IQueryHandler<GetPaginatedFollo
 
         for (int i = 0; i < paginatedFollowerDtos.Items.Count; i++)
         {
-            paginatedFollowerDtos.Items[i].IsInvited = paginatedFollowers.Items[i].Inviters.Any(x => x.InviterId == request.UserId);
+            paginatedFollowerDtos.Items[i].IsInvited = paginatedFollowers.Items[i].Inviters.Any(x => x.InvitedId == request.UserId);
         }
 
         return Task.FromResult(paginatedFollowerDtos);
