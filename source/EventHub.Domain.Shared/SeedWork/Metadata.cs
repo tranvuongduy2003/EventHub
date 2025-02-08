@@ -121,3 +121,12 @@ public class Metadata
     [Description("Existing a page behind the current page or not")]
     public bool HasNext => CurrentPage < TotalPages;
 }
+
+public class NotificationMetadata
+{
+    public int TotalUnseenFollowing { get; set; }
+
+    public int TotalUnseenOrdering { get; set; }
+
+    public int TotalUnseenInvitation { get; set; }
+}

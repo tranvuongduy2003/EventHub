@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.Shared.Enums.Notification;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +28,31 @@ public class Notification : AggregateRoot
 
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
+    public bool IsSeen { get; set; }
+
     public Guid? TargetUserId { get; set; }
 
     public string? TargetGroup { get; set; }
 
+    public Guid? InvitationId { get; set; }
+
+    public Guid? PaymentId { get; set; }
+
+    public Guid? UserFollowerId { get; set; }
+
     [ForeignKey("TargetUserId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual User TargetUser { get; set; } = null!;
+
+    [ForeignKey("InvitationId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual Invitation? Invitation { get; set; } = null!;
+
+    [ForeignKey("PaymentId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual Payment? Payment { get; set; } = null!;
+
+    [ForeignKey("UserFollowerId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual UserFollower? UserFollower { get; set; } = null!;
 }

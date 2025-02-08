@@ -6,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 
 [Table("UserFollowers")]
-[PrimaryKey("FollowerId", "FollowedId")]
 public class UserFollower : EntityBase
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; set; }
+
     [Required]
     public required Guid FollowerId { get; set; } = Guid.Empty;
 

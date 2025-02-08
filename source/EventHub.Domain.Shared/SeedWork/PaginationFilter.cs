@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using EventHub.Domain.Shared.Enums.Common;
 using EventHub.Domain.Shared.Enums.Event;
+using EventHub.Domain.Shared.Enums.Notification;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -158,4 +159,10 @@ public class EventPaginationFilter : PaginationFilter
 
     [FromQuery(Name = "visibility")]
     public EVisibility? Visibility { get; set; } = EVisibility.ALL;
+}
+
+public class NotificationPaginationFilter : PaginationFilter
+{
+    [FromQuery(Name = "type")]
+    public ENotificationType? Type { get; set; } = null!;
 }

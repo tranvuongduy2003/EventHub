@@ -9,7 +9,12 @@ public sealed class NotificationMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<Notification, NotificationDto>().ReverseMap();
+        config.CreateMap<Notification, NotificationDto>()
+            .ForMember(dest => dest.FollowerId, options => options
+                .MapFrom(source => source.UserFollower!.FollowedId))
+            .ForMember(dest => dest.Follower, options => options.MapFrom(source =>
+                source.UserFollower!.Follower))
+            .ReverseMap();
 
         config.CreateMap<Pagination<Notification>, Pagination<NotificationDto>>()
             .ForMember(dest => dest.Items, options =>

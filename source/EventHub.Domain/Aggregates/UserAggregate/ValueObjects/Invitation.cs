@@ -7,16 +7,19 @@ using Microsoft.EntityFrameworkCore;
 namespace EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 
 [Table("Invitations")]
-[PrimaryKey("InviterId", "InvitedId", "EventId")]
 public class Invitation : EntityBase
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; set; }
+
     [Required]
     public Guid InviterId { get; set; } = Guid.Empty;
 
     [Required]
     public Guid InvitedId { get; set; } = Guid.Empty;
 
-    [Required] 
+    [Required]
     public Guid EventId { get; set; } = Guid.Empty;
 
     [ForeignKey("InviterId")]
