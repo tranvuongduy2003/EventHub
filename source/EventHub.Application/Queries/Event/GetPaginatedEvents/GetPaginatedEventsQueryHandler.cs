@@ -45,21 +45,24 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
 
                     if (request.Filter.Rate is int rate && rate is >= 1 and <= 5)
                     {
-                        query = query.Where(x => x.Reviews.Average(r => r.Rate) >= rate);
+                        query = query
+                            .Include(x => x.Reviews)
+                            .Where(x => x.Reviews.Average(r => r.Rate) >= rate);
                     }
 
                     if (request.Filter.CategoryIds?.Any() == true)
                     {
                         var categorySet = new HashSet<Guid>(request.Filter.CategoryIds);
-                        query = query.Where(x => x.EventCategories.Any(ec => categorySet.Contains(ec.CategoryId)));
+                        query = query
+                            .Include(x => x.EventCategories)
+                                .ThenInclude(x => x.Category)
+                            .Where(x => x.EventCategories.Any(ec => categorySet.Contains(ec.CategoryId)));
                     }
 
                     return query
-                        .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                         .Include(x => x.EventCoupons).ThenInclude(x => x.Coupon)
                         .Include(x => x.TicketTypes)
-                        .Include(x => x.Expenses)
-                        .Include(x => x.Reviews);
+                        .Include(x => x.Expenses);
                 }
             );
 
