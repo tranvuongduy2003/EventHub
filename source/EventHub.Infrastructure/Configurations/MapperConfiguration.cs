@@ -13,6 +13,7 @@ public static class MapperConfiguration
                 CategoryMapper.CreateMap(config);
                 CommandMapper.CreateMap(config);
                 CouponMapper.CreateMap(config);
+                ConversationMapper.CreateMap(config);
                 ReasonMapper.CreateMap(config);
                 EmailContentMapper.CreateMap(config);
                 EventMapper.CreateMap(config);

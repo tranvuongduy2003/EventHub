@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Application.SeedWork.DTOs.Invitation;
 using EventHub.Application.SeedWork.DTOs.User;
 using EventHub.Domain.Aggregates.UserAggregate;
@@ -27,6 +28,8 @@ public sealed class UserMapper
                 options.MapFrom(source => source.Items));
 
         config.CreateMap<Invitation, InvitationDto>();
+
+        config.CreateMap<User, ConversationUserDto>();
 
         config.CreateMap<Pagination<Invitation>, Pagination<InvitationDto>>()
             .ForMember(dest => dest.Items, options =>
