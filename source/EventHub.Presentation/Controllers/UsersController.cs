@@ -364,7 +364,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("invitations")]
-    [SwaggerResponse(200, "Users invited successfully")]
+    [SwaggerResponse(200, "Users invited successfully", typeof(Pagination<InvitationDto>))]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
