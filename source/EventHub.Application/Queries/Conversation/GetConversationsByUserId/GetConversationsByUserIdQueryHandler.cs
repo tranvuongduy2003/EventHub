@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.SeedWork;
@@ -34,32 +33,18 @@ public class
             throw new NotFoundException("User does not exist!");
         }
 
-        List<Message> messages = await _unitOfWork.Messages
-            .FindAll()
-            .Include(x => x.Author)
-            .ToListAsync(cancellationToken);
-
         Pagination<Domain.Aggregates.ConversationAggregate.Conversation> conversations = _unitOfWork.Conversations
             .PaginatedFindByCondition(x => x.UserId == request.UserId, request.Filter, query => query
                 .Include(x => x.Event)
                 .Include(x => x.Host)
-                .Include(x => x.User));
+                .Include(x => x.User)
+                .Include(x => x.Messages));
 
-        conversations.Items = (
-                from _conversation in conversations.Items
-                join _message in messages.DefaultIfEmpty()
-                    on _conversation.Id equals _message.ConversationId
-                select new { Conversation = _conversation, Message = _message }
-            )
-            .GroupBy(x => x.Conversation)
-            .AsEnumerable()
-            .Select(group =>
+        conversations.Items
+            .ForEach(conversation =>
             {
-                Domain.Aggregates.ConversationAggregate.Conversation conversation = group.Key;
-                conversation.LastMessage = group.MaxBy(x => x.Message.CreatedAt)?.Message;
-                return conversation;
-            })
-            .ToList();
+                conversation.LastMessage = conversation.Messages?.MaxBy(x => x.CreatedAt);
+            });
 
         Pagination<ConversationDto> paginatedConversationDtos =
             _mapper.Map<Pagination<ConversationDto>>(conversations);

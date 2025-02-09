@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventHub.Application.Queries.Conversation.GetConversationsByEventId;
 
@@ -31,10 +29,6 @@ public class
             throw new NotFoundException("Event does not exist!");
         }
 
-        IIncludableQueryable<Message, Domain.Aggregates.UserAggregate.User> messages = _unitOfWork.Messages
-            .FindAll()
-            .Include(x => x.Author);
-
         Pagination<Domain.Aggregates.ConversationAggregate.Conversation> paginatedConversations = _unitOfWork
             .Conversations
             .PaginatedFindByCondition(
@@ -44,23 +38,14 @@ public class
                     .Include(x => x.Event)
                     .Include(x => x.Host)
                     .Include(x => x.User)
+                    .Include(x => x.Messages)
             );
 
-        paginatedConversations.Items = (
-                from _conversation in paginatedConversations.Items
-                join _message in messages.DefaultIfEmpty()
-                    on _conversation.Id equals _message.ConversationId
-                select new { Conversation = _conversation, Message = _message }
-            )
-            .GroupBy(x => x.Conversation)
-            .AsEnumerable()
-            .Select(group =>
+        paginatedConversations.Items
+            .ForEach(conversation =>
             {
-                Domain.Aggregates.ConversationAggregate.Conversation conversation = group.Key;
-                conversation.LastMessage = group.MaxBy(x => x.Message.CreatedAt)?.Message;
-                return conversation;
-            })
-            .ToList();
+                conversation.LastMessage = conversation.Messages?.MaxBy(x => x.CreatedAt);
+            });
 
         Pagination<ConversationDto> paginatedConversationDtos =
             _mapper.Map<Pagination<ConversationDto>>(paginatedConversations);
