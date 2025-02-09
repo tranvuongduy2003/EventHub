@@ -167,7 +167,7 @@ public class ChatHub : Hub
 
             MessageDto messageDto = _mapper.Map<MessageDto>(message);
 
-            await Clients.Group(request.ConversationId.ToString()).SendAsync("ReceiveMessage", messageDto);
+            await Clients.Group(request.ConversationId.ToString()).SendAsync("MessageReceived", messageDto);
 
             _logger.LogInformation("SendMessage: Message sent in conversation {ConversationId}", request.ConversationId);
         }
@@ -188,5 +188,122 @@ public class ChatHub : Hub
         }
 
         _logger.LogInformation("END: SendMessage");
+    }
+
+    public async Task DeleteMessage(DeleteMessageDto request)
+    {
+        _logger.LogInformation("BEGIN: DeleteMessage - MessageId: {MessageId}, AuthorId: {AuthorId}",
+            request.MessageId, request.AuthorId);
+
+        try
+        {
+            // Tìm tin nhắn theo ID
+            Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
+            if (message == null)
+            {
+                throw new NotFoundException("Message does not exist");
+            }
+
+            // Kiểm tra quyền truy cập: Chỉ người tạo tin nhắn mới được phép xóa
+            if (message.AuthorId != request.AuthorId)
+            {
+                throw new BadRequestException("You are not authorized to delete this message");
+            }
+
+            // Xóa tin nhắn
+            await _unitOfWork.Messages.Delete(message);
+            await _unitOfWork.CommitAsync();
+
+            // Thông báo cho nhóm rằng tin nhắn đã bị xóa
+            await Clients.Group(message.ConversationId.ToString()).SendAsync("MessageDeleted", message.Id);
+            _logger.LogInformation("DeleteMessage: Message {MessageId} deleted", request.MessageId);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex, "Resource not found during DeleteMessage");
+            throw;
+        }
+        catch (BadRequestException ex)
+        {
+            _logger.LogError(ex, "Bad request during DeleteMessage");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error during DeleteMessage");
+            throw;
+        }
+
+        _logger.LogInformation("END: DeleteMessage");
+    }
+
+    public async Task EditMessage(EditMessageDto request)
+    {
+        _logger.LogInformation("BEGIN: EditMessage - MessageId: {MessageId}, AuthorId: {AuthorId}",
+            request.MessageId, request.AuthorId);
+
+        try
+        {
+            // Tìm tin nhắn theo ID
+            Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
+            if (message == null)
+            {
+                throw new NotFoundException("Message does not exist");
+            }
+
+            // Kiểm tra quyền truy cập: Chỉ người tạo tin nhắn mới được phép sửa
+            if (message.AuthorId != request.AuthorId)
+            {
+                throw new BadRequestException("You are not authorized to edit this message");
+            }
+
+            // Cập nhật nội dung tin nhắn
+            if (!string.IsNullOrEmpty(request.Content))
+            {
+                message.Content = request.Content;
+            }
+            else if (!string.IsNullOrEmpty(request.VideoUrl) && !string.IsNullOrEmpty(request.VideoFileName))
+            {
+                message.VideoUrl = request.VideoUrl;
+                message.VideoFileName = request.VideoFileName;
+            }
+            else if (!string.IsNullOrEmpty(request.ImageUrl) && !string.IsNullOrEmpty(request.ImageFileName))
+            {
+                message.ImageUrl = request.ImageUrl;
+                message.ImageFileName = request.ImageFileName;
+            }
+            else if (!string.IsNullOrEmpty(request.AudioUrl) && !string.IsNullOrEmpty(request.AudioFileName))
+            {
+                message.AudioUrl = request.AudioUrl;
+                message.AudioFileName = request.AudioFileName;
+            }
+
+            // Lưu thay đổi
+            await _unitOfWork.Messages.Update(message);
+            await _unitOfWork.CommitAsync();
+
+            // Ánh xạ sang DTO và gửi thông báo về nhóm
+            MessageDto updatedMessageDto = _mapper.Map<MessageDto>(message);
+            await Clients.Group(message.ConversationId.ToString()).SendAsync("MessageEdited", updatedMessageDto);
+
+            _logger.LogInformation("EditMessage: Message {MessageId} edited", request.MessageId);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex, "Resource not found during EditMessage");
+            throw;
+        }
+        catch (BadRequestException ex)
+        {
+            _logger.LogError(ex, "Bad request during EditMessage");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error during EditMessage");
+            throw;
+        }
+
+        _logger.LogInformation("END: EditMessage");
     }
 }
