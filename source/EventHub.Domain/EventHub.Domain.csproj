@@ -12,7 +12,4 @@
     <ItemGroup>
       <ProjectReference Include="..\EventHub.Domain.Shared\EventHub.Domain.Shared.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Events\" />
-    </ItemGroup>
 </Project>

@@ -26,5 +26,9 @@ public class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
 
         await _unitOfWork.CachedReviews.Update(review);
         await _unitOfWork.CommitAsync();
+
+        Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(review.EventId);
+        @event.CalculatePositivePercentageOfReview(review.Id);
+        await _unitOfWork.CommitAsync();
     }
 }

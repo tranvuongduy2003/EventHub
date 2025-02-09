@@ -25,6 +25,8 @@ public class Review : EntityBase, IAuditable
 
     public bool IsPositive { get; set; }
 
+    public double SentimentPercentage { get; set; }
+
     [Required]
     [Range(1.0, 5.0)]
     public required double Rate { get; set; } = 1.0;

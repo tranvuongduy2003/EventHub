@@ -36,6 +36,11 @@ public class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, R
         await _unitOfWork.CachedReviews.CreateAsync(review);
         await _unitOfWork.CommitAsync();
 
+
+        Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
+        @event.CalculatePositivePercentageOfReview(review.Id);
+        await _unitOfWork.CommitAsync();
+
         return _mapper.Map<ReviewDto>(review);
     }
 }

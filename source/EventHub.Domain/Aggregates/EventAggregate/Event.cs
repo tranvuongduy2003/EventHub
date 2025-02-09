@@ -11,6 +11,7 @@ using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.Aggregates.TicketAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
+using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.AggregateRoot;
 using EventHub.Domain.SeedWork.Entities;
 using EventHub.Domain.Shared.Enums.Event;
@@ -109,4 +110,9 @@ public class Event : AggregateRoot, IAuditable
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
     #endregion
+
+    public void CalculatePositivePercentageOfReview(Guid reviewId)
+    {
+        RaiseDomainEvent(new CalculatePositivePercentageOfReviewDomainEvent(Guid.NewGuid(), reviewId));
+    }
 }

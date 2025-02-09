@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.ConfigureDependencyInjection();
         services.ConfigurePersistenceServices();
         services.ConfigureSignalRServices();
+        services.ConfigureHttpClients(configuration);
 
         return services;
     }
