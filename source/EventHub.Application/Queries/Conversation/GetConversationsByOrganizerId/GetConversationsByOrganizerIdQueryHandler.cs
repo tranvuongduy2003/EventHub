@@ -38,7 +38,7 @@ public class GetConversationsByOrganizerIdQueryHandler : IQueryHandler<GetConver
                     .Include(x => x.User)
             );
 
-        var conversationWithMessages = (
+        paginatedConversations.Items = (
                 from _conversation in paginatedConversations.Items
                 join _message in messages.DefaultIfEmpty()
                     on _conversation.Id equals _message.ConversationId
@@ -55,7 +55,7 @@ public class GetConversationsByOrganizerIdQueryHandler : IQueryHandler<GetConver
             .ToList();
 
         Pagination<ConversationDto> paginatedConversationDtos =
-            _mapper.Map<Pagination<ConversationDto>>(conversationWithMessages);
+            _mapper.Map<Pagination<ConversationDto>>(paginatedConversations);
 
         return Task.FromResult(paginatedConversationDtos);
     }

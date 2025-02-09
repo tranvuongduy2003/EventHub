@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Message;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.ConversationAggregate;
 using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Conversation;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.ConversationAggregate;
 using EventHub.Domain.Aggregates.ConversationAggregate.Entities;
 using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.SeedWork.Query;
-using EventHub.Domain.Shared.Helpers;
 using EventHub.Domain.Shared.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -48,7 +46,7 @@ public class
                     .Include(x => x.User)
             );
 
-        var conversationWithMessages = (
+        paginatedConversations.Items = (
                 from _conversation in paginatedConversations.Items
                 join _message in messages.DefaultIfEmpty()
                     on _conversation.Id equals _message.ConversationId
@@ -65,7 +63,7 @@ public class
             .ToList();
 
         Pagination<ConversationDto> paginatedConversationDtos =
-            _mapper.Map<Pagination<ConversationDto>>(conversationWithMessages);
+            _mapper.Map<Pagination<ConversationDto>>(paginatedConversations);
 
         return paginatedConversationDtos;
     }
