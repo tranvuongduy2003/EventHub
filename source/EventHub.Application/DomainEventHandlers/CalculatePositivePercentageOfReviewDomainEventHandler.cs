@@ -2,17 +2,20 @@
 using EventHub.Domain.Events;
 using EventHub.Domain.SeedWork.DomainEvent;
 using EventHub.Domain.SeedWork.Persistence;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace EventHub.Application.DomainEventHandlers;
 
 public class CalculatePositivePercentageOfReviewDomainEventHandler : IDomainEventHandler<CalculatePositivePercentageOfReviewDomainEvent>
 {
+    private readonly ILogger<CalculatePositivePercentageOfReviewDomainEventHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHttpClientFactory _clientFactory;
 
-    public CalculatePositivePercentageOfReviewDomainEventHandler(IUnitOfWork unitOfWork, IHttpClientFactory clientFactory)
+    public CalculatePositivePercentageOfReviewDomainEventHandler(ILogger<CalculatePositivePercentageOfReviewDomainEventHandler> logger, IUnitOfWork unitOfWork, IHttpClientFactory clientFactory)
     {
+        _logger = logger;
         _unitOfWork = unitOfWork;
         _clientFactory = clientFactory;
     }
@@ -26,6 +29,7 @@ public class CalculatePositivePercentageOfReviewDomainEventHandler : IDomainEven
         }
 
         HttpClient client = _clientFactory.CreateClient("SentimentAnalysis");
+        _logger.LogInformation("{Uri}", client.BaseAddress!.ToString());
         HttpResponseMessage httpResponse = await client.GetAsync($"/predict?text=${review.Content}", cancellationToken);
         string apiContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
         SentimentAnalysisResponseDto response = JsonConvert.DeserializeObject<SentimentAnalysisResponseDto>(apiContent);
