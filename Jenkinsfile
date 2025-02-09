@@ -18,14 +18,14 @@ pipeline {
             steps {
                 sh "cp /home/eventhub/eventhub-api/appsettings.Development.json ./source/EventHub.Presentation/appsettings.json"
 
-                withSonarQubeEnv("SonarQube server connection") {
-                    sh "docker run --rm \
-                    -e SONAR_HOST_URL=${env.SONAR_EVENTHUB_API_HOST_URL} \
-                    -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=${env.SONAR_EVENTHUB_API_PROJECT_KEY}' \
-                    -e SONAR_TOKEN=$SONAR_TOKEN \
-                    -v '.:/usr/src' \
-                    sonarsource/sonar-scanner-cli"
-                }
+                // withSonarQubeEnv("SonarQube server connection") {
+                //     sh "docker run --rm \
+                //     -e SONAR_HOST_URL=${env.SONAR_EVENTHUB_API_HOST_URL} \
+                //     -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=${env.SONAR_EVENTHUB_API_PROJECT_KEY}' \
+                //     -e SONAR_TOKEN=$SONAR_TOKEN \
+                //     -v '.:/usr/src' \
+                //     sonarsource/sonar-scanner-cli"
+                // }
             }
         }
       
