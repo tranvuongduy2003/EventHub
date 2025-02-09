@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace EventHub.Infrastructure.SignalR.Hubs;
+namespace EventHub.Application.Hubs;
 
 public class NotificationHub : Hub
 {

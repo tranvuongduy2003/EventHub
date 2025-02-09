@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using EventHub.Application.Hubs;
+using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.DTOs.Ticket;
 using EventHub.Application.SeedWork.Exceptions;
@@ -6,8 +8,10 @@ using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Enums.Notification;
 using EventHub.Domain.Shared.Enums.Payment;
 using EventHub.Domain.Shared.Helpers;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
@@ -18,11 +22,13 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
-    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<NotificationHub> hubContext)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _hubContext = hubContext;
     }
 
     public async Task<ValidateSessionResponseDto> Handle(ValidateSessionCommand request, CancellationToken cancellationToken)
@@ -100,6 +106,14 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
             validateSessionResponse.Tickets = _mapper.Map<List<TicketDto>>(tickets);
 
             // Send email to customer
+
+            var notification = new NotificationDto
+            {
+                Title = "New Ticket Purchase",
+                Message = $"A new ticket has been purchased for your event '{@event.Name}' by '{payment.CustomerName}",
+                Type = ENotificationType.FOLLOWING,
+            };
+            await _hubContext.Clients.User(@event.AuthorId.ToString()).SendAsync("SendNotificationToUser", @event.AuthorId, notification, cancellationToken);
 
             return validateSessionResponse;
         }

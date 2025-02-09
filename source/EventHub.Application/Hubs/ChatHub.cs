@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace EventHub.Infrastructure.SignalR.Hubs;
+namespace EventHub.Application.Hubs;
 
 public class ChatHub : Hub
 {

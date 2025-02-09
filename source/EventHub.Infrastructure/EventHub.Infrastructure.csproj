@@ -44,7 +44,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\EventHub.Infrastructure.Persistence\EventHub.Infrastructure.Persistence.csproj" />
-	  <ProjectReference Include="..\EventHub.Infrastructure.SignalR\EventHub.Infrastructure.SignalR.csproj" />
 	</ItemGroup>
 
 </Project>

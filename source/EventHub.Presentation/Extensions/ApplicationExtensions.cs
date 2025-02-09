@@ -1,7 +1,7 @@
-﻿using EventHub.Infrastructure.Configurations;
+﻿using EventHub.Application.Hubs;
+using EventHub.Infrastructure.Configurations;
 using EventHub.Infrastructure.Persistence.Data;
 using EventHub.Presentation.Middlewares;
-using EventHub.Infrastructure.SignalR.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventHub.Presentation.Extensions;
@@ -40,7 +40,9 @@ internal static class ApplicationExtensions
         app.UseHangfireDashboard(app.Configuration);
         app.MapGet("/", context => Task.Run(() =>
             context.Response.Redirect("/swagger/index.html")));
-        app.MapHub<ChatHub>("/Chat");
+
+        app.MapHub<ChatHub>("/chat");
+        app.MapHub<NotificationHub>("/notification");
 
         // 10, Endpoint
         app.MapControllers();

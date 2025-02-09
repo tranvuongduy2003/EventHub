@@ -6,7 +6,6 @@ using EventHub.Infrastructure.FilesSystem;
 using EventHub.Infrastructure.Mailler;
 using EventHub.Infrastructure.Persistence;
 using EventHub.Infrastructure.Services;
-using EventHub.Infrastructure.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,7 +33,7 @@ public static class DependencyInjection
         services.ConfigureMinioStorage();
         services.ConfigureDependencyInjection();
         services.ConfigurePersistenceServices();
-        services.ConfigureSignalRServices();
+        services.ConfigureSignalR();
         services.ConfigureHttpClients(configuration);
 
         return services;
