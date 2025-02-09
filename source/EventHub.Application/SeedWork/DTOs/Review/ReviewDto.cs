@@ -16,7 +16,7 @@ public class ReviewDto
     public double Rate { get; set; }
 
     [SwaggerSchema("Positive level analysed by the sentiment, true or false")]
-    public bool IsPositive { get; set; }
+    public bool? IsPositive { get; set; } = null;
 
     [SwaggerSchema("Event details associated with the review")]
     public LeanEventDto? Event { get; set; } = null;

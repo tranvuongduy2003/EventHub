@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,8 @@ public class Review : EntityBase, IAuditable
     [Column(TypeName = "nvarchar(1000)")]
     public string? Content { get; set; }
 
-    public bool IsPositive { get; set; }
+    [AllowNull]
+    public bool? IsPositive { get; set; } = null;
 
     public double SentimentPercentage { get; set; }
 

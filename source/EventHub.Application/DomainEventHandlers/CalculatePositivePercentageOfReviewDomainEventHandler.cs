@@ -30,7 +30,7 @@ public class CalculatePositivePercentageOfReviewDomainEventHandler : IDomainEven
         string apiContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
         SentimentAnalysisResponseDto response = JsonConvert.DeserializeObject<SentimentAnalysisResponseDto>(apiContent);
 
-        review.IsPositive = response?.Result == "Positive";
+        review.IsPositive = response is null ? null : response.Result == "Positive";
         review.SentimentPercentage = response is not null ? response.Percentage : 0.0;
 
         await _unitOfWork.Reviews.Update(review);
