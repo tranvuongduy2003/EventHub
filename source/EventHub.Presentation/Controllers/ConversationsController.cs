@@ -1,4 +1,4 @@
-﻿using EventHub.Application.Queries.Conversation.GetConversationsByEventId;
+﻿using EventHub.Application.Queries.Conversation.GetConversationsByOrganizerId;
 using EventHub.Application.Queries.Conversation.GetConversationsByUserId;
 using EventHub.Application.Queries.Conversation.GetMessagesByConversationId;
 using EventHub.Application.SeedWork.Attributes;
@@ -28,26 +28,26 @@ public class ConversationsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("get-by-event/{eventId:guid}")]
+    [HttpGet("get-by-organizer/{organizerId:guid}")]
     [SwaggerOperation(
-        Summary = "Retrieve a list of conversations by the event",
+        Summary = "Retrieve a list of conversations by the organizer",
         Description =
-            "Fetches a paginated list of conversations created by the event, based on the provided pagination filter."
+            "Fetches a paginated list of conversations created by the organizer, based on the provided pagination filter."
     )]
     [SwaggerResponse(200, "Successfully retrieved the list of conversations", typeof(Pagination<ConversationDto>))]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
-    [SwaggerResponse(404, "Not Found - Event with the specified ID not found")]
+    [SwaggerResponse(404, "Not Found - Organizer with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
     [ClaimRequirement(EFunctionCode.GENERAL_CHAT, ECommandCode.VIEW)]
-    public async Task<IActionResult> GetConversationsByEvent(Guid eventId, [FromQuery] PaginationFilter filter)
+    public async Task<IActionResult> GetConversationsByOrganizer(Guid organizerId, [FromQuery] PaginationFilter filter)
     {
-        _logger.LogInformation("START: GetConversationsByEvent");
+        _logger.LogInformation("START: GetConversationsByOrganizer");
         try
         {
-            Pagination<ConversationDto> conversations = await _mediator.Send(new GetConversationsByEventIdQuery(eventId, filter));
+            Pagination<ConversationDto> conversations = await _mediator.Send(new GetConversationsByOrganizerIdQuery(organizerId, filter));
 
-            _logger.LogInformation("END: GetConversationsByEvent");
+            _logger.LogInformation("END: GetConversationsByOrganizer");
 
             return Ok(new ApiOkResponse(conversations));
         }
