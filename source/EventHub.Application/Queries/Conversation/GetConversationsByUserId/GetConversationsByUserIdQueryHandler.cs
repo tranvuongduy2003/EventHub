@@ -40,7 +40,7 @@ public class
             .ToListAsync(cancellationToken);
 
         Pagination<Domain.Aggregates.ConversationAggregate.Conversation> conversations = _unitOfWork.Conversations
-            .PaginatedFindByCondition(x => x.EventId == request.UserId, request.Filter, query => query
+            .PaginatedFindByCondition(x => x.UserId == request.UserId, request.Filter, query => query
                 .Include(x => x.Event)
                 .Include(x => x.Host)
                 .Include(x => x.User));
