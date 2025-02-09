@@ -25,7 +25,9 @@ public sealed class EventMapper
 
         config.CreateMap<Event, LeanEventDto>();
 
-        config.CreateMap<Event, ConversationEventDto>();
+        config.CreateMap<Event, ConversationEventDto>()
+            .ForMember(dest => dest.CoverImage, options =>
+                options.MapFrom(source => source.CoverImageUrl));
 
         config.CreateMap<Event, EventDetailDto>()
             .ForMember(dest => dest.EventSubImageUrls, options =>

@@ -29,7 +29,9 @@ public sealed class UserMapper
 
         config.CreateMap<Invitation, InvitationDto>();
 
-        config.CreateMap<User, ConversationUserDto>();
+        config.CreateMap<User, ConversationUserDto>()
+            .ForMember(dest => dest.Avatar, options =>
+                options.MapFrom(source => source.AvatarUrl));
 
         config.CreateMap<Pagination<Invitation>, Pagination<InvitationDto>>()
             .ForMember(dest => dest.Items, options =>
