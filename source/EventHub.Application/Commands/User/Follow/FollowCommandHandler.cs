@@ -62,12 +62,12 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand>
         await _userManager.UpdateAsync(follower);
         await _userManager.UpdateAsync(followedUser);
 
-        var notification = new NotificationDto
+        var notification = new SendNotificationDto
         {
             Title = "You have been followed",
             Message = $"You have been followed by {follower!.FullName}",
             Type = ENotificationType.FOLLOWING,
         };
-        await _notificationService.SendNotificationToUser(followedUser.Id.ToString(), notification);
+        await _notificationService.SendNotification(followedUser.Id.ToString(), notification);
     }
 }

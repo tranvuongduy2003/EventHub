@@ -106,13 +106,13 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 
             // Send email to customer
 
-            var notification = new NotificationDto
+            var notification = new SendNotificationDto
             {
                 Title = "New Ticket Purchase",
                 Message = $"A new ticket has been purchased for your event '{@event.Name}' by '{payment.CustomerName}",
                 Type = ENotificationType.FOLLOWING,
             };
-            await _notificationService.SendNotificationToUser(@event.AuthorId.ToString(), notification);
+            await _notificationService.SendNotification(@event.AuthorId.ToString(), notification);
 
             return validateSessionResponse;
         }

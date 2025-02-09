@@ -29,7 +29,7 @@ public class NotificationService : INotificationService
         _hubContext = hubContext;
     }
 
-    public async Task SendNotificationToAll(NotificationDto notification)
+    public async Task SendNotificationToAll(SendNotificationDto notification)
     {
         _logger.LogInformation("BEGIN: SendNotificationToAll");
 
@@ -67,52 +67,9 @@ public class NotificationService : INotificationService
         _logger.LogInformation("END: SendNotificationToAll");
     }
 
-    public async Task SendNotificationToGroup(string groupName, SendNotificationDto notification)
+    public async Task SendNotification(string userId, SendNotificationDto notification)
     {
-        _logger.LogInformation("BEGIN: SendNotificationToGroup - GroupName: {GroupName}", groupName);
-
-        try
-        {
-            if (string.IsNullOrWhiteSpace(groupName))
-            {
-                throw new BadRequestException("Group name is required");
-            }
-
-            if (notification == null)
-            {
-                throw new BadRequestException("Notification data is invalid");
-            }
-
-            var notificationEntity = new Notification
-            {
-                Title = notification.Title,
-                Message = notification.Message,
-                Type = notification.Type,
-                TargetGroup = groupName,
-                Timestamp = DateTime.UtcNow
-            };
-
-            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
-            await _unitOfWork.CommitAsync();
-
-            NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
-
-            await _hubContext.Clients.Group(groupName).SendAsync("ReceiveNotification", notificationDto);
-
-            _logger.LogInformation("Notification sent to group {GroupName}: {Title}", groupName, notification.Title);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error sending notification to group {GroupName}", groupName);
-            throw;
-        }
-
-        _logger.LogInformation("END: SendNotificationToGroup");
-    }
-
-    public async Task SendNotificationToUser(string userId, NotificationDto notification)
-    {
-        _logger.LogInformation("BEGIN: SendNotificationToUser - UserId: {UserId}", userId);
+        _logger.LogInformation("BEGIN: SendNotificationToGroup - GroupName: {GroupName}", userId);
 
         try
         {
@@ -133,6 +90,7 @@ public class NotificationService : INotificationService
                 Title = notification.Title,
                 Message = notification.Message,
                 Type = notification.Type,
+                TargetGroup = userId,
                 TargetUserId = Guid.Parse(userId),
                 Timestamp = DateTime.UtcNow
             };
@@ -143,16 +101,16 @@ public class NotificationService : INotificationService
             notificationEntity.TargetUser = user;
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
 
-            await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", notificationDto);
+            await _hubContext.Clients.Group(userId).SendAsync("ReceiveNotification", notificationDto);
 
-            _logger.LogInformation("Notification sent to user {UserId}: {Title}", userId, notification.Title);
+            _logger.LogInformation("Notification sent to group {GroupName}: {Title}", userId, notification.Title);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending notification to user {UserId}", userId);
+            _logger.LogError(ex, "Error sending notification to group {GroupName}", userId);
             throw;
         }
 
-        _logger.LogInformation("END: SendNotificationToUser");
+        _logger.LogInformation("END: SendNotificationToGroup");
     }
 }

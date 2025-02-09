@@ -7,6 +7,7 @@ using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Hubs;
 
@@ -17,13 +18,15 @@ public class NotificationHub : Hub
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
 
-    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
+    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper;
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -33,8 +36,12 @@ public class NotificationHub : Hub
     {
         _logger.LogInformation("BEGIN: OnConnectedAsync - ConnectionId: {ConnectionId}", Context.ConnectionId);
 
+        string userId = _signInManager.Context.User.Identities.FirstOrDefault()
+            ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
+
         // Thêm ConnectionId vào danh sách
         _connections.Add(Context.ConnectionId);
+        await Groups.AddToGroupAsync(Context.ConnectionId, userId);
 
         await base.OnConnectedAsync();
 
@@ -64,7 +71,7 @@ public class NotificationHub : Hub
     /// <summary>
     /// Gửi thông báo đến tất cả người dùng
     /// </summary>
-    public async Task SendNotificationToAll(NotificationDto notification)
+    public async Task SendNotificationToAll(SendNotificationDto notification)
     {
         _logger.LogInformation("BEGIN: SendNotificationToAll");
 
@@ -103,57 +110,11 @@ public class NotificationHub : Hub
     }
 
     /// <summary>
-    /// Gửi thông báo đến một nhóm cụ thể
-    /// </summary>
-    public async Task SendNotificationToGroup(string groupName, SendNotificationDto notification)
-    {
-        _logger.LogInformation("BEGIN: SendNotificationToGroup - GroupName: {GroupName}", groupName);
-
-        try
-        {
-            if (string.IsNullOrWhiteSpace(groupName))
-            {
-                throw new BadRequestException("Group name is required");
-            }
-
-            if (notification == null)
-            {
-                throw new BadRequestException("Notification data is invalid");
-            }
-
-            var notificationEntity = new Notification
-            {
-                Title = notification.Title,
-                Message = notification.Message,
-                Type = notification.Type,
-                TargetGroup = groupName,
-                Timestamp = DateTime.UtcNow
-            };
-
-            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
-            await _unitOfWork.CommitAsync();
-
-            NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
-
-            await Clients.Group(groupName).SendAsync("ReceiveNotification", notificationDto);
-
-            _logger.LogInformation("Notification sent to group {GroupName}: {Title}", groupName, notification.Title);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error sending notification to group {GroupName}", groupName);
-            throw;
-        }
-
-        _logger.LogInformation("END: SendNotificationToGroup");
-    }
-
-    /// <summary>
     /// Gửi thông báo đến một người dùng cụ thể
     /// </summary>
-    public async Task SendNotificationToUser(string userId, NotificationDto notification)
+    public async Task SendNotification(string userId, SendNotificationDto notification)
     {
-        _logger.LogInformation("BEGIN: SendNotificationToUser - UserId: {UserId}", userId);
+        _logger.LogInformation("BEGIN: SendNotification - UserId: {UserId}", userId);
 
         try
         {
@@ -174,6 +135,7 @@ public class NotificationHub : Hub
                 Title = notification.Title,
                 Message = notification.Message,
                 Type = notification.Type,
+                TargetGroup = userId,
                 TargetUserId = Guid.Parse(userId),
                 Timestamp = DateTime.UtcNow
             };
@@ -184,7 +146,7 @@ public class NotificationHub : Hub
             notificationEntity.TargetUser = user;
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
 
-            await Clients.User(userId).SendAsync("ReceiveNotification", notificationDto);
+            await Clients.Group(userId).SendAsync("ReceiveNotification", notificationDto);
 
             _logger.LogInformation("Notification sent to user {UserId}: {Title}", userId, notification.Title);
         }
@@ -194,7 +156,7 @@ public class NotificationHub : Hub
             throw;
         }
 
-        _logger.LogInformation("END: SendNotificationToUser");
+        _logger.LogInformation("END: SendNotification");
     }
 
     /// <summary>

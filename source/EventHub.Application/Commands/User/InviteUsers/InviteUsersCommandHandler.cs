@@ -48,13 +48,13 @@ public class InviteUsersCommandHandler : ICommandHandler<InviteUsersCommand>
 
             Domain.Aggregates.EventAggregate.Event @event = await _unitOfWork.Events.GetByIdAsync(request.EventId);
             Domain.Aggregates.UserAggregate.User user = await _userManager.FindByIdAsync(inviterId.ToString());
-            var notification = new NotificationDto
+            var notification = new SendNotificationDto
             {
                 Title = "You have been invited to an event",
                 Message = $"You have been invited to event {@event.Name} by {user!.FullName}",
                 Type = ENotificationType.INVITING,
             };
-            await _notificationService.SendNotificationToUser(userId.ToString(), notification);
+            await _notificationService.SendNotification(userId.ToString(), notification);
         }
     }
 }
