@@ -50,7 +50,8 @@ public static class DependencyInjection
             .AddTransient<IHangfireService, HangfireService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITokenService, TokenService>()
-            .AddTransient<IDateTimeProvider, DateTimeProvider>();
+            .AddTransient<IDateTimeProvider, DateTimeProvider>()
+            .AddTransient<INotificationService, NotificationService>();
 
         return services;
     }

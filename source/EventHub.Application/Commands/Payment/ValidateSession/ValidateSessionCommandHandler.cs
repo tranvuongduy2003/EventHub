@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EventHub.Application.Hubs;
+using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.DTOs.Ticket;
@@ -11,7 +11,6 @@ using EventHub.Domain.SeedWork.Persistence;
 using EventHub.Domain.Shared.Enums.Notification;
 using EventHub.Domain.Shared.Enums.Payment;
 using EventHub.Domain.Shared.Helpers;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
@@ -22,13 +21,13 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly IHubContext<NotificationHub> _hubContext;
+    private readonly INotificationService _notificationService;
 
-    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IHubContext<NotificationHub> hubContext)
+    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _hubContext = hubContext;
+        _notificationService = notificationService;
     }
 
     public async Task<ValidateSessionResponseDto> Handle(ValidateSessionCommand request, CancellationToken cancellationToken)
@@ -113,7 +112,7 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
                 Message = $"A new ticket has been purchased for your event '{@event.Name}' by '{payment.CustomerName}",
                 Type = ENotificationType.FOLLOWING,
             };
-            await _hubContext.Clients.User(@event.AuthorId.ToString()).SendAsync("SendNotificationToUser", @event.AuthorId, notification, cancellationToken);
+            await _notificationService.SendNotificationToUser(@event.AuthorId.ToString(), notification);
 
             return validateSessionResponse;
         }
