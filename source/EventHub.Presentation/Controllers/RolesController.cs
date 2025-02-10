@@ -1,11 +1,14 @@
 using EventHub.Application.Commands.Permission.AddFunctionToRole;
 using EventHub.Application.Commands.Permission.RemoveFunctionFromRole;
+using EventHub.Application.Queries.Role.GetPaginatedRoles;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Command;
+using EventHub.Application.SeedWork.DTOs.Role;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Shared.Enums.Command;
 using EventHub.Domain.Shared.Enums.Function;
 using EventHub.Domain.Shared.HttpResponses;
+using EventHub.Domain.Shared.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,6 +26,20 @@ public class RolesController : ControllerBase
     {
         _logger = logger;
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    [SwaggerResponse(200, "Successfully retrieved the list of roles", typeof(Pagination<RoleDto>))]
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_ROLE, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetPaginatedRoles([FromQuery] PaginationFilter filter)
+    {
+        _logger.LogInformation("START: GetPaginatedRoles");
+
+        Pagination<RoleDto> roles = await _mediator.Send(new GetPaginatedRolesQuery(filter));
+
+        _logger.LogInformation("END: GetPaginatedRoles");
+
+        return Ok(new ApiOkResponse(roles));
     }
 
     [HttpPost("{roleId:guid}/add-function/{functionId}")]

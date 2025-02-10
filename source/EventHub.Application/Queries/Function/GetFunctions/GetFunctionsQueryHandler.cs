@@ -21,9 +21,20 @@ public class GetFunctionsQueryHandler : IQueryHandler<GetFunctionsQuery, List<Fu
         CancellationToken cancellationToken)
     {
         List<Domain.Aggregates.UserAggregate.Entities.Function> functions = await _unitOfWork.Functions
-            .FindAll()
+            .FindByCondition(x => x.ParentId == null)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<List<FunctionDto>>(functions);
+        List<FunctionDto> functionDtos = _mapper.Map<List<FunctionDto>>(functions);
+
+        foreach (FunctionDto function in functionDtos)
+        {
+            List<Domain.Aggregates.UserAggregate.Entities.Function> children = await _unitOfWork.Functions
+                .FindByCondition(x => x.ParentId == function.Id)
+                .ToListAsync(cancellationToken);
+
+            function.Children = _mapper.Map<List<FunctionDto>>(children);
+        }
+
+        return functionDtos;
     }
 }

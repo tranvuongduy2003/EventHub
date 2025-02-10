@@ -11,4 +11,10 @@ public class SendNotificationDto
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ENotificationType Type { get; set; }
+
+    public Guid? InvitationId { get; set; }
+
+    public Guid? PaymentId { get; set; }
+
+    public Guid? UserFollowerId { get; set; }
 }

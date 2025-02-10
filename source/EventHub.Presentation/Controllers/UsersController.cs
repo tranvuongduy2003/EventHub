@@ -256,7 +256,7 @@ public class UsersController : ControllerBase
         Summary = "Follow a user",
         Description = "Allows the authenticated user to follow another user by specifying the followed user's ID."
     )]
-    [SwaggerResponse(200, "User followed successfully")]
+    [SwaggerResponse(200, "User followed successfully", typeof(Guid)]
     [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
@@ -268,11 +268,11 @@ public class UsersController : ControllerBase
         _logger.LogInformation("START: PatchFollowUser");
         try
         {
-            await _mediator.Send(new FollowCommand(followedUserId));
+            Guid userFollowerId = await _mediator.Send(new FollowCommand(followedUserId));
 
             _logger.LogInformation("END: PatchFollowUser");
 
-            return Ok(new ApiOkResponse(true));
+            return Ok(new ApiOkResponse(userFollowerId));
         }
         catch (NotFoundException e)
         {
@@ -356,11 +356,11 @@ public class UsersController : ControllerBase
     {
         _logger.LogInformation("START: PostInviteUsers");
 
-        await _mediator.Send(new InviteUsersCommand(request.EventId, request.UserIds));
+        List<Guid> invitationIds = await _mediator.Send(new InviteUsersCommand(request.EventId, request.UserIds));
 
         _logger.LogInformation("END: PostInviteUsers");
 
-        return Ok(new ApiOkResponse());
+        return Ok(new ApiOkResponse(invitationIds));
     }
 
     [HttpGet("invitations")]

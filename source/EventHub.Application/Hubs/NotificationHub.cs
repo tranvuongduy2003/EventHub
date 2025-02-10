@@ -137,7 +137,10 @@ public class NotificationHub : Hub
                 Type = notification.Type,
                 TargetGroup = userId,
                 TargetUserId = Guid.Parse(userId),
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                InvitationId = notification.InvitationId,
+                PaymentId = notification.PaymentId,
+                UserFollowerId = notification.UserFollowerId
             };
 
             await _unitOfWork.Notifications.CreateAsync(notificationEntity);

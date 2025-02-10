@@ -1,8 +1,6 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.DTOs.Permission;
 using EventHub.Application.SeedWork.Exceptions;
-using EventHub.Domain.Aggregates.UserAggregate;
-using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.SeedWork.Query;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +10,10 @@ namespace EventHub.Application.Queries.Permission.GetPermissionsByUser;
 public class GetPermissionsByUserQueryHandler : IQueryHandler<GetPermissionsByUserQuery, List<RolePermissionDto>>
 {
     private readonly IMapper _mapper;
-    private readonly RoleManager<Role> _roleManager;
+    private readonly RoleManager<Domain.Aggregates.UserAggregate.Entities.Role> _roleManager;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
 
-    public GetPermissionsByUserQueryHandler(RoleManager<Role> roleManager,
+    public GetPermissionsByUserQueryHandler(RoleManager<Domain.Aggregates.UserAggregate.Entities.Role> roleManager,
         UserManager<Domain.Aggregates.UserAggregate.User> userManager, IMapper mapper)
     {
         _roleManager = roleManager;

@@ -10,6 +10,8 @@ public class Role : IdentityRole<Guid>, IDateTracking, ISoftDeletable
     {
     }
 
+    public string? Description { get; set; } = string.Empty;
+
     public bool IsDeleted { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

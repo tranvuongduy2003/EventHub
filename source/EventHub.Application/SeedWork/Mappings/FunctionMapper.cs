@@ -8,11 +8,9 @@ public sealed class FunctionMapper
 {
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config
-            .CreateMap<Function, FunctionDto>()
-            .ForMember(dest => dest.ParentId, options => options.Ignore())
-            .ForMember(dest => dest.SortOrder, options => options.Ignore())
-            .ForMember(dest => dest.Url, options => options.Ignore());
+        config.CreateMap<Function, FunctionDto>()
+            .ForMember(dest => dest.Level, options =>
+                options.MapFrom(source => source.SortOrder));
 
         config.CreateMap<UpdateFunctionDto, Function>();
     }
