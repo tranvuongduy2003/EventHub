@@ -16,15 +16,13 @@ public class NotificationHub : Hub
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
 
-    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
+    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper;
         _userManager = userManager;
-        _signInManager = signInManager;
     }
 
     /// <summary>
