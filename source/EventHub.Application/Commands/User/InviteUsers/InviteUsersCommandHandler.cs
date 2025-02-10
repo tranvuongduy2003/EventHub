@@ -1,6 +1,9 @@
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Enums.Notification;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -10,11 +13,13 @@ public class InviteUsersCommandHandler : ICommandHandler<InviteUsersCommand, Lis
 {
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
 
-    public InviteUsersCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IUnitOfWork unitOfWork)
+    public InviteUsersCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IUnitOfWork unitOfWork, INotificationService notificationService)
     {
         _signInManager = signInManager;
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
     }
 
     public async Task<List<Guid>> Handle(InviteUsersCommand request, CancellationToken cancellationToken)
@@ -41,6 +46,13 @@ public class InviteUsersCommandHandler : ICommandHandler<InviteUsersCommand, Lis
             await _unitOfWork.CommitAsync();
 
             invitationIds.Add(invitation.Id);
+
+            var notification = new SendNotificationDto
+            {
+                Type = ENotificationType.INVITING,
+                InvitationId = invitation.Id,
+            };
+            await _notificationService.SendNotification(userId.ToString(), notification);
         }
 
         return invitationIds;
