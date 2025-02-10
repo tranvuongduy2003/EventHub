@@ -145,7 +145,13 @@ public class ChatHub : Hub
             User sender = await _userManager.FindByIdAsync(request.SenderId.ToString());
             if (sender == null)
             {
-                throw new NotFoundException("User does not exist");
+                throw new NotFoundException("Sender does not exist");
+            }
+
+            User receiver = await _userManager.FindByIdAsync(request.ReceiverId.ToString());
+            if (receiver == null)
+            {
+                throw new NotFoundException("Receiver does not exist");
             }
 
             var message = new Message
@@ -166,6 +172,8 @@ public class ChatHub : Hub
             await _unitOfWork.Messages.CreateAsync(message);
             await _unitOfWork.CommitAsync();
 
+            message.Author = sender;
+            message.Receiver = receiver;
             MessageDto messageDto = _mapper.Map<MessageDto>(message);
 
             await Clients.Group(request.ConversationId.ToString()).SendAsync("MessageReceived", messageDto);

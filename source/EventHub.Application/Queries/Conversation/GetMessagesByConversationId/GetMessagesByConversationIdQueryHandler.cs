@@ -34,6 +34,7 @@ public class
         Pagination<Message> paginatedMessages = _unitOfWork.Messages
             .PaginatedFindByCondition(x => x.ConversationId == request.ConversationId, request.Filter, query => query
                 .Include(x => x.Author)
+                .Include(x => x.Receiver)
             );
 
         Pagination<MessageDto> paginatedMessageDtos = _mapper.Map<Pagination<MessageDto>>(paginatedMessages);
