@@ -149,6 +149,7 @@ public class NotificationHub : Hub
             notificationEntity.TargetUser = user;
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
 
+            await Groups.AddToGroupAsync(Context.ConnectionId, userId);
             await Clients.Group(userId).SendAsync("ReceiveNotification", notificationDto);
 
             _logger.LogInformation("Notification sent to user {UserId}: {Title}", userId, notification.Title);
