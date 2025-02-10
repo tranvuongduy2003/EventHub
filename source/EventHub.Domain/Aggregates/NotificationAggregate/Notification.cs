@@ -45,14 +45,14 @@ public class Notification : AggregateRoot
     public virtual User TargetUser { get; set; } = null!;
 
     [ForeignKey("InvitationId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual Invitation? Invitation { get; set; } = null!;
 
     [ForeignKey("PaymentId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual Payment? Payment { get; set; } = null!;
 
     [ForeignKey("UserFollowerId")]
-    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    [DeleteBehavior(DeleteBehavior.Cascade)]
     public virtual UserFollower? UserFollower { get; set; } = null!;
 }
