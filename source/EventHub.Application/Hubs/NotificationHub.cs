@@ -3,10 +3,8 @@ using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.NotificationAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate;
-using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Persistence;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,14 +16,12 @@ public class NotificationHub : Hub
     private readonly ILogger<NotificationHub> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly UserManager<User> _userManager;
 
-    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
+    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper;
-        _userManager = userManager;
     }
 
     /// <summary>
