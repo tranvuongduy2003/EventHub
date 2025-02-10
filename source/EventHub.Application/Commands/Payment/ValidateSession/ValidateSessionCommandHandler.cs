@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.DTOs.Payment;
 using EventHub.Application.SeedWork.DTOs.Ticket;
 using EventHub.Application.SeedWork.Exceptions;
@@ -6,6 +8,7 @@ using EventHub.Domain.Aggregates.EventAggregate.Entities;
 using EventHub.Domain.Aggregates.PaymentAggregate.Entities;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Enums.Notification;
 using EventHub.Domain.Shared.Enums.Payment;
 using EventHub.Domain.Shared.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +21,13 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly INotificationService _notificationService;
 
-    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public ValidateSessionCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _notificationService = notificationService;
     }
 
     public async Task<ValidateSessionResponseDto> Handle(ValidateSessionCommand request, CancellationToken cancellationToken)
@@ -31,7 +36,6 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
             .FindByCondition(x => x.Id == request.PaymentId)
             .Include(x => x.Event)
             .FirstOrDefaultAsync(cancellationToken);
-
         if (payment == null)
         {
             throw new NotFoundException("Payment does not exist!");
@@ -102,6 +106,15 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 
             ValidateSessionResponseDto validateSessionResponse = _mapper.Map<ValidateSessionResponseDto>(payment);
             validateSessionResponse.Tickets = _mapper.Map<List<TicketDto>>(tickets);
+
+            // Send email to customer
+
+            var notification = new SendNotificationDto
+            {
+                Type = ENotificationType.FOLLOWING,
+                PaymentId = payment.Id,
+            };
+            await _notificationService.SendNotification(@event.AuthorId.ToString(), notification);
 
             return validateSessionResponse;
         }
