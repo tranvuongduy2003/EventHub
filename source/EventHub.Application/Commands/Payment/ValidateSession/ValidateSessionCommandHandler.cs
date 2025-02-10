@@ -32,7 +32,11 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 
     public async Task<ValidateSessionResponseDto> Handle(ValidateSessionCommand request, CancellationToken cancellationToken)
     {
-        Domain.Aggregates.PaymentAggregate.Payment payment = await _unitOfWork.Payments.GetByIdAsync(request.PaymentId);
+        Domain.Aggregates.PaymentAggregate.Payment payment = await _unitOfWork.Payments
+            .FindByCondition(x => x.Id == request.PaymentId)
+            .Include(x => x.Event)
+            .FirstOrDefaultAsync(cancellationToken);
+
         if (payment == null)
         {
             throw new NotFoundException("Payment does not exist!");

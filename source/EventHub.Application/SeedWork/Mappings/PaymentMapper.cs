@@ -21,7 +21,8 @@ public sealed class PaymentMapper
 
         config.CreateMap<CheckoutDto, CheckoutCommand>();
 
-        config.CreateMap<Payment, ValidateSessionResponseDto>();
+        config.CreateMap<Payment, ValidateSessionResponseDto>()
+             .ForMember(dest => dest.OrganizerId, options => options.MapFrom(dest => dest.Event.AuthorId));
 
         config.CreateMap<Payment, PaymentDto>()
             .ReverseMap();

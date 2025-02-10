@@ -23,6 +23,8 @@ public class ValidateSessionResponseDto
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EPaymentStatus Status { get; set; }
 
+    public Guid? OrganizerId { get; set; } = null!;
+
     public DateTime CreatedAt { get; set; }
 
     public List<TicketDto> Tickets { get; set; }

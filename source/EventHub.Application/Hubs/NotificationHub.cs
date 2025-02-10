@@ -3,8 +3,10 @@ using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.NotificationAggregate;
 using EventHub.Domain.Aggregates.PaymentAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,12 +18,14 @@ public class NotificationHub : Hub
     private readonly ILogger<NotificationHub> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly UserManager<User> _userManager;
 
-    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper)
+    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _mapper = mapper;
+        _userManager = userManager;
     }
 
     /// <summary>
@@ -106,12 +110,18 @@ public class NotificationHub : Hub
     /// <summary>
     /// Gửi thông báo đến một người dùng cụ thể
     /// </summary>
-    public async Task SendNotification(SendNotificationDto notification)
+    public async Task SendNotification(string userId, SendNotificationDto notification)
     {
-        _logger.LogInformation("BEGIN: SendNotification");
+        _logger.LogInformation("BEGIN: SendNotification - UserId: {UserId}", userId);
 
         try
         {
+            User user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                throw new NotFoundException("User does not exist!");
+            }
+
             if (notification == null)
             {
                 throw new BadRequestException("Notification data is invalid!");
@@ -123,11 +133,16 @@ public class NotificationHub : Hub
                 Title = notification.Title,
                 Message = notification.Message,
                 Type = notification.Type,
+                TargetGroup = userId,
+                TargetUserId = Guid.Parse(userId),
                 Timestamp = DateTime.UtcNow,
                 InvitationId = notification.InvitationId,
                 PaymentId = notification.PaymentId,
                 UserFollowerId = notification.UserFollowerId
             };
+
+            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
+            await _unitOfWork.CommitAsync();
 
             if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.FOLLOWING && notification.UserFollowerId is not null)
             {
@@ -136,8 +151,6 @@ public class NotificationHub : Hub
                     .Include(x => x.Follower)
                     .FirstOrDefaultAsync();
                 notificationEntity.UserFollower = userFollower;
-                notificationEntity.TargetGroup = userFollower!.FollowedId.ToString();
-                notificationEntity.TargetUserId = userFollower!.FollowedId;
             }
             else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.INVITING && notification.InvitationId is not null)
             {
@@ -148,8 +161,6 @@ public class NotificationHub : Hub
                     .Include(x => x.Event)
                     .FirstOrDefaultAsync();
                 notificationEntity.Invitation = invitation;
-                notificationEntity.TargetGroup = invitation!.InvitedId.ToString();
-                notificationEntity.TargetUserId = invitation!.InvitedId;
             }
             else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.ORDERING && notification.PaymentId is not null)
             {
@@ -159,22 +170,19 @@ public class NotificationHub : Hub
                     .Include(x => x.Event)
                     .FirstOrDefaultAsync();
                 notificationEntity.Payment = payment;
-                notificationEntity.TargetGroup = payment!.Event.AuthorId.ToString();
-                notificationEntity.TargetUserId = payment!.Event.AuthorId;
             }
 
-            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
-            await _unitOfWork.CommitAsync();
 
+            notificationEntity.TargetUser = user;
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
 
-            await Clients.Group(notificationEntity.TargetUserId.ToString()!).SendAsync("ReceiveNotification", notificationDto);
+            await Clients.Group(userId).SendAsync("ReceiveNotification", notificationDto);
 
-            _logger.LogInformation("Notification sent to user {UserId}: {Title}", notificationEntity.TargetUserId.ToString(), notification.Title);
+            _logger.LogInformation("Notification sent to user {UserId}: {Title}", userId, notification.Title);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending notification to user");
+            _logger.LogError(ex, "Error sending notification to user {UserId}", userId);
             throw;
         }
 
