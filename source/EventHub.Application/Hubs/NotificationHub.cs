@@ -110,18 +110,12 @@ public class NotificationHub : Hub
     /// <summary>
     /// Gửi thông báo đến một người dùng cụ thể
     /// </summary>
-    public async Task SendNotification(string userId, SendNotificationDto notification)
+    public async Task SendNotification(SendNotificationDto notification)
     {
-        _logger.LogInformation("BEGIN: SendNotification - UserId: {UserId}", userId);
+        _logger.LogInformation("BEGIN: SendNotification");
 
         try
         {
-            User user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                throw new NotFoundException("User does not exist!");
-            }
-
             if (notification == null)
             {
                 throw new BadRequestException("Notification data is invalid!");
@@ -133,16 +127,11 @@ public class NotificationHub : Hub
                 Title = notification.Title,
                 Message = notification.Message,
                 Type = notification.Type,
-                TargetGroup = userId,
-                TargetUserId = Guid.Parse(userId),
                 Timestamp = DateTime.UtcNow,
                 InvitationId = notification.InvitationId,
                 PaymentId = notification.PaymentId,
                 UserFollowerId = notification.UserFollowerId
             };
-
-            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
-            await _unitOfWork.CommitAsync();
 
             if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.FOLLOWING && notification.UserFollowerId is not null)
             {
@@ -151,6 +140,8 @@ public class NotificationHub : Hub
                     .Include(x => x.Follower)
                     .FirstOrDefaultAsync();
                 notificationEntity.UserFollower = userFollower;
+                notificationEntity.TargetGroup = userFollower!.FollowedId.ToString();
+                notificationEntity.TargetUserId = userFollower!.FollowedId;
             }
             else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.INVITING && notification.InvitationId is not null)
             {
@@ -161,6 +152,8 @@ public class NotificationHub : Hub
                     .Include(x => x.Event)
                     .FirstOrDefaultAsync();
                 notificationEntity.Invitation = invitation;
+                notificationEntity.TargetGroup = invitation!.InvitedId.ToString();
+                notificationEntity.TargetUserId = invitation!.InvitedId;
             }
             else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.ORDERING && notification.PaymentId is not null)
             {
@@ -170,17 +163,22 @@ public class NotificationHub : Hub
                     .Include(x => x.Event)
                     .FirstOrDefaultAsync();
                 notificationEntity.Payment = payment;
+                notificationEntity.TargetGroup = payment!.Event.AuthorId.ToString();
+                notificationEntity.TargetUserId = payment!.Event.AuthorId;
             }
+
+            await _unitOfWork.Notifications.CreateAsync(notificationEntity);
+            await _unitOfWork.CommitAsync();
 
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
 
-            await Clients.Group(userId).SendAsync("ReceiveNotification", notificationDto);
+            await Clients.Group(notificationEntity.TargetUserId.ToString()!).SendAsync("ReceiveNotification", notificationDto);
 
-            _logger.LogInformation("Notification sent to user {UserId}: {Title}", userId, notification.Title);
+            _logger.LogInformation("Notification sent to user {UserId}: {Title}", notificationEntity.TargetUserId.ToString(), notification.Title);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending notification to user {UserId}", userId);
+            _logger.LogError(ex, "Error sending notification to user");
             throw;
         }
 

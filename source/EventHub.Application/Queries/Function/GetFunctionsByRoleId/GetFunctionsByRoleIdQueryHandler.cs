@@ -26,7 +26,7 @@ public class GetFunctionsByRoleIdQueryHandler : IQueryHandler<GetFunctionsByRole
                 .ThenInclude(x => x.Function)
             .FirstOrDefaultAsync(cancellationToken);
 
-        var functions = role!.Permissions.Select(x => x.Function).ToList();
+        var functions = role!.Permissions.Select(x => x.Function).DistinctBy(x => x.Id).ToList();
 
         List<FunctionDto> functionDtos = _mapper.Map<List<FunctionDto>>(functions.Where(x => x.ParentId == null));
 
