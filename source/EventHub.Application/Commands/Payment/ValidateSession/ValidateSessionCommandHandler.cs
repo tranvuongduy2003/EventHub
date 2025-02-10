@@ -111,6 +111,8 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
 
             var notification = new SendNotificationDto
             {
+                Title = "New Ticket Purchase",
+                Message = $"A new ticket has been purchased for your event '{@event.Name}' by '{payment.CustomerName}",
                 Type = ENotificationType.FOLLOWING,
                 PaymentId = payment.Id,
             };
