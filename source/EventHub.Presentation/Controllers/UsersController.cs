@@ -256,7 +256,7 @@ public class UsersController : ControllerBase
         Summary = "Follow a user",
         Description = "Allows the authenticated user to follow another user by specifying the followed user's ID."
     )]
-    [SwaggerResponse(200, "User followed successfully", typeof(Guid)]
+    [SwaggerResponse(200, "User followed successfully", typeof(Guid))]
     [SwaggerResponse(400, "BadRequest - Invalid input or request data")]
     [SwaggerResponse(401, "Unauthorized - User not authenticated")]
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
