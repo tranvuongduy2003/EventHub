@@ -1,7 +1,10 @@
+using EventHub.Application.SeedWork.Abstractions;
+using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Command;
 using EventHub.Domain.SeedWork.Persistence;
+using EventHub.Domain.Shared.Enums.Notification;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 
@@ -12,13 +15,15 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand, Guid>
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
     private readonly UserManager<Domain.Aggregates.UserAggregate.User> _userManager;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
 
     public FollowCommandHandler(SignInManager<Domain.Aggregates.UserAggregate.User> signInManager,
-        UserManager<Domain.Aggregates.UserAggregate.User> userManager, IUnitOfWork unitOfWork)
+        UserManager<Domain.Aggregates.UserAggregate.User> userManager, IUnitOfWork unitOfWork, INotificationService notificationService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
     }
 
     public async Task<Guid> Handle(FollowCommand request, CancellationToken cancellationToken)
@@ -56,6 +61,13 @@ public class FollowCommandHandler : ICommandHandler<FollowCommand, Guid>
 
         await _userManager.UpdateAsync(follower);
         await _userManager.UpdateAsync(followedUser);
+
+        var notification = new SendNotificationDto
+        {
+            Type = ENotificationType.FOLLOWING,
+            UserFollowerId = userFollower.Id,
+        };
+        await _notificationService.SendNotification(followedUser.Id.ToString(), notification);
 
         return userFollower.Id;
     }

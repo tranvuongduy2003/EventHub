@@ -113,7 +113,7 @@ public class ValidateSessionCommandHandler : ICommandHandler<ValidateSessionComm
             {
                 Title = "New Ticket Purchase",
                 Message = $"A new ticket has been purchased for your event '{@event.Name}' by '{payment.CustomerName}",
-                Type = ENotificationType.FOLLOWING,
+                Type = ENotificationType.ORDERING,
                 PaymentId = payment.Id,
             };
             await _notificationService.SendNotification(@event.AuthorId.ToString(), notification);
