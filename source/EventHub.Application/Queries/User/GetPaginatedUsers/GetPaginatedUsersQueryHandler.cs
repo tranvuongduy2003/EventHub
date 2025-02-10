@@ -1,7 +1,6 @@
 using AutoMapper;
 using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.User;
-using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.Aggregates.UserAggregate.Entities;
 using EventHub.Domain.SeedWork.Query;
 using EventHub.Domain.Shared.Helpers;
@@ -30,20 +29,19 @@ public class GetPaginatedUsersQueryHandler : IQueryHandler<GetPaginatedUsersQuer
     {
         string key = "user";
 
-        IQueryable<Domain.Aggregates.UserAggregate.User> queryableUsers =
-            await _cacheService.GetData<IQueryable<Domain.Aggregates.UserAggregate.User>>(key);
-
-        if (queryableUsers == null || !queryableUsers.Any())
+        if (_cacheService.GetData<List<Domain.Aggregates.UserAggregate.User>>(key).GetAwaiter().GetResult()
+            is not IQueryable<Domain.Aggregates.UserAggregate.User> items
+            || !items.Any())
         {
-            queryableUsers = _userManager.Users
+            items = _userManager.Users
                 .AsNoTracking()
                 .Where(x => !x.IsDeleted);
 
-            await _cacheService.SetData(key, queryableUsers, TimeSpan.FromMinutes(2));
+            await _cacheService.SetData(key, items, TimeSpan.FromMinutes(2));
         }
 
         Pagination<Domain.Aggregates.UserAggregate.User> paginatedUsers =
-            PagingHelper.QueryPaginate(request.Filter, queryableUsers);
+            PagingHelper.QueryPaginate(request.Filter, items);
         paginatedUsers.Items.ForEach(x =>
         {
             x.Roles = _userManager

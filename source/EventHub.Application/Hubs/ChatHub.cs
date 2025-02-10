@@ -131,7 +131,7 @@ public class ChatHub : Hub
 
     public async Task SendMessage(SendMessageDto request)
     {
-        _logger.LogInformation("BEGIN: SendMessage - ConversationId: {ConversationId}, AuthorId: {AuthorId}",
+        _logger.LogInformation("BEGIN: SendMessage - ConversationId: {ConversationId}, SenderId: {SenderId}",
             request.ConversationId, request.SenderId);
 
         try
