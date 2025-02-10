@@ -13,14 +13,13 @@ namespace EventHub.Application.Hubs;
 
 public class NotificationHub : Hub
 {
-    private static readonly HashSet<string> _connections = new HashSet<string>(); // Lưu trữ danh sách ConnectionId
     private readonly ILogger<NotificationHub> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
 
-    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
+    public NotificationHub(ILogger<NotificationHub> logger, IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -34,13 +33,12 @@ public class NotificationHub : Hub
     /// </summary>
     public override async Task OnConnectedAsync()
     {
-        _logger.LogInformation("BEGIN: OnConnectedAsync - ConnectionId: {ConnectionId}", Context.ConnectionId);
 
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()
             ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
-        // Thêm ConnectionId vào danh sách
-        _connections.Add(Context.ConnectionId);
+        _logger.LogInformation("BEGIN: OnConnectedAsync - ConnectionId: {ConnectionId} {UserId}", Context.ConnectionId, userId);
+
         await Groups.AddToGroupAsync(Context.ConnectionId, userId);
 
         await base.OnConnectedAsync();
@@ -54,9 +52,6 @@ public class NotificationHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("BEGIN: OnDisconnectedAsync - ConnectionId: {ConnectionId}", Context.ConnectionId);
-
-        // Xóa ConnectionId khỏi danh sách
-        _connections.Remove(Context.ConnectionId);
 
         if (exception != null)
         {

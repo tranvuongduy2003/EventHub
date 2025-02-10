@@ -44,7 +44,7 @@ public class UnfollowCommandHandler : ICommandHandler<UnfollowCommand>
             throw new BadRequestException("User has not been followed before");
         }
 
-        await _unitOfWork.UserFollowers.Delete(userFollower);
+        await _unitOfWork.UserFollowers.SoftDelete(userFollower);
         await _unitOfWork.CommitAsync();
 
         follower!.NumberOfFolloweds -= 1;
