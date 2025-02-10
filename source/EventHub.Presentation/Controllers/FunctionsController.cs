@@ -5,6 +5,7 @@ using EventHub.Application.Commands.Permission.DisableCommandInFunction;
 using EventHub.Application.Commands.Permission.EnableCommandInFunction;
 using EventHub.Application.Queries.Function.GetFunctionById;
 using EventHub.Application.Queries.Function.GetFunctions;
+using EventHub.Application.Queries.Function.GetFunctionsByRoleId;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Function;
 using EventHub.Application.SeedWork.Exceptions;
@@ -77,6 +78,20 @@ public class FunctionsController : ControllerBase
         List<FunctionDto> functions = await _mediator.Send(new GetFunctionsQuery());
 
         _logger.LogInformation("END: GetFunctions");
+
+        return Ok(new ApiOkResponse(functions));
+    }
+
+    [HttpGet("get-by-role/{roleId:guid}")]
+
+    [ClaimRequirement(EFunctionCode.ADMINISTRATION_FUNCTION, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetFunctionsByRole(Guid roleId)
+    {
+        _logger.LogInformation("START: GetFunctionsByRole");
+
+        List<FunctionDto> functions = await _mediator.Send(new GetFunctionsByRoleIdQuery(roleId));
+
+        _logger.LogInformation("END: GetFunctionsByRole");
 
         return Ok(new ApiOkResponse(functions));
     }
