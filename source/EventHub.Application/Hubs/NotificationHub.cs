@@ -7,7 +7,6 @@ using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace EventHub.Application.Hubs;
 
@@ -33,13 +32,7 @@ public class NotificationHub : Hub
     /// </summary>
     public override async Task OnConnectedAsync()
     {
-
-        string userId = _signInManager.Context.User.Identities.FirstOrDefault()
-            ?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
-
-        _logger.LogInformation("BEGIN: OnConnectedAsync - ConnectionId: {ConnectionId} {UserId}", Context.ConnectionId, userId);
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+        _logger.LogInformation("BEGIN: OnConnectedAsync - ConnectionId: {ConnectionId}", Context.ConnectionId);
 
         await base.OnConnectedAsync();
 
@@ -102,6 +95,15 @@ public class NotificationHub : Hub
         }
 
         _logger.LogInformation("END: SendNotificationToAll");
+    }
+
+    public async Task Connect(string userId)
+    {
+        _logger.LogInformation("BEGIN: Connect - ConnectionId: {ConnectionId} {UserId}", Context.ConnectionId, userId);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+
+        _logger.LogInformation("END: Connect");
     }
 
     /// <summary>
