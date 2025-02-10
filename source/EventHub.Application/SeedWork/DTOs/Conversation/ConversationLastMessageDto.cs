@@ -8,5 +8,7 @@ public class ConversationLastMessageDto
 
     public string? Content { get; set; }
 
-    public AuthorDto Sender { get; set; }
+    public AuthorDto? Sender { get; set; }
+
+    public AuthorDto? Receiver { get; set; }
 }

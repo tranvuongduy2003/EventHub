@@ -132,7 +132,7 @@ public class ChatHub : Hub
     public async Task SendMessage(SendMessageDto request)
     {
         _logger.LogInformation("BEGIN: SendMessage - ConversationId: {ConversationId}, AuthorId: {AuthorId}",
-            request.ConversationId, request.AuthorId);
+            request.ConversationId, request.SenderId);
 
         try
         {
@@ -142,15 +142,16 @@ public class ChatHub : Hub
                 throw new NotFoundException("Conversation does not exist");
             }
 
-            User user = await _userManager.FindByIdAsync(request.AuthorId.ToString());
-            if (user == null)
+            User sender = await _userManager.FindByIdAsync(request.SenderId.ToString());
+            if (sender == null)
             {
                 throw new NotFoundException("User does not exist");
             }
 
             var message = new Message
             {
-                AuthorId = request.AuthorId,
+                AuthorId = request.SenderId,
+                ReceiverId = request.ReceiverId,
                 ConversationId = request.ConversationId,
                 Content = request.Content,
                 EventId = conversation.EventId,
@@ -192,8 +193,8 @@ public class ChatHub : Hub
 
     public async Task DeleteMessage(DeleteMessageDto request)
     {
-        _logger.LogInformation("BEGIN: DeleteMessage - MessageId: {MessageId}, AuthorId: {AuthorId}",
-            request.MessageId, request.AuthorId);
+        _logger.LogInformation("BEGIN: DeleteMessage - MessageId: {MessageId}, SenderId: {SenderId}",
+            request.MessageId, request.SenderId);
 
         try
         {
@@ -205,7 +206,7 @@ public class ChatHub : Hub
             }
 
             // Kiểm tra quyền truy cập: Chỉ người tạo tin nhắn mới được phép xóa
-            if (message.AuthorId != request.AuthorId)
+            if (message.AuthorId != request.SenderId)
             {
                 throw new BadRequestException("You are not authorized to delete this message");
             }
@@ -239,8 +240,8 @@ public class ChatHub : Hub
 
     public async Task EditMessage(EditMessageDto request)
     {
-        _logger.LogInformation("BEGIN: EditMessage - MessageId: {MessageId}, AuthorId: {AuthorId}",
-            request.MessageId, request.AuthorId);
+        _logger.LogInformation("BEGIN: EditMessage - MessageId: {MessageId}, SenderId: {SenderId}",
+            request.MessageId, request.SenderId);
 
         try
         {
@@ -252,7 +253,7 @@ public class ChatHub : Hub
             }
 
             // Kiểm tra quyền truy cập: Chỉ người tạo tin nhắn mới được phép sửa
-            if (message.AuthorId != request.AuthorId)
+            if (message.AuthorId != request.SenderId)
             {
                 throw new BadRequestException("You are not authorized to edit this message");
             }

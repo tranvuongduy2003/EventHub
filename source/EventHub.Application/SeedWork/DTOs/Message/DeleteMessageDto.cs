@@ -3,5 +3,6 @@
 public class DeleteMessageDto
 {
     public Guid MessageId { get; set; }
-    public Guid AuthorId { get; set; }
+
+    public Guid SenderId { get; set; }
 }

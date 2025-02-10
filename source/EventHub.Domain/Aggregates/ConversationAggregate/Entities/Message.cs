@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EventHub.Domain.Aggregates.EventAggregate;
+using EventHub.Domain.Aggregates.UserAggregate;
 using EventHub.Domain.SeedWork.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,13 @@ public class Message : EntityAuditBase
     [MaxLength(255)]
     [Column(TypeName = "nvarchar(255)")]
     public string? AudioFileName { get; set; }
+
+    [Required]
+    public required Guid ReceiverId { get; set; }
+
+    [ForeignKey("ReceiverId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual User Receiver { get; set; } = null!;
 
     [Required]
     public required Guid EventId { get; set; } = Guid.Empty;

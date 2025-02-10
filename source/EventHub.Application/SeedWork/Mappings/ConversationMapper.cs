@@ -12,9 +12,13 @@ public sealed class ConversationMapper
     public static void CreateMap(IMapperConfigurationExpression config)
     {
         config.CreateMap<Message, MessageDto>()
+            .ForMember(dest => dest.Sender, options =>
+                options.MapFrom(source => source.Author))
             .ReverseMap();
 
         config.CreateMap<Message, ConversationLastMessageDto>()
+            .ForMember(dest => dest.Sender, options =>
+                options.MapFrom(source => source.Author))
             .ReverseMap();
 
         config.CreateMap<Pagination<Message>, Pagination<MessageDto>>()
