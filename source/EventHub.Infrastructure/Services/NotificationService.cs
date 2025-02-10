@@ -4,10 +4,13 @@ using EventHub.Application.SeedWork.Abstractions;
 using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.Exceptions;
 using EventHub.Domain.Aggregates.NotificationAggregate;
+using EventHub.Domain.Aggregates.PaymentAggregate;
 using EventHub.Domain.Aggregates.UserAggregate;
+using EventHub.Domain.Aggregates.UserAggregate.ValueObjects;
 using EventHub.Domain.SeedWork.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EventHub.Infrastructure.Services;
@@ -92,11 +95,43 @@ public class NotificationService : INotificationService
                 Type = notification.Type,
                 TargetGroup = userId,
                 TargetUserId = Guid.Parse(userId),
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                InvitationId = notification.InvitationId,
+                PaymentId = notification.PaymentId,
+                UserFollowerId = notification.UserFollowerId
             };
 
             await _unitOfWork.Notifications.CreateAsync(notificationEntity);
             await _unitOfWork.CommitAsync();
+
+            if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.FOLLOWING && notification.UserFollowerId is not null)
+            {
+                UserFollower userFollower = await _unitOfWork.UserFollowers
+                    .FindByCondition(x => x.Id == notification.UserFollowerId)
+                    .Include(x => x.Follower)
+                    .FirstOrDefaultAsync();
+                notificationEntity.UserFollower = userFollower;
+            }
+            else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.INVITING && notification.InvitationId is not null)
+            {
+                Invitation invitation = await _unitOfWork.Invitations
+                    .FindByCondition(x => x.Id == notification.InvitationId)
+                    .Include(x => x.Invited)
+                    .Include(x => x.Inviter)
+                    .Include(x => x.Event)
+                    .FirstOrDefaultAsync();
+                notificationEntity.Invitation = invitation;
+            }
+            else if (notification.Type == Domain.Shared.Enums.Notification.ENotificationType.ORDERING && notification.PaymentId is not null)
+            {
+                Payment payment = await _unitOfWork.Payments
+                    .FindByCondition(x => x.Id == notification.PaymentId)
+                    .Include(x => x.Author)
+                    .Include(x => x.Event)
+                    .FirstOrDefaultAsync();
+                notificationEntity.Payment = payment;
+            }
+
 
             notificationEntity.TargetUser = user;
             NotificationDto notificationDto = _mapper.Map<NotificationDto>(notificationEntity);
