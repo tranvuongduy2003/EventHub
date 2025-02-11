@@ -37,6 +37,7 @@ public class NotificationsController : ControllerBase
     [SwaggerResponse(200, "Successfully retrieved the list of notifications", typeof(Pagination<NotificationDto>))]
     [SwaggerResponse(404, "Not Found - User with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
     public async Task<IActionResult> GetPaginatedNotifications([FromQuery] NotificationPaginationFilter filter)
     {
         _logger.LogInformation("START: GetPaginatedNotifications");
@@ -60,7 +61,7 @@ public class NotificationsController : ControllerBase
     [SwaggerResponse(403, "Forbidden - User does not have the required permissions")]
     [SwaggerResponse(404, "Not Found - Review with the specified ID not found")]
     [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
-    [ClaimRequirement(EFunctionCode.GENERAL_REVIEW, ECommandCode.UPDATE)]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.UPDATE)]
     public async Task<IActionResult> PatchSeenAllNotifications([FromQuery] ENotificationType? type)
     {
         _logger.LogInformation("START: PatchSeenAllNotifications");

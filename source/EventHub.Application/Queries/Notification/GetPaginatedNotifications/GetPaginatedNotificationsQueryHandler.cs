@@ -37,20 +37,20 @@ public class GetPaginatedNotificationsQueryHandler : IQueryHandler<GetPaginatedN
                 .PaginatedFindByCondition(x => x.TargetUserId == Guid.Parse(userId), request.Filter,
                     query =>
                     {
+                        totalUnseenFollowing = query.Count(x => !x.IsSeen && x.Type == ENotificationType.FOLLOWING);
+                        totalUnseenOrdering = query.Count(x => !x.IsSeen && x.Type == ENotificationType.ORDERING);
+                        totalUnseenInvitation = query.Count(x => !x.IsSeen && x.Type == ENotificationType.INVITING);
+
                         if (request.Filter.Type != null)
                         {
                             query = request.Filter.Type switch
                             {
-                                ENotificationType.FOLLOWING => query.Where(x => x.UserFollowerId != null),
-                                ENotificationType.INVITING => query.Where(x => x.InvitationId != null),
-                                ENotificationType.ORDERING => query.Where(x => x.PaymentId != null),
+                                ENotificationType.FOLLOWING => query.Where(x => x.Type == ENotificationType.FOLLOWING),
+                                ENotificationType.INVITING => query.Where(x => x.Type == ENotificationType.INVITING),
+                                ENotificationType.ORDERING => query.Where(x => x.Type == ENotificationType.ORDERING),
                                 _ => query
                             };
                         }
-
-                        totalUnseenFollowing = query.Count(x => !x.IsSeen && x.UserFollowerId != null);
-                        totalUnseenOrdering = query.Count(x => !x.IsSeen && x.PaymentId != null);
-                        totalUnseenInvitation = query.Count(x => !x.IsSeen && x.InvitationId != null);
 
                         return query
                             .Include(x => x.UserFollower)

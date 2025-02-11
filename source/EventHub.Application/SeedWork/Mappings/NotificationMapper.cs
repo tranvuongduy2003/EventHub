@@ -19,5 +19,11 @@ public sealed class NotificationMapper
         config.CreateMap<Pagination<Notification>, Pagination<NotificationDto>>()
             .ForMember(dest => dest.Items, options =>
                 options.MapFrom(source => source.Items));
+
+        config.CreateMap<Metadata, NotificationMetadata>();
+
+        config.CreateMap<Pagination<Notification>, Pagination<NotificationDto, NotificationMetadata>>()
+            .ForMember(dest => dest.Items, options =>
+                options.MapFrom(source => source.Items));
     }
 }
