@@ -8,5 +8,5 @@ public class EventReviewsByCustomerDto
 
     public int TotalReviews { get; set; }
 
-    public double AvarageRate { get; set; } = 0.0;
+    public double AvarageRate { get; set; }
 }
