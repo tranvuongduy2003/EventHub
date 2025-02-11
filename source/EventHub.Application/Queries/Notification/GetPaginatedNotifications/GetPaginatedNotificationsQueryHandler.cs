@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace EventHub.Application.Queries.Notification.GetPaginatedNotificationsByUserId;
+namespace EventHub.Application.Queries.Notification.GetPaginatedNotifications;
 
 public class GetPaginatedNotificationsQueryHandler : IQueryHandler<GetPaginatedNotificationsQuery, Pagination<NotificationDto, NotificationMetadata>>
 {

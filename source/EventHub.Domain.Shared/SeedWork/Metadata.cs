@@ -122,7 +122,7 @@ public class Metadata
     public bool HasNext => CurrentPage < TotalPages;
 }
 
-public class NotificationMetadata
+public class NotificationMetadata : Metadata
 {
     public int TotalUnseenFollowing { get; set; }
 

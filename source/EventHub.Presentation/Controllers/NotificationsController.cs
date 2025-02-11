@@ -1,6 +1,7 @@
 ﻿using EventHub.Application.Commands.Notification.DeleteNotification;
 using EventHub.Application.Commands.Notification.SeenAll;
-using EventHub.Application.Queries.Notification.GetPaginatedNotificationsByUserId;
+using EventHub.Application.Queries.Notification.GetNotificationsStatistic;
+using EventHub.Application.Queries.Notification.GetPaginatedNotifications;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Notification;
 using EventHub.Application.SeedWork.Exceptions;
@@ -48,6 +49,25 @@ public class NotificationsController : ControllerBase
             _logger.LogInformation("END: GetPaginatedNotifications");
 
             return Ok(new ApiOkResponse(notifications));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+    }
+
+    [HttpGet("statistic")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetNotificationsStatistic()
+    {
+        _logger.LogInformation("START: GetNotificationsStatistic");
+        try
+        {
+            NotificationStatisticDto statistic = await _mediator.Send(new GetNotificationsStatisticQuery());
+
+            _logger.LogInformation("END: GetNotificationsStatistic");
+
+            return Ok(new ApiOkResponse(statistic));
         }
         catch (NotFoundException e)
         {
