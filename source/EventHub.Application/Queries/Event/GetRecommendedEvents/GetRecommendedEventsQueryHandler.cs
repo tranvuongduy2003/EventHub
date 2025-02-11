@@ -13,13 +13,15 @@ public class GetRecommendedEventsQueryHandler : IQueryHandler<GetRecommendedEven
 {
     private readonly IMapper _mapper;
     private readonly SignInManager<Domain.Aggregates.UserAggregate.User> _signInManager;
+    private readonly IHttpClientFactory _clientFactory;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetRecommendedEventsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager)
+    public GetRecommendedEventsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, SignInManager<Domain.Aggregates.UserAggregate.User> signInManager, IHttpClientFactory clientFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _signInManager = signInManager;
+        _clientFactory = clientFactory;
     }
 
     public async Task<List<EventDto>> Handle(GetRecommendedEventsQuery request,
@@ -27,11 +29,7 @@ public class GetRecommendedEventsQueryHandler : IQueryHandler<GetRecommendedEven
     {
         string userId = _signInManager.Context.User.Identities.FirstOrDefault()?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ?? "";
 
-        using var httpClient = new HttpClient
-        {
-            BaseAddress = new Uri("http://165.22.63.139:8002")
-        };
-
+        HttpClient httpClient = _clientFactory.CreateClient("RecommenderSystem");
         HttpResponseMessage httpResponseMessage = await httpClient.GetAsync($"/api/recommendations/{userId}", cancellationToken);
         if (!httpResponseMessage.IsSuccessStatusCode)
         {
