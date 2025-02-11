@@ -148,6 +148,9 @@ public class Search
 
 public class EventPaginationFilter : PaginationFilter
 {
+    [FromQuery(Name = "dateRange")]
+    public DateRange DateRange { get; set; } = null!;
+
     [FromQuery(Name = "status")]
     public EEventStatus? Status { get; set; } = null!;
 
@@ -165,4 +168,11 @@ public class NotificationPaginationFilter : PaginationFilter
 {
     [FromQuery(Name = "type")]
     public ENotificationType? Type { get; set; } = null!;
+}
+
+public class DateRange
+{
+    public DateTime StartDate { get; set; }
+
+    public DateTime EndDate { get; set; }
 }

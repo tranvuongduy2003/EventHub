@@ -26,6 +26,12 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
                 request.Filter,
                 query =>
                 {
+                    if (request.Filter.DateRange != null)
+                    {
+                        query = query.Where(x => request.Filter.DateRange.StartDate <= x.StartTime &&
+                                                 x.EndTime <= request.Filter.DateRange.EndDate);
+                    }
+
                     if (request.Filter.Status != null)
                     {
                         query = request.Filter.Status switch
