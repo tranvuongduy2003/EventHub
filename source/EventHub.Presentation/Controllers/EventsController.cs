@@ -15,6 +15,7 @@ using EventHub.Application.Queries.Event.GetDeletedEventsByUserId;
 using EventHub.Application.Queries.Event.GetEventById;
 using EventHub.Application.Queries.Event.GetFavouriteEventsByUserId;
 using EventHub.Application.Queries.Event.GetPaginatedEvents;
+using EventHub.Application.Queries.Event.GetRecommendedEvents;
 using EventHub.Application.SeedWork.Attributes;
 using EventHub.Application.SeedWork.DTOs.Coupon;
 using EventHub.Application.SeedWork.DTOs.Event;
@@ -56,6 +57,21 @@ public class EventsController : ControllerBase
         Pagination<EventDto> events = await _mediator.Send(new GetPaginatedEventsQuery(filter));
 
         _logger.LogInformation("END: GetPaginatedEvents");
+
+        return Ok(new ApiOkResponse(events));
+    }
+
+    [HttpGet("recommendations")]
+    [SwaggerResponse(200, "Successfully retrieved the list of events", typeof(List<EventDto>))]
+    [SwaggerResponse(500, "Internal Server Error - An error occurred while processing the request")]
+    [ClaimRequirement(EFunctionCode.GENERAL_EVENT, ECommandCode.VIEW)]
+    public async Task<IActionResult> GetRecommendedEvents()
+    {
+        _logger.LogInformation("START: GetRecommendedEvents");
+
+        List<EventDto> events = await _mediator.Send(new GetRecommendedEventsQuery());
+
+        _logger.LogInformation("END: GetRecommendedEvents");
 
         return Ok(new ApiOkResponse(events));
     }
