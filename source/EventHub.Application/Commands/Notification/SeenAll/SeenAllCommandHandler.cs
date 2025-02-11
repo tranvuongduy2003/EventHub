@@ -33,7 +33,8 @@ public class SeenAllCommandHandler : ICommandHandler<SeenAllCommand>
 
         foreach (Domain.Aggregates.NotificationAggregate.Notification notification in notifications)
         {
-            notification.IsSeen = true;
+            Domain.Aggregates.NotificationAggregate.Notification notificationEntity = await _unitOfWork.Notifications.GetByIdAsync(notification.Id);
+            notificationEntity.IsSeen = true;
             await _unitOfWork.Notifications.Update(notification);
             await _unitOfWork.CommitAsync();
         }

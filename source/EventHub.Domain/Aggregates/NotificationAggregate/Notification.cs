@@ -28,8 +28,6 @@ public class Notification : AggregateRoot
 
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-    public bool IsSeen { get; set; }
-
     public Guid? TargetUserId { get; set; }
 
     public string? TargetGroup { get; set; }
@@ -39,6 +37,8 @@ public class Notification : AggregateRoot
     public Guid? PaymentId { get; set; }
 
     public Guid? UserFollowerId { get; set; }
+
+    public bool IsSeen { get; set; }
 
     [ForeignKey("TargetUserId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
