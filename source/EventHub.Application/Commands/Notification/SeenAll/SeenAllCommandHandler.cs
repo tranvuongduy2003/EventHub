@@ -35,8 +35,7 @@ public class SeenAllCommandHandler : ICommandHandler<SeenAllCommand>
         {
             notification.IsSeen = true;
             await _unitOfWork.Notifications.Update(notification);
+            await _unitOfWork.CommitAsync();
         }
-
-        await _unitOfWork.CommitAsync();
     }
 }
