@@ -60,7 +60,7 @@ public class GetCreatedEventsByUserIdQueryHandler : IQueryHandler<GetCreatedEven
 
                     if (request.Filter.Rate is int rate && rate is >= 1 and <= 5)
                     {
-                        query = query.Where(x => x.Reviews.Average(r => r.Rate) >= rate);
+                        query = query.Where(x => (x.Reviews.Any() ? x.Reviews.Average(r => r.Rate) : 0) >= rate);
                     }
 
                     if (request.Filter.CategoryIds?.Any() == true)

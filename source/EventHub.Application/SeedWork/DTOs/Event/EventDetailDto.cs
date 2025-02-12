@@ -39,6 +39,8 @@ public class EventDetailDto
     [SwaggerSchema("The avarage rating for this event")]
     public double AverageRate { get; set; } = 0;
 
+    public bool IsReviewable { get; set; }
+
     [SwaggerSchema("Current status of the event")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EEventStatus? Status { get; set; }

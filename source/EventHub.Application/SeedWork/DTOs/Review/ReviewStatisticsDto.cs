@@ -2,7 +2,7 @@
 
 public class ReviewStatisticsDto
 {
-    public float AverageRate { get; set; }
+    public double AverageRate { get; set; }
 
     public int Total { get; set; }
 

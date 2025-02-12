@@ -23,7 +23,7 @@ public class GetEventReviewsByCustomerQueryHandler : IQueryHandler<GetEventRevie
         int total = reviews.Count;
         int totalPositive = reviews.Count(x => x.IsPositive == true);
         int totalNegative = reviews.Count(x => x.IsPositive == false);
-        double averageRate = reviews.Average(x => x.Rate);
+        double averageRate = reviews.Any() ? reviews.Average(x => x.Rate) : 0.0;
 
         return Task.FromResult(new EventReviewsByCustomerDto
         {

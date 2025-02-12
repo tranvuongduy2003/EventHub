@@ -52,7 +52,7 @@ public class GetPaginatedEventsQueryHandler : IQueryHandler<GetPaginatedEventsQu
                     query = query.Include(x => x.Reviews);
                     if (request.Filter.Rate is int rate && rate is >= 1 and <= 5)
                     {
-                        query = query.Where(x => x.Reviews.Average(r => r.Rate) >= rate);
+                        query = query.Where(x => (x.Reviews.Any() ? x.Reviews.Average(r => r.Rate) : 0.0) >= rate);
                     }
 
                     query = query.Include(x => x.EventCategories).ThenInclude(x => x.Category);

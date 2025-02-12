@@ -26,7 +26,7 @@ public class GetReviewStatisticsByCreatedEventsQueryHandler : IQueryHandler<GetR
         int total = reviews.Count;
         int totalPositive = reviews.Count(x => x.IsPositive == true);
         int totalNegative = reviews.Count(x => x.IsPositive == false);
-        float averageRate = (float)reviews.Average(x => x.Rate);
+        double averageRate = reviews.Any() ? reviews.Average(x => x.Rate) : 0.0;
 
         var totalPerRate = Enumerable.Range(1, 5)
             .Select(rate => new RateStatistic

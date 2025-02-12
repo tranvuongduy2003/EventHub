@@ -63,6 +63,9 @@ public class GetEventByIdQueryHandler : IQueryHandler<GetEventByIdQuery, EventDe
             eventDto.Author.IsFollower =
                 await _unitOfWork.UserFollowers.ExistAsync(x =>
                     x.FollowerId == Guid.Parse(userId) && x.FollowedId == Guid.Parse(eventDto.Author.Id));
+
+            eventDto.IsReviewable = await _unitOfWork.Tickets.ExistAsync(x =>
+                x.EventId == request.EventId && x.AuthorId == Guid.Parse(userId));
         }
 
         return eventDto;
