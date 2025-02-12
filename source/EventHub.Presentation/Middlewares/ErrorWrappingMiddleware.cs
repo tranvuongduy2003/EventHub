@@ -1,4 +1,5 @@
-﻿using EventHub.Domain.Shared.HttpResponses;
+﻿using EventHub.Application.SeedWork.Exceptions;
+using EventHub.Domain.Shared.HttpResponses;
 using Newtonsoft.Json;
 
 namespace EventHub.Presentation.Middlewares;
@@ -19,6 +20,36 @@ public class ErrorWrappingMiddleware
         try
         {
             await _next.Invoke(context);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex, "{ErrorMessage}", ex.Message);
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = ex.StatusCode;
+            var response = new ApiNotFoundResponse(ex.Message);
+            string json = JsonConvert.SerializeObject(response);
+            await context.Response.WriteAsync(json);
+        }
+        catch (BadRequestException ex)
+        {
+            _logger.LogError(ex, "{ErrorMessage}", ex.Message);
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = ex.StatusCode;
+            var response = new ApiBadRequestResponse(ex.Message);
+            string json = JsonConvert.SerializeObject(response);
+            await context.Response.WriteAsync(json);
+        }
+        catch (UnauthorizedException ex)
+        {
+            _logger.LogError(ex, "{ErrorMessage}", ex.Message);
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = ex.StatusCode;
+            var response = new ApiUnauthorizedResponse(ex.Message);
+            string json = JsonConvert.SerializeObject(response);
+            await context.Response.WriteAsync(json);
         }
         catch (Exception ex)
         {
