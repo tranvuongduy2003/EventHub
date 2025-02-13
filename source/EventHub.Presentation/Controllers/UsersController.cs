@@ -4,6 +4,7 @@ using EventHub.Application.Commands.User.Follow;
 using EventHub.Application.Commands.User.InviteUsers;
 using EventHub.Application.Commands.User.Unfollow;
 using EventHub.Application.Commands.User.UpdateUser;
+using EventHub.Application.Commands.User.UpdateUserRoles;
 using EventHub.Application.Queries.User.GetPaginatedFollowers;
 using EventHub.Application.Queries.User.GetPaginatedFollowersToInvite;
 using EventHub.Application.Queries.User.GetPaginatedFollowingUsers;
@@ -149,6 +150,24 @@ public class UsersController : ControllerBase
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
 
+        }
+    }
+
+    [HttpPatch("{userId:guid}/roles")]
+    public async Task<IActionResult> PatchUpdateUserRoles(Guid userId, [FromBody] UpdateUserRolesDto request)
+    {
+        _logger.LogInformation("START: PatchUpdateUserRoles");
+        try
+        {
+            await _mediator.Send(new UpdateUserRolesCommand(userId, request));
+
+            _logger.LogInformation("END: PatchUpdateUserRoles");
+
+            return Ok(new ApiOkResponse());
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
         }
     }
 
