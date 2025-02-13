@@ -26,7 +26,7 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
             throw new NotFoundException("Category does not exist!");
         }
 
-        bool isCategoryExisted = await _unitOfWork.Categories.ExistAsync(x => x.Name == request.Name);
+        bool isCategoryExisted = await _unitOfWork.Categories.ExistAsync(x => x.Name == request.Name && x.Id != request.Id);
         if (isCategoryExisted)
         {
             throw new BadRequestException("Category name already exists!");
