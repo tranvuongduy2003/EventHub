@@ -2,8 +2,6 @@
 
 public enum EFunctionCode
 {
-    DASHBOARD,
-
     GENERAL,
     GENERAL_CATEGORY,
     GENERAL_EVENT,
@@ -13,8 +11,6 @@ public enum EFunctionCode
     GENERAL_PAYMENT,
     GENERAL_CHAT,
     GENERAL_COUPON,
-
-    STATISTIC,
 
     ADMINISTRATION,
     ADMINISTRATION_USER,

@@ -128,12 +128,6 @@ public class ApplicationDbContextSeed
             {
                 new()
                 {
-                    Id = EFunctionCode.DASHBOARD.GetDisplayName(), Name = "Dashboard", ParentId = null, SortOrder = 0,
-                    Url = "/dashboard"
-                },
-
-                new()
-                {
                     Id = EFunctionCode.GENERAL.GetDisplayName(), Name = "General", ParentId = null, SortOrder = 0,
                     Url = "/"
                 },
@@ -177,12 +171,6 @@ public class ApplicationDbContextSeed
                 {
                     Id = EFunctionCode.GENERAL_COUPON.GetDisplayName(), Name = "Coupons",
                     ParentId = EFunctionCode.GENERAL.GetDisplayName(), SortOrder = 1, Url = "/coupons"
-                },
-
-                new()
-                {
-                    Id = EFunctionCode.STATISTIC.GetDisplayName(), Name = "Statistics", ParentId = null, SortOrder = 0,
-                    Url = "/statistic"
                 },
 
                 new()

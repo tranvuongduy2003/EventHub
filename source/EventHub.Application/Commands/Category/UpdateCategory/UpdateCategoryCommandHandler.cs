@@ -27,7 +27,7 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
         }
 
         bool isCategoryExisted = await _unitOfWork.CachedCategories.ExistAsync(x => x.Name == request.Name);
-        if (isCategoryExisted)
+        if (!isCategoryExisted)
         {
             throw new BadRequestException("Category name already exists!");
         }
