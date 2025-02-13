@@ -24,7 +24,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
 
     public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        bool isCategoryExisted = await _unitOfWork.CachedCategories.ExistAsync(x => x.Name == request.Name);
+        bool isCategoryExisted = await _unitOfWork.Categories.ExistAsync(x => x.Name == request.Name);
         if (isCategoryExisted)
         {
             throw new BadRequestException("Category name already exists!");
@@ -42,7 +42,7 @@ public class CreateCategoryCommandHandler : ICommandHandler<CreateCategoryComman
         category.IconImageUrl = iconImage.Blob.Uri ?? "";
         category.IconImageFileName = iconImage.Blob.Name ?? "";
 
-        await _unitOfWork.CachedCategories.CreateAsync(category);
+        await _unitOfWork.Categories.CreateAsync(category);
         await _unitOfWork.CommitAsync();
 
         return _mapper.Map<CategoryDto>(category);

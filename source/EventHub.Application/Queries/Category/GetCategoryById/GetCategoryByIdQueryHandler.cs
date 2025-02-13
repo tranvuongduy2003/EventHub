@@ -21,7 +21,7 @@ public class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByIdQuery, C
     public async Task<CategoryDto> Handle(GetCategoryByIdQuery request,
         CancellationToken cancellationToken)
     {
-        Domain.Aggregates.EventAggregate.Entities.Category cachedCategory = await _unitOfWork.CachedCategories.GetByIdAsync(request.CategoryId);
+        Domain.Aggregates.EventAggregate.Entities.Category cachedCategory = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId);
 
         if (cachedCategory == null)
         {

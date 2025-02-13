@@ -36,7 +36,7 @@ public class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategoryComman
             await _fileService.DeleteAsync(category.IconImageFileName, FileContainer.CATEGORIES);
         }
 
-        await _unitOfWork.CachedCategories.SoftDelete(category);
+        await _unitOfWork.Categories.SoftDelete(category);
         await _unitOfWork.CommitAsync();
     }
 }

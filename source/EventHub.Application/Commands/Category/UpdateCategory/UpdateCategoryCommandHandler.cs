@@ -26,8 +26,8 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
             throw new NotFoundException("Category does not exist!");
         }
 
-        bool isCategoryExisted = await _unitOfWork.CachedCategories.ExistAsync(x => x.Name == request.Name);
-        if (!isCategoryExisted)
+        bool isCategoryExisted = await _unitOfWork.Categories.ExistAsync(x => x.Name == request.Name);
+        if (isCategoryExisted)
         {
             throw new BadRequestException("Category name already exists!");
         }
@@ -43,7 +43,7 @@ public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryComman
         category.IconImageUrl = iconImage.Blob.Uri ?? "";
         category.IconImageFileName = iconImage.Blob.Name ?? "";
 
-        await _unitOfWork.CachedCategories.Update(category);
+        await _unitOfWork.Categories.Update(category);
         await _unitOfWork.CommitAsync();
     }
 }
