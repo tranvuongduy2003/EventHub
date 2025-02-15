@@ -18,14 +18,14 @@ pipeline {
             steps {
                 sh "cp /home/eventhub/eventhub-api/appsettings.Development.json ./source/EventHub.Presentation/appsettings.json"
 
-                // withSonarQubeEnv("SonarQube server connection") {
-                //     sh "docker run --rm \
-                //     -e SONAR_HOST_URL=${env.SONAR_EVENTHUB_API_HOST_URL} \
-                //     -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=${env.SONAR_EVENTHUB_API_PROJECT_KEY}' \
-                //     -e SONAR_TOKEN=$SONAR_TOKEN \
-                //     -v '.:/usr/src' \
-                //     sonarsource/sonar-scanner-cli"
-                // }
+                withSonarQubeEnv("SonarQube server connection") {
+                    sh "docker run --rm \
+                    -e SONAR_HOST_URL=${env.SONAR_EVENTHUB_API_HOST_URL} \
+                    -e SONAR_SCANNER_OPTS='-Dsonar.projectKey=${env.SONAR_EVENTHUB_API_PROJECT_KEY}' \
+                    -e SONAR_TOKEN=$SONAR_TOKEN \
+                    -v '.:/usr/src' \
+                    sonarsource/sonar-scanner-cli"
+                }
             }
         }
       
@@ -89,15 +89,7 @@ pipeline {
                     disable_notification: false
                 ])
                 // Use double quotes for sh and escape the payload
-                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
-                
-                def payload1 = groovy.json.JsonOutput.toJson([
-                    chat_id: "6595915114",
-                    text: jsonText,
-                    disable_notification: false
-                ])
-                // Use double quotes for sh and escape the payload
-                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload1}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"                
             }
         }
         failure {
@@ -109,14 +101,6 @@ pipeline {
                     disable_notification: false
                 ])
                 sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' 'https://api.telegram.org/bot7896259001:AAElRMt5EoUn-KtzmLYPehaFaS9Sc1nU094/sendMessage'"
-
-                def payload1 = groovy.json.JsonOutput.toJson([
-                    chat_id: "6595915114",
-                    text: jsonText,
-                    disable_notification: false
-                ])
-                // Use double quotes for sh and escape the payload
-                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload1}' 'https://api.telegram.org/bot7762312074:AAHJ-iZRYNxUAWPfMOLE475IGeHmMiTtn1U/sendMessage'"
             }
         }
     }
